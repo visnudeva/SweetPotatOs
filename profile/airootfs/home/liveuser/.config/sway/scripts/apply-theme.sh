@@ -2,6 +2,7 @@
 # Apply SweetPotato GTK / icon / cursor theme to all channels apps actually read.
 # Prefer Adwaita-dark (ships with GTK — no extra theme package).
 # Potato charcoal + accents live in ~/.config/gtk-3.0/gtk.css
+# (incl. Thunar multi-select / rubberband — kill Adwaita blue outlines).
 set -euo pipefail
 
 pick_gtk_theme() {
@@ -16,6 +17,56 @@ pick_gtk_theme() {
     fi
   done
   echo "Adwaita-dark"
+}
+
+# Ensure user GTK CSS overrides Adwaita blue rubberband / multi-select chrome.
+# Full theme lives in gtk.css from skel/ISO; this only backfills on older homes.
+ensure_selection_css() {
+  local css="${HOME}/.config/gtk-3.0/gtk.css"
+  mkdir -p "${HOME}/.config/gtk-3.0"
+  if [[ -f "${css}" ]] && grep -q 'Kill Adwaita blue rubberband' "${css}"; then
+    return 0
+  fi
+  cat >> "${css}" << 'EOF'
+
+/* Kill Adwaita blue rubberband / multi-select chrome */
+@define-color potato_red #a73b50;
+@define-color theme_selected_bg_color #a73b50;
+@define-color theme_selected_fg_color #ffffff;
+.rubberband,
+rubberband,
+.content-view rubberband,
+.content-view .rubberband,
+treeview.view rubberband,
+flowbox rubberband,
+.thunar .rubberband,
+.thunar rubberband {
+  border: 1px solid @potato_red;
+  background-color: alpha(@potato_red, 0.22);
+}
+.view.content-view.check:not(list),
+iconview.content-view.check:not(list),
+.content-view:not(list) check,
+.view.content-view.check:checked:not(list),
+iconview.content-view.check:checked:not(list),
+.content-view:not(list) check:checked {
+  background-color: @potato_red;
+  color: #ffffff;
+}
+.thunar .standard-view .view:selected,
+.thunar .standard-view .view:selected:focus,
+.thunar iconview:selected,
+.thunar iconview:selected:focus {
+  background-color: alpha(@potato_red, 0.45);
+  color: #ffffff;
+  outline-color: @potato_red;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: -2px;
+  border-color: @potato_red;
+  box-shadow: none;
+}
+EOF
 }
 
 THEME="$(pick_gtk_theme)"
@@ -34,6 +85,8 @@ mkdir -p \
   "${HOME}/.config/gtk-3.0" \
   "${HOME}/.config/gtk-4.0" \
   "${HOME}/.config/xsettingsd"
+
+ensure_selection_css
 
 # settings.ini (used when no settings daemon is running)
 for ini in "${HOME}/.config/gtk-3.0/settings.ini" "${HOME}/.config/gtk-4.0/settings.ini"; do

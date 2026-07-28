@@ -76,6 +76,29 @@ menubar > menuitem {
   padding: 4px 10px;
 }
 
+/* Kill Adwaita blue rubberband / multi-select chrome */
+.rubberband,
+rubberband,
+.content-view rubberband,
+.content-view .rubberband,
+treeview.view rubberband,
+flowbox rubberband,
+.thunar .rubberband,
+.thunar rubberband {
+  border: 1px solid @potato_red;
+  background-color: alpha(@potato_red, 0.22);
+}
+
+.view.content-view.check:not(list),
+iconview.content-view.check:not(list),
+.content-view:not(list) check,
+.view.content-view.check:checked:not(list),
+iconview.content-view.check:checked:not(list),
+.content-view:not(list) check:checked {
+  background-color: @potato_red;
+  color: #ffffff;
+}
+
 /* Thunar — red only */
 .thunar *:selected,
 .thunar .view:selected,
@@ -83,9 +106,19 @@ menubar > menuitem {
 .thunar treeview:selected,
 .thunar list row:selected,
 .thunar .sidebar row:selected,
-.thunar iconview:selected {
-  background-color: @potato_red;
+.thunar iconview:selected,
+.thunar iconview:selected:focus,
+.thunar .standard-view .view:selected,
+.thunar .standard-view .view:selected:focus,
+.thunar .standard-view iconview:selected {
+  background-color: alpha(@potato_red, 0.45);
   color: #ffffff;
+  outline-color: @potato_red;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: -2px;
+  border-color: @potato_red;
+  box-shadow: none;
 }
 
 .thunar check:checked,
@@ -96,6 +129,7 @@ menubar > menuitem {
   background-image: image(@potato_red);
   border-color: @potato_red;
   color: #ffffff;
+  outline-color: alpha(@potato_red, 0.45);
 }
 
 .thunar progressbar progress {

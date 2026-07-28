@@ -25,7 +25,7 @@ set $editor geany
 ### Output configuration
 #
 # Default wallpaper; wallpaper.sh overwrites ~/.config/sway/wallpaper.conf
-output * bg ~/.local/share/backgrounds/SweetPotato.png fill
+output * bg ~/.local/share/backgrounds/SPKeybinds.png fill
 include ~/.config/sway/wallpaper.conf
 
 ### Idle configuration

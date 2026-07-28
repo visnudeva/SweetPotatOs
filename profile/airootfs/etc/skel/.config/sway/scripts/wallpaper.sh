@@ -46,7 +46,7 @@ for dir in "${DIRS[@]}"; do
 done
 
 if ((${#display_list[@]} == 0)); then
-  notify-send -t 3000 -a "Wallpaper" -i "preferences-desktop-wallpaper" \
+  notify-send -t 3000 -a "Wallpaper" -i "sweetpotatoos" \
     "Wallpaper" "No images found. Drop files in ~/.local/share/backgrounds" 2>/dev/null || true
   exit 1
 fi
@@ -60,8 +60,13 @@ img="${path_of[${choice}]:-}"
 swaymsg output '*' bg "${img}" fill >/dev/null
 
 mkdir -p "$(dirname "${WALLPAPER_CONF}")"
-# Quote the path so spaces work in sway config
-printf 'output * bg "%s" fill\n' "${img}" > "${WALLPAPER_CONF}"
+# Persist with ~ when under $HOME so configs stay portable across users/ISOs
+if [[ "${img}" == "${HOME}/"* ]]; then
+  conf_img="~${img#"${HOME}"}"
+else
+  conf_img="${img}"
+fi
+printf 'output * bg "%s" fill\n' "${conf_img}" > "${WALLPAPER_CONF}"
 
-notify-send -t 2000 -a "Wallpaper" -i "preferences-desktop-wallpaper" \
+notify-send -t 2000 -a "Wallpaper" -i "sweetpotatoos" \
   "Wallpaper" "$(basename "${img}")" 2>/dev/null || true

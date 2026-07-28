@@ -1,5 +1,9 @@
 # SweetPotatOs
 
+<p align="center">
+  <img src="assets/SweetPotatOs.png" alt="SweetPotatOs" width="220">
+</p>
+
 Live graphical **Arch Linux** ISO with the [SweetPotato](https://github.com/visnudeva/SweetPotato) Sway desktop and a **Calamares** installer.
 
 Colors: **#a73b50** potato red · **#f79b29** potato orange · **#1d1f21** charcoal
@@ -73,6 +77,7 @@ sudo dd if=out/sweetpotatoos-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 
 ```
 SweetPotatOs/
+├── assets/           # README / branding art (SweetPotatOs.png, SPLogo.png)
 ├── build.sh          # --build-calamares | mkarchiso wrapper
 ├── profile/          # archiso profile
 │   ├── profiledef.sh
@@ -90,7 +95,6 @@ Theme files are mirrored from [SweetPotato](https://github.com/visnudeva/SweetPo
 
 - First ISO build needs Calamares present in `repo/`
 - `unpackfs` expects the ISO mounted at `/run/archiso/bootmnt/spotato/...`
-- Calamares branding artwork is minimal
 - Desktop stack → large ISO
 
 ## Related
