@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Install SweetPotatOs
+GenericName=System Installer
+Comment=Install SweetPotatOs on your machine
+Exec=sudo -E calamares
+Icon=system-software-install
+Terminal=false
+Categories=System;Settings;
+StartupNotify=true
+Keywords=calamares;install;installer;

@@ -1,0 +1,76 @@
+/* SweetPotato GTK4 overrides — charcoal chrome, potato accents */
+@define-color window_bg_color #1d1f21;
+@define-color window_fg_color #f5e6e8;
+@define-color view_bg_color #151617;
+@define-color view_fg_color #f5e6e8;
+@define-color headerbar_bg_color #222426;
+@define-color headerbar_fg_color #f5e6e8;
+@define-color accent_bg_color #a73b50;
+@define-color accent_fg_color #ffffff;
+@define-color accent_color #f79b29;
+@define-color destructive_bg_color #7a2030;
+@define-color destructive_fg_color #ffffff;
+@define-color success_bg_color #c47a3a;
+@define-color success_fg_color #1d1f21;
+@define-color warning_bg_color #f79b29;
+@define-color warning_fg_color #1d1f21;
+@define-color error_bg_color #a73b50;
+@define-color error_fg_color #ffffff;
+@define-color card_bg_color #222426;
+@define-color card_fg_color #f5e6e8;
+@define-color popover_bg_color #222426;
+@define-color popover_fg_color #f5e6e8;
+@define-color shade_color rgba(0,0,0,0.35);
+@define-color sidebar_bg_color #222426;
+@define-color sidebar_fg_color #f5e6e8;
+@define-color secondary_sidebar_bg_color #1d1f21;
+@define-color secondary_sidebar_fg_color #f5e6e8;
+
+window {
+  background-color: @window_bg_color;
+  color: @window_fg_color;
+}
+
+headerbar {
+  background-color: @headerbar_bg_color;
+  color: @headerbar_fg_color;
+}
+
+button:hover {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+}
+
+button.suggested-action {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+}
+
+*:selected {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+}
+
+check:checked,
+radio:checked,
+switch:checked {
+  background-color: @accent_color;
+}
+
+progressbar progress {
+  background-color: @accent_color;
+}
+
+link {
+  color: @accent_color;
+}
+
+/* Tab underline — override Adwaita blue accent */
+notebook > header > tabs > tab:checked {
+  box-shadow: inset 0 -3px @accent_color;
+  border-bottom-color: @accent_color;
+}
+
+stackswitcher > button:checked {
+  box-shadow: inset 0 -3px @accent_color;
+}

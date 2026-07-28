@@ -1,0 +1,37 @@
+/* SweetPotato — allow wheel users to manage disks via udisks2 on Sway.
+ *
+ * Without a working polkit agent + session rules, gnome-disks fails with:
+ *   "Not authorized to perform operation" (UDisks error quark 4)
+ * when restoring an ISO to USB.
+ */
+polkit.addRule(function (action, subject) {
+    if (!subject.isInGroup("wheel")) {
+        return;
+    }
+
+    var id = action.id;
+    if (id.indexOf("org.freedesktop.udisks2.") !== 0) {
+        return;
+    }
+
+    // Disk image restore, format, eject, power-off, unlock, etc.
+    if (
+        id == "org.freedesktop.udisks2.modify-device" ||
+        id == "org.freedesktop.udisks2.modify-device-system" ||
+        id == "org.freedesktop.udisks2.open-device" ||
+        id == "org.freedesktop.udisks2.open-device-system" ||
+        id == "org.freedesktop.udisks2.filesystem-mount" ||
+        id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+        id == "org.freedesktop.udisks2.filesystem-mount-other-seat" ||
+        id == "org.freedesktop.udisks2.filesystem-unmount-others" ||
+        id == "org.freedesktop.udisks2.encrypted-unlock" ||
+        id == "org.freedesktop.udisks2.encrypted-unlock-system" ||
+        id == "org.freedesktop.udisks2.encrypted-unlock-other-seat" ||
+        id == "org.freedesktop.udisks2.eject-media" ||
+        id == "org.freedesktop.udisks2.power-off-drive" ||
+        id == "org.freedesktop.udisks2.power-off-drive-system" ||
+        id == "org.freedesktop.udisks2.power-off-drive-other-seat"
+    ) {
+        return polkit.Result.YES;
+    }
+});

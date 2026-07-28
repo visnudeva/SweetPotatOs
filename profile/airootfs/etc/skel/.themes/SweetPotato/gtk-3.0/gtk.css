@@ -1,0 +1,114 @@
+/* SweetPotato GTK3 — Adwaita-dark base + potato accents
+   Adwaita resources ship with GTK (portable on any Arch). */
+@import url("resource:///org/gtk/libgtk/theme/Adwaita/gtk-contained-dark.css");
+
+@define-color potato_red #a73b50;
+@define-color potato_orange #f79b29;
+
+/* Selections */
+*:selected,
+*:selected:focus,
+.view:selected,
+.view:selected:focus,
+treeview:selected,
+list row:selected,
+listview row:selected,
+iconview:selected {
+  background-color: @potato_red;
+  color: #ffffff;
+}
+
+/* Accent — orange outside Thunar */
+progressbar progress,
+progressbar trough > progress {
+  background-color: @potato_orange;
+}
+
+button.suggested-action {
+  background-image: image(@potato_red);
+  border-color: @potato_red;
+  color: #ffffff;
+}
+
+button.suggested-action:hover {
+  background-image: image(@potato_orange);
+  border-color: @potato_orange;
+  color: #1d1f21;
+}
+
+menubar > menuitem:hover,
+menubar > menuitem:selected {
+  background-color: @potato_red;
+  color: #ffffff;
+}
+
+headerbar button:hover,
+toolbar.horizontal button:hover {
+  color: #ffffff;
+}
+
+scrollbar slider:hover {
+  background-color: @potato_red;
+}
+
+link,
+a {
+  color: @potato_orange;
+}
+
+/* SSD / gtk-nocsd */
+decoration,
+.window-frame,
+.window-frame:backdrop {
+  box-shadow: none;
+  border-style: none;
+  margin: 0;
+  border-radius: 0;
+}
+
+.titlebar,
+headerbar {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+menubar > menuitem {
+  padding: 4px 10px;
+}
+
+/* Thunar — red only */
+.thunar *:selected,
+.thunar .view:selected,
+.thunar .view:selected:focus,
+.thunar treeview:selected,
+.thunar list row:selected,
+.thunar .sidebar row:selected,
+.thunar iconview:selected {
+  background-color: @potato_red;
+  color: #ffffff;
+}
+
+.thunar check:checked,
+.thunar radio:checked,
+.thunar switch:checked,
+.thunar button:checked,
+.thunar .path-bar button:checked {
+  background-image: image(@potato_red);
+  border-color: @potato_red;
+  color: #ffffff;
+}
+
+.thunar progressbar progress {
+  background-color: @potato_red;
+}
+
+.thunar link,
+.thunar a {
+  color: @potato_red;
+}
+
+.thunar menubar > menuitem:hover,
+.thunar menubar > menuitem:selected {
+  background-color: @potato_red;
+  color: #ffffff;
+}

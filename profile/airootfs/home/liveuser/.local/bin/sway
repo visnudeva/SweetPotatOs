@@ -1,0 +1,5 @@
+#!/bin/sh
+# SweetPotato: drop Archcraft gtk-nocsd so GTK apps keep close buttons
+unset LD_PRELOAD
+export GTK_CSD=1
+exec /usr/bin/sway "$@"

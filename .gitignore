@@ -1,0 +1,16 @@
+# Build artifacts
+work/
+out/
+.aur-build/
+
+# Local pacman repo packages (large; rebuild with --build-calamares)
+repo/*.pkg.tar.*
+repo/*.pkg.tar.*.sig
+repo/*.db*
+repo/*.files*
+!repo/.gitkeep
+
+# Editor / OS junk
+*~
+*.swp
+.DS_Store

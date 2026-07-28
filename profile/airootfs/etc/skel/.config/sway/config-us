@@ -1,0 +1,250 @@
+# SweetPotato sway config (US QWERTY)
+#
+# Read `man 5 sway` for a complete reference.
+
+### Variables
+#
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+# Your preferred terminal emulator
+set $term foot
+# Your preferred application launcher (desktop apps only)
+set $menu ~/.config/sway/scripts/applauncher.sh
+# Your preferred web browser
+set $web firefox
+# Your preferred file browser
+set $file thunar
+# Your preferred editor
+set $editor geany
+
+### Output configuration
+#
+# Default wallpaper; wallpaper.sh overwrites ~/.config/sway/wallpaper.conf
+output * bg ~/.local/share/backgrounds/SweetPotato.png fill
+include ~/.config/sway/wallpaper.conf
+
+### Idle configuration
+#
+exec swayidle -w \
+          timeout 300 'swaylock -f' \
+          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+          before-sleep 'swaylock -f'
+
+### Input configuration
+#
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    drag_lock disabled
+    natural_scroll enabled
+    middle_emulation enabled
+}
+
+input type:keyboard {
+    xkb_layout "us"
+}
+
+# Three-finger swipes to switch workspaces
+seat * xcursor_theme capitaine-cursors 24
+
+bindgesture swipe:3:right workspace next_on_output
+bindgesture swipe:3:left workspace prev_on_output
+
+### Key bindings
+#
+# Basics:
+#
+    # Start a terminal
+    bindsym $mod+Return exec $term
+
+    # Kill focused window
+    bindsym $mod+q kill
+
+    # App launcher
+    bindsym $mod+space exec $menu
+
+    # Wi‑Fi / NetworkManager (swaybar tray clicks don't open menus)
+    bindsym $mod+n exec networkmanager_dmenu
+
+    # Install SweetPotatOs to disk
+    bindsym $mod+i exec sudo -E calamares
+
+    # Wallpaper selector
+    bindsym $mod+Shift+w exec ~/.config/sway/scripts/wallpaper.sh
+
+    # Start your web browser
+    bindsym $mod+w exec $web
+
+    # Start your file browser
+    bindsym $mod+f exec $file
+
+    # Start your editor
+    bindsym $mod+e exec $editor
+
+    # Lock screen (Mod+l — vim focus-right moved to arrow keys only)
+    bindsym $mod+l exec swaylock -f
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # Exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+    # Power off
+    bindsym $mod+o exec swaynag -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
+#
+# Moving around:
+#
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    # $right is "l" — reserved for lock; use arrows for focus right
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces (QWERTY):
+#
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
+    bindsym $mod+0 workspace number 10
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
+    bindsym $mod+Shift+0 move container to workspace number 10
+#
+# Layout stuff:
+#
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Make the current focus fullscreen
+    bindsym $mod+Shift+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+Tab focus mode_toggle
+
+    # Move focus to the parent container
+    bindsym $mod+a focus parent
+#
+# Resizing containers:
+#
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+#
+# Utilities:
+#
+    bindsym --locked XF86AudioMute exec ~/.config/sway/scripts/volume.sh mute
+    bindsym --locked XF86AudioLowerVolume exec ~/.config/sway/scripts/volume.sh down
+    bindsym --locked XF86AudioRaiseVolume exec ~/.config/sway/scripts/volume.sh up
+    bindsym --locked XF86AudioMicMute exec ~/.config/sway/scripts/volume.sh mic
+
+    bindsym --locked XF86AudioPlay exec ~/.config/sway/scripts/media.sh play-pause
+    bindsym --locked XF86AudioPause exec ~/.config/sway/scripts/media.sh play-pause
+    bindsym --locked XF86AudioPrev exec ~/.config/sway/scripts/media.sh prev
+    bindsym --locked XF86AudioNext exec ~/.config/sway/scripts/media.sh next
+    bindsym --locked XF86AudioStop exec ~/.config/sway/scripts/media.sh stop
+
+    bindsym --locked XF86MonBrightnessDown exec ~/.config/sway/scripts/brightness.sh down
+    bindsym --locked XF86MonBrightnessUp exec ~/.config/sway/scripts/brightness.sh up
+
+    bindsym Print exec grim
+    bindsym $mod+Shift+Print exec grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png
+
+# ============================================
+# Window Decorations - Sweet Potato
+# border | background | text | indicator | child_border
+# ============================================
+default_border pixel 2
+default_floating_border pixel 2
+hide_edge_borders smart
+
+client.focused           #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
+client.focused_inactive  #3a3a3a #1d1f21 #aaaaaa #3a3a3a #3a3a3a
+client.unfocused         #3a3a3a #1d1f21 #888888 #3a3a3a #3a3a3a
+client.urgent            #f79b29 #f79b29 #1d1f21 #a73b50 #f79b29
+client.placeholder       #1d1f21 #1d1f21 #888888 #1d1f21 #1d1f21
+client.background        #1d1f21
+
+# ============================================
+# Status Bar
+# ============================================
+bar {
+    position top
+    status_command ~/.config/sway/scripts/status.sh
+    tray_padding 5
+    icon_theme Papirus-Dark
+    font pango:Noto Sans 10
+
+    colors {
+        statusline #ffffff
+        background #1d1f21
+        separator  #a73b50
+
+        focused_workspace     #f79b29 #a73b50 #ffffff
+        active_workspace      #a73b50 #1d1f21 #ffffff
+        inactive_workspace    #1d1f21 #1d1f21 #aaaaaa
+        urgent_workspace      #f79b29 #f79b29 #1d1f21
+        binding_mode          #f79b29 #f79b29 #1d1f21
+    }
+}
+
+# Polkit agent for GUI privilege prompts
+exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+# Apply GTK/icon/cursor theme (Thunar reads gsettings/xfconf/xsettingsd)
+exec ~/.config/sway/scripts/apply-theme.sh
+# Notifications, USB automount, tray applets
+exec mako
+exec udiskie --tray
+exec nm-applet --indicator
+exec blueman-applet
+
+include /etc/sway/config.d/*

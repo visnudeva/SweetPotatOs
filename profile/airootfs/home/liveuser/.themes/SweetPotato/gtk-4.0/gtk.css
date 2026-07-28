@@ -1,0 +1,28 @@
+/* SweetPotato GTK4 — keep light overlays on system dark theme */
+@define-color accent_bg_color #a73b50;
+@define-color accent_fg_color #ffffff;
+@define-color accent_color #f79b29;
+
+*:selected {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+}
+
+check:checked,
+radio:checked,
+switch:checked {
+  background-color: @accent_color;
+}
+
+progressbar progress {
+  background-color: @accent_color;
+}
+
+link {
+  color: @accent_color;
+}
+
+button.suggested-action {
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+}

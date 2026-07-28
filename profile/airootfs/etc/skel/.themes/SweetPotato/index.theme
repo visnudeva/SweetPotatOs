@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=SweetPotato
+Comment=Sweet Potato dark theme (#a73b50 / #f79b29)
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=SweetPotato
+MetacityTheme=SweetPotato
+IconTheme=Papirus-Dark
+CursorTheme=capitaine-cursors
+ButtonLayout=close,minimize,maximize:

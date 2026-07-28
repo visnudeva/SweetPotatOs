@@ -1,0 +1,36 @@
+# SweetPotato mako
+# charcoal #1d1f21 · potato red #a73b50 · potato orange #f79b29
+
+font=Noto Sans 11
+background-color=#1d1f21ee
+text-color=#f5e6e8ff
+border-color=#f79b29ff
+border-size=2
+border-radius=6
+progress-color=over #a73b50ff
+width=360
+height=120
+margin=8
+padding=10
+default-timeout=5000
+max-visible=5
+icons=1
+max-icon-size=48
+anchor=top-right
+layer=overlay
+markup=1
+actions=1
+
+[urgency=low]
+border-color=#3a3a3aff
+default-timeout=3000
+
+[urgency=normal]
+border-color=#f79b29ff
+default-timeout=5000
+
+[urgency=critical]
+background-color=#1d1f21ff
+border-color=#a73b50ff
+text-color=#ffffffff
+default-timeout=0
