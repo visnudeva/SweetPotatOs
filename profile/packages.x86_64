@@ -152,6 +152,7 @@ flatpak
 bazaar
 gtk3
 gtk4
+gnome-themes-extra
 papirus-icon-theme
 capitaine-cursors
 xsettingsd
@@ -164,4 +165,5 @@ polkit-gnome
 wireless_tools
 libnotify
 fastfetch
+chafa
 ly

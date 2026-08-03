@@ -1,5 +1,5 @@
 Welcome to SweetPotatOs.
 
   Graphical session: log in as liveuser on tty1 (Sway starts automatically).
-  Install to disk:   Mod+i in Sway, or run: sudo calamares
+  Install to disk:   opens automatically, or Mod+i / sweetpotatoos-calamares
 

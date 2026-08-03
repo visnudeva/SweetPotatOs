@@ -10,8 +10,12 @@ pick_gtk_theme() {
     echo "${THEME}"
     return
   fi
-  for candidate in Adwaita-dark Adwaita; do
-    if [[ -d "/usr/share/themes/${candidate}" ]] || [[ -d "${HOME}/.themes/${candidate}" ]]; then
+  # Prefer Adwaita-dark (gnome-themes-extra). SweetPotato embeds dark Adwaita
+  # via GTK resource — use it before falling back to light Adwaita.
+  for candidate in Adwaita-dark SweetPotato Adwaita; do
+    if [[ -d "/usr/share/themes/${candidate}" ]] \
+      || [[ -d "${HOME}/.themes/${candidate}" ]] \
+      || [[ -d "${HOME}/.local/share/themes/${candidate}" ]]; then
       echo "${candidate}"
       return
     fi

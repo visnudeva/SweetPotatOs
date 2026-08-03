@@ -12,7 +12,7 @@ Colors: **#a73b50** potato red · **#f79b29** potato orange · **#1d1f21** charc
 
 - Live Sway session (`liveuser`, empty password, sudo without password)
 - Autologin on tty1 → SweetPotato desktop (foot, Thunar, mako, NetworkManager, …)
-- Installer: **Mod+i**, desktop *Install SweetPotatOs*, or `sudo calamares`
+- Installer autostarts on the live desktop; also **Mod+i**, desktop *Install SweetPotatOs*, or `sweetpotatoos-calamares`
 - Installed system uses the live squashfs, GRUB, and **Ly** on tty2
 
 ## Prerequisites
@@ -91,7 +91,12 @@ SweetPotatOs/
 └── work/             # mkarchiso work dir (gitignored)
 ```
 
-Theme files are mirrored from [SweetPotato](https://github.com/visnudeva/SweetPotato) into `profile/airootfs/etc/skel`. Re-copy after theme updates.
+Theme files are mirrored from [SweetPotato](https://github.com/visnudeva/SweetPotato) into `profile/airootfs/etc/skel` and `home/liveuser`. Re-sync after theme updates:
+
+```bash
+./sync-theme.sh
+```
+
 
 ## Known limitations
 

@@ -24,9 +24,9 @@ set $editor geany
 
 ### Output configuration
 #
-# Default wallpaper; wallpaper.sh overwrites ~/.config/sway/wallpaper.conf
-output * bg ~/.local/share/backgrounds/SPKeybinds.png fill
-include ~/.config/sway/wallpaper.conf
+# Wallpaper is applied by ensure-wallpaper.sh (avoids sway parse errors when
+# the image path is missing). Preference is stored in wallpaper.conf.
+exec_always ~/.config/sway/scripts/ensure-wallpaper.sh
 
 ### Idle configuration
 #
@@ -70,9 +70,6 @@ bindgesture swipe:3:left workspace prev_on_output
 
     # Wi‑Fi / NetworkManager (swaybar tray clicks don't open menus)
     bindsym $mod+n exec networkmanager_dmenu
-
-    # Install SweetPotatOs to disk
-    bindsym $mod+i exec sudo -E calamares
 
     # Wallpaper selector
     bindsym $mod+Shift+w exec ~/.config/sway/scripts/wallpaper.sh
@@ -196,8 +193,8 @@ bindsym $mod+r mode "resize"
     bindsym --locked XF86MonBrightnessDown exec ~/.config/sway/scripts/brightness.sh down
     bindsym --locked XF86MonBrightnessUp exec ~/.config/sway/scripts/brightness.sh up
 
-    bindsym Print exec grim
-    bindsym $mod+Shift+Print exec grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png
+    bindsym --locked Print exec ~/.config/sway/scripts/screenshot.sh full
+    bindsym $mod+Shift+Print exec ~/.config/sway/scripts/screenshot.sh region
     # Screen record toggle (region + audio → ~/Videos); press again to stop
     bindsym $mod+Print exec ~/.config/sway/scripts/record.sh
 
@@ -239,8 +236,8 @@ bar {
     }
 }
 
-# Polkit agent for GUI privilege prompts
-exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+# Polkit agent for GUI privilege prompts (gnome or xfce)
+exec --no-startup-id sh -c '/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 || /usr/lib/xfce-polkit/xfce-polkit || /usr/lib/xfce4/xfce-polkit || true'
 # Apply GTK/icon/cursor theme (Thunar reads gsettings/xfconf/xsettingsd)
 exec ~/.config/sway/scripts/apply-theme.sh
 # Notifications, USB automount, tray applets

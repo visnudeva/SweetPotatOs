@@ -2,7 +2,7 @@
 Type=Application
 Name=Install SweetPotatOs
 Comment=Launch the Calamares installer
-Exec=sudo -E calamares
+Exec=sweetpotatoos-calamares
 Icon=sweetpotatoos
 Terminal=false
 Categories=System;

@@ -1,0 +1,12 @@
+#!/bin/sh
+# Launch Calamares with the live user's display (Wayland/X11).
+# Plain "sudo calamares" drops WAYLAND_DISPLAY / XDG_RUNTIME_DIR and Qt fails.
+
+set -eu
+
+if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+  export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-wayland}"
+fi
+
+exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,QT_QPA_PLATFORM,XAUTHORITY,DBUS_SESSION_BUS_ADDRESS \
+  /usr/bin/calamares "$@"

@@ -384,18 +384,36 @@ iconview.content-view.check:checked:active:not(list),
   box-shadow: none;
 }
 
-/* Separators / paned grips — grey, not white */
+/* Separators / paned grips — charcoal, never Adwaita light/white */
+separator,
+separator.horizontal,
+separator.vertical,
+paned > separator,
+paned.horizontal > separator,
+paned.vertical > separator,
 .thunar separator,
 .thunar paned > separator,
 .thunar .sidebar separator,
-separator {
+.thunar toolbar separator,
+frame > border,
+.frame > border {
   background-image: none;
   background-color: @borders_color;
   border: none;
+  border-color: @borders_color;
   min-width: 1px;
   min-height: 1px;
 }
 
-.thunar paned > separator:hover {
+.thunar paned > separator:hover,
+paned > separator:hover {
   background-color: #3a3f42;
+}
+
+/* Editor host chrome (Geany Scintilla sits in a paned/notebook) */
+paned > notebook,
+paned > notebook > stack {
+  background-color: @potato_charcoal;
+  border-color: @borders_color;
+  box-shadow: none;
 }

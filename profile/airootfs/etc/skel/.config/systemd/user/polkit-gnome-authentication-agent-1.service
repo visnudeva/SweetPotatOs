@@ -5,7 +5,8 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+# Prefer polkit-gnome; fall back to xfce-polkit (Archcraft / XFCE hosts)
+ExecStart=/bin/sh -c 'if [ -x /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 ]; then exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1; elif [ -x /usr/lib/xfce-polkit/xfce-polkit ]; then exec /usr/lib/xfce-polkit/xfce-polkit; elif [ -x /usr/lib/xfce4/xfce-polkit ]; then exec /usr/lib/xfce4/xfce-polkit; else echo "no polkit agent found" >&2; exit 1; fi'
 Restart=on-failure
 RestartSec=1
 
