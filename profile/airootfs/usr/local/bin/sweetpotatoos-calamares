@@ -1,12 +1,23 @@
 #!/bin/sh
-# Launch Calamares with the live user's display (Wayland/X11).
-# Plain "sudo calamares" drops WAYLAND_DISPLAY / XDG_RUNTIME_DIR and Qt fails.
+# Launch Calamares on the live Sway session.
+# Root cannot attach to the user's Wayland socket, so use XWayland (xcb) + xhost.
 
 set -eu
 
-if [ -n "${WAYLAND_DISPLAY:-}" ]; then
-  export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-wayland}"
+export DISPLAY="${DISPLAY:-:0}"
+export QT_QPA_PLATFORM=xcb
+
+cleanup() {
+  if command -v xhost >/dev/null 2>&1; then
+    xhost -SI:localuser:root >/dev/null 2>&1 || true
+  fi
+}
+
+# Allow root's Qt client onto the live user's XWayland display
+if command -v xhost >/dev/null 2>&1; then
+  xhost +SI:localuser:root >/dev/null 2>&1 || true
+  trap cleanup EXIT
 fi
 
-exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,QT_QPA_PLATFORM,XAUTHORITY,DBUS_SESSION_BUS_ADDRESS \
+sudo --preserve-env=DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,QT_QPA_PLATFORM,DBUS_SESSION_BUS_ADDRESS \
   /usr/bin/calamares "$@"

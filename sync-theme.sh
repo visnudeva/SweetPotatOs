@@ -15,19 +15,19 @@ fi
 
 inject_live_calamares() {
   local f="$1"
-  if ! grep -q 'sweetpotatoos-calamares' "${f}"; then
+  if ! grep -q 'bindsym \$mod+i exec sweetpotatoos-calamares' "${f}"; then
     sed -i '/bindsym \$mod+n exec networkmanager_dmenu/a\
 \
     # Install SweetPotatOs to disk\
     bindsym $mod+i exec sweetpotatoos-calamares
 ' "${f}"
   fi
-  if ! grep -q 'exec sleep 2 && sweetpotatoos-calamares' "${f}"; then
-    sed -i '/^include \/etc\/sway\/config.d\/\*/i\
+  # Normalize autostart to XWayland-safe launcher with a short delay
+  sed -i '/Autostart installer on the live ISO session/,+1d' "${f}"
+  sed -i '/^include \/etc\/sway\/config.d\/\*/i\
 # Autostart installer on the live ISO session\
-exec sleep 2 && sweetpotatoos-calamares\
+exec sh -c '\''sleep 3; sweetpotatoos-calamares'\''\
 ' "${f}"
-  fi
   sed -i 's|exec --no-startup-id sh -c.*polkit.*|exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1|' "${f}"
 }
 
@@ -71,7 +71,9 @@ sync_common_into() {
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
   printf 'output * bg "~/.local/share/backgrounds/SPKeybinds.png" fill\n' \
     > "${dest}/.config/sway/wallpaper.conf"
-  if [[ -f "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
+  if [[ -f "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]] \
+     && [[ "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" \
+          != "${dest}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
     cp -f "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" \
       "${dest}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml"
   fi

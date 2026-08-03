@@ -250,6 +250,6 @@ exec nm-applet --indicator
 exec blueman-applet
 
 # Autostart installer on the live ISO session
-exec sleep 2 && sweetpotatoos-calamares
+exec sh -c 'sleep 3; sweetpotatoos-calamares'
 
 include /etc/sway/config.d/*

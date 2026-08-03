@@ -161,6 +161,8 @@ dconf
 noto-fonts
 noto-fonts-emoji
 xorg-xwayland
+xorg-xhost
+xcb-util-cursor
 polkit-gnome
 wireless_tools
 libnotify
