@@ -1,0 +1,12 @@
+#!/bin/sh
+# Apply SweetPotatOs branding after filesystem is installed (avoids pacstrap conflicts).
+set -eu
+BRAND=/usr/local/share/sweetpotatoos
+
+install -Dm644 "${BRAND}/os-release" /usr/lib/os-release
+if [ -L /etc/os-release ] || [ ! -e /etc/os-release ]; then
+  ln -sf ../usr/lib/os-release /etc/os-release
+else
+  install -Dm644 "${BRAND}/os-release" /etc/os-release
+fi
+install -Dm644 "${BRAND}/issue" /etc/issue

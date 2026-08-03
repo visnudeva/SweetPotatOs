@@ -1,0 +1,14 @@
+# Apply SweetPotatOs os-release / issue after the filesystem package lands.
+# (Shipping those paths directly in airootfs conflicts during pacstrap.)
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = filesystem
+
+[Action]
+Description = Applying SweetPotatOs branding (os-release / issue)...
+When = PostTransaction
+Depends = sh
+Exec = /usr/local/bin/sweetpotatoos-branding
