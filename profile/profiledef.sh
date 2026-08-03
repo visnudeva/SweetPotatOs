@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-iso_name="sweetpotatoos"
+iso_name="SweetPotatOs"
 iso_label="SPOTATO_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
 iso_publisher="SweetPotatOs"
 iso_application="SweetPotatOs Live"

@@ -90,7 +90,20 @@ while true; do
     # Date/Time
     datetime=$(date '+%a %d %b %H:%M')
 
-    echo "CPU:${cpu_usage}% • RAM:${ram_usage}% • DISK:${disk_usage}% • ${brightness_display} • BAT:${battery_display} • ${volume_display} • ${wifi_display} • ${datetime}"
+    # Focused window title (truncate so metrics stay readable)
+    win_title=$(swaymsg -t get_tree 2>/dev/null \
+      | jq -r '.. | objects | select(.focused == true) | .name // empty' 2>/dev/null \
+      | head -1)
+    win_title=${win_title//$'\n'/ }
+    if [ ${#win_title} -gt 48 ]; then
+        win_title="${win_title:0:45}..."
+    fi
+
+    if [ -n "$win_title" ]; then
+        echo "${win_title}  •  CPU:${cpu_usage}% • RAM:${ram_usage}% • DISK:${disk_usage}% • ${brightness_display} • BAT:${battery_display} • ${volume_display} • ${wifi_display} • ${datetime}"
+    else
+        echo "CPU:${cpu_usage}% • RAM:${ram_usage}% • DISK:${disk_usage}% • ${brightness_display} • BAT:${battery_display} • ${volume_display} • ${wifi_display} • ${datetime}"
+    fi
 
     sleep 1
 done

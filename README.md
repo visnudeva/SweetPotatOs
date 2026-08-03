@@ -35,7 +35,7 @@ sudo ./build.sh --build-calamares
 sudo ./build.sh
 ```
 
-ISO output: `out/sweetpotatoos-*.iso`  
+ISO output: `out/SweetPotatOs-*.iso`  
 Work tree: `work/` (removed automatically at the start of each ISO build)
 
 ### Local Calamares repo
@@ -72,7 +72,7 @@ Or:
 
 ```bash
 lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
-sudo dd if=out/sweetpotatoos-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
+sudo dd if=out/SweetPotatOs-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
 ## Layout

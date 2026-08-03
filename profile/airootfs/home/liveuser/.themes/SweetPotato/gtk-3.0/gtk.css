@@ -146,3 +146,49 @@ iconview.content-view.check:checked:not(list),
   background-color: @potato_red;
   color: #ffffff;
 }
+
+/* Thunar chrome — kill light borders around location / path bar */
+.thunar toolbar,
+.thunar .location-toolbar,
+.thunar .location-bar,
+.thunar .path-bar,
+.thunar frame,
+.thunar frame > border {
+  background-image: none;
+  background-color: #222426;
+  border-color: #2e3234;
+  color: #f5e6e8;
+  box-shadow: none;
+}
+
+.thunar .path-bar button,
+.thunar .location-bar button,
+.thunar toolbar button,
+.thunar toolbar button.flat,
+.thunar .linked > button {
+  background-image: none;
+  background-color: #222426;
+  border-color: #2e3234;
+  color: #f5e6e8;
+  box-shadow: none;
+}
+
+.thunar entry,
+.thunar .location-bar entry,
+.thunar toolbar entry {
+  background-image: none;
+  background-color: #181a1b;
+  border-color: #2e3234;
+  color: #f5e6e8;
+  box-shadow: none;
+}
+
+.thunar separator,
+.thunar paned > separator,
+separator {
+  background-image: none;
+  background-color: #2e3234;
+  border: none;
+  min-width: 1px;
+  min-height: 1px;
+}

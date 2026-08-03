@@ -324,3 +324,78 @@ iconview.content-view.check:checked:active:not(list),
   background-color: @potato_red;
   color: #ffffff;
 }
+
+/* Thunar chrome — kill Adwaita light borders around location / path bar */
+.thunar toolbar,
+.thunar .location-toolbar,
+.thunar .location-bar,
+.thunar .path-bar,
+.thunar frame,
+.thunar frame > border {
+  background-image: none;
+  background-color: @potato_chrome;
+  border-color: @borders_color;
+  color: @potato_fg;
+  box-shadow: none;
+}
+
+.thunar .path-bar button,
+.thunar .path-bar button:hover,
+.thunar .path-bar button:checked,
+.thunar .location-bar button,
+.thunar toolbar button,
+.thunar toolbar button.flat,
+.thunar .linked > button {
+  background-image: none;
+  background-color: @potato_chrome;
+  border-color: @borders_color;
+  color: @potato_fg;
+  box-shadow: none;
+  outline: none;
+}
+
+.thunar .path-bar button:hover,
+.thunar .location-bar button:hover,
+.thunar toolbar button:hover {
+  background-color: #2c3032;
+}
+
+.thunar .path-bar button:checked,
+.thunar .location-bar button:checked {
+  background-color: @potato_red;
+  border-color: @potato_red;
+  color: #ffffff;
+}
+
+.thunar entry,
+.thunar .location-bar entry,
+.thunar toolbar entry {
+  background-image: none;
+  background-color: @potato_panel;
+  border-color: @borders_color;
+  color: @potato_fg;
+  box-shadow: none;
+  caret-color: @potato_fg;
+}
+
+.thunar entry:focus,
+.thunar .location-bar entry:focus {
+  border-color: @potato_red;
+  box-shadow: none;
+}
+
+/* Separators / paned grips — grey, not white */
+.thunar separator,
+.thunar paned > separator,
+.thunar .sidebar separator,
+separator {
+  background-image: none;
+  background-color: @borders_color;
+  border: none;
+  min-width: 1px;
+  min-height: 1px;
+}
+
+.thunar paned > separator:hover {
+  background-color: #3a3f42;
+}

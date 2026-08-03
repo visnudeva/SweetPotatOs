@@ -99,6 +99,7 @@ swaylock
 foot
 wmenu
 j4-dmenu-desktop
+jq
 grim
 slurp
 wf-recorder
@@ -162,4 +163,5 @@ xorg-xwayland
 polkit-gnome
 wireless_tools
 libnotify
+fastfetch
 ly
