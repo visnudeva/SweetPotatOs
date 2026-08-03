@@ -1,11 +1,20 @@
 #!/bin/sh
 # Launch Calamares on the live Sway session.
-# Root cannot attach to the user's Wayland socket, so use XWayland (xcb) + xhost.
+# Root cannot use the user's Wayland socket; use XWayland (xcb) + xhost.
+# Do not call plain "sudo/pkexec calamares" — those strip display env.
 
 set -eu
 
 export DISPLAY="${DISPLAY:-:0}"
 export QT_QPA_PLATFORM=xcb
+# Avoid Qt trying Wayland first when session type is wayland
+unset WAYLAND_DISPLAY || true
+
+notify() {
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send -a "SweetPotatOs" -i sweetpotatoos "$@" >/dev/null 2>&1 || true
+  fi
+}
 
 cleanup() {
   if command -v xhost >/dev/null 2>&1; then
@@ -13,11 +22,34 @@ cleanup() {
   fi
 }
 
-# Allow root's Qt client onto the live user's XWayland display
-if command -v xhost >/dev/null 2>&1; then
-  xhost +SI:localuser:root >/dev/null 2>&1 || true
-  trap cleanup EXIT
+# Sway starts XWayland lazily; retry until the X display accepts clients.
+if ! command -v xhost >/dev/null 2>&1; then
+  notify "Installer" "xhost is missing; cannot open Calamares on Wayland."
+  echo "sweetpotatoos-calamares: xhost not found" >&2
+  exit 1
 fi
 
-sudo --preserve-env=DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR,XDG_SESSION_TYPE,QT_QPA_PLATFORM,DBUS_SESSION_BUS_ADDRESS \
+ok=0
+i=0
+while [ "$i" -lt 50 ]; do
+  if xhost +SI:localuser:root >/dev/null 2>&1; then
+    ok=1
+    break
+  fi
+  i=$((i + 1))
+  sleep 0.2
+done
+
+if [ "$ok" -ne 1 ]; then
+  notify "Installer" "Display not ready (XWayland). Try Mod+i again in a few seconds."
+  echo "sweetpotatoos-calamares: could not access DISPLAY=${DISPLAY}" >&2
+  exit 1
+fi
+
+trap cleanup EXIT
+
+# Drop Wayland/session hints so Qt stays on xcb as root
+sudo --preserve-env=DISPLAY,XAUTHORITY,QT_QPA_PLATFORM \
+  env -u WAYLAND_DISPLAY -u XDG_SESSION_TYPE \
+  QT_QPA_PLATFORM=xcb \
   /usr/bin/calamares "$@"

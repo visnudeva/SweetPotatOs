@@ -59,6 +59,7 @@ sync_common_into() {
   cp -f "${SP}/xsettingsd/xsettingsd.conf" "${dest}/.config/xsettingsd/"
   cp -f "${SP}/fastfetch/config.jsonc" "${dest}/.config/fastfetch/"
   cp -f "${SP}/fastfetch/SPLogo.png" "${dest}/.config/fastfetch/"
+  cp -f "${SP}/fastfetch/SPLogo.asc" "${dest}/.config/fastfetch/"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/sway-portals.conf"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/wlroots-portals.conf"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/swayfx-portals.conf"
@@ -149,6 +150,11 @@ show_linenumber_margin=true
 pref_main_load_session=false
 EOF
 mkdir -p "${ISO}/home/liveuser/Desktop"
+
+# System logo for fastfetch (absolute path in config.jsonc)
+mkdir -p "${ISO}/usr/local/share/sweetpotatoos"
+cp -f "${SP}/fastfetch/SPLogo.asc" "${ISO}/usr/local/share/sweetpotatoos/SPLogo.asc"
+cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatoos/SPLogo.png"
 
 # Assets
 mkdir -p "${ROOT}/assets"

@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Install SweetPotatOs
+GenericName=System Installer
+Comment=Install SweetPotatOs on your machine
+Exec=sweetpotatoos-calamares
+TryExec=sweetpotatoos-calamares
+Icon=sweetpotatoos
+Terminal=false
+StartupNotify=true
+Categories=Qt;System;Settings;
+Keywords=calamares;install;installer;system;
+X-AppStream-Ignore=true
