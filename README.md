@@ -59,6 +59,8 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Desktop | Sway + SweetPotato |
 | Wi‑Fi | `Mod+n` |
 | Wallpaper | `Mod+Shift+w` |
+| Screenshot | `Print` · region `Mod+Shift+Print` |
+| Screen record | `Mod+Print` (toggle, region + audio → `~/Videos`) |
 | Installer | `Mod+i` |
 
 ## Write ISO to USB
