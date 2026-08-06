@@ -72,7 +72,7 @@ bindgesture swipe:3:left workspace prev_on_output
     bindsym $mod+n exec networkmanager_dmenu
 
     # Install SweetPotatOs to disk
-    bindsym $mod+i exec sweetpotatoos-calamares
+    bindsym $mod+i exec sweetpotatos-calamares
 
     # Wallpaper selector
     bindsym $mod+Shift+w exec ~/.config/sway/scripts/wallpaper.sh
@@ -250,6 +250,9 @@ exec nm-applet --indicator
 exec blueman-applet
 
 # Autostart installer on the live ISO session
-exec sh -c 'sleep 3; sweetpotatoos-calamares'
+exec sh -c 'sleep 5; sweetpotatos-calamares'
+
+# Calamares installer (Wayland app_id)
+for_window [app_id="io.calamares.calamares"] floating enable
 
 include /etc/sway/config.d/*

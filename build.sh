@@ -42,7 +42,7 @@ if ! ls "${REPO}"/*.pkg.tar.* >/dev/null 2>&1; then
       exit 1
     }
     cp "${BUILD_DIR}"/*.pkg.tar.* "${REPO}/"
-    repo-add "${REPO}/sweetpotatoos.db.tar.gz" "${REPO}"/*.pkg.tar.*
+    repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
     echo "[+] calamares added to local repo."
   else
     cat >&2 <<EOF
@@ -57,9 +57,9 @@ EOF
   fi
 fi
 
-if [[ ! -f "${REPO}/sweetpotatoos.db.tar.gz" ]]; then
+if [[ ! -f "${REPO}/sweetpotatos.db.tar.gz" ]]; then
   echo "[*] Initializing repo database..."
-  repo-add "${REPO}/sweetpotatoos.db.tar.gz" "${REPO}"/*.pkg.tar.* 2>/dev/null || true
+  repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.* 2>/dev/null || true
 fi
 
 echo "[*] Building SweetPotatOs ISO (profile: ${PROFILE})..."

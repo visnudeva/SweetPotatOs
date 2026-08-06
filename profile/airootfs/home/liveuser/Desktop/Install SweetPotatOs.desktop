@@ -2,7 +2,7 @@
 Type=Application
 Name=Install SweetPotatOs
 Comment=Launch the Calamares installer
-Exec=sweetpotatoos-calamares
-Icon=sweetpotatoos
+Exec=sweetpotatos-calamares
+Icon=sweetpotatos
 Terminal=false
 Categories=System;

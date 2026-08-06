@@ -1,0 +1,13 @@
+#!/bin/sh
+# Apply SweetPotatOs Plymouth theme after the plymouth package lands.
+# (Shipping plymouthd.conf in airootfs conflicts during pacstrap.)
+set -eu
+install -d /etc/plymouth
+cat > /etc/plymouth/plymouthd.conf <<'EOF'
+[Daemon]
+Theme=sweetpotatos
+ShowDelay=0
+EOF
+if command -v plymouth-set-default-theme >/dev/null 2>&1; then
+  plymouth-set-default-theme sweetpotatos >/dev/null 2>&1 || true
+fi

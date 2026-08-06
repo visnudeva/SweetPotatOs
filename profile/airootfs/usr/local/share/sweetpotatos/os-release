@@ -1,6 +1,6 @@
 NAME="SweetPotatOs"
 PRETTY_NAME="SweetPotatOs"
-ID=sweetpotatoos
+ID=sweetpotatos
 ID_LIKE=arch
 BUILD_ID=rolling
 ANSI_COLOR="38;2;167;59;80"
@@ -8,4 +8,4 @@ HOME_URL="https://github.com/visnudeva/SweetPotatOs"
 DOCUMENTATION_URL="https://github.com/visnudeva/SweetPotatOs"
 SUPPORT_URL="https://github.com/visnudeva/SweetPotatOs/issues"
 BUG_REPORT_URL="https://github.com/visnudeva/SweetPotatOs/issues"
-LOGO=sweetpotatoos
+LOGO=sweetpotatos

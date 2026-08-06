@@ -46,7 +46,7 @@ for dir in "${DIRS[@]}"; do
 done
 
 if ((${#display_list[@]} == 0)); then
-  notify-send -t 3000 -a "Wallpaper" -i "sweetpotatoos" \
+  notify-send -t 3000 -a "Wallpaper" -i "sweetpotatos" \
     "Wallpaper" "No images found. Drop files in ~/.local/share/backgrounds" 2>/dev/null || true
   exit 1
 fi
@@ -68,5 +68,5 @@ else
 fi
 printf 'output * bg "%s" fill\n' "${conf_img}" > "${WALLPAPER_CONF}"
 
-notify-send -t 2000 -a "Wallpaper" -i "sweetpotatoos" \
+notify-send -t 2000 -a "Wallpaper" -i "sweetpotatos" \
   "Wallpaper" "$(basename "${img}")" 2>/dev/null || true

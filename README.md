@@ -12,7 +12,7 @@ Colors: **#a73b50** potato red · **#f79b29** potato orange · **#1d1f21** charc
 
 - Live Sway session (`liveuser`, empty password, sudo without password)
 - Autologin on tty1 → SweetPotato desktop (foot, Thunar, mako, NetworkManager, …)
-- Installer autostarts on the live desktop; also **Mod+i**, desktop *Install SweetPotatOs*, or `sweetpotatoos-calamares`
+- Installer autostarts on the live desktop; also **Mod+i**, desktop *Install SweetPotatOs*, or `sweetpotatos-calamares`
 - Installed system uses the live squashfs, GRUB, and **Ly** on tty2
 
 ## Prerequisites
@@ -43,7 +43,7 @@ Work tree: `work/` (removed automatically at the start of each ISO build)
 `profile/pacman.conf` includes:
 
 ```ini
-[sweetpotatoos]
+[sweetpotatos]
 SigLevel = Optional TrustAll
 Server = file:///ABS/PATH/TO/SweetPotatOs/repo
 ```

@@ -1,0 +1,37 @@
+#!/bin/bash
+# Launch Calamares on the live session (Archcraft-style).
+# On Wayland, preserve the user display env with sudo -E so Qt can connect.
+# Do not use plain "pkexec calamares" — that strips WAYLAND_DISPLAY / XDG_RUNTIME_DIR.
+
+set -euo pipefail
+
+UNPACK="/etc/calamares/modules/unpackfs.conf"
+
+notify() {
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send -a "SweetPotatOs" -i sweetpotatos "$@" >/dev/null 2>&1 || true
+  fi
+}
+
+# Copy-to-RAM boot: squashfs / kernel live under /run/archiso/copytoram
+if [[ -d /run/archiso/copytoram && -f "${UNPACK}" ]]; then
+  KERNEL="$(uname -r)"
+  sudo sed -i \
+    -e 's|/run/archiso/bootmnt/spotato/x86_64/airootfs.sfs|/run/archiso/copytoram/airootfs.sfs|g' \
+    -e "s|/run/archiso/bootmnt/spotato/boot/x86_64/vmlinuz-linux|/usr/lib/modules/${KERNEL}/vmlinuz|g" \
+    "${UNPACK}"
+fi
+
+notify "Installer" "Launching Calamares..."
+
+if [[ "${XDG_SESSION_TYPE:-}" == "wayland" ]] || [[ -n "${WAYLAND_DISPLAY:-}" ]]; then
+  # Archcraft Wayland path: keep the live user's compositor env for root Qt
+  exec sudo -E /usr/bin/calamares "$@"
+fi
+
+# X11 / fallback
+export DISPLAY="${DISPLAY:-:0}"
+if command -v xhost >/dev/null 2>&1; then
+  xhost +SI:localuser:root >/dev/null 2>&1 || true
+fi
+exec sudo -E /usr/bin/calamares "$@"

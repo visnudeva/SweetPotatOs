@@ -246,4 +246,7 @@ exec udiskie --tray
 exec nm-applet --indicator
 exec blueman-applet
 
+# Calamares installer (Wayland app_id)
+for_window [app_id="io.calamares.calamares"] floating enable
+
 include /etc/sway/config.d/*

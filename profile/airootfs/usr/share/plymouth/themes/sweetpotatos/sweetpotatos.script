@@ -1,0 +1,114 @@
+# SweetPotatOs — centered WhiteLogo on black
+
+Window.SetBackgroundTopColor(0.00, 0.00, 0.00);
+Window.SetBackgroundBottomColor(0.00, 0.00, 0.00);
+
+logo.image = Image("WhiteLogo.png");
+target_h = Window.GetHeight() * 0.42;
+if (logo.image.GetHeight() > 0) {
+  scale = target_h / logo.image.GetHeight();
+  logo.image = logo.image.Scale(logo.image.GetWidth() * scale, logo.image.GetHeight() * scale);
+}
+logo.sprite = Sprite(logo.image);
+logo.sprite.SetX(Window.GetX() + Window.GetWidth() / 2 - logo.image.GetWidth() / 2);
+logo.sprite.SetY(Window.GetY() + Window.GetHeight() / 2 - logo.image.GetHeight() / 2);
+logo.sprite.SetOpacity(1);
+
+#----------------------------------------- Dialogue --------------------------------
+
+status = "normal";
+
+fun dialog_setup() {
+  local.box;
+  local.lock;
+  local.entry;
+
+  box.image = Image("box.png");
+  lock.image = Image("lock.png");
+  entry.image = Image("entry.png");
+
+  box.sprite = Sprite(box.image);
+  box.x = Window.GetX() + Window.GetWidth() / 2 - box.image.GetWidth() / 2;
+  box.y = Window.GetY() + Window.GetHeight() / 2 - box.image.GetHeight() / 2;
+  box.z = 10000;
+  box.sprite.SetPosition(box.x, box.y, box.z);
+
+  lock.sprite = Sprite(lock.image);
+  lock.x = box.x + box.image.GetWidth() / 2 - (lock.image.GetWidth() + entry.image.GetWidth()) / 2;
+  lock.y = box.y + box.image.GetHeight() / 2 - lock.image.GetHeight() / 2;
+  lock.z = box.z + 1;
+  lock.sprite.SetPosition(lock.x, lock.y, lock.z);
+
+  entry.sprite = Sprite(entry.image);
+  entry.x = lock.x + lock.image.GetWidth();
+  entry.y = box.y + box.image.GetHeight() / 2 - entry.image.GetHeight() / 2;
+  entry.z = box.z + 1;
+  entry.sprite.SetPosition(entry.x, entry.y, entry.z);
+
+  global.dialog.box = box;
+  global.dialog.lock = lock;
+  global.dialog.entry = entry;
+  global.dialog.bullet_image = Image("bullet.png");
+  dialog_opacity(1);
+}
+
+fun dialog_opacity(opacity) {
+  dialog.box.sprite.SetOpacity(opacity);
+  dialog.lock.sprite.SetOpacity(opacity);
+  dialog.entry.sprite.SetOpacity(opacity);
+  for (index = 0; dialog.bullet[index]; index++) {
+    dialog.bullet[index].sprite.SetOpacity(opacity);
+  }
+}
+
+fun dialog_show() {
+  status = "dialog";
+  dialog_setup();
+  logo.sprite.SetOpacity(0.3);
+}
+
+fun dialog_hide() {
+  dialog_opacity(0);
+  status = "normal";
+  logo.sprite.SetOpacity(1);
+}
+
+fun display_normal_callback() {
+  dialog_hide();
+}
+
+fun display_password_callback(prompt, bullets) {
+  if (status != "dialog") {
+    dialog_show();
+  }
+  for (index = 0; dialog.bullet[index]; index++) {
+    dialog.bullet[index].sprite.SetOpacity(0);
+  }
+  dialog.bullet = null;
+  for (index = 0; index < bullets; index++) {
+    bullet = Image("bullet.png");
+    dialog.bullet[index].sprite = Sprite(bullet);
+    dialog.bullet[index].sprite.SetPosition(
+      dialog.entry.x + index * bullet.GetWidth(),
+      dialog.entry.y + dialog.entry.image.GetHeight() / 2 - bullet.GetHeight() / 2,
+      dialog.entry.z + 1);
+  }
+}
+
+fun display_question_callback(prompt, entry_text) {
+  if (status != "dialog") {
+    dialog_show();
+  }
+}
+
+Plymouth.SetDisplayNormalFunction(display_normal_callback);
+Plymouth.SetDisplayPasswordFunction(display_password_callback);
+Plymouth.SetDisplayQuestionFunction(display_question_callback);
+
+#----------------------------------------- Quit --------------------------------
+
+fun quit_callback() {
+  logo.sprite.SetOpacity(1);
+}
+
+Plymouth.SetQuitFunction(quit_callback);

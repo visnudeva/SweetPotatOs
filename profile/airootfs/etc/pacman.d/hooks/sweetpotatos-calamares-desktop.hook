@@ -1,0 +1,15 @@
+# Override stock Calamares .desktop after the package lands.
+# (Shipping that path directly in airootfs conflicts during pacstrap.)
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = calamares
+
+[Action]
+Description = Applying SweetPotatOs Calamares desktop entry...
+When = PostTransaction
+Depends = sh
+Depends = coreutils
+Exec = /bin/sh -c 'install -Dm644 /usr/local/share/sweetpotatos/calamares.desktop /usr/share/applications/calamares.desktop; install -Dm755 /usr/local/bin/sweetpotatos-calamares /etc/calamares/launch.sh'

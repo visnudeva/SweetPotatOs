@@ -1,0 +1,6 @@
+#!/bin/bash
+# Hand off from Plymouth splash to the live Sway session.
+if command -v plymouth >/dev/null 2>&1; then
+  plymouth quit --retain-splash 2>/dev/null || plymouth quit 2>/dev/null || true
+fi
+exec sway

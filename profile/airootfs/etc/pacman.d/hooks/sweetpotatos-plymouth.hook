@@ -1,0 +1,14 @@
+# Set SweetPotatOs Plymouth theme after the package lands.
+# (plymouthd.conf is owned by the package, so airootfs would be overwritten.)
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = plymouth
+
+[Action]
+Description = Applying SweetPotatOs Plymouth theme...
+When = PostTransaction
+Depends = sh
+Exec = /usr/local/bin/sweetpotatos-plymouth

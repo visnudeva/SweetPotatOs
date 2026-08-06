@@ -13,22 +13,33 @@ if [[ -z "${SP}" || ! -d "${SP}/sway" ]]; then
   exit 1
 fi
 
+inject_calamares_float() {
+  local f="$1"
+  if ! grep -q 'io.calamares.calamares' "${f}"; then
+    sed -i '/^include \/etc\/sway\/config.d\/\*/i\
+# Calamares installer (Wayland app_id)\
+for_window [app_id="io.calamares.calamares"] floating enable\
+' "${f}"
+  fi
+}
+
 inject_live_calamares() {
   local f="$1"
-  if ! grep -q 'bindsym \$mod+i exec sweetpotatoos-calamares' "${f}"; then
+  if ! grep -q 'bindsym \$mod+i exec sweetpotatos-calamares' "${f}"; then
     sed -i '/bindsym \$mod+n exec networkmanager_dmenu/a\
 \
     # Install SweetPotatOs to disk\
-    bindsym $mod+i exec sweetpotatoos-calamares
+    bindsym $mod+i exec sweetpotatos-calamares
 ' "${f}"
   fi
-  # Normalize autostart to XWayland-safe launcher with a short delay
+  # Autostart installer after the session is up (Archcraft-style sudo -E launcher)
   sed -i '/Autostart installer on the live ISO session/,+1d' "${f}"
   sed -i '/^include \/etc\/sway\/config.d\/\*/i\
 # Autostart installer on the live ISO session\
-exec sh -c '\''sleep 3; sweetpotatoos-calamares'\''\
+exec sh -c '\''sleep 5; sweetpotatos-calamares'\''\
 ' "${f}"
   sed -i 's|exec --no-startup-id sh -c.*polkit.*|exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1|' "${f}"
+  inject_calamares_float "${f}"
 }
 
 sync_common_into() {
@@ -105,9 +116,12 @@ sed "s|%HOME%|${HOME_DIR}|g" "${SP}/environment.d/90-sweetpotato-csd.conf" \
 [[ -f "${SP}/sweetlock.png" ]] && \
   cp -f "${SP}/sweetlock.png" "${HOME_DIR}/.local/share/backgrounds/sweetlock.png"
 
-# Skel (no calamares)
+# Skel (no calamares autostart; float rule harmless if installer absent)
 sync_common_into "${ISO}/etc/skel"
 cp -f "${SP}/sway/config" "${ISO}/etc/skel/.config/sway/config"
+inject_calamares_float "${ISO}/etc/skel/.config/sway/config"
+inject_calamares_float "${ISO}/etc/skel/.config/sway/config-us"
+inject_calamares_float "${ISO}/etc/skel/.config/sway/config-fr"
 cat > "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
 # Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (sway wrapper).
@@ -152,9 +166,9 @@ EOF
 mkdir -p "${ISO}/home/liveuser/Desktop"
 
 # System logo for fastfetch (absolute path in config.jsonc)
-mkdir -p "${ISO}/usr/local/share/sweetpotatoos"
-cp -f "${SP}/fastfetch/SPLogo.asc" "${ISO}/usr/local/share/sweetpotatoos/SPLogo.asc"
-cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatoos/SPLogo.png"
+mkdir -p "${ISO}/usr/local/share/sweetpotatos"
+cp -f "${SP}/fastfetch/SPLogo.asc" "${ISO}/usr/local/share/sweetpotatos/SPLogo.asc"
+cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
 
 # Assets
 mkdir -p "${ROOT}/assets"

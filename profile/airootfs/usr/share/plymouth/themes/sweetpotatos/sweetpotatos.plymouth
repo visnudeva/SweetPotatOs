@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=SweetPotatOs
+Description=SweetPotatOs boot splash (WhiteLogo)
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/sweetpotatos
+ScriptFile=/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.script

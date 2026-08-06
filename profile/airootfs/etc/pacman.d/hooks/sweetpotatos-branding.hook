@@ -11,4 +11,4 @@ Target = filesystem
 Description = Applying SweetPotatOs branding (os-release / issue)...
 When = PostTransaction
 Depends = sh
-Exec = /usr/local/bin/sweetpotatoos-branding
+Exec = /usr/local/bin/sweetpotatos-branding
