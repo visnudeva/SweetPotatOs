@@ -62,6 +62,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Screenshot | `Print` · region `Mod+Shift+Print` |
 | Screen record | `Mod+Print` (toggle, region + audio → `~/Videos`) |
 | Installer | `Mod+i` |
+| Caffeine | on by default (no sleep/lock); toggle `Mod+c` |
 
 ## Write ISO to USB
 

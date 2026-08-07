@@ -23,6 +23,22 @@ for_window [app_id="io.calamares.calamares"] floating enable\
   fi
 }
 
+inject_live_caffeine() {
+  local f="$1"
+  # Live ISO: start with caffeine on so idle lock/sleep cannot interrupt install
+  if grep -q 'caffeine.sh on' "${f}"; then
+    return 0
+  fi
+  if grep -q '^exec swayidle' "${f}"; then
+    sed -i '/^exec swayidle -w \\$/,/^[[:space:]]*before-sleep/d' "${f}"
+  fi
+  sed -i '/^### Idle configuration/a\
+#\
+# Live ISO: caffeine on by default so install does not sleep/lock\
+exec ~/.config/sway/scripts/caffeine.sh on
+' "${f}"
+}
+
 inject_live_calamares() {
   local f="$1"
   if ! grep -q 'bindsym \$mod+i exec sweetpotatos-calamares' "${f}"; then
@@ -32,6 +48,7 @@ inject_live_calamares() {
     bindsym $mod+i exec sweetpotatos-calamares
 ' "${f}"
   fi
+  inject_live_caffeine "${f}"
   # Autostart installer after the session is up (Archcraft-style sudo -E launcher)
   sed -i '/Autostart installer on the live ISO session/,+1d' "${f}"
   sed -i '/^include \/etc\/sway\/config.d\/\*/i\

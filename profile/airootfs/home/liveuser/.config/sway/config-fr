@@ -30,10 +30,9 @@ exec_always ~/.config/sway/scripts/ensure-wallpaper.sh
 
 ### Idle configuration
 #
-exec swayidle -w \
-          timeout 300 'swaylock -f' \
-          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-          before-sleep 'swaylock -f'
+# Live ISO: caffeine on by default so install does not sleep/lock
+exec ~/.config/sway/scripts/caffeine.sh on
+#
 
 ### Input configuration
 #
@@ -88,6 +87,9 @@ bindgesture swipe:3:left workspace prev_on_output
 
     # Lock screen (Mod+l — vim focus-right moved to arrow keys only)
     bindsym $mod+l exec swaylock -f
+
+    # Caffeine: toggle idle lock / display off / sleep inhibit
+    bindsym $mod+c exec ~/.config/sway/scripts/caffeine.sh
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
