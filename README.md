@@ -57,12 +57,33 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | User | `liveuser` |
 | Password | empty (Enter) |
 | Desktop | Sway + SweetPotato |
-| Wi‑Fi | `Mod+n` |
-| Wallpaper | `Mod+Shift+w` |
-| Screenshot | `Print` · region `Mod+Shift+Print` |
-| Screen record | `Mod+Print` (toggle, region + audio → `~/Videos`) |
-| Installer | `Mod+i` |
-| Caffeine | on by default (no sleep/lock); toggle `Mod+c` |
+| Caffeine | **on by default** (no sleep/lock during install) |
+
+### Useful binds
+
+| Bind | Action |
+|------|--------|
+| `Mod+n` | Wi‑Fi / NetworkManager |
+| `Mod+Space` | App launcher |
+| `Mod+w` | Web browser (firefox) |
+| `Mod+f` | File manager (thunar) |
+| `Mod+e` | IDE (geany) |
+| `Mod+Return` | Terminal (foot) |
+| `Mod+Shift+w` | Wallpaper selector |
+| `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
+| `Mod+Shift+Print` | Region screenshot |
+| `Mod+Print` | Screen record toggle (region + audio → `~/Videos`) |
+| `Mod+q` | Kill focused window |
+| `Mod+number` | Change workspaces |
+| `Mod+l` | Lock (swaylock) |
+| `Mod+c` | Caffeine toggle (on by default on live ISO) |
+| `Mod+i` | Installer (Calamares) |
+| `Mod+Shift+e` | Exit Sway |
+| `Mod+o` | Power off |
+| `Mod+Shift+c` | Reload config |
+
+`Mod` is usually the Super/Windows key.
+
 
 ## Write ISO to USB
 
