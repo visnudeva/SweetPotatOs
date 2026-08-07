@@ -1,5 +1,6 @@
 Welcome to SweetPotatOs.
 
-  Graphical session: log in as liveuser on tty1 (Sway starts automatically).
+  Graphical session: liveuser on tty1 (Sway starts automatically).
+  Screen lock:       empty password — press Enter to unlock (Mod+l).
   Install to disk:   opens automatically, or Mod+i / sweetpotatos-calamares
 

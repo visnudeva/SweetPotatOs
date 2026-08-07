@@ -1,6 +1,6 @@
 #!/bin/sh
 # Apply SweetPotatOs Plymouth theme after the plymouth package lands.
-# (Shipping plymouthd.conf in airootfs conflicts during pacstrap.)
+# Must run before mkinitcpio packs the live initramfs (see 89-*.hook).
 set -eu
 install -d /etc/plymouth
 cat > /etc/plymouth/plymouthd.conf <<'EOF'
@@ -8,6 +8,11 @@ cat > /etc/plymouth/plymouthd.conf <<'EOF'
 Theme=sweetpotatos
 ShowDelay=0
 EOF
-if command -v plymouth-set-default-theme >/dev/null 2>&1; then
-  plymouth-set-default-theme sweetpotatos >/dev/null 2>&1 || true
+if ! command -v plymouth-set-default-theme >/dev/null 2>&1; then
+  exit 0
 fi
+if [ ! -f /usr/share/plymouth/themes/sweetpotatos/sweetpotatos.plymouth ]; then
+  echo "sweetpotatos-plymouth: theme files missing" >&2
+  exit 1
+fi
+plymouth-set-default-theme sweetpotatos

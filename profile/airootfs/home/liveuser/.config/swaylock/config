@@ -3,7 +3,8 @@
 
 daemonize
 show-failed-attempts
-ignore-empty-password
+# Live ISO: liveuser has an empty password — allow Enter to unlock.
+# (Installed systems keep ignore-empty-password via skel.)
 indicator-idle-visible
 indicator-radius=150
 indicator-thickness=8

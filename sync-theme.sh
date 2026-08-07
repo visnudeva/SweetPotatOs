@@ -71,6 +71,9 @@ sync_common_into() {
   cp -f "${SP}/fastfetch/config.jsonc" "${dest}/.config/fastfetch/"
   cp -f "${SP}/fastfetch/SPLogo.png" "${dest}/.config/fastfetch/"
   cp -f "${SP}/fastfetch/SPLogo.asc" "${dest}/.config/fastfetch/"
+  # Prefer system logo path so live/ISO never falls back to the Arch builtin
+  sed -i 's|"source": "~/.config/fastfetch/SPLogo.png"|"source": "/usr/local/share/sweetpotatos/SPLogo.png"|' \
+    "${dest}/.config/fastfetch/config.jsonc"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/sway-portals.conf"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/wlroots-portals.conf"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/swayfx-portals.conf"
@@ -164,11 +167,20 @@ show_linenumber_margin=true
 pref_main_load_session=false
 EOF
 mkdir -p "${ISO}/home/liveuser/Desktop"
+# Live session uses empty password; don't block Enter-to-unlock after theme sync
+sed -i '/^ignore-empty-password$/d' "${ISO}/home/liveuser/.config/swaylock/config"
+if ! grep -q 'Live ISO: liveuser has an empty password' "${ISO}/home/liveuser/.config/swaylock/config"; then
+  sed -i '/^show-failed-attempts$/a\
+# Live ISO: liveuser has an empty password — allow Enter to unlock.\
+# (Installed systems keep ignore-empty-password via skel.)
+' "${ISO}/home/liveuser/.config/swaylock/config"
+fi
 
 # System logo for fastfetch (absolute path in config.jsonc)
-mkdir -p "${ISO}/usr/local/share/sweetpotatos"
+mkdir -p "${ISO}/usr/local/share/sweetpotatos" "${ISO}/etc/fastfetch"
 cp -f "${SP}/fastfetch/SPLogo.asc" "${ISO}/usr/local/share/sweetpotatos/SPLogo.asc"
 cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
+cp -f "${ISO}/home/liveuser/.config/fastfetch/config.jsonc" "${ISO}/etc/fastfetch/config.jsonc"
 
 # Assets
 mkdir -p "${ROOT}/assets"

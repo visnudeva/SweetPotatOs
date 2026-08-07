@@ -1,0 +1,41 @@
+---
+# SweetPotatOs Calamares branding (must be named branding.desc)
+componentName:  sweetpotatos
+
+welcomeStyleCalamares:   true
+welcomeExpandingLogo:    true
+
+windowExpanding:    normal
+windowSize:         800px,520px
+windowPlacement:    center
+
+sidebar:     widget
+navigation:  widget
+
+strings:
+    productName:         SweetPotatOs
+    shortProductName:    SweetPotatOs
+    version:             2026
+    shortVersion:        2026
+    versionedName:       SweetPotatOs 2026
+    shortVersionedName:  SweetPotatOs 2026
+    bootloaderEntryName: SweetPotatOs
+    productUrl:          https://github.com/visnudeva/SweetPotatOs
+    supportUrl:          https://github.com/visnudeva/SweetPotatOs
+    knownIssuesUrl:      https://github.com/visnudeva/SweetPotatOs/issues
+    releaseNotesUrl:     https://github.com/visnudeva/SweetPotatOs
+    donateUrl:           https://github.com/visnudeva/SweetPotatOs
+
+images:
+    productLogo:         "logo.png"
+    productIcon:         "icon.png"
+    productWelcome:      "welcome.png"
+
+style:
+    SidebarBackground:        "#1d1f21"
+    SidebarText:              "#FFFFFF"
+    SidebarTextCurrent:       "#f79b29"
+    SidebarBackgroundCurrent: "#a73b50"
+
+slideshow:     "show.qml"
+slideshowAPI:  2

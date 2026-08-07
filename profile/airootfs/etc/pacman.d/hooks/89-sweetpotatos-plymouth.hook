@@ -1,4 +1,5 @@
-# Set SweetPotatOs Plymouth theme after the package lands.
+# Set SweetPotatOs Plymouth theme BEFORE 90-mkinitcpio-install.hook
+# so the live initramfs includes the theme (not stock bgrt/spinner).
 # (plymouthd.conf is owned by the package, so airootfs would be overwritten.)
 
 [Trigger]
