@@ -3,6 +3,29 @@ work/
 out/
 .aur-build/
 
+# Accidental initramfs extract into repo root (do not commit)
+/bin
+/sbin
+/lib
+/lib64
+/usr/
+/var/
+/etc/
+/hooks/
+/kernel/
+/init
+/init_functions
+/early_cpio
+/buildconfig
+/config
+/VERSION
+/dev/
+/proc/
+/sys/
+/tmp/
+/run/
+/new_root/
+
 # Local pacman repo packages (large; rebuild with --build-calamares)
 repo/*.pkg.tar.*
 repo/*.pkg.tar.*.sig
