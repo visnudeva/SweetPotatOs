@@ -5,7 +5,7 @@ set -euo pipefail
 CONF="${HOME}/.config/sway/wallpaper.conf"
 DIR="${HOME}/.local/share/backgrounds"
 FALLBACKS=(
-  "${DIR}/SPKeybinds.png"
+  "${DIR}/UsefulBinds.png"
   "${DIR}/SweetPotato.png"
   "${DIR}/SweetPOTATo.png"
 )

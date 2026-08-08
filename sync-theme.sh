@@ -101,7 +101,7 @@ sync_common_into() {
   cp -f "${SP}/bin/sway" "${dest}/.local/bin/sway"
   chmod 755 "${dest}/.local/bin/sway"
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
-  printf 'output * bg "~/.local/share/backgrounds/SPKeybinds.png" fill\n' \
+  printf 'output * bg "~/.local/share/backgrounds/UsefulBinds.png" fill\n' \
     > "${dest}/.config/sway/wallpaper.conf"
   if [[ -f "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]] \
      && [[ "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" \
