@@ -26,11 +26,10 @@
 
 ## Download
 
-ISO builds are hosted on **SourceForge** (GitHub cannot host a ~2 GB image):
+**ISO:** [SweetPotatOs-2026.08.08-x86_64.iso](https://sourceforge.net/projects/sweetpotatos/files/2026.08.08/SweetPotatOs-2026.08.08-x86_64.iso/download)  
+**Checksum:** [SweetPotatOs-2026.08.08-x86_64.iso.sha256](https://sourceforge.net/projects/sweetpotatos/files/2026.08.08/SweetPotatOs-2026.08.08-x86_64.iso.sha256/download)
 
-- Project: [sourceforge.net/projects/sweetpotatos](https://sourceforge.net/projects/sweetpotatos/)
-- Latest ISO: [Download](https://sourceforge.net/projects/sweetpotatos/files/latest/download)
-- All files: [Files](https://sourceforge.net/projects/sweetpotatos/files/)
+Also: [latest download](https://sourceforge.net/projects/sweetpotatos/files/latest/download) · [all files](https://sourceforge.net/projects/sweetpotatos/files/) · [project page](https://sourceforge.net/projects/sweetpotatos/)
 
 Verify after download:
 
