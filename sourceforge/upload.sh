@@ -40,7 +40,8 @@ WEB="${SF_USER}@web.sourceforge.net:/home/project-web/${SF_PROJECT}/htdocs/"
 
 echo "[*] Uploading release files to ${FRS}"
 echo "    (enter your SourceForge password or use an SSH key)"
-rsync -avP -e ssh \
+# --copy-links: follow local ISO symlink under sourceforge/files/
+rsync -avP --copy-links -e ssh \
   "${FILES_DIR}/${ISO_NAME}" \
   "${FILES_DIR}/${ISO_NAME}.sha256" \
   "${FRS}"
