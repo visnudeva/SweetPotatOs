@@ -24,6 +24,26 @@
 - Installer autostarts on the live desktop; also **Mod+i**, desktop *Install SweetPotatOs*, or `sweetpotatos-calamares`
 - Installed system uses the live squashfs, GRUB, and **Ly** on tty2
 
+## Download
+
+ISO builds are hosted on **SourceForge** (GitHub cannot host a ~2 GB image):
+
+- Project: [sourceforge.net/projects/sweetpotatos](https://sourceforge.net/projects/sweetpotatos/)
+- Latest ISO: [Download](https://sourceforge.net/projects/sweetpotatos/files/latest/download)
+- All files: [Files](https://sourceforge.net/projects/sweetpotatos/files/)
+
+Verify after download:
+
+```bash
+sha256sum -c SweetPotatOs-*-x86_64.iso.sha256
+```
+
+To publish a new build from this repo:
+
+```bash
+SF_USER=your_sourceforge_username ./sourceforge/upload.sh
+```
+
 ## Prerequisites
 
 - Arch-based build host
@@ -118,6 +138,7 @@ SweetPotatOs/
 │   ├── pacman.conf
 │   └── airootfs/     # live overlay (skel, Calamares, NetworkManager, …)
 ├── repo/             # local pacman repo (calamares *.pkg.tar.*)
+├── sourceforge/      # SourceForge project web + upload.sh (rsync)
 ├── out/              # built ISOs (gitignored)
 └── work/             # mkarchiso work dir (gitignored)
 ```

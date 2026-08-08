@@ -2,6 +2,7 @@
 work/
 out/
 .aur-build/
+sourceforge/files/
 
 # Accidental initramfs extract into repo root (do not commit)
 /bin

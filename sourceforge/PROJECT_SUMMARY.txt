@@ -1,0 +1,4 @@
+SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Sway desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
+
+Homepage / source: https://github.com/visnudeva/SweetPotatOs
+Theme: https://github.com/visnudeva/SweetPotato

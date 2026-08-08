@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SweetPotatOs — Arch-based Linux for old potato PCs</title>
+  <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Sway desktop, and Calamares installer.">
+  <style>
+    :root {
+      --red: #a73b50;
+      --orange: #f79b29;
+      --charcoal: #1d1f21;
+      --cream: #f7f3ee;
+      --ink: #2a2c2e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(247, 155, 41, 0.22), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(167, 59, 80, 0.18), transparent),
+        var(--cream);
+      line-height: 1.55;
+    }
+    a { color: var(--red); }
+    header {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem 1.25rem 1rem;
+      text-align: center;
+    }
+    header img.logo {
+      width: 140px;
+      height: auto;
+      margin-bottom: 0.75rem;
+    }
+    h1 {
+      margin: 0.2rem 0;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--charcoal);
+      letter-spacing: -0.02em;
+    }
+    .tag {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background: var(--charcoal);
+      color: var(--orange);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .lead {
+      max-width: 42rem;
+      margin: 1rem auto 0;
+      font-size: 1.08rem;
+      color: #444;
+    }
+    .hero {
+      max-width: 960px;
+      margin: 1.5rem auto;
+      padding: 0 1.25rem;
+    }
+    .hero img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 18px 40px rgba(29, 31, 33, 0.18);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin: 1.5rem 0 0.5rem;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 1.35rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      border: 2px solid transparent;
+    }
+    .btn-primary {
+      background: var(--red);
+      color: #fff;
+    }
+    .btn-primary:hover { filter: brightness(1.05); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--charcoal);
+      border-color: var(--charcoal);
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.5rem 1.25rem 3rem;
+    }
+    h2 {
+      color: var(--charcoal);
+      border-bottom: 2px solid var(--orange);
+      padding-bottom: 0.35rem;
+      display: inline-block;
+    }
+    ul { padding-left: 1.2rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.75rem 0 1.5rem;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+    }
+    th, td {
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid #eee;
+    }
+    th { background: var(--charcoal); color: #fff; }
+    code {
+      background: #efeae4;
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: #666;
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="SweetPotatOs.png" alt="SweetPotatOs logo">
+    <h1>SweetPotatOs</h1>
+    <span class="tag">Arch-based Linux distro</span>
+    <p class="lead">
+      A live graphical ISO with the SweetPotato Sway desktop and a Calamares installer,
+      built to revive slow old potato PCs and make them sweet again.
+    </p>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download ISO</a>
+      <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotatOs">GitHub</a>
+      <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotato">SweetPotato theme</a>
+    </div>
+  </header>
+
+  <div class="hero">
+    <img src="Screenshot.png" alt="SweetPotatOs desktop screenshot">
+  </div>
+
+  <main>
+    <h2>What you get</h2>
+    <ul>
+      <li>Live Sway session (<code>liveuser</code>, empty password, sudo without password)</li>
+      <li>Autologin on tty1 → SweetPotato desktop</li>
+      <li>Installer autostarts (also <code>Mod+i</code> / <em>Install SweetPotatOs</em>)</li>
+      <li>Installed system uses GRUB and Ly on tty2</li>
+    </ul>
+
+    <h2>Live session</h2>
+    <table>
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>User</td><td><code>liveuser</code></td></tr>
+      <tr><td>Password</td><td>empty (Enter)</td></tr>
+      <tr><td>Desktop</td><td>Sway + SweetPotato</td></tr>
+      <tr><td>Colors</td><td>#a73b50 · #f79b29 · #1d1f21</td></tr>
+    </table>
+
+    <h2>Write ISO to USB</h2>
+    <pre><code>lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
+sudo dd if=SweetPotatOs-*-x86_64.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
+    <p>Prefer verifying the download with the <code>.sha256</code> file next to the ISO on the Files page.</p>
+  </main>
+
+  <footer>
+    Source: <a href="https://github.com/visnudeva/SweetPotatOs">github.com/visnudeva/SweetPotatOs</a>
+    · Downloads: <a href="https://sourceforge.net/projects/sweetpotatos/files/">SourceForge Files</a>
+  </footer>
+</body>
+</html>
