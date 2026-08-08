@@ -1,0 +1,20 @@
+#!/bin/bash
+# Replace archiso live mkinitcpio preset with an installed-system preset
+# so Calamares initcpio can build bootable initramfs images.
+set -euo pipefail
+
+cat > /etc/mkinitcpio.d/linux.preset <<'EOF'
+# mkinitcpio preset file for the 'linux' package
+
+ALL_kver="/boot/vmlinuz-linux"
+ALL_config="/etc/mkinitcpio.conf"
+
+PRESETS=('default' 'fallback')
+
+default_image="/boot/initramfs-linux.img"
+
+fallback_image="/boot/initramfs-linux-fallback.img"
+fallback_options="-S autodetect"
+EOF
+
+rm -f /etc/mkinitcpio.conf.d/archiso.conf

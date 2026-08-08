@@ -27,6 +27,7 @@ file_permissions=(
   ["/usr/local/bin/sweetpotatos-branding"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-plymouth"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-calamares"]="0:0:755"
+  ["/usr/local/bin/sweetpotatos-fix-mkinitcpio"]="0:0:755"
   ["/home/liveuser"]="1000:1000:755"
   ["/etc/sudoers.d/liveuser"]="0:0:440"
   ["/home/liveuser/.config/sway/scripts/applauncher.sh"]="1000:1000:755"
