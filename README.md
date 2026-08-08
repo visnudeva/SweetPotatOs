@@ -1,7 +1,7 @@
 # SweetPotatOs
 
 <p align="center">
-  <img src="assets/UsefulBinds.png" alt="SweetPotatOs useful keybinds" width="920"
+  <img src="assets/Screenshot.png" alt="SweetPotatOs desktop" width="920"
        style="border-radius: 12px; max-width: 100%; height: auto;">
 </p>
 
@@ -106,7 +106,7 @@ sudo dd if=out/SweetPotatOs-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 
 ```
 SweetPotatOs/
-├── assets/           # README / branding art (UsefulBinds.png, SweetPotatOs.png, SPLogo.png)
+├── assets/           # README / branding art (Screenshot.png, SweetPotatOs.png, SPLogo.png)
 ├── build.sh          # --build-calamares | mkarchiso wrapper
 ├── profile/          # archiso profile
 │   ├── profiledef.sh
