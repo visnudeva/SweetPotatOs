@@ -1,7 +1,12 @@
 # SweetPotatOs
 
 <p align="center">
-  <img src="assets/SweetPotatOs.png" alt="SweetPotatOs" width="220">
+  <img src="assets/UsefulBinds.png" alt="SweetPotatOs useful keybinds" width="920"
+       style="border-radius: 12px; max-width: 100%; height: auto;">
+</p>
+
+<p align="center">
+  <img src="assets/SweetPotatOs.png" alt="SweetPotatOs" width="160">
 </p>
 
 Live graphical **Arch Linux** ISO with the [SweetPotato](https://github.com/visnudeva/SweetPotato) Sway desktop and a **Calamares** installer.
@@ -101,7 +106,7 @@ sudo dd if=out/SweetPotatOs-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 
 ```
 SweetPotatOs/
-├── assets/           # README / branding art (SweetPotatOs.png, SPLogo.png)
+├── assets/           # README / branding art (UsefulBinds.png, SweetPotatOs.png, SPLogo.png)
 ├── build.sh          # --build-calamares | mkarchiso wrapper
 ├── profile/          # archiso profile
 │   ├── profiledef.sh
