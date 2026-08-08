@@ -5,16 +5,10 @@
        style="border-radius: 12px; max-width: 100%; height: auto;">
 </p>
 
-
-<<<<<<< HEAD
-=======
-**SweetPotatOs** is an Arch-based Linux distro: a live graphical ISO with the [SweetPotato](https://github.com/visnudeva/SweetPotato) Sway desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
->>>>>>> ddce837 (Clarify SweetPotatOs as an Arch-based distro in the README.)
-
 <table>
   <tr>
     <td>
-      <strong>Live graphical Arch Linux ISO with the SweetPotato Sway desktop and a Calamares installer to revive slow and old potatoes PCs and make them sweet again.
+      <strong>SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Sway desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
 <br>
     </td>
     <td>
@@ -22,8 +16,6 @@
 </td>
   </tr>
 </table>
-
-
 
 ## What you get
 
