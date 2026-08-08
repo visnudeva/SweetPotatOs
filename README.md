@@ -5,13 +5,21 @@
        style="border-radius: 12px; max-width: 100%; height: auto;">
 </p>
 
-<p align="center">
-  <img src="assets/SweetPotatOs.png" alt="SweetPotatOs" width="160">
-</p>
 
-Live graphical **Arch Linux** ISO with the [SweetPotato](https://github.com/visnudeva/SweetPotato) Sway desktop and a **Calamares** installer.
 
-Colors: **#a73b50** potato red · **#f79b29** potato orange · **#1d1f21** charcoal
+<table>
+  <tr>
+    <td>
+      <strong>Live graphical Arch Linux ISO with the SweetPotato Sway desktop and a Calamares installer to revive slow and old potatoes PCs and make them sweet again.
+<br>
+    </td>
+    <td>
+  <img src="assets/SweetPotatOs.png" alt="SweetPotato" width="220">
+</td>
+  </tr>
+</table>
+
+
 
 ## What you get
 
@@ -133,7 +141,7 @@ Theme files are mirrored from [SweetPotato](https://github.com/visnudeva/SweetPo
 
 ## Related
 
-- Theme / post-install script: https://github.com/visnudeva/SweetPotato
+- Theme / post-install script to install on another distro: https://github.com/visnudeva/SweetPotato
 
 ## License
 
