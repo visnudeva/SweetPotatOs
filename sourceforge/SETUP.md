@@ -18,7 +18,7 @@ SourceForge project setup checklist
    - Mirror preferred download name if asked
 
 4) After upload, set default download:
-   Files → 2026.08.08 → (i) on the .iso → select as default download
+   Files → (release folder) → (i) on the .iso → select as default download
 
 5) Project web (uploaded by the script) appears at:
    https://sweetpotatos.sourceforge.io/

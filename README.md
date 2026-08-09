@@ -26,10 +26,9 @@
 
 ## Download
 
-**ISO:** [SweetPotatOs-2026.08.08-x86_64.iso](https://sourceforge.net/projects/sweetpotatos/files/2026.08.08/SweetPotatOs-2026.08.08-x86_64.iso/download)  
-**Checksum:** [SweetPotatOs-2026.08.08-x86_64.iso.sha256](https://sourceforge.net/projects/sweetpotatos/files/2026.08.08/SweetPotatOs-2026.08.08-x86_64.iso.sha256/download)
+Get the ISO and `.sha256` from SourceForge Files (newest release folder):
 
-Also: [latest download](https://sourceforge.net/projects/sweetpotatos/files/latest/download) · [all files](https://sourceforge.net/projects/sweetpotatos/files/) · [project page](https://sourceforge.net/projects/sweetpotatos/)
+**[Download SweetPotatOs](https://sourceforge.net/projects/sweetpotatos/files/)** · [Project page](https://sourceforge.net/projects/sweetpotatos/)
 
 Verify after download:
 
@@ -40,8 +39,10 @@ sha256sum -c SweetPotatOs-*-x86_64.iso.sha256
 To publish a new build from this repo:
 
 ```bash
-SF_USER=your_sourceforge_username ./sourceforge/upload.sh
+SF_USER=your_sourceforge_username SF_RELEASE=YYYY.MM.DD ./sourceforge/upload.sh
 ```
+
+Then in SourceForge: Files → that release → ⓘ on the `.iso` → set as default download.
 
 ## Prerequisites
 
