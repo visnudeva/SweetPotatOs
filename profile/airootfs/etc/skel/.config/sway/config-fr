@@ -86,7 +86,7 @@ bindgesture swipe:3:left workspace prev_on_output
     # Lock screen (Mod+l — vim focus-right moved to arrow keys only)
     bindsym $mod+l exec swaylock -f
 
-    # Caffeine: toggle idle lock / display off / sleep inhibit
+    # Caffeine: toggle idle lock / display off (lid-close still suspends)
     bindsym $mod+c exec ~/.config/sway/scripts/caffeine.sh
 
     # Drag floating windows by holding down $mod and left mouse button.

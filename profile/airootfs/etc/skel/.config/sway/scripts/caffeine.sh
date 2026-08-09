@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# SweetPotato caffeine — prevent idle lock / display off / sleep
+# SweetPotato caffeine — prevent idle lock / display off
+# (does not block lid-close suspend — only idle idle/sleep handling)
 # Usage: caffeine.sh [on|off|toggle]  (default: toggle)
 set -euo pipefail
 
@@ -44,11 +45,12 @@ enable_caffeine() {
     kill "$(<"${PIDFILE}")" 2>/dev/null || true
     rm -f "${PIDFILE}"
   fi
-  systemd-inhibit --what=idle:sleep --who=SweetPotato --why="Caffeine mode" --mode=block \
+  # idle only — keep lid-close / suspend key working
+  systemd-inhibit --what=idle --who=SweetPotato --why="Caffeine mode" --mode=block \
     sleep infinity &
   echo $! > "${PIDFILE}"
   echo "on" > "${STATEFILE}"
-  notify "preferences-desktop-screensaver" "Caffeine on" "Sleep and lock disabled"
+  notify "preferences-desktop-screensaver" "Caffeine on" "Idle lock disabled (lid still sleeps)"
 }
 
 disable_caffeine() {
@@ -58,7 +60,7 @@ disable_caffeine() {
   fi
   echo "off" > "${STATEFILE}"
   start_swayidle
-  notify "system-lock-screen" "Caffeine off" "Sleep and lock restored"
+  notify "system-lock-screen" "Caffeine off" "Idle lock restored"
 }
 
 cmd="${1:-toggle}"

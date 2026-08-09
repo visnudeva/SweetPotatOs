@@ -88,9 +88,11 @@ sync_common_into() {
   cp -f "${SP}/fastfetch/config.jsonc" "${dest}/.config/fastfetch/"
   cp -f "${SP}/fastfetch/SPLogo.png" "${dest}/.config/fastfetch/"
   cp -f "${SP}/fastfetch/SPLogo.asc" "${dest}/.config/fastfetch/"
-  # Prefer system logo path so live/ISO never falls back to the Arch builtin
-  sed -i 's|"source": "~/.config/fastfetch/SPLogo.png"|"source": "/usr/local/share/sweetpotatos/SPLogo.png"|' \
-    "${dest}/.config/fastfetch/config.jsonc"
+  # ISO trees: absolute system path (airootfs ships the logo under /usr/local/share)
+  if [[ "${dest}" == "${ISO}"/* ]]; then
+    sed -i 's|"source": "~/.config/fastfetch/SPLogo\.asc"|"source": "/usr/local/share/sweetpotatos/SPLogo.asc"|' \
+      "${dest}/.config/fastfetch/config.jsonc"
+  fi
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/sway-portals.conf"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/wlroots-portals.conf"
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/swayfx-portals.conf"
