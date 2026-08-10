@@ -1,9 +1,0 @@
-#!/bin/sh
-# SweetPotato: Sway session entry redirects to Swirl (same config dir / IPC tools)
-unset LD_PRELOAD
-export GTK_CSD=1
-dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
-if [ -x "$dir/swirl" ]; then
-  exec "$dir/swirl" "$@"
-fi
-exec swirl "$@"

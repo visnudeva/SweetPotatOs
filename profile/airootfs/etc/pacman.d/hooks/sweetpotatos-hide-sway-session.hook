@@ -1,5 +1,6 @@
-# Hide stock Sway session after the sway package lands.
-# (Shipping sway.desktop directly in airootfs conflicts during pacstrap.)
+# Remove stock Sway session after the sway package lands.
+# Ly does not honor Hidden=/NoDisplay= on .desktop files.
+# (Do not ship sway.desktop in airootfs — conflicts during pacstrap.)
 
 [Trigger]
 Operation = Install
@@ -8,8 +9,8 @@ Type = Package
 Target = sway
 
 [Action]
-Description = Hiding stock Sway session (SweetPotatOs uses Swirl)...
+Description = Removing stock Sway session (SweetPotatOs uses Swirl)...
 When = PostTransaction
 Depends = sh
 Depends = coreutils
-Exec = /bin/sh -c 'install -Dm644 /usr/local/share/sweetpotatos/sway.desktop.hide /usr/share/wayland-sessions/sway.desktop'
+Exec = /bin/sh -c 'rm -f /usr/share/wayland-sessions/sway.desktop; mkdir -p /etc/ly/wayland-sessions; if [ -f /usr/share/wayland-sessions/swirl.desktop ]; then install -Dm644 /usr/share/wayland-sessions/swirl.desktop /etc/ly/wayland-sessions/swirl.desktop; fi'

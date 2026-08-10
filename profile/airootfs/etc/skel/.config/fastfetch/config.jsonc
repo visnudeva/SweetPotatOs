@@ -25,8 +25,14 @@
     "packages",
     "shell",
     "display",
-    "de",
-    "wm",
+    {
+      "type": "de",
+      "format": "Swirl"
+    },
+    {
+      "type": "wm",
+      "format": "Swirl ({protocol-name})"
+    },
     "terminal",
     "cpu",
     "gpu",

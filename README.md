@@ -114,6 +114,12 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 
 `Mod` is usually the Super/Windows key.
 
+### Gestures
+
+| Gesture | Action |
+|---------|--------|
+| 3-finger left / right | Scroll the window strip |
+| 4-finger up / down | Next / previous workspace |
 
 ## Write ISO to USB
 

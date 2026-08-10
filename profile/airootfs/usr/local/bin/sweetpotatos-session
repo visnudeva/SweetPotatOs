@@ -3,4 +3,7 @@
 if command -v plymouth >/dev/null 2>&1; then
   plymouth quit --retain-splash 2>/dev/null || plymouth quit 2>/dev/null || true
 fi
+export XDG_CURRENT_DESKTOP=swirl
+export XDG_SESSION_DESKTOP=swirl
+export XDG_SESSION_TYPE=wayland
 exec swirl

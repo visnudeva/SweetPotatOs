@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Sway
-Comment=Stock Sway (hidden — SweetPotatOs uses Swirl)
-Exec=sway
-Type=Application
-DesktopNames=sway;wlroots
-NoDisplay=true
-Hidden=true

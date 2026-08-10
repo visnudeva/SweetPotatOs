@@ -1,0 +1,14 @@
+# Keep Ly's curated session list in sync when swirl is installed/upgraded.
+
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = swirl
+
+[Action]
+Description = Installing Swirl session for Ly...
+When = PostTransaction
+Depends = sh
+Depends = coreutils
+Exec = /bin/sh -c 'rm -f /usr/share/wayland-sessions/sway.desktop; mkdir -p /etc/ly/wayland-sessions; install -Dm644 /usr/share/wayland-sessions/swirl.desktop /etc/ly/wayland-sessions/swirl.desktop'

@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=1
+pkgrel=2
 pkgdesc='Scrolling tiling Wayland compositor (Scroll/Sway fork; uses stock swaybar/swaymsg/swaynag)'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -58,10 +58,10 @@ optdepends=(
 provides=('wayland-compositor')
 # Vendored wlroots 0.21 is under swirl/subprojects/ (Arch has no wlroots0.21 yet).
 source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
-        '50-systemd-user.conf'
+        '99-swirl-systemd-user.conf'
         'swirl-portals.conf')
 sha256sums=('SKIP'
-            '170d554a4d4870f0bc9ceda4611c7edb8365ff688201941eefc2a1d55e4d7af2'
+            '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
             '7f240d2e4a711dd3d4bb390bf90495edea0d15fd9bbf5f10a828338107d9ad1c')
 
 pkgver() {
@@ -90,6 +90,6 @@ package() {
   meson install -C build --destdir "$pkgdir"
   install -Dm644 swirl/LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 swirl/README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
-  install -Dm644 50-systemd-user.conf "$pkgdir/etc/sway/config.d/50-swirl-systemd-user.conf"
+  install -Dm644 99-swirl-systemd-user.conf "$pkgdir/etc/sway/config.d/99-swirl-systemd-user.conf"
   install -Dm644 swirl-portals.conf "$pkgdir/usr/share/xdg-desktop-portal/swirl-portals.conf"
 }

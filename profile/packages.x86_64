@@ -92,7 +92,7 @@ calamares
 qt6-base
 qt5-base
 accountsservice
-# SweetPotato desktop stack (swirl compositor; sway package = bar/msg/nag)
+# SweetPotato desktop: swirl compositor; sway package kept only for swaybar/swaymsg/swaynag (session removed)
 swirl
 sway
 swaybg

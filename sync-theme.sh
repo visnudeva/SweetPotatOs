@@ -102,8 +102,8 @@ sync_common_into() {
   cp -a "${SP}/themes/SweetPotato" "${dest}/.themes/"
   cp -f "${SP}/backgrounds/"*.png "${dest}/.local/share/backgrounds/"
   cp -f "${SP}/bin/swirl" "${dest}/.local/bin/swirl"
-  cp -f "${SP}/bin/sway" "${dest}/.local/bin/sway"
-  chmod 755 "${dest}/.local/bin/swirl" "${dest}/.local/bin/sway"
+  chmod 755 "${dest}/.local/bin/swirl"
+  rm -f "${dest}/.local/bin/sway"
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
   printf 'output * bg "~/.local/share/backgrounds/UsefulBinds.png" fill\n' \
     > "${dest}/.config/sway/wallpaper.conf"
