@@ -7,7 +7,7 @@ Durable context for humans and Cursor agents. Prefer this over chat history afte
 | Repo | Role | Remotes |
 |------|------|---------|
 | **SweetPotatOs** (this repo) | Archiso profile, ISO build, SourceForge tooling | GitHub `origin`, SourceForge `sourceforge` |
-| **SweetPotato** | Desktop theme + `install.sh` (source of truth for sway/gtk/fastfetch/…) | GitHub `origin` only |
+| **SweetPotato** | Desktop theme + `install.sh` (source of truth for Swirl/`~/.config/sway`/gtk/fastfetch/…) | GitHub `origin` only |
 
 Expected layout on a build machine (siblings):
 
@@ -27,8 +27,9 @@ Expected layout on a build machine (siblings):
    - `profile/airootfs/home/liveuser`
    - system logo dir `profile/airootfs/usr/local/share/sweetpotatos/`
    - `profile/airootfs/etc/fastfetch/config.jsonc`
-3. Build ISO: `sudo ./build.sh` (first time: `sudo ./build.sh --build-calamares`).
-4. Publish:
+3. Build packages if needed: `sudo ./build.sh --build-packages` (calamares + swirl).
+4. Build ISO: `sudo ./build.sh`.
+5. Publish:
    - Git: push SweetPotato → GitHub; SweetPotatOs → GitHub **and** `sourceforge`.
    - ISO files: `SF_USER=… ./sourceforge/upload.sh` (rsync ISO + `.sha256` + `htdocs/`).
 
@@ -56,10 +57,12 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Lid-close suspend must keep working while caffeine is on.
 - Live ISO: caffeine **on by default** so install is not interrupted by idle lock; lid still suspends via logind.
 
-## Live ISO specifics (`sync-theme.sh` injects into liveuser sway)
+## Live ISO specifics (`sync-theme.sh` injects into liveuser Swirl config)
 
 - Calamares: float window, **Mod+i**, autostart after ~5s (`sweetpotatos-calamares`).
-- Liveuser: empty password, sudo NOPASSWD, autologin tty1 → Sway.
+- Liveuser: empty password, sudo NOPASSWD, autologin tty1 → **Swirl** (`sweetpotatos-session`).
+- Compositor package: `swirl` in local `repo/` (`packaging/swirl`, `sudo ./build.sh --build-swirl`).
+- Bar / IPC / nag: stock from Arch `sway` package. Config stays in `~/.config/sway/`.
 
 ## SourceForge
 

@@ -8,7 +8,7 @@
 <table>
   <tr>
     <td>
-      <strong>SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Sway desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
+      <strong>SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Swirl desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
 <br>
     </td>
     <td>
@@ -19,8 +19,8 @@
 
 ## What you get
 
-- Live Sway session (`liveuser`, empty password, sudo without password)
-- Autologin on tty1 → SweetPotato desktop (foot, Thunar, mako, NetworkManager, …)
+- Live Swirl session (`liveuser`, empty password, sudo without password)
+- Autologin on tty1 → SweetPotato Swirl desktop (foot, Thunar, mako, NetworkManager, …)
 - Installer autostarts on the live desktop; also **Mod+i**, desktop *Install SweetPotatOs*, or `sweetpotatos-calamares`
 - Installed system uses the live squashfs, GRUB, and **Ly** on tty2
 
@@ -49,7 +49,7 @@ Then in SourceForge: Files → that release → ⓘ on the `.iso` → set as def
 - Arch-based build host
 - Root privileges (`mkarchiso`)
 - Packages: `archiso`, `base-devel`, `git`
-- Local **Calamares** package (AUR — not in official repos)
+- Local **Calamares** + **swirl** packages (see `sudo ./build.sh --build-packages`)
 
 ## Build
 
@@ -58,7 +58,8 @@ git clone https://github.com/visnudeva/SweetPotatOs.git
 cd SweetPotatOs
 
 # First time only — build Calamares into ./repo
-sudo ./build.sh --build-calamares
+sudo ./build.sh --build-packages
+# or separately: --build-calamares / --build-swirl
 
 # Build the ISO
 sudo ./build.sh
@@ -85,7 +86,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 |------|--------|
 | User | `liveuser` |
 | Password | empty (Enter) |
-| Desktop | Sway + SweetPotato |
+| Desktop | Swirl + SweetPotato |
 | Caffeine | **on by default** (no sleep/lock during install) |
 
 ### Useful binds
@@ -104,10 +105,10 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | `Mod+Print` | Screen record toggle (region + audio → `~/Videos`) |
 | `Mod+q` | Kill focused window |
 | `Mod+number` | Change workspaces |
-| `Mod+l` | Lock (swaylock) |
+| `Mod+l` | Lock screen |
 | `Mod+c` | Caffeine toggle (on by default on live ISO) |
 | `Mod+i` | Installer (Calamares) |
-| `Mod+Shift+e` | Exit Sway |
+| `Mod+Shift+e` | Exit Swirl |
 | `Mod+o` | Power off |
 | `Mod+Shift+c` | Reload config |
 
@@ -117,7 +118,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 ## Write ISO to USB
 
 On a SweetPotato desktop, **Disks** (gnome-disks) → select USB → *Restore Disk Image…*  
-(Polkit rules in SweetPotato allow `wheel` users to do this on Sway.)
+(Polkit rules in SweetPotato allow `wheel` users to do this on Swirl.)
 
 Or:
 
@@ -131,13 +132,15 @@ sudo dd if=out/SweetPotatOs-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 SweetPotatOs/
 ├── assets/           # README / branding art (Screenshot.png, SweetPotatOs.png, SPLogo.png)
-├── build.sh          # --build-calamares | mkarchiso wrapper
+├── build.sh          # --build-packages / --build-swirl / --build-calamares | mkarchiso
+├── packaging/swirl/  # PKGBUILD for the swirl compositor
+├── sync-theme.sh     # pull SweetPotato → airootfs + $HOME
 ├── profile/          # archiso profile
 │   ├── profiledef.sh
 │   ├── packages.x86_64
 │   ├── pacman.conf
 │   └── airootfs/     # live overlay (skel, Calamares, NetworkManager, …)
-├── repo/             # local pacman repo (calamares *.pkg.tar.*)
+├── repo/             # local pacman repo (calamares + swirl *.pkg.tar.*)
 ├── sourceforge/      # SourceForge project web + upload.sh (rsync)
 ├── out/              # built ISOs (gitignored)
 └── work/             # mkarchiso work dir (gitignored)

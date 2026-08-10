@@ -7,6 +7,62 @@ PROFILE="${ROOT}/profile"
 REPO="${ROOT}/repo"
 WORK="${ROOT}/work"
 OUT="${ROOT}/out"
+AUR_USER="${SUDO_USER:-}"
+
+need_repo_pkg() {
+  local name="$1"
+  ls "${REPO}/${name}"-*.pkg.tar.* >/dev/null 2>&1
+}
+
+build_local_pkg() {
+  local name="$1"
+  local srcdir="$2"
+  if [[ -z "${AUR_USER}" || "${AUR_USER}" == "root" ]]; then
+    echo "Run: sudo ./build.sh (from a normal user, not root login)." >&2
+    exit 1
+  fi
+  echo "[*] Building ${name} into ${REPO}..."
+  pacman -S --needed --noconfirm base-devel git meson ninja 2>/dev/null || true
+  local build_dir="${ROOT}/.aur-build/${name}"
+  mkdir -p "${ROOT}/.aur-build"
+  rm -rf "${build_dir}"
+  mkdir -p "${build_dir}"
+  cp -a "${srcdir}/." "${build_dir}/"
+  chown -R "${AUR_USER}:${AUR_USER}" "${ROOT}/.aur-build"
+  sudo -u "${AUR_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm" || {
+    echo "makepkg failed for ${name}; fix packaging/${name} or install the package into ${REPO}/ manually." >&2
+    exit 1
+  }
+  cp "${build_dir}"/*.pkg.tar.* "${REPO}/"
+  repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
+  echo "[+] ${name} added to local repo."
+}
+
+build_aur_pkg() {
+  local name="$1"
+  local aur_url="$2"
+  if [[ -z "${AUR_USER}" || "${AUR_USER}" == "root" ]]; then
+    echo "Run: sudo ./build.sh --build-calamares (from a normal user, not root login)." >&2
+    exit 1
+  fi
+  echo "[*] Building ${name} from AUR into ${REPO}..."
+  local build_dir="${ROOT}/.aur-build/${name}"
+  mkdir -p "${ROOT}/.aur-build"
+  chown -R "${AUR_USER}:${AUR_USER}" "${ROOT}/.aur-build"
+  pacman -S --needed --noconfirm base-devel git
+  if [[ ! -d "${build_dir}/.git" ]]; then
+    sudo -u "${AUR_USER}" git clone --depth 1 "${aur_url}" "${build_dir}"
+  else
+    sudo -u "${AUR_USER}" git -C "${build_dir}" pull --ff-only || true
+  fi
+  sudo -u "${AUR_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm" || {
+    echo "makepkg failed; install ${name} into ${REPO}/ manually." >&2
+    exit 1
+  }
+  cp "${build_dir}"/*.pkg.tar.* "${REPO}/"
+  repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
+  echo "[+] ${name} added to local repo."
+}
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo "This script must be run as root (sudo ./build.sh)." >&2
@@ -20,46 +76,67 @@ fi
 
 mkdir -p "${REPO}" "${OUT}"
 
-if ! ls "${REPO}"/*.pkg.tar.* >/dev/null 2>&1; then
-  if [[ "${1:-}" == "--build-calamares" ]]; then
-    echo "[*] Building calamares from AUR into ${REPO}..."
-    AUR_USER="${SUDO_USER:-}"
-    if [[ -z "${AUR_USER}" || "${AUR_USER}" == "root" ]]; then
-      echo "Run: sudo ./build.sh --build-calamares (from a normal user, not root login)." >&2
-      exit 1
-    fi
-    BUILD_DIR="${ROOT}/.aur-build/calamares"
-    mkdir -p "${ROOT}/.aur-build"
-    chown -R "${AUR_USER}:${AUR_USER}" "${ROOT}/.aur-build"
-    pacman -S --needed --noconfirm base-devel git
-    if [[ ! -d "${BUILD_DIR}/.git" ]]; then
-      sudo -u "${AUR_USER}" git clone --depth 1 https://aur.archlinux.org/calamares.git "${BUILD_DIR}"
-    else
-      sudo -u "${AUR_USER}" git -C "${BUILD_DIR}" pull --ff-only || true
-    fi
-    sudo -u "${AUR_USER}" bash -c "cd '${BUILD_DIR}' && makepkg -sr --noconfirm" || {
-      echo "makepkg failed; install calamares into ${REPO}/ manually." >&2
-      exit 1
-    }
-    cp "${BUILD_DIR}"/*.pkg.tar.* "${REPO}/"
-    repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
-    echo "[+] calamares added to local repo."
-  else
-    cat >&2 <<EOF
-[!] No packages in ${REPO}/
+DO_CALAMARES=0
+DO_SWIRL=0
+DO_ISO=1
+for arg in "$@"; do
+  case "${arg}" in
+    --build-calamares) DO_CALAMARES=1; DO_ISO=0 ;;
+    --build-swirl) DO_SWIRL=1; DO_ISO=0 ;;
+    --build-packages) DO_CALAMARES=1; DO_SWIRL=1; DO_ISO=0 ;;
+    --help|-h)
+      cat <<EOF
+Usage: sudo ./build.sh [options]
 
-Calamares is not in official Arch repos. Build it into the local repo first:
+  (no args)           Build ISO (requires calamares + swirl in repo/)
+  --build-calamares   Build Calamares into repo/ only
+  --build-swirl       Build Swirl compositor into repo/ only
+  --build-packages    Build calamares + swirl into repo/ only
+EOF
+      exit 0
+      ;;
+  esac
+done
 
-  sudo ./build.sh --build-calamares
+# Auto-build missing packages when building the ISO
+if (( DO_ISO )); then
+  need_repo_pkg calamares || DO_CALAMARES=1
+  need_repo_pkg swirl || DO_SWIRL=1
+fi
+
+if (( DO_CALAMARES )) && ! need_repo_pkg calamares; then
+  build_aur_pkg calamares https://aur.archlinux.org/calamares.git
+elif (( DO_CALAMARES )); then
+  echo "[*] calamares already in ${REPO}/ — skipping"
+fi
+
+if (( DO_SWIRL )) && ! need_repo_pkg swirl; then
+  build_local_pkg swirl "${ROOT}/packaging/swirl"
+elif (( DO_SWIRL )); then
+  echo "[*] swirl already in ${REPO}/ — skipping"
+fi
+
+if ! need_repo_pkg calamares || ! need_repo_pkg swirl; then
+  cat >&2 <<EOF
+[!] Local repo is missing required packages in ${REPO}/
+
+Build them first:
+
+  sudo ./build.sh --build-packages
 
 EOF
-    exit 1
-  fi
+  exit 1
 fi
 
 if [[ ! -f "${REPO}/sweetpotatos.db.tar.gz" ]]; then
   echo "[*] Initializing repo database..."
   repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.* 2>/dev/null || true
+fi
+
+if (( ! DO_ISO )); then
+  echo "[+] Packages ready in ${REPO}/"
+  ls -la "${REPO}/"*.pkg.tar.* 2>/dev/null || true
+  exit 0
 fi
 
 echo "[*] Building SweetPotatOs ISO (profile: ${PROFILE})..."

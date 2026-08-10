@@ -40,6 +40,8 @@ file_permissions=(
   ["/home/liveuser/.config/sway/scripts/record.sh"]="1000:1000:755"
   ["/home/liveuser/.config/sway/scripts/screenshot.sh"]="1000:1000:755"
   ["/home/liveuser/.config/sway/scripts/ensure-wallpaper.sh"]="1000:1000:755"
+  ["/home/liveuser/.config/sway/scripts/caffeine.sh"]="1000:1000:755"
+  ["/home/liveuser/.local/bin/swirl"]="1000:1000:755"
   ["/home/liveuser/.local/bin/sway"]="1000:1000:755"
   ["/etc/skel/.config/sway/scripts/applauncher.sh"]="0:0:755"
   ["/etc/skel/.config/sway/scripts/apply-theme.sh"]="0:0:755"
@@ -51,5 +53,7 @@ file_permissions=(
   ["/etc/skel/.config/sway/scripts/record.sh"]="0:0:755"
   ["/etc/skel/.config/sway/scripts/screenshot.sh"]="0:0:755"
   ["/etc/skel/.config/sway/scripts/ensure-wallpaper.sh"]="0:0:755"
+  ["/etc/skel/.config/sway/scripts/caffeine.sh"]="0:0:755"
+  ["/etc/skel/.local/bin/swirl"]="0:0:755"
   ["/etc/skel/.local/bin/sway"]="0:0:755"
 )

@@ -77,6 +77,7 @@ sync_common_into() {
   cp -f "${SP}/sway/config" "${dest}/.config/sway/config-fr"
   cp -f "${SP}/sway/config-us" "${dest}/.config/sway/config-us"
   cp -f "${SP}"/sway/scripts/*.sh "${dest}/.config/sway/scripts/"
+  cp -f "${SP}/sway/scripts/autotile.lua" "${dest}/.config/sway/scripts/autotile.lua"
   chmod 755 "${dest}/.config/sway/scripts/"*.sh
   cp -f "${SP}/gtk-3.0/"* "${dest}/.config/gtk-3.0/"
   cp -f "${SP}/gtk-4.0/"* "${dest}/.config/gtk-4.0/"
@@ -100,8 +101,9 @@ sync_common_into() {
   cp -f "${SP}/networkmanager-dmenu/config.ini" "${dest}/.config/networkmanager-dmenu/"
   cp -a "${SP}/themes/SweetPotato" "${dest}/.themes/"
   cp -f "${SP}/backgrounds/"*.png "${dest}/.local/share/backgrounds/"
+  cp -f "${SP}/bin/swirl" "${dest}/.local/bin/swirl"
   cp -f "${SP}/bin/sway" "${dest}/.local/bin/sway"
-  chmod 755 "${dest}/.local/bin/sway"
+  chmod 755 "${dest}/.local/bin/swirl" "${dest}/.local/bin/sway"
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
   printf 'output * bg "~/.local/share/backgrounds/UsefulBinds.png" fill\n' \
     > "${dest}/.config/sway/wallpaper.conf"
@@ -146,7 +148,7 @@ inject_calamares_float "${ISO}/etc/skel/.config/sway/config-us"
 inject_calamares_float "${ISO}/etc/skel/.config/sway/config-fr"
 cat > "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
-# Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (sway wrapper).
+# Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (swirl wrapper).
 # Ensure a real PATH so glycin/bwrap can run (Firefox Save As / portal file chooser).
 # Note: do not hardcode a username here — skel is copied to each new home.
 LD_PRELOAD=
@@ -169,7 +171,7 @@ inject_live_calamares "${ISO}/home/liveuser/.config/sway/config-us"
 inject_live_calamares "${ISO}/home/liveuser/.config/sway/config-fr"
 cat > "${ISO}/home/liveuser/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
-# Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (sway wrapper).
+# Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (swirl wrapper).
 # Ensure a real PATH so glycin/bwrap can run (Firefox Save As / portal file chooser).
 LD_PRELOAD=
 GTK_CSD=1

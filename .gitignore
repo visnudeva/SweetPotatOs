@@ -27,12 +27,18 @@ sourceforge/files/
 /run/
 /new_root/
 
-# Local pacman repo packages (large; rebuild with --build-calamares)
+# Local pacman repo packages (large; rebuild with --build-packages)
 repo/*.pkg.tar.*
 repo/*.pkg.tar.*.sig
 repo/*.db*
 repo/*.files*
 !repo/.gitkeep
+
+# swirl/calamares makepkg worktrees
+packaging/swirl/src/
+packaging/swirl/pkg/
+packaging/swirl/swirl/
+packaging/swirl/*.pkg.tar.*
 
 # Editor / OS junk
 *~

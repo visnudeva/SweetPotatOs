@@ -1,5 +1,9 @@
 #!/bin/sh
-# SweetPotato: drop Archcraft gtk-nocsd so GTK apps keep close buttons
+# SweetPotato: Sway session entry redirects to Swirl (same config dir / IPC tools)
 unset LD_PRELOAD
 export GTK_CSD=1
-exec /usr/bin/sway "$@"
+dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+if [ -x "$dir/swirl" ]; then
+  exec "$dir/swirl" "$@"
+fi
+exec swirl "$@"

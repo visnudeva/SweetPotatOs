@@ -10,6 +10,7 @@ Before non-trivial changes, read `NOTES.md` at the repo root.
 ## Hard rules from prior work
 
 - Theme source of truth is the sibling **SweetPotato** repo. Sync into this ISO with `./sync-theme.sh` (not by hand-copying one tree only).
+- Desktop compositor is **Swirl**; `sway` package stays for swaybar/swaymsg/swaynag. Config dir remains `~/.config/sway/`.
 - Fastfetch must use ASCII `SPLogo.asc` (`logo.type: file`). Do not switch primary logo back to chafa/PNG — it falls back to Arch in foot.
 - Lid close suspends via logind `lid-sleep.conf`. Never reintroduce `do-not-suspend.conf` that sets `HandleLidSwitch=ignore`. Caffeine must not block lid suspend.
 - Push SweetPotatOs to **both** `origin` (GitHub) and `sourceforge` when the user asks to publish git. ISO upload is separate (`sourceforge/upload.sh`).

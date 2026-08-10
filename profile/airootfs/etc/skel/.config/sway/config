@@ -1,4 +1,4 @@
-# SweetPotato sway config (French AZERTY)
+# SweetPotato / Swirl config (French AZERTY)
 #
 # Read `man 5 sway` for a complete reference.
 
@@ -49,11 +49,31 @@ input type:keyboard {
     xkb_layout "fr"
 }
 
-# Three-finger swipes to switch workspaces
-seat * xcursor_theme capitaine-cursors 24
+### Swirl layout (niri-like)
+# Columns on an infinite horizontal strip. Autotile pairs columns:
+# odd last = full width, even = 50/50 (see scripts/autotile.lua).
+default_orientation horizontal
+workspace_layout horizontal
+layout_default_width 1.0
+layout_default_height 1.0
+# Autotile script owns single-window maximize (set_size blocks maximize_if_single).
+maximize_if_single false
+workspace_next_on_output_create_empty true
 
-bindgesture swipe:3:right workspace next_on_output
-bindgesture swipe:3:left workspace prev_on_output
+# 3-finger: continuous scroll along the window strip (must not bind 3-finger
+# swipes, or layout scroll is stolen).
+gesture_scroll_enable true
+gesture_scroll_fingers 3
+gesture_scroll_sensitivity 1.0
+
+# 4-finger vertical: dynamic workspaces (traditional direction: swipe up → next)
+bindgesture swipe:4:up workspace next_on_output
+bindgesture swipe:4:down workspace prev_on_output
+
+# Autotile: pair columns (odd last = full, even = 50/50)
+lua ~/.config/sway/scripts/autotile.lua
+
+seat * xcursor_theme capitaine-cursors 24
 
 ### Key bindings
 #
@@ -96,8 +116,8 @@ bindgesture swipe:3:left workspace prev_on_output
     # Reload the configuration file
     bindsym $mod+Shift+c reload
 
-    # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+    # Exit Swirl (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit Swirl? This will end your Wayland session.' -B 'Yes, exit Swirl' 'swaymsg exit'
 
     # Power off
     bindsym $mod+o exec swaynag -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'

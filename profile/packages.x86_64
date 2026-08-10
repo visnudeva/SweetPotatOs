@@ -92,11 +92,13 @@ calamares
 qt6-base
 qt5-base
 accountsservice
-# SweetPotato desktop stack
+# SweetPotato desktop stack (swirl compositor; sway package = bar/msg/nag)
+swirl
 sway
 swaybg
 swayidle
 swaylock
+lua
 foot
 wmenu
 j4-dmenu-desktop

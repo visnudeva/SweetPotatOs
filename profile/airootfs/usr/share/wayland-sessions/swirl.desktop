@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Swirl
+Comment=SweetPotato scrolling tiling Wayland compositor (uses swaybar/swaymsg/swaynag)
+Exec=swirl
+Type=Application
+DesktopNames=swirl;sway;wlroots

@@ -1,0 +1,14 @@
+#!/bin/sh
+# SweetPotato: drop Archcraft gtk-nocsd so GTK apps keep close buttons
+unset LD_PRELOAD
+export GTK_CSD=1
+dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+for bin in /usr/bin/swirl /usr/local/bin/swirl \
+           "${HOME}/.local/libexec/swirl" \
+           "${dir}/../libexec/swirl"; do
+  if [ -x "$bin" ] && [ ! "$bin" -ef "$0" ]; then
+    exec "$bin" "$@"
+  fi
+done
+echo "swirl not found — install the swirl package or build from https://github.com/visnudeva/swirl" >&2
+exit 127
