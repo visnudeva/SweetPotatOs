@@ -1,4 +1,7 @@
-SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Sway desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
+SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Swirl desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
+
+Swirl (https://github.com/visnudeva/swirl) is the scrolling tiling Wayland compositor — columns on a horizontal strip, dynamic workspaces, Sway-compatible config, stock swaybar/swaymsg/swaynag.
 
 Homepage / source: https://github.com/visnudeva/SweetPotatOs
 Theme: https://github.com/visnudeva/SweetPotato
+Compositor: https://github.com/visnudeva/swirl

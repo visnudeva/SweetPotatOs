@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Arch-based Linux for old potato PCs</title>
-  <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Sway desktop, and Calamares installer.">
+  <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Swirl desktop, and Calamares installer.">
   <style>
     :root {
       --red: #a73b50;
@@ -142,12 +142,13 @@
     <h1>SweetPotatOs</h1>
     <span class="tag">Arch-based Linux distro</span>
     <p class="lead">
-      A live graphical ISO with the SweetPotato Sway desktop and a Calamares installer,
+      A live graphical ISO with the SweetPotato <strong>Swirl</strong> desktop and a Calamares installer,
       built to revive slow old potato PCs and make them sweet again.
     </p>
     <div class="actions">
       <a class="btn btn-primary" href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download ISO</a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotatOs">GitHub</a>
+      <a class="btn btn-secondary" href="https://github.com/visnudeva/swirl">Swirl</a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotato">SweetPotato theme</a>
     </div>
   </header>
@@ -159,18 +160,42 @@
   <main>
     <h2>What you get</h2>
     <ul>
-      <li>Live Sway session (<code>liveuser</code>, empty password, sudo without password)</li>
+      <li>Live <strong>Swirl</strong> session (<code>liveuser</code>, empty password, sudo without password)</li>
       <li>Autologin on tty1 → SweetPotato desktop</li>
       <li>Installer autostarts (also <code>Mod+i</code> / <em>Install SweetPotatOs</em>)</li>
-      <li>Installed system uses GRUB and Ly on tty2</li>
+      <li>Installed system uses GRUB and Ly on tty2 (pick the <strong>Swirl</strong> session)</li>
     </ul>
+
+    <h2>Swirl</h2>
+    <p>
+      <a href="https://github.com/visnudeva/swirl">Swirl</a> is the Wayland compositor SweetPotatOs ships:
+      a light scrolling tiling window manager forked from Scroll/Sway, with a layout inspired by Niri and PaperWM.
+      Windows sit as <strong>columns on an infinite horizontal strip</strong>; workspaces move vertically.
+      Config stays Sway-compatible under <code>~/.config/sway/</code>.
+    </p>
+    <p>
+      Swirl ships only the compositor binary. The status bar and helpers are stock
+      <code>swaybar</code>, <code>swaymsg</code>, and <code>swaynag</code> — same i3/Sway IPC, less to maintain.
+    </p>
+    <table>
+      <tr><th>Gesture</th><th>Action</th></tr>
+      <tr><td>3-finger left / right</td><td>Scroll the window strip</td></tr>
+      <tr><td>4-finger up / down</td><td>Next / previous workspace</td></tr>
+      <tr><td>2-finger scroll</td><td>Natural scrolling inside apps</td></tr>
+    </table>
+    <table>
+      <tr><th>Windows</th><th>Auto-tile</th></tr>
+      <tr><td>1</td><td>Full width</td></tr>
+      <tr><td>2</td><td>50 / 50</td></tr>
+      <tr><td>3+</td><td>Pairs of 50 / 50; odd last column full</td></tr>
+    </table>
 
     <h2>Live session</h2>
     <table>
       <tr><th>Item</th><th>Value</th></tr>
       <tr><td>User</td><td><code>liveuser</code></td></tr>
       <tr><td>Password</td><td>empty (Enter)</td></tr>
-      <tr><td>Desktop</td><td>Sway + SweetPotato</td></tr>
+      <tr><td>Desktop</td><td>Swirl + SweetPotato</td></tr>
       <tr><td>Colors</td><td>#a73b50 · #f79b29 · #1d1f21</td></tr>
     </table>
 
@@ -182,6 +207,7 @@ sudo dd if=SweetPotatOs-*-x86_64.iso of=/dev/sdX bs=4M status=progress oflag=syn
 
   <footer>
     Source: <a href="https://github.com/visnudeva/SweetPotatOs">github.com/visnudeva/SweetPotatOs</a>
+    · Compositor: <a href="https://github.com/visnudeva/swirl">Swirl</a>
     · Downloads: <a href="https://sourceforge.net/projects/sweetpotatos/files/">SourceForge Files</a>
   </footer>
 </body>
