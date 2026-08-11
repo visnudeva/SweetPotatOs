@@ -89,6 +89,22 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Desktop | Swirl + SweetPotato |
 | Caffeine | **on by default** (no sleep/lock during install) |
 
+### Default apps
+
+| Role | App |
+|------|-----|
+| Browser | Firefox |
+| Files | Thunar |
+| Editor | Geany |
+| Terminal | foot |
+| Video | mpv |
+| Image edit | GIMP |
+| Music | Audacious |
+| PDF | mupdf |
+| Images | swayimg |
+| Flatpaks | Bazaar (+ flatpak) |
+| Disks | GNOME Disks |
+
 ### Useful binds
 
 | Bind | Action |
