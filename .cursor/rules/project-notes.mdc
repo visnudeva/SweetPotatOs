@@ -13,4 +13,6 @@ Before non-trivial changes, read `NOTES.md` at the repo root.
 - Desktop compositor is **Swirl**; `sway` package stays for swaybar/swaymsg/swaynag. Config dir remains `~/.config/sway/`.
 - Fastfetch must use ASCII `SPLogo.asc` (`logo.type: file`). Do not switch primary logo back to chafa/PNG — it falls back to Arch in foot.
 - Lid close suspends via logind `lid-sleep.conf`. Never reintroduce `do-not-suspend.conf` that sets `HandleLidSwitch=ignore`. Caffeine must not block lid suspend.
+- Ly always lists root first; never ship `/etc/ly/save.txt` as `0`. Post-install `sweetpotatos-fix-ly` (Calamares `shellprocess@fix-ly`) must set the saved user to `${USER}` and remove `liveuser`.
+- Live Calamares keyboard needs `sweetpotatos-sway-xkb-watch` (locale1 → Swirl). Do not assume Calamares Wayland apply changes the compositor by itself.
 - Push SweetPotatOs to **both** `origin` (GitHub) and `sourceforge` when the user asks to publish git. ISO upload is separate (`sourceforge/upload.sh`).

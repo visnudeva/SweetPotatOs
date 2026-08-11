@@ -1,0 +1,54 @@
+#!/bin/bash
+# Apply org.freedesktop.locale1 X11 keyboard settings to the running Swirl/Sway
+# session. Calamares on Wayland only updates locale1; wlroots compositors do not
+# pick that up automatically (unlike KWin --locale1 / GNOME).
+set -euo pipefail
+
+bus_get() {
+  local prop="$1"
+  busctl get-property org.freedesktop.locale1 /org/freedesktop/locale1 \
+    org.freedesktop.locale1 "${prop}" 2>/dev/null \
+    | sed -n 's/^s "\(.*\)"$/\1/p'
+}
+
+layout="$(bus_get X11Layout)"
+variant="$(bus_get X11Variant)"
+options="$(bus_get X11Options)"
+
+[[ -n "${layout}" ]] || exit 0
+
+if [[ -z "${SWAYSOCK:-}" ]]; then
+  SWAYSOCK="$(find "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}" -maxdepth 1 -type s -name 'sway-ipc.*.sock' 2>/dev/null | head -1 || true)"
+  export SWAYSOCK
+fi
+[[ -n "${SWAYSOCK:-}" ]] || exit 0
+command -v swaymsg >/dev/null 2>&1 || exit 0
+
+# Comma-separated layouts/variants are valid for xkb_layout / xkb_variant.
+swaymsg -q "input type:keyboard xkb_layout \"${layout}\"" || true
+if [[ -n "${variant}" ]]; then
+  swaymsg -q "input type:keyboard xkb_variant \"${variant}\"" || true
+else
+  swaymsg -q 'input type:keyboard xkb_variant ""' || true
+fi
+if [[ -n "${options}" ]]; then
+  swaymsg -q "input type:keyboard xkb_options \"${options}\"" || true
+else
+  swaymsg -q 'input type:keyboard xkb_options ""' || true
+fi
+
+# Keep live config in sync so a later reload does not snap back to "us".
+cfg="${HOME}/.config/sway/config"
+if [[ -f "${cfg}" ]]; then
+  # Escape & for sed replacement; layouts are usually plain [a-z0-9,_-].
+  esc_layout="$(printf '%s' "${layout}" | sed 's/[&|]/g')"
+  sed -i "s/^[[:space:]]*xkb_layout[[:space:]]\".*\"/    xkb_layout \"${esc_layout}\"/" "${cfg}" || true
+  if [[ -n "${variant}" ]]; then
+    esc_variant="$(printf '%s' "${variant}" | sed 's/[&|]/g')"
+    if grep -q '^[[:space:]]*xkb_variant' "${cfg}"; then
+      sed -i "s/^[[:space:]]*xkb_variant[[:space:]].*/    xkb_variant \"${esc_variant}\"/" "${cfg}" || true
+    else
+      sed -i "/xkb_layout \"${esc_layout}\"/a\\    xkb_variant \"${esc_variant}\"" "${cfg}" || true
+    fi
+  fi
+fi

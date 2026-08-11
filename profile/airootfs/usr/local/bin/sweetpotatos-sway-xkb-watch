@@ -1,0 +1,23 @@
+#!/bin/bash
+# Live session: keep Swirl keyboard layout synced with systemd-localed.
+# Calamares applyLocale1() updates locale1 when the user picks a layout; this
+# watcher pushes that into the running compositor so password fields etc. match.
+set -euo pipefail
+
+LOCK="${XDG_RUNTIME_DIR:-/tmp}/sweetpotatos-xkb-watch.lock"
+exec 9>"${LOCK}"
+flock -n 9 || exit 0
+
+SYNC="/usr/local/bin/sweetpotatos-sway-xkb-sync"
+[[ -x "${SYNC}" ]] || exit 0
+
+"${SYNC}" || true
+
+# Debounced apply on locale1 property changes (Calamares SetX11Keyboard).
+dbus-monitor --system \
+  "type='signal',interface='org.freedesktop.DBus.Properties',path='/org/freedesktop/locale1',member='PropertiesChanged'" \
+  2>/dev/null | while IFS= read -r _; do
+  # Coalesce bursts from a single UI selection
+  while read -r -t 0.25 _; do :; done
+  "${SYNC}" || true
+done

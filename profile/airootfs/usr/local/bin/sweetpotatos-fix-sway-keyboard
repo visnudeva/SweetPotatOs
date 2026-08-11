@@ -1,0 +1,47 @@
+#!/bin/bash
+# After Calamares creates the user, select the matching Swirl bind layout
+# (config-us / config-fr) from the keyboard page choice.
+set -euo pipefail
+
+TARGET_USER="${1:-}"
+LAYOUT="${2:-}"
+VARIANT="${3:-}"
+
+if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" || "${TARGET_USER}" == "liveuser" ]]; then
+  echo "sweetpotatos-fix-sway-keyboard: invalid user '${TARGET_USER}'" >&2
+  exit 1
+fi
+
+HOME_DIR="/home/${TARGET_USER}"
+SWAY_DIR="${HOME_DIR}/.config/sway"
+[[ -d "${SWAY_DIR}" ]] || exit 0
+
+primary="${LAYOUT%%,*}"
+primary="${primary:-us}"
+
+pick=""
+case "${primary}" in
+  fr) pick="config-fr" ;;
+  us) pick="config-us" ;;
+esac
+
+if [[ -n "${pick}" && -f "${SWAY_DIR}/${pick}" ]]; then
+  cp -f "${SWAY_DIR}/${pick}" "${SWAY_DIR}/config"
+else
+  # Unknown layout: keep config, only rewrite xkb_* lines.
+  if [[ -n "${LAYOUT}" && -f "${SWAY_DIR}/config" ]]; then
+    esc="$(printf '%s' "${LAYOUT}" | sed 's/[&|]/g')"
+    sed -i "s/^[[:space:]]*xkb_layout[[:space:]]\".*\"/    xkb_layout \"${esc}\"/" "${SWAY_DIR}/config" || true
+  fi
+  if [[ -n "${VARIANT}" && -f "${SWAY_DIR}/config" ]]; then
+    escv="$(printf '%s' "${VARIANT}" | sed 's/[&|]/g')"
+    if grep -q '^[[:space:]]*xkb_variant' "${SWAY_DIR}/config"; then
+      sed -i "s/^[[:space:]]*xkb_variant[[:space:]].*/    xkb_variant \"${escv}\"/" "${SWAY_DIR}/config" || true
+    else
+      sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${SWAY_DIR}/config" || true
+    fi
+  fi
+fi
+
+chown -R "${TARGET_USER}:${TARGET_USER}" "${SWAY_DIR}" 2>/dev/null || true
+echo "sweetpotatos-fix-sway-keyboard: ${TARGET_USER} → layout ${LAYOUT:-?} (${pick:-patched})"

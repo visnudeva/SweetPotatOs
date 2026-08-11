@@ -1,0 +1,53 @@
+#!/bin/bash
+# Post-install Ly fixups for SweetPotatOs.
+# Ly always includes root (uid 0) first in its user list; airootfs ships
+# /etc/ly/save.txt with index 0, so the login field defaults to "root".
+# After Calamares creates the real user, point Ly at that account and
+# drop live-ISO leftovers (liveuser / tty1 autologin).
+set -euo pipefail
+
+TARGET_USER="${1:-}"
+if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" || "${TARGET_USER}" == "liveuser" ]]; then
+  echo "sweetpotatos-fix-ly: refusing invalid user '${TARGET_USER}'" >&2
+  exit 1
+fi
+
+# Remove live session account so it cannot steal a Ly slot / confuse logins.
+if id liveuser >/dev/null 2>&1; then
+  userdel -r liveuser 2>/dev/null || userdel liveuser 2>/dev/null || true
+fi
+rm -f /etc/sudoers.d/liveuser
+rm -f /etc/systemd/system/getty@tty1.service.d/autologin.conf
+rmdir /etc/systemd/system/getty@tty1.service.d 2>/dev/null || true
+
+UID_MIN="$(awk '/^UID_MIN/{print $2; exit}' /etc/login.defs)"
+UID_MAX="$(awk '/^UID_MAX/{print $2; exit}' /etc/login.defs)"
+UID_MIN="${UID_MIN:-1000}"
+UID_MAX="${UID_MAX:-60000}"
+
+# Match fairyglade/ly getAllUsernames(): root + UIDs in [UID_MIN, UID_MAX],
+# in /etc/passwd (getpwent) order.
+index=0
+found=""
+while IFS=: read -r name _ uid _; do
+  [[ -n "${name}" && -n "${uid}" ]] || continue
+  if [[ "${uid}" -eq 0 ]] || { [[ "${uid}" -ge "${UID_MIN}" ]] && [[ "${uid}" -le "${UID_MAX}" ]]; }; then
+    if [[ "${name}" == "${TARGET_USER}" ]]; then
+      found="${index}"
+      break
+    fi
+    index=$((index + 1))
+  fi
+done < /etc/passwd
+
+if [[ -z "${found}" ]]; then
+  echo "sweetpotatos-fix-ly: user '${TARGET_USER}' not in Ly candidate list" >&2
+  exit 1
+fi
+
+mkdir -p /etc/ly
+# type_username=false → first line is the user-list index; session 0 = Swirl.
+printf '%s\n%s:0\n' "${found}" "${TARGET_USER}" > /etc/ly/save.txt
+chmod 644 /etc/ly/save.txt
+
+echo "sweetpotatos-fix-ly: Ly default user → ${TARGET_USER} (index ${found})"

@@ -39,6 +39,18 @@ exec ~/.config/sway/scripts/caffeine.sh on
 ' "${f}"
 }
 
+inject_live_xkb_watch() {
+  local f="$1"
+  # Mirror Calamares locale1 keyboard picks into the running Swirl session
+  if grep -q 'sweetpotatos-sway-xkb-watch' "${f}"; then
+    return 0
+  fi
+  sed -i '/^### Input configuration/i\
+# Calamares (Wayland) updates systemd-localed; push that into Swirl live\
+exec sweetpotatos-sway-xkb-watch
+' "${f}"
+}
+
 inject_live_calamares() {
   local f="$1"
   if ! grep -q 'bindsym \$mod+i exec sweetpotatos-calamares' "${f}"; then
@@ -49,6 +61,7 @@ inject_live_calamares() {
 ' "${f}"
   fi
   inject_live_caffeine "${f}"
+  inject_live_xkb_watch "${f}"
   # Autostart installer after the session is up (Archcraft-style sudo -E launcher)
   sed -i '/Autostart installer on the live ISO session/,+1d' "${f}"
   sed -i '/^include \/etc\/sway\/config.d\/\*/i\
