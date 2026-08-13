@@ -54,6 +54,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 ## Caffeine vs suspend
 
 - **Mod+c** / `caffeine.sh`: disables **idle** lock/display-off only (`systemd-inhibit --what=idle`).
+- **Mod+Shift+b** / `fsb100.sh`: fullscreen media → 100% backlight, restore on exit (on by default).
 - Lid-close suspend must keep working while caffeine is on.
 - Live ISO: caffeine **on by default** so install is not interrupted by idle lock; lid still suspends via logind.
 

@@ -109,6 +109,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Caffeine: toggle idle lock / display off (lid-close still suspends)
     bindsym $mod+c exec ~/.config/sway/scripts/caffeine.sh
 
+    # FSB100: fullscreen media → max brightness
+    bindsym $mod+Shift+b exec ~/.config/sway/scripts/fsb100.sh
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     floating_modifier $mod normal
@@ -263,6 +266,8 @@ bar {
 exec --no-startup-id sh -c '/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 || /usr/lib/xfce-polkit/xfce-polkit || /usr/lib/xfce4/xfce-polkit || true'
 # Apply GTK/icon/cursor theme (Thunar reads gsettings/xfconf/xsettingsd)
 exec ~/.config/sway/scripts/apply-theme.sh
+# FSB100: max backlight while fullscreen media is focused
+exec ~/.config/sway/scripts/fsb100.sh on
 # Notifications, USB automount, tray applets
 exec mako
 exec udiskie --tray
