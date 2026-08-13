@@ -1,7 +1,6 @@
 #!/bin/bash
 # Post-install cleanup for SweetPotatOs live-only bits and admin rights.
-# Runs after Calamares users + packages so the installed user can sudo and
-# the installer no longer appears in the app launcher.
+# Runs after Calamares packages so the installer UI is gone and sudo still works.
 set -euo pipefail
 
 TARGET_USER="${1:-}"
@@ -10,20 +9,8 @@ if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" || "${TARGET_USER}" == "
   exit 1
 fi
 
-# Ensure the Calamares user has admin groups (wheel = sudo via 10-wheel).
-for grp in wheel audio video storage optical network power input; do
-  if getent group "${grp}" >/dev/null 2>&1; then
-    usermod -aG "${grp}" "${TARGET_USER}" 2>/dev/null || true
-  fi
-done
-
-# Belt-and-suspenders: Calamares also writes 10-installer; keep a permanent rule.
-mkdir -p /etc/sudoers.d
-cat > /etc/sudoers.d/10-wheel << 'EOF'
-# Allow members of group wheel to run any command.
-%wheel ALL=(ALL:ALL) ALL
-EOF
-chmod 440 /etc/sudoers.d/10-wheel
+# Re-assert sudo (in case anything between users and packages dropped it).
+/usr/local/bin/sweetpotatos-fix-sudo "${TARGET_USER}"
 
 # Drop live installer entries (package remove may leave airootfs .desktop files).
 rm -f /usr/share/applications/sweetpotatos-installer.desktop
@@ -31,8 +18,8 @@ rm -f /usr/share/applications/calamares.desktop
 rm -f /usr/local/share/sweetpotatos/calamares.desktop
 rm -f /usr/local/bin/sweetpotatos-calamares
 rm -f /etc/calamares/launch.sh
-rm -rf /etc/calamares
+# Keep /etc/calamares until after this script returns; only purge branding leftovers.
 rm -f /usr/local/bin/sweetpotatos-sway-xkb-watch
 rm -f /usr/local/bin/sweetpotatos-sway-xkb-sync
 
-echo "sweetpotatos-cleanup-live: ${TARGET_USER} → wheel + sudo; installer desktop removed"
+echo "sweetpotatos-cleanup-live: installer desktop removed for ${TARGET_USER}"

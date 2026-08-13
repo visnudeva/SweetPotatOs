@@ -12,6 +12,9 @@ if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" || "${TARGET_USER}" == "
   exit 1
 fi
 
+# Grant sudo before dropping liveuser (wheel membership + sudoers.d drop-ins).
+/usr/local/bin/sweetpotatos-fix-sudo "${TARGET_USER}"
+
 # Remove live session account so it cannot steal a Ly slot / confuse logins.
 if id liveuser >/dev/null 2>&1; then
   userdel -r liveuser 2>/dev/null || userdel liveuser 2>/dev/null || true

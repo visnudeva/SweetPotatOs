@@ -1,0 +1,58 @@
+#!/bin/bash
+# Ensure the Calamares-created user can use sudo on the installed system.
+# Called from sweetpotatos-fix-ly (and again from cleanup-live).
+set -euo pipefail
+
+TARGET_USER="${1:-}"
+if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" || "${TARGET_USER}" == "liveuser" ]]; then
+  echo "sweetpotatos-fix-sudo: refusing invalid user '${TARGET_USER}'" >&2
+  exit 1
+fi
+
+if ! id "${TARGET_USER}" >/dev/null 2>&1; then
+  echo "sweetpotatos-fix-sudo: user '${TARGET_USER}' does not exist" >&2
+  exit 1
+fi
+
+# Admin + desktop device groups
+for grp in wheel audio video storage optical network power input; do
+  if getent group "${grp}" >/dev/null 2>&1; then
+    usermod -aG "${grp}" "${TARGET_USER}" || true
+  fi
+done
+
+mkdir -p /etc/sudoers.d
+
+# Group rule (Arch convention). ASCII-only comments -- sudo can be picky.
+cat > /etc/sudoers.d/10-wheel << 'EOF'
+# SweetPotatOs: members of wheel may run any command
+%wheel ALL=(ALL:ALL) ALL
+EOF
+chmod 440 /etc/sudoers.d/10-wheel
+chown root:root /etc/sudoers.d/10-wheel
+
+# Explicit per-user rule so sudo works even if group membership is stale
+# until the next login (or if wheel is missing for any reason).
+cat > /etc/sudoers.d/10-installed-user << EOF
+# SweetPotatOs: Calamares user ${TARGET_USER}
+${TARGET_USER} ALL=(ALL:ALL) ALL
+EOF
+chmod 440 /etc/sudoers.d/10-installed-user
+chown root:root /etc/sudoers.d/10-installed-user
+
+# Also uncomment the packaged wheel line in the main sudoers file.
+if [[ -f /etc/sudoers ]]; then
+  sed -i -E 's/^#\s*(%wheel\s+ALL=\(ALL:ALL\)\s+ALL)/\1/' /etc/sudoers || true
+fi
+
+# Drop broken/ignored drop-ins that could confuse debugging
+rm -f /etc/sudoers.d/liveuser
+
+if command -v visudo >/dev/null 2>&1; then
+  visudo -cf /etc/sudoers >/dev/null
+  visudo -cf /etc/sudoers.d/10-wheel >/dev/null
+  visudo -cf /etc/sudoers.d/10-installed-user >/dev/null
+fi
+
+echo "sweetpotatos-fix-sudo: ${TARGET_USER} -> wheel + /etc/sudoers.d/10-installed-user"
+id "${TARGET_USER}"
