@@ -22,7 +22,7 @@ Expected layout on a build machine (siblings):
 
 1. Change theme/desktop in **SweetPotato** first; test on the running session (`~/.config/…`).
 2. Run `./sync-theme.sh` from SweetPotatOs to copy into:
-   - live home (`$HOME`)
+   - live home (`$HOME`) — **only on Swirl/Arch**. On a **GNOME/Bluefin** host this is skipped automatically (Papirus + Arch glycin paths blank half the GNOME icons). Pass `--live` only if you really want to clobber the GNOME session; `--iso-only` forces airootfs-only.
    - `profile/airootfs/etc/skel`
    - `profile/airootfs/home/liveuser`
    - system logo dir `profile/airootfs/usr/local/share/sweetpotatos/`
@@ -68,6 +68,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Ly: `waylandsessions = /etc/ly/wayland-sessions` (Swirl only). Pacman hooks **delete** `/usr/share/wayland-sessions/sway.desktop` (Ly ignores Hidden=). Keep the Arch `sway` package only for swaybar/swaymsg/swaynag.
 - Ly always lists **root** first. Do **not** ship `/etc/ly/save.txt` with index `0` (that selects root). Calamares `shellprocess@fix-ly` (`sweetpotatos-fix-ly`) removes `liveuser` and writes `save.txt` for `${USER}` after the users step.
 - Live Calamares keyboard: on Wayland Calamares only updates **locale1**; Swirl ignores it. Live session runs `sweetpotatos-sway-xkb-watch` to mirror locale1 → `swaymsg`. Installed user gets `shellprocess@fix-sway-keyboard` (`config-us` / `config-fr`).
+- **Gotcha:** shellprocess GS vars must be `${gs[keyboardLayout]}` / `${gs[keyboardVariant]}`. Bare `gs[...]` is passed literally, hits a sed path, and aborts install (seen on 2026.08.12 ISO). Command is prefixed with `-` so a future tweak failure cannot fail the whole install.
 
 ## SourceForge
 

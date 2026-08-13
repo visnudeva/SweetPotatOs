@@ -36,7 +36,6 @@ exec ~/.config/sway/scripts/caffeine.sh on
 
 # Calamares (Wayland) updates systemd-localed; push that into Swirl live
 exec sweetpotatos-sway-xkb-watch
-
 ### Input configuration
 #
 input type:touchpad {

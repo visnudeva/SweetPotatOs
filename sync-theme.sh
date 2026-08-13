@@ -7,6 +7,30 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SP="${SWEETPOTATO_DIR:-$(cd "${ROOT}/../SweetPotato" 2>/dev/null && pwd || true)}"
 ISO="${ROOT}/profile/airootfs"
 HOME_DIR="${HOME}"
+SYNC_LIVE=1
+LIVE_FLAG=""
+
+usage() {
+  echo "Usage: $0 [--iso-only|--live]" >&2
+  echo "  --iso-only  write airootfs only (default on GNOME/Bluefin hosts)" >&2
+  echo "  --live      also copy theme into \$HOME (Swirl/Arch session)" >&2
+  exit 2
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --iso-only) SYNC_LIVE=0; LIVE_FLAG=iso; shift ;;
+    --live) SYNC_LIVE=1; LIVE_FLAG=live; shift ;;
+    -h|--help) usage ;;
+    *) usage ;;
+  esac
+done
+
+# Papirus + Arch glycin paths in $HOME blank half the GNOME icons on Bluefin.
+if [[ "${SYNC_LIVE}" -eq 1 && "${LIVE_FLAG}" != "live" && "${XDG_CURRENT_DESKTOP:-}" == *GNOME* ]]; then
+  echo "GNOME session detected — skipping live \$HOME (pass --live to force)."
+  SYNC_LIVE=0
+fi
 
 if [[ -z "${SP}" || ! -d "${SP}/sway" ]]; then
   echo "SweetPotato repo not found. Set SWEETPOTATO_DIR=/path/to/SweetPotato" >&2
@@ -139,19 +163,25 @@ sync_common_into() {
 
 echo "Source: ${SP}"
 echo "ISO:    ${ISO}"
-echo "Live:   ${HOME_DIR}"
-
-# Live
-sync_common_into "${HOME_DIR}"
-if grep -q 'xkb_layout "us"' "${HOME_DIR}/.config/sway/config" 2>/dev/null; then
-  cp -f "${SP}/sway/config-us" "${HOME_DIR}/.config/sway/config"
+if [[ "${SYNC_LIVE}" -eq 1 ]]; then
+  echo "Live:   ${HOME_DIR}"
 else
-  cp -f "${SP}/sway/config" "${HOME_DIR}/.config/sway/config"
+  echo "Live:   (skipped)"
 fi
-sed "s|%HOME%|${HOME_DIR}|g" "${SP}/environment.d/90-sweetpotato-csd.conf" \
-  > "${HOME_DIR}/.config/environment.d/90-sweetpotato-csd.conf"
-[[ -f "${SP}/sweetlock.png" ]] && \
-  cp -f "${SP}/sweetlock.png" "${HOME_DIR}/.local/share/backgrounds/sweetlock.png"
+
+# Live (Swirl/Arch). Skipped on GNOME so Bluefin ISO builds do not clobber Adwaita.
+if [[ "${SYNC_LIVE}" -eq 1 ]]; then
+  sync_common_into "${HOME_DIR}"
+  if grep -q 'xkb_layout "us"' "${HOME_DIR}/.config/sway/config" 2>/dev/null; then
+    cp -f "${SP}/sway/config-us" "${HOME_DIR}/.config/sway/config"
+  else
+    cp -f "${SP}/sway/config" "${HOME_DIR}/.config/sway/config"
+  fi
+  sed "s|%HOME%|${HOME_DIR}|g" "${SP}/environment.d/90-sweetpotato-csd.conf" \
+    > "${HOME_DIR}/.config/environment.d/90-sweetpotato-csd.conf"
+  [[ -f "${SP}/sweetlock.png" ]] && \
+    cp -f "${SP}/sweetlock.png" "${HOME_DIR}/.local/share/backgrounds/sweetlock.png"
+fi
 
 # Skel (no calamares autostart; float rule harmless if installer absent)
 sync_common_into "${ISO}/etc/skel"
@@ -216,6 +246,10 @@ cp -f "${SP}/fastfetch/SPLogo.asc" "${ISO}/usr/local/share/sweetpotatos/SPLogo.a
 cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
 cp -f "${ISO}/home/liveuser/.config/fastfetch/config.jsonc" "${ISO}/etc/fastfetch/config.jsonc"
 
+# System wallpapers (Mod+Shift+w also scans /usr/share/backgrounds)
+mkdir -p "${ISO}/usr/share/backgrounds/sweetpotatos"
+cp -f "${SP}/backgrounds/"*.png "${ISO}/usr/share/backgrounds/sweetpotatos/"
+
 # Assets
 mkdir -p "${ROOT}/assets"
 cp -f "${SP}/assets/"*.png "${ROOT}/assets/" 2>/dev/null || true
@@ -224,4 +258,8 @@ if command -v swaymsg >/dev/null 2>&1; then
   swaymsg reload >/dev/null 2>&1 || true
 fi
 
-echo "Synced SweetPotato → live + SweetPotatOs (skel + liveuser)."
+if [[ "${SYNC_LIVE}" -eq 1 ]]; then
+  echo "Synced SweetPotato → live + SweetPotatOs (skel + liveuser)."
+else
+  echo "Synced SweetPotato → SweetPotatOs (skel + liveuser). Live \$HOME skipped."
+fi

@@ -7,6 +7,14 @@ TARGET_USER="${1:-}"
 LAYOUT="${2:-}"
 VARIANT="${3:-}"
 
+# Ignore unexpanded Calamares placeholders (older broken confs).
+if [[ "${LAYOUT}" == *'gs['* || "${LAYOUT}" == *'${'* ]]; then
+  LAYOUT=""
+fi
+if [[ "${VARIANT}" == *'gs['* || "${VARIANT}" == *'${'* ]]; then
+  VARIANT=""
+fi
+
 if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" || "${TARGET_USER}" == "liveuser" ]]; then
   echo "sweetpotatos-fix-sway-keyboard: invalid user '${TARGET_USER}'" >&2
   exit 1
@@ -25,18 +33,27 @@ case "${primary}" in
   us) pick="config-us" ;;
 esac
 
+sed_escape() {
+  # Escape sed replacement specials for delimiter | : \ & |
+  local s=$1
+  s=${s//\\/\\\\}
+  s=${s//&/\\&}
+  s=${s//|/\\|}
+  printf '%s' "$s"
+}
+
 if [[ -n "${pick}" && -f "${SWAY_DIR}/${pick}" ]]; then
   cp -f "${SWAY_DIR}/${pick}" "${SWAY_DIR}/config"
 else
   # Unknown layout: keep config, only rewrite xkb_* lines.
   if [[ -n "${LAYOUT}" && -f "${SWAY_DIR}/config" ]]; then
-    esc="$(printf '%s' "${LAYOUT}" | sed 's/[&|]/g')"
-    sed -i "s/^[[:space:]]*xkb_layout[[:space:]]\".*\"/    xkb_layout \"${esc}\"/" "${SWAY_DIR}/config" || true
+    esc="$(sed_escape "${LAYOUT}")"
+    sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc}\"|" "${SWAY_DIR}/config" || true
   fi
   if [[ -n "${VARIANT}" && -f "${SWAY_DIR}/config" ]]; then
-    escv="$(printf '%s' "${VARIANT}" | sed 's/[&|]/g')"
+    escv="$(sed_escape "${VARIANT}")"
     if grep -q '^[[:space:]]*xkb_variant' "${SWAY_DIR}/config"; then
-      sed -i "s/^[[:space:]]*xkb_variant[[:space:]].*/    xkb_variant \"${escv}\"/" "${SWAY_DIR}/config" || true
+      sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${escv}\"|" "${SWAY_DIR}/config" || true
     else
       sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${SWAY_DIR}/config" || true
     fi
@@ -44,4 +61,4 @@ else
 fi
 
 chown -R "${TARGET_USER}:${TARGET_USER}" "${SWAY_DIR}" 2>/dev/null || true
-echo "sweetpotatos-fix-sway-keyboard: ${TARGET_USER} → layout ${LAYOUT:-?} (${pick:-patched})"
+echo "sweetpotatos-fix-sway-keyboard: ${TARGET_USER} → layout ${LAYOUT:-us} (${pick:-patched})"
