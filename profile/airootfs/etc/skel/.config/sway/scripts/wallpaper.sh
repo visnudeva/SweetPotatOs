@@ -66,7 +66,9 @@ if [[ "${img}" == "${HOME}/"* ]]; then
 else
   conf_img="${img}"
 fi
-printf 'output * bg "%s" fill\n' "${conf_img}" > "${WALLPAPER_CONF}"
+tmp="${WALLPAPER_CONF}.tmp.$$"
+printf 'output * bg "%s" fill\n' "${conf_img}" > "${tmp}"
+mv -f "${tmp}" "${WALLPAPER_CONF}"
 
 notify-send -t 2000 -a "Wallpaper" -i "sweetpotatos" \
   "Wallpaper" "$(basename "${img}")" 2>/dev/null || true

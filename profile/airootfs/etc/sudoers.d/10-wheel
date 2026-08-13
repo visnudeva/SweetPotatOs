@@ -1,0 +1,3 @@
+# Allow members of group wheel to run any command (Calamares adds the
+# installed user to wheel). Filename must not contain a '.' — sudo ignores those.
+%wheel ALL=(ALL:ALL) ALL

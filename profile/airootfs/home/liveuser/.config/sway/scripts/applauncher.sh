@@ -9,6 +9,6 @@ mkdir -p "${HOME}/.cache"
 
 exec j4-dmenu-desktop \
   --dmenu="${DMENU}" \
-  --term="foot" \
+  --term="kitty" \
   --no-generic \
   --usage-log="${HOME}/.cache/sweetpotato-apps.log"

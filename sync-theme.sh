@@ -101,7 +101,7 @@ sync_common_into() {
   mkdir -p \
     "${dest}/.config/sway/scripts" \
     "${dest}/.config/gtk-3.0" "${dest}/.config/gtk-4.0" \
-    "${dest}/.config/foot" "${dest}/.config/mako" "${dest}/.config/swaylock" \
+    "${dest}/.config/foot" "${dest}/.config/kitty" "${dest}/.config/mako" "${dest}/.config/swaylock" \
     "${dest}/.config/geany/colorschemes" "${dest}/.config/xsettingsd" \
     "${dest}/.config/fastfetch" "${dest}/.config/environment.d" \
     "${dest}/.config/xdg-desktop-portal" "${dest}/.config/networkmanager-dmenu" \
@@ -119,6 +119,7 @@ sync_common_into() {
   cp -f "${SP}/gtk-3.0/"* "${dest}/.config/gtk-3.0/"
   cp -f "${SP}/gtk-4.0/"* "${dest}/.config/gtk-4.0/"
   cp -f "${SP}/foot/foot.ini" "${dest}/.config/foot/"
+  cp -f "${SP}/kitty/kitty.conf" "${dest}/.config/kitty/"
   cp -f "${SP}/mako/config" "${dest}/.config/mako/"
   cp -f "${SP}/swaylock/config" "${dest}/.config/swaylock/"
   cp -f "${SP}/geany/colorschemes/sweetpotato.conf" "${dest}/.config/geany/colorschemes/"
