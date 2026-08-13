@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SweetPotatOs — Arch-based Linux for old potato PCs</title>
+  <title>SweetPotatOs BETA — Arch-based Linux for old potato PCs</title>
   <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Swirl desktop, and Calamares installer.">
   <style>
     :root {
@@ -41,6 +41,15 @@
       font-size: clamp(1.8rem, 4vw, 2.6rem);
       color: var(--charcoal);
       letter-spacing: -0.02em;
+    }
+    h1 .beta {
+      display: inline-block;
+      margin-left: 0.35em;
+      vertical-align: 0.2em;
+      font-size: 0.42em;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--orange);
     }
     .tag {
       display: inline-block;
@@ -174,7 +183,7 @@
 <body>
   <header>
     <img class="logo" src="SweetPotatOs.png" alt="SweetPotatOs logo">
-    <h1>SweetPotatOs</h1>
+    <h1>SweetPotatOs <span class="beta">BETA</span></h1>
     <span class="tag">Arch-based Linux distro</span>
     <p class="lead">
       A live graphical ISO with the SweetPotato <strong>Swirl</strong> desktop and a Calamares installer,
