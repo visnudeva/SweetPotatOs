@@ -100,7 +100,6 @@ swayidle
 swaylock
 lua
 foot
-kitty
 wmenu
 j4-dmenu-desktop
 jq
@@ -153,7 +152,6 @@ qt6-wayland
 btop
 cliphist
 wlsunset
-gammastep
 flatpak
 bazaar
 gtk3

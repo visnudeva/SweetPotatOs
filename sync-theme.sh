@@ -101,7 +101,7 @@ sync_common_into() {
   mkdir -p \
     "${dest}/.config/swirl/scripts" \
     "${dest}/.config/gtk-3.0" "${dest}/.config/gtk-4.0" \
-    "${dest}/.config/foot" "${dest}/.config/kitty" "${dest}/.config/mako" "${dest}/.config/swaylock" \
+    "${dest}/.config/foot" "${dest}/.config/mako" "${dest}/.config/swaylock" \
     "${dest}/.config/geany/colorschemes" "${dest}/.config/xsettingsd" \
     "${dest}/.config/fastfetch" "${dest}/.config/environment.d" \
     "${dest}/.config/xdg-desktop-portal" "${dest}/.config/networkmanager-dmenu" \
@@ -119,7 +119,6 @@ sync_common_into() {
   cp -f "${SP}/gtk-3.0/"* "${dest}/.config/gtk-3.0/"
   cp -f "${SP}/gtk-4.0/"* "${dest}/.config/gtk-4.0/"
   cp -f "${SP}/foot/foot.ini" "${dest}/.config/foot/"
-  cp -f "${SP}/kitty/kitty.conf" "${dest}/.config/kitty/"
   cp -f "${SP}/mako/config" "${dest}/.config/mako/"
   cp -f "${SP}/swaylock/config" "${dest}/.config/swaylock/"
   cp -f "${SP}/geany/colorschemes/sweetpotato.conf" "${dest}/.config/geany/colorschemes/"
@@ -146,7 +145,8 @@ sync_common_into() {
   printf 'output * bg "~/.local/share/backgrounds/UsefulBinds.png" fill\n' \
     > "${dest}/.config/swirl/wallpaper.conf"
   # Swirl reads ~/.config/sway/config *before* swirl — never leave a leftover sway dir.
-  rm -rf "${dest}/.config/sway"
+  # Default terminal is foot — drop any leftover kitty config.
+  rm -rf "${dest}/.config/sway" "${dest}/.config/kitty"
   if [[ -f "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]] \
      && [[ "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" \
           != "${dest}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then

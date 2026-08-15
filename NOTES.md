@@ -37,7 +37,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Fastfetch logo
 
-- Primary logo is colored **`SPLogo.png`** (`logo.type: auto`) so kitty (default terminal) uses the graphics protocol; other terminals fall through to chafa.
+- Primary logo is colored **`SPLogo.png`** (`logo.type: auto`) so terminals that support image protocols can show it; others fall through to chafa.
 - Do **not** make monochrome `SPLogo.asc` the primary logo.
 - Paths:
   - Session / SweetPotato install: `~/.config/fastfetch/SPLogo.png`
@@ -70,9 +70,10 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Ly always lists **root** first. Do **not** ship `/etc/ly/save.txt` with index `0` (that selects root). Calamares `shellprocess@fix-ly` (`sweetpotatos-fix-ly`) removes `liveuser` and writes `save.txt` for `${USER}` after the users step.
 - Installed user must be able to `sudo`: airootfs ships `/etc/sudoers.d/10-wheel`; `sweetpotatos-fix-sudo` (from `shellprocess@fix-ly` and again from `cleanup-live`) adds `${USER}` to `wheel`, writes `/etc/sudoers.d/10-installed-user` with an explicit user rule, and uncomments `%wheel` in `/etc/sudoers`. Do not rely only on Calamares `10-installer`.
 - After install, `shellprocess@cleanup-live` must remove Install SweetPotatOs / calamares `.desktop` leftovers from the app launcher.
-- Default terminal is **kitty** (cursor trail + `background_opacity`); `Mod+Return` / applauncher / networkmanager-dmenu use kitty. Foot remains optional.
+- Default terminal is **foot**; `Mod+Return` / applauncher / networkmanager-dmenu use foot. Do not ship kitty config.
 - Wallpaper preference is `~/.config/swirl/wallpaper.conf`. `ensure-wallpaper.sh` must **not** overwrite a saved path with the UsefulBinds fallback when the file is briefly missing.
 - Live Calamares keyboard: on Wayland Calamares only updates **locale1**; Swirl ignores it. Live session runs `sweetpotatos-sway-xkb-watch` to mirror locale1 → `swaymsg`. Installed user gets `shellprocess@fix-sway-keyboard` (`config-us` / `config-fr`).
+- Live/install: do **not** enable `sshd`, `ModemManager`, or VM guest helpers (`vboxservice`, `vmtoolsd`, `vmware-vmblock-fuse`, `hv_fcopy_daemon`) by default. Packages stay installed; re-enable with `systemctl enable --now <unit>` (WWAN needs ModemManager; SSH needs sshd).
 - **Gotcha:** shellprocess GS vars must be `${gs[keyboardLayout]}` / `${gs[keyboardVariant]}`. Bare `gs[...]` is passed literally, hits a sed path, and aborts install (seen on 2026.08.12 ISO). Command is prefixed with `-` so a future tweak failure cannot fail the whole install.
 
 ## SourceForge

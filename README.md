@@ -25,7 +25,7 @@ https://github.com/user-attachments/assets/c4e14323-38b3-44b9-8084-5d25a45755ee
 ## What you get
 
 - Live Swirl session (`liveuser`, empty password, sudo without password)
-- Autologin on tty1 → SweetPotato Swirl desktop (kitty, Thunar, mako, NetworkManager, …)
+- Autologin on tty1 → SweetPotato Swirl desktop (foot, Thunar, mako, NetworkManager, …)
 - Installer autostarts on the live desktop; also **Mod+i**, desktop *Install SweetPotatOs*, or `sweetpotatos-calamares`
 - Installed system uses the live squashfs, GRUB, and **Ly** on tty2
 
@@ -102,7 +102,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Browser | Firefox |
 | Files | Thunar |
 | Editor | Geany |
-| Terminal | kitty |
+| Terminal | foot |
 | Video | mpv + yt-dlp |
 | Image edit | GIMP |
 | Music | Audacious |
@@ -121,7 +121,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | `Mod+w` | Web browser (firefox) |
 | `Mod+f` | File manager (thunar) |
 | `Mod+e` | IDE (geany) |
-| `Mod+Return` | Terminal (kitty) |
+| `Mod+Return` | Terminal (foot) |
 | `Mod+Shift+w` | Wallpaper selector |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |
