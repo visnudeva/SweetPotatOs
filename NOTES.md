@@ -7,7 +7,7 @@ Durable context for humans and Cursor agents. Prefer this over chat history afte
 | Repo | Role | Remotes |
 |------|------|---------|
 | **SweetPotatOs** (this repo) | Archiso profile, ISO build, SourceForge tooling | GitHub `origin`, SourceForge `sourceforge` |
-| **SweetPotato** | Desktop theme + `install.sh` (source of truth for Swirl/`~/.config/sway`/gtk/fastfetch/…) | GitHub `origin` only |
+| **SweetPotato** | Desktop theme + `install.sh` (source of truth for Swirl/`~/.config/swirl`/gtk/fastfetch/…) | GitHub `origin` only |
 
 Expected layout on a build machine (siblings):
 
@@ -37,12 +37,12 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Fastfetch logo
 
-- **Do not** use `logo.type: chafa` / PNG as the primary logo in foot: without cell pixel size, fastfetch fails image logos and **falls back to the Arch/Archcraft builtin**.
-- Use **`type: file`** + **`SPLogo.asc`** (braille ASCII of the white potato logo).
+- Primary logo is colored **`SPLogo.png`** (`logo.type: auto`) so kitty (default terminal) uses the graphics protocol; other terminals fall through to chafa.
+- Do **not** make monochrome `SPLogo.asc` the primary logo.
 - Paths:
-  - Session / SweetPotato install: `~/.config/fastfetch/SPLogo.asc`
-  - ISO / system: `/usr/local/share/sweetpotatos/SPLogo.asc` (skel + liveuser configs rewritten by `sync-theme.sh` for ISO trees only)
-- Canonical ASC lives in `SweetPotato/fastfetch/SPLogo.asc`. Regenerate from `WhiteLogo.png` / Downloads logos with chafa symbols if needed, then sync.
+  - Session / SweetPotato install: `~/.config/fastfetch/SPLogo.png`
+  - ISO / system: `/usr/local/share/sweetpotatos/SPLogo.png` (skel + liveuser configs rewritten by `sync-theme.sh` for ISO trees only)
+- Canonical PNG lives in `SweetPotato/fastfetch/SPLogo.png`. ASCII remains as a last-resort file only.
 
 ## Lid close → sleep
 
@@ -54,7 +54,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 ## Caffeine vs suspend
 
 - **Mod+c** / `caffeine.sh`: disables **idle** lock/display-off only (`systemd-inhibit --what=idle`).
-- **Mod+Shift+b** / `fsb100.sh`: fullscreen media → 100% backlight, restore on exit (on by default).
+- **Mod+Shift+b** / `fsb100.sh`: fullscreen media → 100% backlight, restore on exit (on by default). Watch the focused **window**, not the output/workspace (those also report `focused`).
 - Lid-close suspend must keep working while caffeine is on.
 - Live ISO: caffeine **on by default** so install is not interrupted by idle lock; lid still suspends via logind.
 
@@ -63,7 +63,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Calamares: float window, **Mod+i**, autostart after ~5s (`sweetpotatos-calamares`).
 - Liveuser: empty password, sudo NOPASSWD, autologin tty1 → **Swirl** (`sweetpotatos-session`).
 - Compositor package: `swirl` in local `repo/` (`packaging/swirl`, `sudo ./build.sh --build-swirl`).
-- Bar / IPC / nag: stock from Arch `sway` package. Config stays in `~/.config/sway/`.
+- Bar / IPC / nag: stock from Arch `sway` package. User config lives in `~/.config/swirl/` (never also ship `~/.config/sway/` — Swirl prefers that path first). `include /etc/sway/config.d/*` stays for package drop-ins.
 - Session files: do **not** ship `wayland-sessions/*.desktop` in airootfs (conflicts with pacstrap). `swirl.desktop` comes from the swirl package; stock `sway.desktop` is hidden by `sweetpotatos-hide-sway-session.hook`.
 - Desktop identity: Arch `sway` drop-in sets `XDG_CURRENT_DESKTOP=sway`; swirl’s `99-swirl-systemd-user.conf` overrides it. Live tty1 also exports Swirl in `sweetpotatos-session`. Fastfetch DE/WM labels are forced to Swirl in the theme config.
 - Ly: `waylandsessions = /etc/ly/wayland-sessions` (Swirl only). Pacman hooks **delete** `/usr/share/wayland-sessions/sway.desktop` (Ly ignores Hidden=). Keep the Arch `sway` package only for swaybar/swaymsg/swaynag.
@@ -71,7 +71,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Installed user must be able to `sudo`: airootfs ships `/etc/sudoers.d/10-wheel`; `sweetpotatos-fix-sudo` (from `shellprocess@fix-ly` and again from `cleanup-live`) adds `${USER}` to `wheel`, writes `/etc/sudoers.d/10-installed-user` with an explicit user rule, and uncomments `%wheel` in `/etc/sudoers`. Do not rely only on Calamares `10-installer`.
 - After install, `shellprocess@cleanup-live` must remove Install SweetPotatOs / calamares `.desktop` leftovers from the app launcher.
 - Default terminal is **kitty** (cursor trail + `background_opacity`); `Mod+Return` / applauncher / networkmanager-dmenu use kitty. Foot remains optional.
-- Wallpaper preference is `~/.config/sway/wallpaper.conf`. `ensure-wallpaper.sh` must **not** overwrite a saved path with the UsefulBinds fallback when the file is briefly missing.
+- Wallpaper preference is `~/.config/swirl/wallpaper.conf`. `ensure-wallpaper.sh` must **not** overwrite a saved path with the UsefulBinds fallback when the file is briefly missing.
 - Live Calamares keyboard: on Wayland Calamares only updates **locale1**; Swirl ignores it. Live session runs `sweetpotatos-sway-xkb-watch` to mirror locale1 → `swaymsg`. Installed user gets `shellprocess@fix-sway-keyboard` (`config-us` / `config-fr`).
 - **Gotcha:** shellprocess GS vars must be `${gs[keyboardLayout]}` / `${gs[keyboardVariant]}`. Bare `gs[...]` is passed literally, hits a sed path, and aborts install (seen on 2026.08.12 ISO). Command is prefixed with `-` so a future tweak failure cannot fail the whole install.
 

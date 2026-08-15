@@ -4,7 +4,7 @@
 # wallpaper to reset to UsefulBinds after a reboot when resolve briefly failed.
 set -euo pipefail
 
-CONF="${HOME}/.config/sway/wallpaper.conf"
+CONF="${HOME}/.config/swirl/wallpaper.conf"
 DIR="${HOME}/.local/share/backgrounds"
 FALLBACKS=(
   "${DIR}/UsefulBinds.png"

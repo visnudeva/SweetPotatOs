@@ -10,8 +10,8 @@ Before non-trivial changes, read `NOTES.md` at the repo root.
 ## Hard rules from prior work
 
 - Theme source of truth is the sibling **SweetPotato** repo. Sync into this ISO with `./sync-theme.sh` (not by hand-copying one tree only). On a GNOME/Bluefin host, `sync-theme.sh` must **not** copy Papirus/glycin into `$HOME` (that blanks half the GNOME icons). It skips live home automatically; never pass `--live` on this host.
-- Desktop compositor is **Swirl**; `sway` package stays for swaybar/swaymsg/swaynag. Config dir remains `~/.config/sway/`.
-- Fastfetch must use ASCII `SPLogo.asc` (`logo.type: file`). Do not switch primary logo back to chafa/PNG — it falls back to Arch in foot.
+- Desktop compositor is **Swirl**; `sway` package stays for swaybar/swaymsg/swaynag. User config is `~/.config/swirl/` only — do **not** also ship `~/.config/sway/` (Swirl checks sway first). Keep `include /etc/sway/config.d/*`.
+- Fastfetch primary logo is colored `SPLogo.png` (`logo.type: auto`). Do not switch primary back to monochrome `SPLogo.asc`.
 - Lid close suspends via logind `lid-sleep.conf`. Never reintroduce `do-not-suspend.conf` that sets `HandleLidSwitch=ignore`. Caffeine must not block lid suspend.
 - Ly always lists root first; never ship `/etc/ly/save.txt` as `0`. Post-install `sweetpotatos-fix-ly` (Calamares `shellprocess@fix-ly`) must set the saved user to `${USER}` and remove `liveuser`.
 - Installed user sudo: `sweetpotatos-fix-sudo` (via `fix-ly` + `cleanup-live`) must add `${USER}` to `wheel`, write `/etc/sudoers.d/10-installed-user` (explicit user rule) and `/etc/sudoers.d/10-wheel`. Never rely only on Calamares `10-installer` or a commented `%wheel` line in `/etc/sudoers`.

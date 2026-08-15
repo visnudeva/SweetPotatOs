@@ -32,7 +32,7 @@ if [[ "${SYNC_LIVE}" -eq 1 && "${LIVE_FLAG}" != "live" && "${XDG_CURRENT_DESKTOP
   SYNC_LIVE=0
 fi
 
-if [[ -z "${SP}" || ! -d "${SP}/sway" ]]; then
+if [[ -z "${SP}" || ! -d "${SP}/swirl" ]]; then
   echo "SweetPotato repo not found. Set SWEETPOTATO_DIR=/path/to/SweetPotato" >&2
   exit 1
 fi
@@ -59,7 +59,7 @@ inject_live_caffeine() {
   sed -i '/^### Idle configuration/a\
 #\
 # Live ISO: caffeine on by default so install does not sleep/lock\
-exec ~/.config/sway/scripts/caffeine.sh on
+exec ~/.config/swirl/scripts/caffeine.sh on
 ' "${f}"
 }
 
@@ -99,7 +99,7 @@ exec sh -c '\''sleep 5; sweetpotatos-calamares'\''\
 sync_common_into() {
   local dest="$1"
   mkdir -p \
-    "${dest}/.config/sway/scripts" \
+    "${dest}/.config/swirl/scripts" \
     "${dest}/.config/gtk-3.0" "${dest}/.config/gtk-4.0" \
     "${dest}/.config/foot" "${dest}/.config/kitty" "${dest}/.config/mako" "${dest}/.config/swaylock" \
     "${dest}/.config/geany/colorschemes" "${dest}/.config/xsettingsd" \
@@ -111,11 +111,11 @@ sync_common_into() {
     "${dest}/.config/xfce4/xfconf/xfce-perchannel-xml" \
     "${dest}/Pictures/Screenshots"
 
-  cp -f "${SP}/sway/config" "${dest}/.config/sway/config-fr"
-  cp -f "${SP}/sway/config-us" "${dest}/.config/sway/config-us"
-  cp -f "${SP}"/sway/scripts/*.sh "${dest}/.config/sway/scripts/"
-  cp -f "${SP}/sway/scripts/autotile.lua" "${dest}/.config/sway/scripts/autotile.lua"
-  chmod 755 "${dest}/.config/sway/scripts/"*.sh
+  cp -f "${SP}/swirl/config" "${dest}/.config/swirl/config-fr"
+  cp -f "${SP}/swirl/config-us" "${dest}/.config/swirl/config-us"
+  cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
+  cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
+  chmod 755 "${dest}/.config/swirl/scripts/"*.sh
   cp -f "${SP}/gtk-3.0/"* "${dest}/.config/gtk-3.0/"
   cp -f "${SP}/gtk-4.0/"* "${dest}/.config/gtk-4.0/"
   cp -f "${SP}/foot/foot.ini" "${dest}/.config/foot/"
@@ -129,7 +129,7 @@ sync_common_into() {
   cp -f "${SP}/fastfetch/SPLogo.asc" "${dest}/.config/fastfetch/"
   # ISO trees: absolute system path (airootfs ships the logo under /usr/local/share)
   if [[ "${dest}" == "${ISO}"/* ]]; then
-    sed -i 's|"source": "~/.config/fastfetch/SPLogo\.asc"|"source": "/usr/local/share/sweetpotatos/SPLogo.asc"|' \
+    sed -i 's|"source": "~/.config/fastfetch/SPLogo\.png"|"source": "/usr/local/share/sweetpotatos/SPLogo.png"|' \
       "${dest}/.config/fastfetch/config.jsonc"
   fi
   cp -f "${SP}/xdg-desktop-portal/sway-portals.conf" "${dest}/.config/xdg-desktop-portal/sway-portals.conf"
@@ -144,7 +144,9 @@ sync_common_into() {
   rm -f "${dest}/.local/bin/sway"
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
   printf 'output * bg "~/.local/share/backgrounds/UsefulBinds.png" fill\n' \
-    > "${dest}/.config/sway/wallpaper.conf"
+    > "${dest}/.config/swirl/wallpaper.conf"
+  # Swirl reads ~/.config/sway/config *before* swirl — never leave a leftover sway dir.
+  rm -rf "${dest}/.config/sway"
   if [[ -f "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]] \
      && [[ "${HOME_DIR}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" \
           != "${dest}/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml" ]]; then
@@ -173,11 +175,12 @@ fi
 # Live (Swirl/Arch). Skipped on GNOME so Bluefin ISO builds do not clobber Adwaita.
 if [[ "${SYNC_LIVE}" -eq 1 ]]; then
   sync_common_into "${HOME_DIR}"
-  if grep -q 'xkb_layout "us"' "${HOME_DIR}/.config/sway/config" 2>/dev/null; then
-    cp -f "${SP}/sway/config-us" "${HOME_DIR}/.config/sway/config"
+  if grep -q 'xkb_layout "us"' "${HOME_DIR}/.config/swirl/config" 2>/dev/null; then
+    cp -f "${SP}/swirl/config-us" "${HOME_DIR}/.config/swirl/config"
   else
-    cp -f "${SP}/sway/config" "${HOME_DIR}/.config/sway/config"
+    cp -f "${SP}/swirl/config" "${HOME_DIR}/.config/swirl/config"
   fi
+  rm -rf "${HOME_DIR}/.config/sway"
   sed "s|%HOME%|${HOME_DIR}|g" "${SP}/environment.d/90-sweetpotato-csd.conf" \
     > "${HOME_DIR}/.config/environment.d/90-sweetpotato-csd.conf"
   [[ -f "${SP}/sweetlock.png" ]] && \
@@ -186,10 +189,10 @@ fi
 
 # Skel (no calamares autostart; float rule harmless if installer absent)
 sync_common_into "${ISO}/etc/skel"
-cp -f "${SP}/sway/config" "${ISO}/etc/skel/.config/sway/config"
-inject_calamares_float "${ISO}/etc/skel/.config/sway/config"
-inject_calamares_float "${ISO}/etc/skel/.config/sway/config-us"
-inject_calamares_float "${ISO}/etc/skel/.config/sway/config-fr"
+cp -f "${SP}/swirl/config" "${ISO}/etc/skel/.config/swirl/config"
+inject_calamares_float "${ISO}/etc/skel/.config/swirl/config"
+inject_calamares_float "${ISO}/etc/skel/.config/swirl/config-us"
+inject_calamares_float "${ISO}/etc/skel/.config/swirl/config-fr"
 cat > "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
 # Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (swirl wrapper).
@@ -209,10 +212,10 @@ EOF
 
 # Liveuser (US default + calamares)
 sync_common_into "${ISO}/home/liveuser"
-cp -f "${SP}/sway/config-us" "${ISO}/home/liveuser/.config/sway/config"
-inject_live_calamares "${ISO}/home/liveuser/.config/sway/config"
-inject_live_calamares "${ISO}/home/liveuser/.config/sway/config-us"
-inject_live_calamares "${ISO}/home/liveuser/.config/sway/config-fr"
+cp -f "${SP}/swirl/config-us" "${ISO}/home/liveuser/.config/swirl/config"
+inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config"
+inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config-us"
+inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config-fr"
 cat > "${ISO}/home/liveuser/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
 # Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (swirl wrapper).
@@ -246,6 +249,8 @@ mkdir -p "${ISO}/usr/local/share/sweetpotatos" "${ISO}/etc/fastfetch"
 cp -f "${SP}/fastfetch/SPLogo.asc" "${ISO}/usr/local/share/sweetpotatos/SPLogo.asc"
 cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
 cp -f "${ISO}/home/liveuser/.config/fastfetch/config.jsonc" "${ISO}/etc/fastfetch/config.jsonc"
+# System swirl wrapper (PATH: /usr/local/bin before /usr/bin)
+install -Dm755 "${SP}/bin/swirl" "${ISO}/usr/local/bin/swirl"
 
 # System wallpapers (Mod+Shift+w also scans /usr/share/backgrounds)
 mkdir -p "${ISO}/usr/share/backgrounds/sweetpotatos"

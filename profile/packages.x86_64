@@ -121,6 +121,8 @@ gnome-disk-utility
 swayimg
 mpv
 mpv-mpris
+yt-dlp
+ffmpeg
 mupdf
 audacious
 audacious-plugins

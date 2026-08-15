@@ -21,8 +21,8 @@ if [[ -z "${TARGET_USER}" || "${TARGET_USER}" == "root" || "${TARGET_USER}" == "
 fi
 
 HOME_DIR="/home/${TARGET_USER}"
-SWAY_DIR="${HOME_DIR}/.config/sway"
-[[ -d "${SWAY_DIR}" ]] || exit 0
+SWIRL_DIR="${HOME_DIR}/.config/swirl"
+[[ -d "${SWIRL_DIR}" ]] || exit 0
 
 primary="${LAYOUT%%,*}"
 primary="${primary:-us}"
@@ -42,23 +42,23 @@ sed_escape() {
   printf '%s' "$s"
 }
 
-if [[ -n "${pick}" && -f "${SWAY_DIR}/${pick}" ]]; then
-  cp -f "${SWAY_DIR}/${pick}" "${SWAY_DIR}/config"
+if [[ -n "${pick}" && -f "${SWIRL_DIR}/${pick}" ]]; then
+  cp -f "${SWIRL_DIR}/${pick}" "${SWIRL_DIR}/config"
 else
   # Unknown layout: keep config, only rewrite xkb_* lines.
-  if [[ -n "${LAYOUT}" && -f "${SWAY_DIR}/config" ]]; then
+  if [[ -n "${LAYOUT}" && -f "${SWIRL_DIR}/config" ]]; then
     esc="$(sed_escape "${LAYOUT}")"
-    sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc}\"|" "${SWAY_DIR}/config" || true
+    sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc}\"|" "${SWIRL_DIR}/config" || true
   fi
-  if [[ -n "${VARIANT}" && -f "${SWAY_DIR}/config" ]]; then
+  if [[ -n "${VARIANT}" && -f "${SWIRL_DIR}/config" ]]; then
     escv="$(sed_escape "${VARIANT}")"
-    if grep -q '^[[:space:]]*xkb_variant' "${SWAY_DIR}/config"; then
-      sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${escv}\"|" "${SWAY_DIR}/config" || true
+    if grep -q '^[[:space:]]*xkb_variant' "${SWIRL_DIR}/config"; then
+      sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${escv}\"|" "${SWIRL_DIR}/config" || true
     else
-      sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${SWAY_DIR}/config" || true
+      sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${SWIRL_DIR}/config" || true
     fi
   fi
 fi
 
-chown -R "${TARGET_USER}:${TARGET_USER}" "${SWAY_DIR}" 2>/dev/null || true
+chown -R "${TARGET_USER}:${TARGET_USER}" "${SWIRL_DIR}" 2>/dev/null || true
 echo "sweetpotatos-fix-sway-keyboard: ${TARGET_USER} → layout ${LAYOUT:-us} (${pick:-patched})"

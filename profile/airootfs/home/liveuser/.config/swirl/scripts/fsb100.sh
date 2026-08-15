@@ -80,34 +80,75 @@ def set_brightness(pct):
         pass
 
 
-def walk_focused(node):
-    if node.get("focused"):
-        return node
+def iter_nodes(node):
+    yield node
     for key in ("nodes", "floating_nodes"):
         for child in node.get(key) or []:
-            found = walk_focused(child)
-            if found:
-                return found
-    return None
+            yield from iter_nodes(child)
 
 
-def focused_window():
-    try:
-        tree = json.loads(subprocess.check_output(["swaymsg", "-t", "get_tree"]))
-    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
-        return None
-    return walk_focused(tree)
+def focused_window(tree):
+    # Output, workspace, and window all set focused=true. The last DFS hit is the window.
+    focused = [n for n in iter_nodes(tree) if n.get("focused")]
+    return focused[-1] if focused else None
 
 
-def should_activate(win):
-    if not win or not win.get("fullscreen_mode"):
+def is_fullscreen(win, tree):
+    if not win or win.get("type") in ("root", "output", "workspace"):
         return False
+    if win.get("fullscreen_mode"):
+        return True
+    for key in ("fullscreen_layout", "fullscreen_application", "fullscreen_container"):
+        val = win.get(key)
+        if val in (1, True, "enabled", "on"):
+            return True
+    wr = win.get("rect") or {}
+    wx, wy = wr.get("x") or 0, wr.get("y") or 0
+    ww, wh = wr.get("width") or 0, wr.get("height") or 0
+    if ww < 64 or wh < 64:
+        return False
+    for node in iter_nodes(tree):
+        if node.get("type") != "output":
+            continue
+        name = str(node.get("name") or "")
+        if name.startswith("__"):
+            continue
+        or_ = node.get("rect") or {}
+        ox, oy = or_.get("x") or 0, or_.get("y") or 0
+        ow, oh = or_.get("width") or 0, or_.get("height") or 0
+        if not ow or not oh:
+            continue
+        on_output = (
+            wx >= ox - 8 and wy >= oy - 8
+            and wx + ww <= ox + ow + 8 and wy + wh <= oy + oh + 8
+        )
+        if on_output and ww >= int(ow * 0.92) and wh >= int(oh * 0.92):
+            return True
+    wf, hf = win.get("width_fraction"), win.get("height_fraction")
+    return wf is not None and hf is not None and wf >= 0.95 and hf >= 0.95
+
+
+def is_media(win):
     props = win.get("window_properties") or {}
     cls = (win.get("app_id") or props.get("class") or props.get("instance") or "").lower()
     title = (win.get("name") or props.get("title") or "").lower()
     if any(c in cls for c in MEDIA_CLASSES):
         return True
     return any(k in title for k in TITLE_KEYWORDS)
+
+
+def should_activate(tree):
+    win = focused_window(tree)
+    if not win or not is_media(win):
+        return False
+    return is_fullscreen(win, tree)
+
+
+def get_tree():
+    try:
+        return json.loads(subprocess.check_output(["swaymsg", "-t", "get_tree"]))
+    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
+        return None
 
 
 def enter_mode():
@@ -147,7 +188,8 @@ def exit_mode():
 
 
 def tick():
-    enter_mode() if should_activate(focused_window()) else exit_mode()
+    tree = get_tree()
+    enter_mode() if tree and should_activate(tree) else exit_mode()
 
 
 def shutdown(*_args):
@@ -216,8 +258,13 @@ enable_fsb() {
     notify "dialog-warning" "FSB100" "python3 not found"
     return 1
   fi
+  if ! brightnessctl -m >/dev/null 2>&1; then
+    notify "dialog-warning" "FSB100" "No backlight device"
+    return 1
+  fi
   "$0" watch >/dev/null 2>&1 &
   echo $! > "${PIDFILE}"
+  disown $! 2>/dev/null || true
   echo "on" > "${STATEFILE}"
   notify "display-brightness-symbolic" "FSB100 on" "Fullscreen media → max brightness"
 }

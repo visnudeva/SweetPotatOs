@@ -1,8 +1,10 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "type": "file",
-    "source": "/usr/local/share/sweetpotatos/SPLogo.asc",
+    "type": "auto",
+    "source": "/usr/local/share/sweetpotatos/SPLogo.png",
+    "width": 28,
+    "height": 14,
     "padding": {
       "top": 1,
       "right": 2

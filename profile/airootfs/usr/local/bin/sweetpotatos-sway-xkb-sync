@@ -38,7 +38,7 @@ else
 fi
 
 # Keep live config in sync so a later reload does not snap back to "us".
-cfg="${HOME}/.config/sway/config"
+cfg="${HOME}/.config/swirl/config"
 if [[ -f "${cfg}" ]]; then
   # Escape & for sed replacement; layouts are usually plain [a-z0-9,_-].
   esc_layout="$(printf '%s' "${layout}" | sed 's/[&|]/g')"

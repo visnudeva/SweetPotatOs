@@ -2,7 +2,7 @@
 # SweetPotato wallpaper selector — pick an image, set it on all outputs, persist.
 set -euo pipefail
 
-WALLPAPER_CONF="${HOME}/.config/sway/wallpaper.conf"
+WALLPAPER_CONF="${HOME}/.config/swirl/wallpaper.conf"
 DIRS=(
   "${HOME}/.local/share/backgrounds"
   "${HOME}/Pictures/Wallpapers"

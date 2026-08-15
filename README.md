@@ -103,7 +103,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Files | Thunar |
 | Editor | Geany |
 | Terminal | kitty |
-| Video | mpv |
+| Video | mpv + yt-dlp |
 | Image edit | GIMP |
 | Music | Audacious |
 | PDF | mupdf |
