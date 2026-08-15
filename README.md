@@ -122,6 +122,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | `Mod+f` | File manager (thunar) |
 | `Mod+e` | IDE (geany) |
 | `Mod+Return` | Terminal (foot) |
+| `Mod+m` | Expand focused column to 100% / restore 50/50 |
 | `Mod+Shift+w` | Wallpaper selector |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |

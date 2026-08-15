@@ -51,6 +51,7 @@ file_permissions=(
   ["/home/liveuser/.config/swirl/scripts/caffeine.sh"]="1000:1000:755"
   ["/home/liveuser/.config/swirl/scripts/fsb100.sh"]="1000:1000:755"
   ["/home/liveuser/.config/swirl/scripts/tips.sh"]="1000:1000:755"
+  ["/home/liveuser/.config/swirl/scripts/expand.sh"]="1000:1000:755"
   ["/home/liveuser/.local/bin/swirl"]="1000:1000:755"
   ["/etc/skel/.config/swirl/scripts/applauncher.sh"]="0:0:755"
   ["/etc/skel/.config/swirl/scripts/apply-theme.sh"]="0:0:755"
@@ -65,5 +66,6 @@ file_permissions=(
   ["/etc/skel/.config/swirl/scripts/caffeine.sh"]="0:0:755"
   ["/etc/skel/.config/swirl/scripts/fsb100.sh"]="0:0:755"
   ["/etc/skel/.config/swirl/scripts/tips.sh"]="0:0:755"
+  ["/etc/skel/.config/swirl/scripts/expand.sh"]="0:0:755"
   ["/etc/skel/.local/bin/swirl"]="0:0:755"
 )

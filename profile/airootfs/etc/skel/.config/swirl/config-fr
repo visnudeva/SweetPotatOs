@@ -176,6 +176,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Make the current focus fullscreen
     bindsym $mod+Shift+f fullscreen
 
+    # Toggle focused column full width ↔ 50/50 (strip maximize, not fullscreen)
+    bindsym $mod+m exec ~/.config/swirl/scripts/expand.sh
+
     # Toggle the current focus between tiling and floating mode
     bindsym $mod+Shift+space floating toggle
 
