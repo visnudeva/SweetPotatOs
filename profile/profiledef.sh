@@ -64,5 +64,6 @@ file_permissions=(
   ["/etc/skel/.config/swirl/scripts/ensure-wallpaper.sh"]="0:0:755"
   ["/etc/skel/.config/swirl/scripts/caffeine.sh"]="0:0:755"
   ["/etc/skel/.config/swirl/scripts/fsb100.sh"]="0:0:755"
+  ["/etc/skel/.config/swirl/scripts/tips.sh"]="0:0:755"
   ["/etc/skel/.local/bin/swirl"]="0:0:755"
 )
