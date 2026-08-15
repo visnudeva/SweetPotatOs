@@ -160,8 +160,23 @@ xdg-user-dirs
 qt6-wayland
 btop
 cliphist
-flatpak
-bazaar
+# AUR helper + GUI package manager (AUR packages built into local repo/)
+yay-bin
+qt-sudo
+octopi
+# Terminal web radio (AUR)
+tera
+# AUR build deps for end users + tera/octopi runtime deps from official repos
+base-devel
+git
+qtermwidget
+qt6-multimedia
+qt6-svg
+pacman-contrib
+fzf
+github-cli
+wget
+python
 power-profiles-daemon
 gtk3
 gtk4

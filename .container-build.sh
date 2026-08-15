@@ -38,9 +38,32 @@ build_aur_to_repo() {
   rm -rf "${build_dir}"
   sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
   sudo -u "${BUILD_USER}" git clone --depth 1 "${aur_url}" "${build_dir}"
+  # Refresh local repo so AUR deps built earlier (e.g. qt-sudo for octopi) resolve
+  if ls "${ROOT}/repo"/*.pkg.tar.* >/dev/null 2>&1; then
+    rm -f "${ROOT}/repo/sweetpotatos".db* "${ROOT}/repo/sweetpotatos".files* 2>/dev/null || true
+    repo-add "${ROOT}/repo/sweetpotatos.db.tar.gz" "${ROOT}/repo"/*.pkg.tar.*
+    if ! grep -q '^\[sweetpotatos\]' /etc/pacman.conf; then
+      cat >>/etc/pacman.conf <<EOF
+
+[sweetpotatos]
+SigLevel = Optional TrustAll
+Server = file://${ROOT}/repo
+EOF
+    fi
+    pacman -Sy --noconfirm
+  fi
+  # Prefer pipewire-jack so mpv/ffmpeg deps do not prompt for a jack provider
+  pacman -S --needed --noconfirm --asdeps pipewire-jack 2>/dev/null || true
   sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
+  shopt -s nullglob
+  local pkgs=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  if ((${#pkgs[@]} == 0)); then
+    echo "[!] makepkg produced no packages for ${name}" >&2
+    exit 1
+  fi
   mkdir -p "${ROOT}/repo"
-  cp "${build_dir}"/*.pkg.tar.* "${ROOT}/repo/"
+  cp "${pkgs[@]}" "${ROOT}/repo/"
   echo "[+] ${name} copied to repo/"
 }
 
@@ -65,6 +88,26 @@ build_swirl_to_repo() {
 echo "[*] Building packages into repo/..."
 build_aur_to_repo calamares https://aur.archlinux.org/calamares.git
 build_swirl_to_repo
+build_aur_to_repo yay-bin https://aur.archlinux.org/yay-bin.git
+build_aur_to_repo qt-sudo https://aur.archlinux.org/qt-sudo.git
+build_aur_to_repo octopi https://aur.archlinux.org/octopi.git
+# tera: local PKGBUILD (AUR omits go makedepend)
+if ! ls "${ROOT}/repo/tera"-*.pkg.tar.* >/dev/null 2>&1; then
+  echo "[*] Building tera from packaging/tera..."
+  build_dir="/home/${BUILD_USER}/build/tera-local"
+  rm -rf "${build_dir}"
+  sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
+  cp -a "${ROOT}/packaging/tera/." "${build_dir}/"
+  chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
+  pacman -S --needed --noconfirm --asdeps go pipewire-jack 2>/dev/null || pacman -S --needed --noconfirm go
+  sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
+  shopt -s nullglob
+  pkgs=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  ((${#pkgs[@]})) || { echo "[!] tera build produced no packages" >&2; exit 1; }
+  cp "${pkgs[@]}" "${ROOT}/repo/"
+  echo "[+] tera copied to repo/"
+fi
 
 echo "[*] Refreshing local repo database..."
 rm -f "${ROOT}/repo/sweetpotatos".db* "${ROOT}/repo/sweetpotatos".files* 2>/dev/null || true

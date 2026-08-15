@@ -54,7 +54,7 @@ Then in SourceForge: Files → that release → ⓘ on the `.iso` → set as def
 - Arch-based build host
 - Root privileges (`mkarchiso`)
 - Packages: `archiso`, `base-devel`, `git`
-- Local **Calamares** + **swirl** packages (see `sudo ./build.sh --build-packages`)
+- Local **Calamares** + **swirl** + **yay-bin/octopi/tera** packages (see `sudo ./build.sh --build-packages`)
 
 ## Build
 
@@ -111,7 +111,8 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Torrents | Transmission |
 | Webcam | guvcview |
 | Color picker | hyprpicker |
-| Flatpaks | Bazaar (+ flatpak) |
+| Packages | Octopi (+ yay / AUR) |
+| Web radio | tera |
 | Disks | GNOME Disks |
 | System monitor | btop |
 

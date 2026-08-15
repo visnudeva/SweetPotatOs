@@ -14,6 +14,28 @@ need_repo_pkg() {
   ls "${REPO}/${name}"-*.pkg.tar.* >/dev/null 2>&1
 }
 
+ensure_local_repo_pacman() {
+  mkdir -p "${REPO}"
+  if [[ ! -f /etc/pacman.d/sweetpotatos-local.conf ]]; then
+    cat >/etc/pacman.d/sweetpotatos-local.conf <<EOF
+[sweetpotatos]
+SigLevel = Optional TrustAll
+Server = file://${REPO}
+EOF
+  else
+    sed -i "s|^Server = file://.*|Server = file://${REPO}|" /etc/pacman.d/sweetpotatos-local.conf
+  fi
+  if ! grep -q '^Include = /etc/pacman.d/sweetpotatos-local.conf' /etc/pacman.conf \
+    && ! grep -q '^\[sweetpotatos\]' /etc/pacman.conf; then
+    printf '\nInclude = /etc/pacman.d/sweetpotatos-local.conf\n' >>/etc/pacman.conf
+  fi
+  if ls "${REPO}"/*.pkg.tar.* >/dev/null 2>&1; then
+    repo-add -R "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.* >/dev/null 2>&1 \
+      || repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.* >/dev/null 2>&1 || true
+  fi
+  pacman -Sy --noconfirm >/dev/null 2>&1 || true
+}
+
 build_local_pkg() {
   local name="$1"
   local srcdir="$2"
@@ -21,6 +43,7 @@ build_local_pkg() {
     echo "Run: sudo ./build.sh (from a normal user, not root login)." >&2
     exit 1
   fi
+  ensure_local_repo_pacman
   echo "[*] Building ${name} into ${REPO}..."
   pacman -S --needed --noconfirm base-devel git meson ninja 2>/dev/null || true
   local build_dir="${ROOT}/.aur-build/${name}"
@@ -34,7 +57,7 @@ build_local_pkg() {
     exit 1
   }
   cp "${build_dir}"/*.pkg.tar.* "${REPO}/"
-  repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
+  ensure_local_repo_pacman
   echo "[+] ${name} added to local repo."
 }
 
@@ -45,11 +68,14 @@ build_aur_pkg() {
     echo "Run: sudo ./build.sh --build-calamares (from a normal user, not root login)." >&2
     exit 1
   fi
+  ensure_local_repo_pacman
   echo "[*] Building ${name} from AUR into ${REPO}..."
   local build_dir="${ROOT}/.aur-build/${name}"
   mkdir -p "${ROOT}/.aur-build"
   chown -R "${AUR_USER}:${AUR_USER}" "${ROOT}/.aur-build"
   pacman -S --needed --noconfirm base-devel git
+  # Avoid interactive jack provider prompts when AUR deps pull in mpv/ffmpeg
+  pacman -S --needed --noconfirm --asdeps pipewire-jack 2>/dev/null || true
   if [[ ! -d "${build_dir}/.git" ]]; then
     sudo -u "${AUR_USER}" git clone --depth 1 "${aur_url}" "${build_dir}"
   else
@@ -59,8 +85,15 @@ build_aur_pkg() {
     echo "makepkg failed; install ${name} into ${REPO}/ manually." >&2
     exit 1
   }
-  cp "${build_dir}"/*.pkg.tar.* "${REPO}/"
-  repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
+  shopt -s nullglob
+  local built=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  if ((${#built[@]} == 0)); then
+    echo "makepkg produced no packages for ${name}" >&2
+    exit 1
+  fi
+  cp "${built[@]}" "${REPO}/"
+  ensure_local_repo_pacman
   echo "[+] ${name} added to local repo."
 }
 
@@ -78,20 +111,23 @@ mkdir -p "${REPO}" "${OUT}"
 
 DO_CALAMARES=0
 DO_SWIRL=0
+DO_AUR_APPS=0
 DO_ISO=1
 for arg in "$@"; do
   case "${arg}" in
     --build-calamares) DO_CALAMARES=1; DO_ISO=0 ;;
     --build-swirl) DO_SWIRL=1; DO_ISO=0 ;;
-    --build-packages) DO_CALAMARES=1; DO_SWIRL=1; DO_ISO=0 ;;
+    --build-aur-apps) DO_AUR_APPS=1; DO_ISO=0 ;;
+    --build-packages) DO_CALAMARES=1; DO_SWIRL=1; DO_AUR_APPS=1; DO_ISO=0 ;;
     --help|-h)
       cat <<EOF
 Usage: sudo ./build.sh [options]
 
-  (no args)           Build ISO (requires calamares + swirl in repo/)
+  (no args)           Build ISO (requires calamares + swirl + AUR apps in repo/)
   --build-calamares   Build Calamares into repo/ only
   --build-swirl       Build Swirl compositor into repo/ only
-  --build-packages    Build calamares + swirl into repo/ only
+  --build-aur-apps    Build yay-bin + qt-sudo + octopi + tera into repo/ only
+  --build-packages    Build calamares + swirl + AUR apps into repo/ only
 EOF
       exit 0
       ;;
@@ -102,6 +138,10 @@ done
 if (( DO_ISO )); then
   need_repo_pkg calamares || DO_CALAMARES=1
   need_repo_pkg swirl || DO_SWIRL=1
+  need_repo_pkg yay-bin || DO_AUR_APPS=1
+  need_repo_pkg qt-sudo || DO_AUR_APPS=1
+  need_repo_pkg octopi || DO_AUR_APPS=1
+  need_repo_pkg tera || DO_AUR_APPS=1
 fi
 
 if (( DO_CALAMARES )) && ! need_repo_pkg calamares; then
@@ -116,7 +156,17 @@ elif (( DO_SWIRL )); then
   echo "[*] swirl already in ${REPO}/ — skipping"
 fi
 
-if ! need_repo_pkg calamares || ! need_repo_pkg swirl; then
+if (( DO_AUR_APPS )); then
+  need_repo_pkg yay-bin || build_aur_pkg yay-bin https://aur.archlinux.org/yay-bin.git
+  need_repo_pkg qt-sudo || build_aur_pkg qt-sudo https://aur.archlinux.org/qt-sudo.git
+  need_repo_pkg octopi || build_aur_pkg octopi https://aur.archlinux.org/octopi.git
+  # Local PKGBUILD: AUR tera omits go makedepend required by upstream Makefile
+  need_repo_pkg tera || build_local_pkg tera "${ROOT}/packaging/tera"
+fi
+
+if ! need_repo_pkg calamares || ! need_repo_pkg swirl \
+  || ! need_repo_pkg yay-bin || ! need_repo_pkg qt-sudo \
+  || ! need_repo_pkg octopi || ! need_repo_pkg tera; then
   cat >&2 <<EOF
 [!] Local repo is missing required packages in ${REPO}/
 
