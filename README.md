@@ -110,6 +110,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Images | swayimg |
 | Flatpaks | Bazaar (+ flatpak) |
 | Disks | GNOME Disks |
+| System monitor | btop |
 
 ### Useful binds
 
