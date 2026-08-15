@@ -46,6 +46,7 @@ check_file "${ISO}/etc/skel/.config/swirl/scripts/tips.sh"
 check_file "${ISO}/etc/systemd/system/multi-user.target.wants/bluetooth.service"
 check_file "${ISO}/etc/systemd/system/multi-user.target.wants/power-profiles-daemon.service"
 
+check_grep '\[colors-dark\]' "${ISO}/etc/skel/.config/foot/foot.ini" "foot uses [colors-dark]"
 check_grep 'alpha=1\.0' "${ISO}/etc/skel/.config/foot/foot.ini" "foot opaque alpha=1.0"
 check_grep 'set \$term foot' "${ISO}/etc/skel/.config/swirl/config" "skel Mod+Return → foot"
 check_grep 'set \$term foot' "${ISO}/home/liveuser/.config/swirl/config" "liveuser Mod+Return → foot"

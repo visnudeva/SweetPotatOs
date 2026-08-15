@@ -37,7 +37,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Fastfetch logo
 
-- Primary logo is colored **`SPLogo.png`** (`logo.type: auto`) so terminals that support image protocols can show it; others fall through to chafa.
+- Primary logo is colored **`SPLogo.png`** with `logo.type: sixel` (foot-friendly). Do not use `auto`/kitty protocol as the primary path. Ship `imagemagick` for sixel conversion.
 - Do **not** make monochrome `SPLogo.asc` the primary logo.
 - Paths:
   - Session / SweetPotato install: `~/.config/fastfetch/SPLogo.png`
@@ -70,7 +70,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Ly always lists **root** first. Do **not** ship `/etc/ly/save.txt` with index `0` (that selects root). Calamares `shellprocess@fix-ly` (`sweetpotatos-fix-ly`) removes `liveuser` and writes `save.txt` for `${USER}` after the users step.
 - Installed user must be able to `sudo`: airootfs ships `/etc/sudoers.d/10-wheel`; `sweetpotatos-fix-sudo` (from `shellprocess@fix-ly` and again from `cleanup-live`) adds `${USER}` to `wheel`, writes `/etc/sudoers.d/10-installed-user` with an explicit user rule, and uncomments `%wheel` in `/etc/sudoers`. Do not rely only on Calamares `10-installer`.
 - After install, `shellprocess@cleanup-live` must remove Install SweetPotatOs / calamares `.desktop` leftovers from the app launcher.
-- Default terminal is **foot**; `Mod+Return` / applauncher / networkmanager-dmenu use foot. Do not ship kitty config. Foot must stay opaque (`alpha=1.0`).
+- Default terminal is **foot**; `Mod+Return` / applauncher / networkmanager-dmenu use foot. Do not ship kitty config. Foot must stay opaque (`alpha=1.0`) under **`[colors-dark]`** (foot ≥1.26; do not use deprecated `[colors]`).
 - Status bar (`status.sh`) polls every **3s**.
 - Ly: `default_input = password` (saved user → type password immediately).
 - Session start: `rfkill unblock bluetooth`; one-shot tips via `tips.sh` (live every boot; installed once).
