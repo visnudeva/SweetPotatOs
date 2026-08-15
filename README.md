@@ -102,12 +102,16 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Browser | Firefox |
 | Files | Thunar |
 | Editor | Geany |
+| Calculator | galculator |
 | Terminal | foot |
 | Video | mpv + yt-dlp |
 | Image edit | GIMP |
 | Music | Audacious |
 | PDF | mupdf |
 | Images | swayimg |
+| Torrents | Transmission |
+| Webcam | guvcview |
+| Color picker | hyprpicker |
 | Flatpaks | Bazaar (+ flatpak) |
 | Disks | GNOME Disks |
 | System monitor | btop |

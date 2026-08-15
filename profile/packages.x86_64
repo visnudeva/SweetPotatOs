@@ -116,6 +116,7 @@ gvfs-smb
 nwg-look
 firefox
 geany
+galculator
 gnome-disk-utility
 swayimg
 mpv
@@ -127,6 +128,15 @@ audacious
 audacious-plugins
 cava
 gimp
+transmission-gtk
+guvcview
+hyprpicker
+unzip
+zip
+7zip
+hunspell
+hunspell-en_us
+hunspell-fr-revised
 pipewire
 pipewire-pulse
 wireplumber
@@ -145,7 +155,6 @@ bluez
 bluez-utils
 mako
 udiskie
-mousepad
 file-roller
 xdg-user-dirs
 qt6-wayland
