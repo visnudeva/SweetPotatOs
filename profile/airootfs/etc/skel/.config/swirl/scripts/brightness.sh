@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 # SweetPotato brightness control + mako notification
+# Prefer backlight class (-n), same approach as Ly's brightness_*_cmd.
 set -euo pipefail
 
-STEP="${BRIGHTNESS_STEP:-5%}"
+STEP="${BRIGHTNESS_STEP:-5}"
 TAG="sweetpotato-brightness"
+BCTL=(brightnessctl -n)
 
 get_brightness() {
-  brightnessctl -m | awk -F, '{gsub(/%/,"",$4); print $4}'
+  "${BCTL[@]}" -m | awk -F, '{gsub(/%/,"",$4); print $4}'
 }
 
 notify_brightness() {
   local level icon
   level="$(get_brightness)"
+  level="${level:-0}"
   if (( level < 20 )); then
     icon="notification-display-brightness-off"
   elif (( level < 40 )); then
@@ -28,16 +31,16 @@ notify_brightness() {
     -h "string:x-canonical-private-synchronous:${TAG}" \
     -h "string:x-dunst-stack-tag:${TAG}" \
     -h "int:value:${level}" \
-    "Brightness" "${level}%"
+    "Brightness" "${level}%" 2>/dev/null || true
 }
 
 case "${1:-}" in
   up)
-    brightnessctl set "+${STEP}" >/dev/null
+    "${BCTL[@]}" set "+${STEP}%" >/dev/null
     notify_brightness
     ;;
   down)
-    brightnessctl set "${STEP}-" >/dev/null
+    "${BCTL[@]}" set "${STEP}%-" >/dev/null
     notify_brightness
     ;;
   *)

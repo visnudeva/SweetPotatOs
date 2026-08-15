@@ -93,7 +93,6 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Password | empty (Enter) |
 | Desktop | Swirl + SweetPotato |
 | Caffeine | **on by default** (no sleep/lock during install) |
-| FSB100 | **on by default** (fullscreen media → max brightness; `Mod+Shift+b`) |
 
 ### Default apps
 
@@ -135,7 +134,6 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | `Mod+number` | Change workspaces |
 | `Mod+l` | Lock screen |
 | `Mod+c` | Caffeine toggle (on by default on live ISO) |
-| `Mod+Shift+b` | FSB100 toggle (fullscreen media → max brightness; on by default) |
 | `Mod+i` | Installer (Calamares) |
 | `Mod+Shift+e` | Exit Swirl |
 | `Mod+o` | Power off |

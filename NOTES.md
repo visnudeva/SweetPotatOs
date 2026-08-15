@@ -53,9 +53,13 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 ## Caffeine vs suspend
 
 - **Mod+c** / `caffeine.sh`: disables **idle** lock/display-off only (`systemd-inhibit --what=idle`).
-- **Mod+Shift+b** / `fsb100.sh`: fullscreen media → 100% backlight, restore on exit (on by default). Watch the focused **window**, not the output/workspace (those also report `focused`).
 - Lid-close suspend must keep working while caffeine is on.
 - Live ISO: caffeine **on by default** so install is not interrupted by idle lock; lid still suspends via logind.
+
+## Brightness
+
+- Keys use `brightnessctl -n` via `~/.config/swirl/scripts/brightness.sh`.
+- **FSB100 removed** — it locked backlight at 100% (false fullscreen + orphaned watchers fighting the keys).
 
 ## Live ISO specifics (`sync-theme.sh` injects into liveuser Swirl config)
 
