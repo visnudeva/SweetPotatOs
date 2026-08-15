@@ -136,7 +136,7 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | `Mod+o` | Power off |
 | `Mod+Shift+c` | Reload config |
 
-`Mod` is usually the Super/Windows key.
+`Mod` is usually the Super/Windows key. A one-shot tips notification lists the main binds after login (every live boot; once on an installed user).
 
 ### Gestures
 

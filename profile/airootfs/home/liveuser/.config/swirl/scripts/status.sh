@@ -105,5 +105,5 @@ while true; do
         echo "CPU:${cpu_usage}% • RAM:${ram_usage}% • DISK:${disk_usage}% • ${brightness_display} • BAT:${battery_display} • ${volume_display} • ${wifi_display} • ${datetime}"
     fi
 
-    sleep 1
+    sleep 3
 done

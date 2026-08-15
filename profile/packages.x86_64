@@ -151,9 +151,9 @@ xdg-user-dirs
 qt6-wayland
 btop
 cliphist
-wlsunset
 flatpak
 bazaar
+power-profiles-daemon
 gtk3
 gtk4
 gnome-themes-extra

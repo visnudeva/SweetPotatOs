@@ -273,6 +273,8 @@ exec mako
 exec udiskie --tray
 exec nm-applet --indicator
 exec blueman-applet
+exec sh -c 'rfkill unblock bluetooth 2>/dev/null || true'
+exec ~/.config/swirl/scripts/tips.sh
 
 # Calamares installer (Wayland app_id)
 for_window [app_id="io.calamares.calamares"] floating enable
