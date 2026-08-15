@@ -37,12 +37,11 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Fastfetch logo
 
-- Primary logo is colored **`SPLogo.png`** with `logo.type: sixel` (foot-friendly). Do not use `auto`/kitty protocol as the primary path. Ship `imagemagick` for sixel conversion.
-- Do **not** make monochrome `SPLogo.asc` the primary logo.
+- Primary logo is colored **`SPLogo.png`** via **`logo.type: chafa`** (ASCII/blocks in potato orange/red). Do not use raw sixel/PNG/`auto` as primary in foot. Monochrome `SPLogo.asc` is last-resort only.
 - Paths:
   - Session / SweetPotato install: `~/.config/fastfetch/SPLogo.png`
   - ISO / system: `/usr/local/share/sweetpotatos/SPLogo.png` (skel + liveuser configs rewritten by `sync-theme.sh` for ISO trees only)
-- Canonical PNG lives in `SweetPotato/fastfetch/SPLogo.png`. ASCII remains as a last-resort file only.
+- Canonical PNG lives in `SweetPotato/fastfetch/SPLogo.png`. Ship `chafa` (and keep `imagemagick` optional).
 
 ## Lid close → sleep
 
