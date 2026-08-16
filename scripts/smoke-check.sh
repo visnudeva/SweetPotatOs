@@ -54,6 +54,16 @@ check_grep 'sleep 3' "${ISO}/etc/skel/.config/swirl/scripts/status.sh" "status b
 check_grep 'default_input = password' "${ISO}/etc/ly/config.ini" "Ly focuses password"
 check_grep 'rfkill unblock bluetooth' "${ISO}/etc/skel/.config/swirl/config" "bluetooth unblock on session start"
 check_grep 'tips\.sh' "${ISO}/etc/skel/.config/swirl/config" "first-boot / live tips"
+check_grep 'exec_always --no-startup-id /usr/local/bin/sweetpotatos-sway-xkb-watch' \
+  "${ISO}/home/liveuser/.config/swirl/config" "liveuser locale1 keyboard watcher"
+check_nogrep 'sweetpotatos-sway-xkb-watch' "${ISO}/etc/skel/.config/swirl/config" \
+  "skel has no live Calamares xkb watcher"
+check_file "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch"
+check_file "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-sync"
+check_grep 'fingerprint' "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch" \
+  "xkb watcher polls locale1 via busctl"
+check_nogrep '^[[:space:]]*dbus-monitor' "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch" \
+  "xkb watcher does not invoke dbus-monitor"
 check_grep 'name: "bluetooth.service"' \
   "${ROOT}/profile/airootfs/etc/calamares/modules/services-systemd.conf" "Calamares enables bluetooth"
 check_grep 'name: "power-profiles-daemon.service"' \

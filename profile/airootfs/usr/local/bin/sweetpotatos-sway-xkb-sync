@@ -17,11 +17,24 @@ options="$(bus_get X11Options)"
 
 [[ -n "${layout}" ]] || exit 0
 
-if [[ -z "${SWAYSOCK:-}" ]]; then
-  SWAYSOCK="$(find "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}" -maxdepth 1 -type s -name 'sway-ipc.*.sock' 2>/dev/null | head -1 || true)"
-  export SWAYSOCK
-fi
-[[ -n "${SWAYSOCK:-}" ]] || exit 0
+find_swaysock() {
+  local rt s
+  if [[ -n "${SWAYSOCK:-}" && -S "${SWAYSOCK}" ]]; then
+    return 0
+  fi
+  rt="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+  s="$(find "${rt}" -maxdepth 1 \( -name 'sway-ipc.*.sock' -o -name 'swirl-ipc.*.sock' \) -type s 2>/dev/null | head -1 || true)"
+  if [[ -z "${s}" ]] && command -v swirl >/dev/null 2>&1; then
+    s="$(swirl --get-socketpath 2>/dev/null || true)"
+  fi
+  if [[ -z "${s}" ]] && command -v sway >/dev/null 2>&1; then
+    s="$(sway --get-socketpath 2>/dev/null || true)"
+  fi
+  [[ -n "${s}" && -S "${s}" ]] || return 1
+  export SWAYSOCK="${s}"
+}
+
+find_swaysock || exit 0
 command -v swaymsg >/dev/null 2>&1 || exit 0
 
 # Comma-separated layouts/variants are valid for xkb_layout / xkb_variant.
@@ -40,13 +53,19 @@ fi
 # Keep live config in sync so a later reload does not snap back to "us".
 cfg="${HOME}/.config/swirl/config"
 if [[ -f "${cfg}" ]]; then
-  # Escape & for sed replacement; layouts are usually plain [a-z0-9,_-].
-  esc_layout="$(printf '%s' "${layout}" | sed 's/[&|]/g')"
-  sed -i "s/^[[:space:]]*xkb_layout[[:space:]]\".*\"/    xkb_layout \"${esc_layout}\"/" "${cfg}" || true
+  sed_escape() {
+    local s=$1
+    s=${s//\\/\\\\}
+    s=${s//&/\\&}
+    s=${s//|/\\|}
+    printf '%s' "$s"
+  }
+  esc_layout="$(sed_escape "${layout}")"
+  sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc_layout}\"|" "${cfg}" || true
   if [[ -n "${variant}" ]]; then
-    esc_variant="$(printf '%s' "${variant}" | sed 's/[&|]/g')"
+    esc_variant="$(sed_escape "${variant}")"
     if grep -q '^[[:space:]]*xkb_variant' "${cfg}"; then
-      sed -i "s/^[[:space:]]*xkb_variant[[:space:]].*/    xkb_variant \"${esc_variant}\"/" "${cfg}" || true
+      sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${esc_variant}\"|" "${cfg}" || true
     else
       sed -i "/xkb_layout \"${esc_layout}\"/a\\    xkb_variant \"${esc_variant}\"" "${cfg}" || true
     fi

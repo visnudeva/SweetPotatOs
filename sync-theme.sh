@@ -65,13 +65,15 @@ exec ~/.config/swirl/scripts/caffeine.sh on
 
 inject_live_xkb_watch() {
   local f="$1"
-  # Mirror Calamares locale1 keyboard picks into the running Swirl session
+  # Mirror Calamares locale1 keyboard picks into the running Swirl session.
+  # exec_always + full path: restart after reload; do not depend on session PATH.
   if grep -q 'sweetpotatos-sway-xkb-watch' "${f}"; then
+    sed -i -E 's|^exec(_always)?( --no-startup-id)? (/.*/)?sweetpotatos-sway-xkb-watch$|exec_always --no-startup-id /usr/local/bin/sweetpotatos-sway-xkb-watch|' "${f}"
     return 0
   fi
   sed -i '/^### Input configuration/i\
 # Calamares (Wayland) updates systemd-localed; push that into Swirl live\
-exec sweetpotatos-sway-xkb-watch
+exec_always --no-startup-id /usr/local/bin/sweetpotatos-sway-xkb-watch
 ' "${f}"
 }
 
