@@ -126,7 +126,6 @@ ffmpeg
 mupdf
 audacious
 audacious-plugins
-cava
 gimp
 transmission-gtk
 guvcview
@@ -162,16 +161,12 @@ btop
 cliphist
 # AUR helper + GUI package manager (AUR packages built into local repo/)
 yay-bin
-qt-sudo
-octopi
+shelly-bin
 # Terminal web radio (AUR)
 tera
-# AUR build deps for end users + tera/octopi runtime deps from official repos
+# AUR build deps for end users + tera runtime deps from official repos
 base-devel
 git
-qtermwidget
-qt6-multimedia
-qt6-svg
 pacman-contrib
 fzf
 github-cli

@@ -27,7 +27,7 @@ Expected layout on a build machine (siblings):
    - `profile/airootfs/home/liveuser`
    - system logo dir `profile/airootfs/usr/local/share/sweetpotatos/`
    - `profile/airootfs/etc/fastfetch/config.jsonc`
-3. Build packages if needed: `sudo ./build.sh --build-packages` (calamares + swirl + yay-bin/qt-sudo/octopi/tera).
+3. Build packages if needed: `sudo ./build.sh --build-packages` (calamares + swirl + yay-bin/shelly-bin/tera).
 4. Build ISO: `sudo ./build.sh`.
 5. Publish:
    - Git: push SweetPotato → GitHub; SweetPotatOs → GitHub **and** `sourceforge`.
@@ -58,10 +58,10 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Packages / AUR
 
-- No Flatpak/Bazaar. Ship **yay-bin**, **qt-sudo**, **octopi**, and **tera** (web radio) via the local `repo/` (built from AUR / `packaging/tera` in `build.sh`).
-- Official deps: `base-devel`, `git`, `qtermwidget`, `qt6-multimedia`, `qt6-svg`, `pacman-contrib`, `fzf`, `github-cli`, `wget`, `python` (mpv already present).
-- Skel: `~/.config/octopi/octopi.conf` sets `Aur_Tool_Name=yay`.
+- No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin** (Shelly GUI; local `packaging/shelly-bin` from upstream prebuilt release — avoids AUR Anubis / zig), and **tera** (web radio) via the local `repo/` (built from AUR / `packaging/` in `build.sh`).
+- Official deps: `base-devel`, `git`, `pacman-contrib`, `fzf`, `github-cli`, `wget`, `python` (mpv already present).
 - `packaging/tera`: local PKGBUILD (upstream AUR omits `go` makedepend required by its Makefile).
+- `packaging/shelly-bin`: local PKGBUILD wrapping Seafoam Labs release tarball (no Flatpak backend package).
 
 ## Live ISO specifics (`sync-theme.sh` injects into liveuser Swirl config)
 

@@ -126,7 +126,7 @@ Usage: sudo ./build.sh [options]
   (no args)           Build ISO (requires calamares + swirl + AUR apps in repo/)
   --build-calamares   Build Calamares into repo/ only
   --build-swirl       Build Swirl compositor into repo/ only
-  --build-aur-apps    Build yay-bin + qt-sudo + octopi + tera into repo/ only
+  --build-aur-apps    Build yay-bin + shelly-bin + tera into repo/ only
   --build-packages    Build calamares + swirl + AUR apps into repo/ only
 EOF
       exit 0
@@ -139,8 +139,7 @@ if (( DO_ISO )); then
   need_repo_pkg calamares || DO_CALAMARES=1
   need_repo_pkg swirl || DO_SWIRL=1
   need_repo_pkg yay-bin || DO_AUR_APPS=1
-  need_repo_pkg qt-sudo || DO_AUR_APPS=1
-  need_repo_pkg octopi || DO_AUR_APPS=1
+  need_repo_pkg shelly-bin || DO_AUR_APPS=1
   need_repo_pkg tera || DO_AUR_APPS=1
 fi
 
@@ -158,15 +157,15 @@ fi
 
 if (( DO_AUR_APPS )); then
   need_repo_pkg yay-bin || build_aur_pkg yay-bin https://aur.archlinux.org/yay-bin.git
-  need_repo_pkg qt-sudo || build_aur_pkg qt-sudo https://aur.archlinux.org/qt-sudo.git
-  need_repo_pkg octopi || build_aur_pkg octopi https://aur.archlinux.org/octopi.git
+  # Local PKGBUILD: AUR shelly-bin often blocked/empty behind Anubis; no zig needed
+  need_repo_pkg shelly-bin || build_local_pkg shelly-bin "${ROOT}/packaging/shelly-bin"
   # Local PKGBUILD: AUR tera omits go makedepend required by upstream Makefile
   need_repo_pkg tera || build_local_pkg tera "${ROOT}/packaging/tera"
 fi
 
 if ! need_repo_pkg calamares || ! need_repo_pkg swirl \
-  || ! need_repo_pkg yay-bin || ! need_repo_pkg qt-sudo \
-  || ! need_repo_pkg octopi || ! need_repo_pkg tera; then
+  || ! need_repo_pkg yay-bin || ! need_repo_pkg shelly-bin \
+  || ! need_repo_pkg tera; then
   cat >&2 <<EOF
 [!] Local repo is missing required packages in ${REPO}/
 
