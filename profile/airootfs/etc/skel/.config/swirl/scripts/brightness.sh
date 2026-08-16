@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 # SweetPotato brightness control + mako notification
-# Prefer backlight class (-n), same approach as Ly's brightness_*_cmd.
+# Keep this simple — plain brightnessctl (worked before FSB100).
 set -euo pipefail
 
-STEP="${BRIGHTNESS_STEP:-5}"
+STEP="${BRIGHTNESS_STEP:-5%}"
 TAG="sweetpotato-brightness"
-BCTL=(brightnessctl -n)
 
 get_brightness() {
-  "${BCTL[@]}" -m | awk -F, '{gsub(/%/,"",$4); print $4}'
+  brightnessctl -m | awk -F, '{gsub(/%/,"",$4); print $4}'
 }
 
 notify_brightness() {
@@ -36,11 +35,11 @@ notify_brightness() {
 
 case "${1:-}" in
   up)
-    "${BCTL[@]}" set "+${STEP}%" >/dev/null
+    brightnessctl set "+${STEP}" >/dev/null
     notify_brightness
     ;;
   down)
-    "${BCTL[@]}" set "${STEP}%-" >/dev/null
+    brightnessctl set "${STEP}-" >/dev/null
     notify_brightness
     ;;
   *)
