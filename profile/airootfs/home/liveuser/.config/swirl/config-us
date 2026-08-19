@@ -285,4 +285,6 @@ exec sh -c 'sleep 5; sweetpotatos-calamares'
 # Calamares installer (Wayland app_id)
 for_window [app_id="io.calamares.calamares"] floating enable
 
+# nwg-displays saves output layout here; include so it persists across reboots
+include ~/.config/nwg-displays/outputs
 include /etc/sway/config.d/*

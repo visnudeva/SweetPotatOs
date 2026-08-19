@@ -148,7 +148,7 @@ pipewire
 pipewire-pulse
 wireplumber
 pavucontrol
-wdisplays
+nwg-displays
 kanshi
 wlr-randr
 xdg-desktop-portal
