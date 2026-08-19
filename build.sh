@@ -190,9 +190,13 @@ EOF
   exit 1
 fi
 
-# Always rebuild repo DB to ensure every package (including newly built AUR deps) is indexed.
+# Always rebuild repo DB from scratch to ensure every package is indexed.
+# Do NOT use repo-add -R: it tries to restore xattrs from the old DB via bsdtar,
+# which fails on non-Arch filesystems (e.g. Fedora overlayfs in the container).
 echo "[*] Refreshing local repo database..."
-repo-add -R "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
+rm -f "${REPO}/sweetpotatos.db.tar.gz" "${REPO}/sweetpotatos.db" \
+      "${REPO}/sweetpotatos.files.tar.gz" "${REPO}/sweetpotatos.files"
+repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
 
 if (( ! DO_ISO )); then
   echo "[+] Packages ready in ${REPO}/"
