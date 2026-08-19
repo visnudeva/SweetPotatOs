@@ -141,6 +141,8 @@ if (( DO_ISO )); then
   need_repo_pkg yay-bin || DO_AUR_APPS=1
   need_repo_pkg shelly-bin || DO_AUR_APPS=1
   need_repo_pkg tera || DO_AUR_APPS=1
+  need_repo_pkg python-screeninfo || DO_AUR_APPS=1
+  need_repo_pkg python-imageio-ffmpeg || DO_AUR_APPS=1
   need_repo_pkg waypaper || DO_AUR_APPS=1
 fi
 
@@ -162,12 +164,17 @@ if (( DO_AUR_APPS )); then
   need_repo_pkg shelly-bin || build_local_pkg shelly-bin "${ROOT}/packaging/shelly-bin"
   # Local PKGBUILD: AUR tera omits go makedepend required by upstream Makefile
   need_repo_pkg tera || build_local_pkg tera "${ROOT}/packaging/tera"
+  # waypaper AUR deps not in official repos — build them first
+  need_repo_pkg python-screeninfo || build_aur_pkg python-screeninfo https://aur.archlinux.org/python-screeninfo.git
+  need_repo_pkg python-imageio-ffmpeg || build_aur_pkg python-imageio-ffmpeg https://aur.archlinux.org/python-imageio-ffmpeg.git
   need_repo_pkg waypaper || build_aur_pkg waypaper https://aur.archlinux.org/waypaper.git
 fi
 
 if ! need_repo_pkg calamares || ! need_repo_pkg swirl \
   || ! need_repo_pkg yay-bin || ! need_repo_pkg shelly-bin \
-  || ! need_repo_pkg tera || ! need_repo_pkg waypaper; then
+  || ! need_repo_pkg tera \
+  || ! need_repo_pkg python-screeninfo || ! need_repo_pkg python-imageio-ffmpeg \
+  || ! need_repo_pkg waypaper; then
   cat >&2 <<EOF
 [!] Local repo is missing required packages in ${REPO}/
 
