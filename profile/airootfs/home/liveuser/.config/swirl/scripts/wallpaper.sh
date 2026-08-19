@@ -57,10 +57,10 @@ choice="$(printf '%s\n' "${display_list[@]}" | "${DMENU[@]}")" || exit 0
 img="${path_of[${choice}]:-}"
 [[ -n "${img}" && -f "${img}" ]] || exit 1
 
-swaymsg output '*' bg "${img}" fill >/dev/null
-
 mkdir -p "$(dirname "${WALLPAPER_CONF}")"
-# Persist with ~ when under $HOME so configs stay portable across users/ISOs
+# Persist with ~ when under $HOME so configs stay portable across users/ISOs.
+# Write conf BEFORE applying so the preference is never lost even if swaymsg
+# exits non-zero (e.g. compositor briefly unresponsive).
 if [[ "${img}" == "${HOME}/"* ]]; then
   conf_img="~${img#"${HOME}"}"
 else
@@ -69,6 +69,8 @@ fi
 tmp="${WALLPAPER_CONF}.tmp.$$"
 printf 'output * bg "%s" fill\n' "${conf_img}" > "${tmp}"
 mv -f "${tmp}" "${WALLPAPER_CONF}"
+
+swaymsg output '*' bg "${img}" fill >/dev/null 2>&1 || true
 
 notify-send -t 2000 -a "Wallpaper" -i "sweetpotatos" \
   "Wallpaper" "$(basename "${img}")" 2>/dev/null || true

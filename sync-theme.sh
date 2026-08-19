@@ -144,7 +144,7 @@ sync_common_into() {
   chmod 755 "${dest}/.local/bin/swirl"
   rm -f "${dest}/.local/bin/sway"
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
-  printf 'output * bg "~/.local/share/backgrounds/UsefulBinds.png" fill\n' \
+  printf 'output * bg "~/.local/share/backgrounds/DefaultBindsBG.png" fill\n' \
     > "${dest}/.config/swirl/wallpaper.conf"
   # Swirl reads ~/.config/sway/config *before* swirl — never leave a leftover sway dir.
   # Default terminal is foot — drop any leftover kitty config.

@@ -36,6 +36,7 @@ plymouth
 linux
 linux-firmware
 linux-firmware-marvell
+linux-firmware-whence
 livecd-sounds
 lsscsi
 lvm2

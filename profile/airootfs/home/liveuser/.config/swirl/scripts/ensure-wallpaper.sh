@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 # Apply wallpaper from wallpaper.conf, or a SweetPotato default if missing/broken.
 # Never overwrite a saved preference with the fallback — that caused the chosen
-# wallpaper to reset to UsefulBinds after a reboot when resolve briefly failed.
+# wallpaper to reset to the default after a reboot when resolve briefly failed.
 set -euo pipefail
 
 CONF="${HOME}/.config/swirl/wallpaper.conf"
 DIR="${HOME}/.local/share/backgrounds"
 FALLBACKS=(
-  "${DIR}/UsefulBinds.png"
+  "${DIR}/DefaultBindsBG.png"
+  "${DIR}/SweetNeonBG.png"
+  "${DIR}/SPixelBG.png"
   "${DIR}/SweetPotato.png"
   "${DIR}/SweetPOTATo.png"
 )
