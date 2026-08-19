@@ -1,0 +1,2453 @@
+==> Generating pacman master key. This may take some time.
+gpg: Generating pacman keyring master key...
+gpg: revocation certificate stored as '/etc/pacman.d/gnupg/openpgp-revocs.d/354556DE20C07F6370626B21F85CCC5384EAD210.rev'
+gpg: Done
+==> Updating trust database...
+gpg: Note: third-party key signatures using the SHA1 algorithm are rejected
+gpg: (use option "--allow-weak-key-signatures" to override)
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   2  signed:   5  trust: 0-, 0q, 0n, 0m, 0f, 2u
+gpg: depth: 1  valid:   5  signed:  88  trust: 0-, 0q, 0n, 5m, 0f, 0u
+gpg: depth: 2  valid:  77  signed:  18  trust: 77-, 0q, 0n, 0m, 0f, 0u
+gpg: next trustdb check due at 2026-10-21
+==> Appending keys from archlinux.gpg...
+==> Locally signing trusted keys in keyring...
+  -> Locally signed 5 keys.
+==> Importing owner trust values...
+==> Updating trust database...
+gpg: Note: third-party key signatures using the SHA1 algorithm are rejected
+gpg: (use option "--allow-weak-key-signatures" to override)
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   2  signed:   5  trust: 0-, 0q, 0n, 0m, 0f, 2u
+gpg: depth: 1  valid:   5  signed:  88  trust: 0-, 0q, 0n, 5m, 0f, 0u
+gpg: depth: 2  valid:  77  signed:  18  trust: 77-, 0q, 0n, 0m, 0f, 0u
+gpg: next trustdb check due at 2026-10-21
+:: Synchronizing package databases...
+ core downloading...
+ extra downloading...
+:: Starting full system upgrade...
+resolving dependencies...
+looking for conflicting packages...
+
+Package (28)                  Old Version                  New Version                 Net Change  Download Size
+
+core/binutils                 2.47-1                       2.47-4                        0.00 MiB       8.20 MiB
+core/ca-certificates-mozilla  3.126-1                      3.127-1                       0.00 MiB       0.37 MiB
+core/expat                    2.8.2-1                      2.8.3-1                       0.00 MiB       0.13 MiB
+core/gcc-libs                 16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.00 MiB
+core/glibc                    2.44+r5+g7cba77790f32-1      2.44+r24+g16be1518495f-1      0.04 MiB      10.38 MiB
+core/gnupg                    2.4.9-2                      2.4.9-3                       0.00 MiB       2.89 MiB
+core/libasan                  16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.51 MiB
+core/libatomic                16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.01 MiB
+core/libelf                   0.195-2                      0.195-8                       0.00 MiB       0.70 MiB
+core/libffi                   3.7.1-1                      3.8.0-1                       0.00 MiB       0.05 MiB
+core/libgcc                   16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.08 MiB
+core/libgfortran              16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.90 MiB
+core/libgomp                  16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.23 MiB
+core/libhwasan                16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.27 MiB
+core/liblsan                  16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.22 MiB
+core/libmakepkg-dropins       20-1                         20-2                          0.00 MiB       0.01 MiB
+core/libobjc                  16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.04 MiB
+core/libp11-kit               0.26.4-1                     0.26.5-1                      0.00 MiB       0.51 MiB
+core/libquadmath              16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.16 MiB
+core/libstdc++                16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.84 MiB
+extra/libsysprof-capture      50.0-4                       50.0-6                        0.00 MiB       0.05 MiB
+core/libtsan                  16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.45 MiB
+core/libubsan                 16.1.1+r595+g171d15ac6959-1  16.2.1+r23+gd564253eb6c8-1    0.00 MiB       0.20 MiB
+core/p11-kit                  0.26.4-1                     0.26.5-1                      0.00 MiB       0.25 MiB
+core/procps-ng                4.0.6-3                      4.0.7-1                       0.00 MiB       0.98 MiB
+core/sed                      4.10-1                       4.10-2                       -0.07 MiB       0.21 MiB
+core/tar                      1.35-2                       1.35-3                        0.01 MiB       0.75 MiB
+core/tpm2-tss                 4.1.3-1                      4.2.0-2                       0.38 MiB       0.99 MiB
+
+Total Download Size:    30.38 MiB
+Total Installed Size:  136.67 MiB
+Net Upgrade Size:        0.37 MiB
+
+:: Proceed with installation? [Y/n] 
+:: Retrieving packages...
+ glibc-2.44+r24+g16be1518495f-1-x86_64 downloading...
+ binutils-2.47-4-x86_64 downloading...
+ gnupg-2.4.9-3-x86_64 downloading...
+ tpm2-tss-4.2.0-2-x86_64 downloading...
+ procps-ng-4.0.7-1-x86_64 downloading...
+ libgfortran-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ libstdc++-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ tar-1.35-3-x86_64 downloading...
+ libelf-0.195-8-x86_64 downloading...
+ libasan-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ libp11-kit-0.26.5-1-x86_64 downloading...
+ libtsan-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ ca-certificates-mozilla-3.127-1-x86_64 downloading...
+ libhwasan-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ p11-kit-0.26.5-1-x86_64 downloading...
+ libgomp-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ liblsan-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ sed-4.10-2-x86_64 downloading...
+ libubsan-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ libquadmath-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ expat-2.8.3-1-x86_64 downloading...
+ libgcc-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ libffi-3.8.0-1-x86_64 downloading...
+ libsysprof-capture-50.0-6-x86_64 downloading...
+ libobjc-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ libatomic-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ libmakepkg-dropins-20-2-any downloading...
+ gcc-libs-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+checking keyring...
+checking package integrity...
+loading package files...
+checking for file conflicts...
+:: Processing package changes...
+upgrading glibc...
+upgrading libgcc...
+upgrading libstdc++...
+upgrading libffi...
+upgrading libp11-kit...
+upgrading p11-kit...
+upgrading ca-certificates-mozilla...
+upgrading libelf...
+upgrading binutils...
+upgrading expat...
+upgrading libasan...
+upgrading libatomic...
+upgrading libgfortran...
+upgrading libgomp...
+upgrading libhwasan...
+upgrading liblsan...
+upgrading libobjc...
+upgrading libquadmath...
+upgrading libtsan...
+upgrading libubsan...
+upgrading gcc-libs...
+upgrading tpm2-tss...
+warning: /etc/tpm2-tss/fapi-profiles/P_ECCP384SHA384.json installed as /etc/tpm2-tss/fapi-profiles/P_ECCP384SHA384.json.pacnew
+warning: /etc/tpm2-tss/fapi-profiles/P_RSA3072SHA384.json installed as /etc/tpm2-tss/fapi-profiles/P_RSA3072SHA384.json.pacnew
+upgrading libsysprof-capture...
+upgrading gnupg...
+upgrading sed...
+upgrading libmakepkg-dropins...
+upgrading procps-ng...
+upgrading tar...
+:: Running post-transaction hooks...
+( 1/11) Generating the configured locale...
+Generating locales...
+Generation complete.
+( 2/11) Configuring dynamic linker run-time bindings...
+( 3/11) Creating iconv module configuration cache...
+( 4/11) Creating system user accounts...
+( 5/11) Creating temporary files...
+/usr/lib/tmpfiles.d/journal-nocow.conf:26: Failed to resolve specifier: uninitialized /etc/ detected, skipping.
+All rules containing unresolvable specifiers will be skipped.
+( 6/11) Reloading system manager configuration...
+  Skipped: Current root is not booted.
+( 7/11) Reloading user manager configuration...
+  Skipped: Current root is not booted.
+( 8/11) Enqueuing marked services...
+  Skipped: Current root is not booted.
+( 9/11) Reloading device manager configuration...
+  Skipped: Current root is not booted.
+(10/11) Arming ConditionNeedsUpdate...
+(11/11) Rebuilding certificate stores...
+resolving dependencies...
+looking for conflicting packages...
+
+Package (39)            New Version                 Net Change  Download Size
+
+core/autoconf           2.73-1                        2.25 MiB       0.64 MiB
+core/automake           1.18.1-1                      1.64 MiB       0.62 MiB
+core/bison              3.8.2-8                       2.52 MiB       0.75 MiB
+extra/boost-libs        1.91.0-2                     50.77 MiB       6.15 MiB
+extra/cpio              2.15-3                        0.98 MiB       0.22 MiB
+core/db5.3              5.3.28-7                      6.48 MiB       1.26 MiB
+core/debugedit          5.3-2                         0.13 MiB       0.05 MiB
+core/diffutils          3.12-2                        1.50 MiB       0.33 MiB
+core/elfutils           0.195-8                       3.64 MiB       0.60 MiB
+core/fakeroot           1:1.37.2-3                    0.14 MiB       0.08 MiB
+core/flex               2.6.4-6                       0.84 MiB       0.29 MiB
+core/gc                 8.2.12-1                      0.76 MiB       0.23 MiB
+core/gcc                16.2.1+r23+gd564253eb6c8-1  220.89 MiB      57.93 MiB
+extra/gdb               17.2-1                       31.93 MiB       8.16 MiB
+extra/gdb-common        17.2-1                        1.13 MiB       0.12 MiB
+core/groff              1.24.1-1                      9.01 MiB       2.40 MiB
+core/guile              3.0.11-1                     54.49 MiB       8.39 MiB
+core/libisl             0.28-1                        5.90 MiB       0.94 MiB
+core/libmpc             1.4.1-1                       0.19 MiB       0.09 MiB
+core/libtool            2.6.2-5                       2.34 MiB       0.42 MiB
+core/m4                 1.4.21-2                      0.71 MiB       0.27 MiB
+core/make               4.4.1-3                       1.66 MiB       0.51 MiB
+core/mpdecimal          4.0.1-3                       0.32 MiB       0.10 MiB
+core/patch              2.8-1                         0.17 MiB       0.08 MiB
+core/perl               5.42.2-2                     70.28 MiB      20.49 MiB
+extra/perl-error        0.17030-3                     0.04 MiB       0.02 MiB
+extra/perl-mailtools    2.22-3                        0.10 MiB       0.06 MiB
+extra/perl-timedate     2.35-1                        0.15 MiB       0.06 MiB
+core/pkgconf            3.0.5-1                       0.34 MiB       0.12 MiB
+core/python             3.14.7-1                     73.62 MiB      13.53 MiB
+extra/source-highlight  3.1.9-18                      3.24 MiB       0.67 MiB
+core/texinfo            7.3-1                        12.67 MiB       2.12 MiB
+core/which              2.25-1                        0.03 MiB       0.02 MiB
+extra/xxhash            0.8.3-1                       0.39 MiB       0.10 MiB
+extra/zlib-ng           2.3.3-1                       0.28 MiB       0.11 MiB
+core/base-devel         1-2                           0.00 MiB       0.00 MiB
+extra/git               2.55.0-1                     31.33 MiB       7.11 MiB
+extra/go                2:1.26.6-1                  215.74 MiB      39.26 MiB
+core/sudo               1.9.17.p2-6                   7.85 MiB       1.86 MiB
+
+Total Download Size:   176.14 MiB
+Total Installed Size:  816.48 MiB
+
+:: Proceed with installation? [Y/n] 
+:: Retrieving packages...
+ gcc-16.2.1+r23+gd564253eb6c8-1-x86_64 downloading...
+ go-2:1.26.6-1-x86_64 downloading...
+ perl-5.42.2-2-x86_64 downloading...
+ python-3.14.7-1-x86_64 downloading...
+ guile-3.0.11-1-x86_64 downloading...
+ gdb-17.2-1-x86_64 downloading...
+ git-2.55.0-1-x86_64 downloading...
+ boost-libs-1.91.0-2-x86_64 downloading...
+ groff-1.24.1-1-x86_64 downloading...
+ texinfo-7.3-1-x86_64 downloading...
+ sudo-1.9.17.p2-6-x86_64 downloading...
+ db5.3-5.3.28-7-x86_64 downloading...
+ libisl-0.28-1-x86_64 downloading...
+ bison-3.8.2-8-x86_64 downloading...
+ source-highlight-3.1.9-18-x86_64 downloading...
+ autoconf-2.73-1-any downloading...
+ automake-1.18.1-1-any downloading...
+ elfutils-0.195-8-x86_64 downloading...
+ make-4.4.1-3-x86_64 downloading...
+ libtool-2.6.2-5-x86_64 downloading...
+ diffutils-3.12-2-x86_64 downloading...
+ flex-2.6.4-6-x86_64 downloading...
+ m4-1.4.21-2-x86_64 downloading...
+ gc-8.2.12-1-x86_64 downloading...
+ cpio-2.15-3-x86_64 downloading...
+ pkgconf-3.0.5-1-x86_64 downloading...
+ gdb-common-17.2-1-x86_64 downloading...
+ zlib-ng-2.3.3-1-x86_64 downloading...
+ mpdecimal-4.0.1-3-x86_64 downloading...
+ xxhash-0.8.3-1-x86_64 downloading...
+ libmpc-1.4.1-1-x86_64 downloading...
+ patch-2.8-1-x86_64 downloading...
+ fakeroot-1:1.37.2-3-x86_64 downloading...
+ perl-timedate-2.35-1-any downloading...
+ perl-mailtools-2.22-3-any downloading...
+ debugedit-5.3-2-x86_64 downloading...
+ perl-error-0.17030-3-any downloading...
+ which-2.25-1-x86_64 downloading...
+ base-devel-1-2-any downloading...
+checking keyring...
+checking package integrity...
+loading package files...
+checking for file conflicts...
+:: Processing package changes...
+installing m4...
+installing diffutils...
+installing db5.3...
+installing perl...
+installing autoconf...
+installing automake...
+installing bison...
+installing xxhash...
+installing cpio...
+installing elfutils...
+installing boost-libs...
+Optional dependencies for boost-libs
+    openmpi: for mpi support
+installing mpdecimal...
+installing python...
+Optional dependencies for python
+    python-setuptools: for building Python packages using tooling that is usually bundled with Python
+    python-pip: for installing Python packages using tooling that is usually bundled with Python
+    python-pipx: for installing Python software not packaged on Arch Linux
+    sqlite: for a default database integration [installed]
+    xz: for lzma [installed]
+    tk: for tkinter
+installing gc...
+installing guile...
+installing gdb-common...
+installing source-highlight...
+Optional dependencies for source-highlight
+    lesspipe: src-hilite-lesspipe.sh
+installing gdb...
+installing debugedit...
+installing fakeroot...
+installing flex...
+installing libisl...
+installing libmpc...
+installing gcc...
+Optional dependencies for gcc
+    lib32-gcc-libs: for generating code for 32-bit ABI
+installing groff...
+Optional dependencies for groff
+    netpbm: for use together with man -H command interaction in browsers
+    psutils: for use together with man -H command interaction in browsers
+    libxaw: for gxditview
+    perl-file-homedir: for use with glilypond
+installing libtool...
+installing make...
+installing patch...
+Optional dependencies for patch
+    ed: for patch -e functionality
+installing pkgconf...
+installing sudo...
+installing texinfo...
+Optional dependencies for texinfo
+    perl-archive-zip: EPUB file output via texi2any
+installing which...
+installing base-devel...
+installing perl-error...
+installing perl-timedate...
+installing perl-mailtools...
+installing zlib-ng...
+installing git...
+Optional dependencies for git
+    git-zsh-completion: upstream zsh completion
+    tk: gitk and git gui
+    openssh: ssh transport and crypto
+    man: show help with `git command --help`
+    perl-libwww: git svn
+    perl-term-readkey: git svn and interactive.singlekey setting
+    perl-io-socket-ssl: git send-email TLS support
+    perl-authen-sasl: git send-email TLS support
+    perl-cgi: gitweb (web interface) support
+    python: git svn & git p4 [installed]
+    subversion: git svn
+    org.freedesktop.secrets: keyring credential helper
+    libsecret: libsecret credential helper [installed]
+    less: the default pager for git
+installing go...
+:: Running post-transaction hooks...
+(1/6) Configuring dynamic linker run-time bindings...
+(2/6) Creating system user accounts...
+Creating group 'git' with GID 969.
+Creating user 'git' (git daemon user) with UID 969 and GID 969.
+(3/6) Creating temporary files...
+/usr/lib/tmpfiles.d/journal-nocow.conf:26: Failed to resolve specifier: uninitialized /etc/ detected, skipping.
+All rules containing unresolvable specifiers will be skipped.
+(4/6) Reloading system manager configuration...
+  Skipped: Current root is not booted.
+(5/6) Arming ConditionNeedsUpdate...
+(6/6) Checking for old perl modules...
+resolving dependencies...
+warning: python-3.14.7-1 is up to date -- skipping
+looking for conflicting packages...
+
+Package (171)                    New Version               Net Change  Download Size
+
+extra/abseil-cpp                 20260526.0-2                7.06 MiB       1.33 MiB
+extra/alsa-card-profiles         1:1.6.8-1                   0.19 MiB       0.03 MiB
+extra/alsa-lib                   1.2.16.1-1                  1.75 MiB       0.52 MiB
+extra/alsa-topology-conf         1.2.5.1-4                   0.33 MiB       0.01 MiB
+extra/alsa-ucm-conf              1.2.16.1-1                  0.68 MiB       0.13 MiB
+extra/aom                        3.14.1-1                    9.25 MiB       2.94 MiB
+extra/bluez-libs                 5.87-2                      0.31 MiB       0.09 MiB
+extra/bubblewrap                 0.11.2-1                    0.09 MiB       0.04 MiB
+extra/cairo                      1.18.4-1                    1.59 MiB       0.61 MiB
+extra/dav1d                      1.5.4-1                     1.85 MiB       0.66 MiB
+extra/default-cursors            3-1                         0.00 MiB       0.00 MiB
+extra/desktop-file-utils         0.28-1                      0.18 MiB       0.04 MiB
+extra/ffmpeg                     2:9.0.1-1                  48.45 MiB      15.15 MiB
+extra/fftw                       3.3.11-1                    8.83 MiB       2.67 MiB
+extra/flac                       1.5.0-1                     1.14 MiB       0.33 MiB
+extra/fontconfig                 2:2.18.3-1                  1.33 MiB       0.40 MiB
+extra/freetype2                  2.14.3-1                    1.66 MiB       0.52 MiB
+extra/fribidi                    1.0.16-2                    0.24 MiB       0.07 MiB
+extra/gdk-pixbuf2                2.44.7-1                    3.00 MiB       0.49 MiB
+extra/giflib                     6.1.3-2                     0.34 MiB       0.10 MiB
+extra/glslang                    1:1.4.357.0-1              13.88 MiB       2.58 MiB
+extra/glycin                     2.1.5-2                    17.49 MiB       3.78 MiB
+extra/gperftools                 2.18.1-1                    2.01 MiB       0.49 MiB
+extra/graphite                   1:1.3.15-1                  0.20 MiB       0.08 MiB
+extra/gsm                        1.0.24-1                    0.10 MiB       0.04 MiB
+extra/gtest                      1.17.0-2                    1.63 MiB       0.38 MiB
+extra/harfbuzz                   14.3.1-1                    4.86 MiB       1.28 MiB
+extra/hicolor-icon-theme         0.18-1                      0.05 MiB       0.01 MiB
+extra/hidapi                     0.15.0-1                    0.13 MiB       0.04 MiB
+extra/highway                    1.4.0-1                    10.04 MiB       1.19 MiB
+extra/jbigkit                    2.1-8                       0.16 MiB       0.05 MiB
+extra/l-smash                    2.14.5-4                    1.02 MiB       0.31 MiB
+extra/lame                       4.0-1                       1.10 MiB       0.30 MiB
+extra/lcms2                      2.19.1-1                    0.69 MiB       0.23 MiB
+extra/libass                     0.17.5-1                    0.30 MiB       0.12 MiB
+extra/libasyncns                 1:0.8+r3+g68cd5af-3         0.05 MiB       0.02 MiB
+extra/libavc1394                 0.5.4-7                     0.12 MiB       0.03 MiB
+extra/libbluray                  1.4.1-1                     1.23 MiB       0.86 MiB
+extra/libbs2b                    3.1.0-10                    0.07 MiB       0.02 MiB
+extra/libbsd                     0.12.2-2                    0.33 MiB       0.16 MiB
+extra/libcdio                    2.3.0-1                     0.88 MiB       0.25 MiB
+extra/libcdio-paranoia           10.2+2.0.2-2                0.16 MiB       0.06 MiB
+extra/libdatrie                  0.2.14-1                    0.49 MiB       0.11 MiB
+extra/libdeflate                 1.25-1                      0.14 MiB       0.06 MiB
+extra/libdisplay-info            0.3.0-1                     0.39 MiB       0.12 MiB
+extra/libdovi                    3.4.0-1                     0.66 MiB       0.28 MiB
+extra/libdrm                     2.4.134-1                   1.28 MiB       0.35 MiB
+extra/libdvdnav                  7.0.0-1                     0.16 MiB       0.06 MiB
+extra/libdvdread                 7.1.1-1                     0.43 MiB       0.14 MiB
+extra/libebur128                 1.2.6-2                     0.05 MiB       0.02 MiB
+core/libedit                     20260512_3.1-1              0.27 MiB       0.11 MiB
+extra/libfdk-aac                 2.0.3-2                     1.46 MiB       0.69 MiB
+extra/libfreeaptx                0.2.2-1                     0.06 MiB       0.02 MiB
+extra/libglvnd                   1.7.0-3                     3.34 MiB       0.32 MiB
+extra/libiec61883                1.2.0-9                     0.12 MiB       0.03 MiB
+extra/libjpeg-turbo              3.2.0-2                     2.65 MiB       0.59 MiB
+extra/libjxl                     0.12.0-1                    6.78 MiB       1.86 MiB
+extra/liblc3                     1.1.3-2                     0.28 MiB       0.12 MiB
+extra/libldac                    2.0.2.6-1                   0.10 MiB       0.04 MiB
+extra/libmd                      1.2.0-1                     0.13 MiB       0.06 MiB
+extra/libmodplug                 0.8.9.0-7                   0.37 MiB       0.17 MiB
+extra/libmysofa                  1.3.4-1                     1.26 MiB       1.11 MiB
+extra/libogg                     1.3.6-1                     0.44 MiB       0.19 MiB
+extra/libopenmpt                 0.8.7-1                     2.53 MiB       0.90 MiB
+extra/libpciaccess               0.19-1                      0.06 MiB       0.02 MiB
+extra/libpgm                     5.3.128-4                   0.35 MiB       0.17 MiB
+extra/libpipewire                1:1.6.8-1                   2.00 MiB       0.50 MiB
+extra/libplacebo                 7.360.1-6                   1.61 MiB       0.51 MiB
+extra/libpng                     1.6.58-2                    0.58 MiB       0.25 MiB
+extra/libpulse                   17.0+r98+gb096704c0-1       1.46 MiB       0.39 MiB
+extra/libraw1394                 2.1.2-4                     0.16 MiB       0.05 MiB
+extra/librsvg                    2:2.62.3-1                 10.26 MiB       2.37 MiB
+extra/libsamplerate              0.2.2-3                     1.55 MiB       1.33 MiB
+extra/libsixel                   1.10.5-1                    0.40 MiB       0.12 MiB
+extra/libsndfile                 1.2.2-4                     0.93 MiB       0.31 MiB
+extra/libsodium                  1.0.22-1                    0.64 MiB       0.21 MiB
+extra/libsoxr                    0.1.3-5                     0.21 MiB       0.08 MiB
+extra/libssh                     0.12.2-1                    0.75 MiB       0.25 MiB
+extra/libthai                    0.1.30-1                    1.24 MiB       0.26 MiB
+extra/libtheora                  1.2.0-1                     2.34 MiB       0.42 MiB
+extra/libtiff                    4.7.2-1                     1.32 MiB       0.40 MiB
+extra/libunibreak                7.0-1                       0.15 MiB       0.03 MiB
+extra/libunwind                  1.8.2-1                     0.29 MiB       0.13 MiB
+extra/libva                      2.24.1-1                    1.00 MiB       0.20 MiB
+extra/libvdpau                   1.5-4                       0.28 MiB       0.06 MiB
+extra/libvorbis                  1.3.7-4                     0.83 MiB       0.18 MiB
+extra/libvpl                     2.17.0-1                    0.99 MiB       0.23 MiB
+extra/libvpx                     1.16.0-3                    3.68 MiB       1.29 MiB
+extra/libwebp                    1.6.0-2                     1.04 MiB       0.32 MiB
+extra/libwireplumber             0.5.15-1                    1.66 MiB       0.29 MiB
+extra/libx11                     1.8.13-1                    9.78 MiB       2.00 MiB
+extra/libxau                     1.0.12-1                    0.02 MiB       0.01 MiB
+extra/libxcb                     1.17.0-1                    3.87 MiB       0.97 MiB
+extra/libxcursor                 1.2.3-1                     0.07 MiB       0.03 MiB
+extra/libxdmcp                   1.1.5-2                     0.13 MiB       0.03 MiB
+extra/libxext                    1.3.7-1                     0.30 MiB       0.10 MiB
+extra/libxfixes                  6.0.2-1                     0.04 MiB       0.01 MiB
+extra/libxft                     2.3.9-1                     0.13 MiB       0.06 MiB
+extra/libxkbcommon               1.13.2-1                    1.05 MiB       0.27 MiB
+extra/libxpresent                1.0.2-1                     0.03 MiB       0.02 MiB
+extra/libxrandr                  1.5.5-1                     0.07 MiB       0.03 MiB
+extra/libxrender                 0.9.12-1                    0.09 MiB       0.03 MiB
+extra/libxshmfence               1.3.3-1                     0.02 MiB       0.01 MiB
+extra/libxss                     1.2.5-1                     0.03 MiB       0.01 MiB
+extra/libxv                      1.0.13-1                    0.06 MiB       0.03 MiB
+extra/libxxf86vm                 1.1.7-1                     0.03 MiB       0.02 MiB
+extra/lilv                       0.28.0-1                    0.20 MiB       0.06 MiB
+extra/llvm-libs                  22.1.8-2                  163.70 MiB      40.96 MiB
+extra/lm_sensors                 1:3.6.2-1                   0.48 MiB       0.13 MiB
+extra/lua                        5.5.1-1                     1.59 MiB       0.38 MiB
+extra/luajit                     2.1.1785763465+1edc3e5-1    0.83 MiB       0.33 MiB
+extra/lv2                        1.18.10-2                   0.98 MiB       0.15 MiB
+core/lzo                         2.10-5                      0.38 MiB       0.09 MiB
+extra/mailcap                    2.1.54-2                    0.11 MiB       0.03 MiB
+extra/mesa                       1:26.1.7-1                 52.70 MiB      13.25 MiB
+extra/mpg123                     1.33.7-1                    1.20 MiB       0.45 MiB
+extra/mujs                       1.3.9-1                     1.12 MiB       0.29 MiB
+extra/ocl-icd                    2.3.5-1                     0.50 MiB       0.10 MiB
+extra/oniguruma                  6.9.10-1                    0.88 MiB       0.22 MiB
+extra/openal                     1.25.2-2                    2.70 MiB       0.95 MiB
+extra/opencore-amr               0.1.6-2                     0.29 MiB       0.14 MiB
+extra/openjpeg2                  2.5.4-1                    13.37 MiB       0.87 MiB
+extra/opus                       1.6.1-1                     4.16 MiB       3.29 MiB
+extra/pango                      1:1.58.2-1                  2.38 MiB       0.43 MiB
+extra/pipewire                   1:1.6.8-1                   2.96 MiB       0.69 MiB
+extra/pipewire-audio             1:1.6.8-1                   6.79 MiB       1.72 MiB
+extra/pipewire-session-manager   1:1.6.8-1                   0.00 MiB       0.00 MiB
+extra/pixman                     0.46.4-1                    0.74 MiB       0.28 MiB
+extra/portaudio                  1:19.7.0-4                  0.33 MiB       0.10 MiB
+extra/rav1e                      0.8.1-3                     7.49 MiB       1.58 MiB
+extra/rubberband                 4.0.0-2                     1.52 MiB       0.29 MiB
+extra/sbc                        2.2-1                       0.21 MiB       0.05 MiB
+extra/sdl2-compat                2.32.70-1                   3.09 MiB       0.46 MiB
+extra/sdl3                       3.4.14-1                    6.97 MiB       1.71 MiB
+extra/serd                       0.32.10-1                   0.17 MiB       0.06 MiB
+extra/shaderc                    2026.3-1                    0.68 MiB       0.16 MiB
+extra/shared-mime-info           2.5.1-2                     5.83 MiB       0.75 MiB
+extra/snappy                     1.2.2-3                     0.09 MiB       0.03 MiB
+extra/sndio                      1.10.0-1                    0.28 MiB       0.12 MiB
+extra/sord                       0.16.22-1                   0.12 MiB       0.04 MiB
+extra/spandsp                    0.0.6-7                     1.59 MiB       0.41 MiB
+extra/speex                      1.2.1-2                     0.62 MiB       0.47 MiB
+extra/speexdsp                   1.2.1-2                     0.54 MiB       0.44 MiB
+extra/spirv-tools                1:1.4.357.0-1               8.08 MiB       2.09 MiB
+extra/sratom                     0.6.22-1                    0.05 MiB       0.02 MiB
+extra/srt                        1.5.6-1                     1.59 MiB       0.53 MiB
+extra/svt-av1                    4.2.0-1                     5.36 MiB       1.98 MiB
+extra/uchardet                   0.0.8-4                     0.20 MiB       0.08 MiB
+extra/v4l-utils                  1.32.0-2                   11.31 MiB       1.99 MiB
+extra/vapoursynth                77-2                        3.25 MiB       1.04 MiB
+extra/vid.stab                   1.1.1-3                     0.14 MiB       0.05 MiB
+extra/vmaf                       3.2.0-1                     7.09 MiB       0.48 MiB
+extra/vulkan-icd-loader          1.4.357.0-1                 0.62 MiB       0.16 MiB
+extra/wayland                    1.26.0-1                    0.86 MiB       0.15 MiB
+extra/webrtc-audio-processing-1  1.3-5                       1.46 MiB       0.52 MiB
+extra/wireplumber                0.5.15-1                    1.22 MiB       0.28 MiB
+extra/x264                       3:0.165.r3222.b35605a-2     3.79 MiB       0.75 MiB
+extra/x265                       4.3-1                      21.46 MiB       2.11 MiB
+extra/xcb-proto                  1.17.0-4                    1.03 MiB       0.13 MiB
+extra/xkeyboard-config           2.48-1                     10.24 MiB       0.87 MiB
+extra/xorgproto                  2025.1-1                    1.47 MiB       0.24 MiB
+extra/xvidcore                   1.3.7-4                     0.66 MiB       0.22 MiB
+extra/zeromq                     4.3.5-3                     3.03 MiB       0.55 MiB
+extra/zimg                       3.0.6-2                     0.70 MiB       0.24 MiB
+extra/zix                        0.8.2-1                     0.13 MiB       0.04 MiB
+extra/fzf                        0.74.2-1                    4.90 MiB       1.68 MiB
+extra/github-cli                 2.97.0-1                   39.04 MiB      11.16 MiB
+extra/jq                         1.8.2-1                     0.47 MiB       0.20 MiB
+extra/mpv                        1:0.41.0-4                  6.34 MiB       1.64 MiB
+extra/pipewire-jack              1:1.6.8-1                   0.68 MiB       0.17 MiB
+extra/wget                       1.25.0-6                    5.70 MiB       0.69 MiB
+
+Total Download Size:   161.30 MiB
+Total Installed Size:  648.06 MiB
+
+:: Proceed with installation? [Y/n] 
+:: Retrieving packages...
+ llvm-libs-22.1.8-2-x86_64 downloading...
+ ffmpeg-2:9.0.1-1-x86_64 downloading...
+ mesa-1:26.1.7-1-x86_64 downloading...
+ github-cli-2.97.0-1-x86_64 downloading...
+ glycin-2.1.5-2-x86_64 downloading...
+ opus-1.6.1-1-x86_64 downloading...
+ aom-3.14.1-1-x86_64 downloading...
+ fftw-3.3.11-1-x86_64 downloading...
+ glslang-1:1.4.357.0-1-x86_64 downloading...
+ librsvg-2:2.62.3-1-x86_64 downloading...
+ x265-4.3-1-x86_64 downloading...
+ spirv-tools-1:1.4.357.0-1-x86_64 downloading...
+ libx11-1.8.13-1-x86_64 downloading...
+ v4l-utils-1.32.0-2-x86_64 downloading...
+ svt-av1-4.2.0-1-x86_64 downloading...
+ libjxl-0.12.0-1-x86_64 downloading...
+ pipewire-audio-1:1.6.8-1-x86_64 downloading...
+ sdl3-3.4.14-1-x86_64 downloading...
+ fzf-0.74.2-1-x86_64 downloading...
+ mpv-1:0.41.0-4-x86_64 downloading...
+ rav1e-0.8.1-3-x86_64 downloading...
+ libsamplerate-0.2.2-3-x86_64 downloading...
+ abseil-cpp-20260526.0-2-x86_64 downloading...
+ libvpx-1.16.0-3-x86_64 downloading...
+ harfbuzz-14.3.1-1-x86_64 downloading...
+ highway-1.4.0-1-x86_64 downloading...
+ libmysofa-1.3.4-1-x86_64 downloading...
+ vapoursynth-77-2-x86_64 downloading...
+ libxcb-1.17.0-1-x86_64 downloading...
+ openal-1.25.2-2-x86_64 downloading...
+ libopenmpt-0.8.7-1-x86_64 downloading...
+ openjpeg2-2.5.4-1-x86_64 downloading...
+ xkeyboard-config-2.48-1-any downloading...
+ libbluray-1.4.1-1-x86_64 downloading...
+ x264-3:0.165.r3222.b35605a-2-x86_64 downloading...
+ shared-mime-info-2.5.1-2-x86_64 downloading...
+ libfdk-aac-2.0.3-2-x86_64 downloading...
+ pipewire-1:1.6.8-1-x86_64 downloading...
+ wget-1.25.0-6-x86_64 downloading...
+ dav1d-1.5.4-1-x86_64 downloading...
+ cairo-1.18.4-1-x86_64 downloading...
+ libjpeg-turbo-3.2.0-2-x86_64 downloading...
+ zeromq-4.3.5-3-x86_64 downloading...
+ srt-1.5.6-1-x86_64 downloading...
+ freetype2-2.14.3-1-x86_64 downloading...
+ webrtc-audio-processing-1-1.3-5-x86_64 downloading...
+ alsa-lib-1.2.16.1-1-x86_64 downloading...
+ libplacebo-7.360.1-6-x86_64 downloading...
+ libpipewire-1:1.6.8-1-x86_64 downloading...
+ gperftools-2.18.1-1-x86_64 downloading...
+ gdk-pixbuf2-2.44.7-1-x86_64 downloading...
+ vmaf-3.2.0-1-x86_64 downloading...
+ speex-1.2.1-2-x86_64 downloading...
+ sdl2-compat-2.32.70-1-x86_64 downloading...
+ mpg123-1.33.7-1-x86_64 downloading...
+ speexdsp-1.2.1-2-x86_64 downloading...
+ pango-1:1.58.2-1-x86_64 downloading...
+ libtheora-1.2.0-1-x86_64 downloading...
+ spandsp-0.0.6-7-x86_64 downloading...
+ libtiff-4.7.2-1-x86_64 downloading...
+ fontconfig-2:2.18.3-1-x86_64 downloading...
+ libpulse-17.0+r98+gb096704c0-1-x86_64 downloading...
+ lua-5.5.1-1-x86_64 downloading...
+ gtest-1.17.0-2-x86_64 downloading...
+ libdrm-2.4.134-1-x86_64 downloading...
+ luajit-2.1.1785763465+1edc3e5-1-x86_64 downloading...
+ flac-1.5.0-1-x86_64 downloading...
+ libwebp-1.6.0-2-x86_64 downloading...
+ libglvnd-1.7.0-3-x86_64 downloading...
+ l-smash-2.14.5-4-x86_64 downloading...
+ libsndfile-1.2.2-4-x86_64 downloading...
+ lame-4.0-1-x86_64 downloading...
+ rubberband-4.0.0-2-x86_64 downloading...
+ mujs-1.3.9-1-x86_64 downloading...
+ libwireplumber-0.5.15-1-x86_64 downloading...
+ wireplumber-0.5.15-1-x86_64 downloading...
+ pixman-0.46.4-1-x86_64 downloading...
+ libdovi-3.4.0-1-x86_64 downloading...
+ libxkbcommon-1.13.2-1-x86_64 downloading...
+ libthai-0.1.30-1-x86_64 downloading...
+ libssh-0.12.2-1-x86_64 downloading...
+ libpng-1.6.58-2-x86_64 downloading...
+ libcdio-2.3.0-1-x86_64 downloading...
+ xorgproto-2025.1-1-any downloading...
+ zimg-3.0.6-2-x86_64 downloading...
+ libvpl-2.17.0-1-x86_64 downloading...
+ lcms2-2.19.1-1-x86_64 downloading...
+ oniguruma-6.9.10-1-x86_64 downloading...
+ xvidcore-1.3.7-4-x86_64 downloading...
+ libsodium-1.0.22-1-x86_64 downloading...
+ jq-1.8.2-1-x86_64 downloading...
+ libva-2.24.1-1-x86_64 downloading...
+ libogg-1.3.6-1-x86_64 downloading...
+ libvorbis-1.3.7-4-x86_64 downloading...
+ libpgm-5.3.128-4-x86_64 downloading...
+ pipewire-jack-1:1.6.8-1-x86_64 downloading...
+ libmodplug-0.8.9.0-7-x86_64 downloading...
+ libbsd-0.12.2-2-x86_64 downloading...
+ vulkan-icd-loader-1.4.357.0-1-x86_64 downloading...
+ shaderc-2026.3-1-x86_64 downloading...
+ lv2-1.18.10-2-x86_64 downloading...
+ wayland-1.26.0-1-x86_64 downloading...
+ opencore-amr-0.1.6-2-x86_64 downloading...
+ libdvdread-7.1.1-1-x86_64 downloading...
+ lm_sensors-1:3.6.2-1-x86_64 downloading...
+ alsa-ucm-conf-1.2.16.1-1-any downloading...
+ xcb-proto-1.17.0-4-any downloading...
+ libunwind-1.8.2-1-x86_64 downloading...
+ sndio-1.10.0-1-x86_64 downloading...
+ libass-0.17.5-1-x86_64 downloading...
+ libsixel-1.10.5-1-x86_64 downloading...
+ libdisplay-info-0.3.0-1-x86_64 downloading...
+ liblc3-1.1.3-2-x86_64 downloading...
+ libedit-20260512_3.1-1-x86_64 downloading...
+ libdatrie-0.2.14-1-x86_64 downloading...
+ ocl-icd-2.3.5-1-x86_64 downloading...
+ libxext-1.3.7-1-x86_64 downloading...
+ giflib-6.1.3-2-x86_64 downloading...
+ portaudio-1:19.7.0-4-x86_64 downloading...
+ bluez-libs-5.87-2-x86_64 downloading...
+ lzo-2.10-5-x86_64 downloading...
+ graphite-1:1.3.15-1-x86_64 downloading...
+ libsoxr-0.1.3-5-x86_64 downloading...
+ uchardet-0.0.8-4-x86_64 downloading...
+ fribidi-1.0.16-2-x86_64 downloading...
+ libcdio-paranoia-10.2+2.0.2-2-x86_64 downloading...
+ serd-0.32.10-1-x86_64 downloading...
+ lilv-0.28.0-1-x86_64 downloading...
+ libdeflate-1.25-1-x86_64 downloading...
+ libvdpau-1.5-4-x86_64 downloading...
+ libxft-2.3.9-1-x86_64 downloading...
+ libmd-1.2.0-1-x86_64 downloading...
+ libdvdnav-7.0.0-1-x86_64 downloading...
+ jbigkit-2.1-8-x86_64 downloading...
+ vid.stab-1.1.1-3-x86_64 downloading...
+ sbc-2.2-1-x86_64 downloading...
+ libraw1394-2.1.2-4-x86_64 downloading...
+ zix-0.8.2-1-x86_64 downloading...
+ desktop-file-utils-0.28-1-x86_64 downloading...
+ hidapi-0.15.0-1-x86_64 downloading...
+ bubblewrap-0.11.2-1-x86_64 downloading...
+ gsm-1.0.24-1-x86_64 downloading...
+ libldac-2.0.2.6-1-x86_64 downloading...
+ sord-0.16.22-1-x86_64 downloading...
+ libxv-1.0.13-1-x86_64 downloading...
+ libiec61883-1.2.0-9-x86_64 downloading...
+ snappy-1.2.2-3-x86_64 downloading...
+ libxcursor-1.2.3-1-x86_64 downloading...
+ libavc1394-0.5.4-7-x86_64 downloading...
+ mailcap-2.1.54-2-any downloading...
+ libxrender-0.9.12-1-x86_64 downloading...
+ alsa-card-profiles-1:1.6.8-1-x86_64 downloading...
+ libunibreak-7.0-1-x86_64 downloading...
+ libxrandr-1.5.5-1-x86_64 downloading...
+ libxdmcp-1.1.5-2-x86_64 downloading...
+ libpciaccess-0.19-1-x86_64 downloading...
+ sratom-0.6.22-1-x86_64 downloading...
+ libfreeaptx-0.2.2-1-x86_64 downloading...
+ libbs2b-3.1.0-10-x86_64 downloading...
+ libxpresent-1.0.2-1-x86_64 downloading...
+ libebur128-1.2.6-2-x86_64 downloading...
+ libasyncns-1:0.8+r3+g68cd5af-3-x86_64 downloading...
+ libxxf86vm-1.1.7-1-x86_64 downloading...
+ libxss-1.2.5-1-x86_64 downloading...
+ libxfixes-6.0.2-1-x86_64 downloading...
+ alsa-topology-conf-1.2.5.1-4-any downloading...
+ hicolor-icon-theme-0.18-1-any downloading...
+ libxau-1.0.12-1-x86_64 downloading...
+ libxshmfence-1.3.3-1-x86_64 downloading...
+ pipewire-session-manager-1:1.6.8-1-x86_64 downloading...
+ default-cursors-3-1-any downloading...
+checking keyring...
+checking package integrity...
+loading package files...
+checking for file conflicts...
+:: Processing package changes...
+installing libpipewire...
+installing pipewire...
+Created symlink '/etc/systemd/user/sockets.target.wants/pipewire.socket' → '/usr/lib/systemd/user/pipewire.socket'.
+Optional dependencies for pipewire
+    gst-plugin-pipewire: GStreamer plugin
+    pipewire-alsa: ALSA configuration
+    pipewire-audio: Audio support [pending]
+    pipewire-docs: Documentation
+    pipewire-ffado: FireWire support
+    pipewire-jack-client: PipeWire as JACK client
+    pipewire-jack: JACK replacement [pending]
+    pipewire-libcamera: Libcamera support
+    pipewire-onnx: ONNX filter support
+    pipewire-pulse: PulseAudio replacement
+    pipewire-roc: ROC streaming
+    pipewire-session-manager: Session manager [pending]
+    pipewire-v4l2: V4L2 interceptor
+    pipewire-x11-bell: X11 bell
+    pipewire-zeroconf: Zeroconf support
+    realtime-privileges: realtime privileges with rt module
+    rtkit: realtime privileges with rtkit module
+installing alsa-card-profiles...
+installing alsa-topology-conf...
+installing alsa-ucm-conf...
+installing alsa-lib...
+installing bluez-libs...
+installing fftw...
+Optional dependencies for fftw
+    fftw-openmpi: for OpenMPI integration
+installing libebur128...
+installing libfdk-aac...
+installing libfreeaptx...
+installing liblc3...
+Optional dependencies for liblc3
+    python: Python bindings [installed]
+installing libldac...
+installing libmysofa...
+installing libogg...
+installing flac...
+installing mpg123...
+Optional dependencies for mpg123
+    sdl2-compat: for sdl audio support [pending]
+    jack: for jack audio support [pending]
+    libpulse: for pulse audio support [pending]
+    perl: for conplay [installed]
+installing lame...
+installing libvorbis...
+installing opus...
+installing libsndfile...
+Optional dependencies for libsndfile
+    alsa-lib: for sndfile-play [installed]
+installing serd...
+Optional dependencies for serd
+    serd-docs: for developer documentation
+installing zix...
+Optional dependencies for zix
+    zix-docs: for developer documentation
+installing sord...
+Optional dependencies for sord
+    sord-docs: for developer documentation
+installing lv2...
+Optional dependencies for lv2
+    lv2-docs: for developer documentation
+    lv2-example-plugins: for example plugins
+    python-lxml: for lv2specgen.py
+    python-markdown: for lv2specgen.py
+    python-pygments: for lv2specgen.py
+    python-rdflib: for lv2specgen.py
+    sord: for lv2_validate [installed]
+installing sratom...
+Optional dependencies for sratom
+    sratom-docs: for developer documentation
+installing lilv...
+Optional dependencies for lilv
+    lilv-docs: for documentation
+    lilv-tools: for CLI tools
+    python-lilv: for Python bindings
+installing sbc...
+installing jbigkit...
+installing libdeflate...
+installing libjpeg-turbo...
+installing libwebp...
+Optional dependencies for libwebp
+    libwebp-utils: WebP conversion and inspection tools
+installing libtiff...
+Optional dependencies for libtiff
+    freeglut: for using tiffgt
+installing spandsp...
+installing gtest...
+Optional dependencies for gtest
+    python: gmock generator [installed]
+installing abseil-cpp...
+installing webrtc-audio-processing-1...
+installing pipewire-audio...
+installing libwireplumber...
+installing lua...
+installing wireplumber...
+Created symlink '/etc/systemd/user/pipewire-session-manager.service' → '/usr/lib/systemd/user/wireplumber.service'.
+Created symlink '/etc/systemd/user/pipewire.service.wants/wireplumber.service' → '/usr/lib/systemd/user/wireplumber.service'.
+Optional dependencies for wireplumber
+    wireplumber-docs: Documentation
+installing pipewire-session-manager...
+installing pipewire-jack...
+Optional dependencies for pipewire-jack
+    jack-example-tools: for official JACK example-clients and tools
+installing desktop-file-utils...
+installing aom...
+installing libpng...
+installing freetype2...
+Optional dependencies for freetype2
+    harfbuzz: Improved autohinting [pending]
+installing fontconfig...
+Creating fontconfig configuration...
+Rebuilding fontconfig cache...
+installing xcb-proto...
+installing xorgproto...
+installing libxdmcp...
+installing libxau...
+installing libxcb...
+installing libx11...
+installing libxext...
+installing libxrender...
+installing lzo...
+installing pixman...
+installing cairo...
+installing dav1d...
+Optional dependencies for dav1d
+    dav1d-doc: HTML documentation
+installing fribidi...
+installing gsm...
+installing graphite...
+Optional dependencies for graphite
+    graphite-docs: Documentation
+installing harfbuzz...
+Optional dependencies for harfbuzz
+    harfbuzz-utils: utilities
+installing lcms2...
+installing libunibreak...
+installing libass...
+installing libraw1394...
+installing libavc1394...
+installing libbluray...
+Optional dependencies for libbluray
+    java-runtime: BD-J library
+installing libbs2b...
+installing libpciaccess...
+installing libdrm...
+Optional dependencies for libdrm
+    cairo: needed for modetest tool [installed]
+installing libdvdread...
+Optional dependencies for libdvdread
+    libdvdcss: Decoding encrypted DVDs
+installing libdvdnav...
+installing libxshmfence...
+installing libxxf86vm...
+installing libedit...
+installing llvm-libs...
+installing lm_sensors...
+Optional dependencies for lm_sensors
+    rrdtool: for logging with sensord
+    perl: for sensor detection and configuration convert [installed]
+installing spirv-tools...
+installing default-cursors...
+Optional dependencies for default-cursors
+    adwaita-cursors: default cursor theme
+installing wayland...
+installing mesa...
+Optional dependencies for mesa
+    opengl-man-pages: for the OpenGL API man pages
+installing libglvnd...
+installing libiec61883...
+installing giflib...
+installing libunwind...
+installing gperftools...
+installing highway...
+installing libjxl...
+Optional dependencies for libjxl
+    java-runtime: for JNI bindings
+installing libmodplug...
+installing libasyncns...
+installing libpulse...
+Optional dependencies for libpulse
+    pulse-native-provider: PulseAudio backend
+installing portaudio...
+installing libopenmpt...
+installing vulkan-icd-loader...
+Optional dependencies for vulkan-icd-loader
+    vulkan-driver: packaged vulkan driver
+installing glslang...
+installing shaderc...
+installing libdovi...
+installing libplacebo...
+installing bubblewrap...
+installing glycin...
+Optional dependencies for glycin
+    libheif: Load .avif, .heic and .heif
+installing shared-mime-info...
+installing gdk-pixbuf2...
+Optional dependencies for gdk-pixbuf2
+    libheif: Load .avif, .heic and .heif
+    libopenraw: Load .arw, .cr2, .crw, .dng, .erf, .mrw, .nef, .orf, .pef and .raf
+    libwmf: Load .apm and .wmf
+installing libdatrie...
+installing libthai...
+installing libxft...
+installing pango...
+installing librsvg...
+installing libsoxr...
+installing libssh...
+installing libtheora...
+installing libxfixes...
+installing libva...
+Optional dependencies for libva
+    intel-media-driver: backend for Intel GPUs (>= Broadwell)
+    libva-intel-driver: backend for Intel GPUs (<= Haswell)
+    libva-mesa-driver: backend for AMD and NVIDIA GPUs [installed]
+installing libvdpau...
+Optional dependencies for libvdpau
+    libvdpau-va-gl: driver using VAAPI
+    nvidia-utils: driver for NVIDIA
+installing libvpx...
+installing libxv...
+installing ocl-icd...
+Optional dependencies for ocl-icd
+    opencl-driver: packaged opencl driver
+installing libvpl...
+Optional dependencies for libvpl
+    intel-media-sdk: runtime implementation for legacy Intel GPUs
+    vpl-gpu-rt: runtime implementation for Tiger Lake and newer GPUs
+installing opencore-amr...
+installing openjpeg2...
+installing rav1e...
+installing libsamplerate...
+installing rubberband...
+installing libxcursor...
+installing hidapi...
+Optional dependencies for hidapi
+    libusb: for hidapi-libusb [installed]
+installing sdl3...
+Optional dependencies for sdl3
+    alsa-lib: ALSA audio driver [installed]
+    libpulse: PulseAudio audio driver [installed]
+    jack: JACK audio driver [installed]
+    pipewire: PipeWire audio driver [installed]
+    vulkan-driver: vulkan renderer
+    sndio: sndio audio driver [pending]
+    libdecor: Wayland client decorations
+installing sdl2-compat...
+installing snappy...
+installing libmd...
+installing libbsd...
+installing sndio...
+installing speexdsp...
+installing speex...
+installing srt...
+installing svt-av1...
+installing hicolor-icon-theme...
+installing v4l-utils...
+Optional dependencies for v4l-utils
+    qt6-base: for qv4l2 and qvidcap
+    qt6-5compat: for qv4l2
+    alsa-lib: for qv4l2 [installed]
+installing zimg...
+installing vapoursynth...
+installing vid.stab...
+installing vmaf...
+installing l-smash...
+installing x264...
+installing x265...
+installing xvidcore...
+installing libsodium...
+installing libpgm...
+installing zeromq...
+Optional dependencies for zeromq
+    cppzmq: C++ binding for libzmq
+installing ffmpeg...
+Optional dependencies for ffmpeg
+    avisynthplus: AviSynthPlus support
+    frei0r-plugins: Frei0r video effects support
+    intel-media-sdk: Intel QuickSync support (legacy)
+    ladspa: LADSPA filters
+    nvidia-utils: Nvidia NVDEC/NVENC support
+    onevpl-intel-gpu: Intel QuickSync support
+installing libcdio...
+installing libcdio-paranoia...
+installing libdisplay-info...
+installing libsixel...
+installing xkeyboard-config...
+installing libxkbcommon...
+Optional dependencies for libxkbcommon
+    libxkbcommon-x11: xkbcli interactive-x11
+    wayland: xkbcli interactive-wayland [installed]
+installing libxrandr...
+installing libxpresent...
+installing libxss...
+installing luajit...
+installing mujs...
+installing openal...
+Optional dependencies for openal
+    qt6-base: alsoft-config GUI Configurator
+    fluidsynth: MIDI rendering
+    libmysofa: makemhr tool [installed]
+installing uchardet...
+installing mpv...
+Optional dependencies for mpv
+    yt-dlp: for video-sharing websites playback
+installing oniguruma...
+installing jq...
+installing fzf...
+Optional dependencies for fzf
+    fish: fish keybindings
+    tmux: fzf-tmux script for launching fzf in a tmux pane
+    vim: plugin
+    zsh: zsh keybindings
+installing mailcap...
+installing github-cli...
+Optional dependencies for github-cli
+    git: To interact with repositories [installed]
+    org.freedesktop.secrets: Store credentials in system keyring
+installing wget...
+Optional dependencies for wget
+    ca-certificates: HTTPS downloads [installed]
+:: Running post-transaction hooks...
+(1/8) Reloading system manager configuration...
+  Skipped: Current root is not booted.
+(2/8) Reloading user manager configuration...
+  Skipped: Current root is not booted.
+(3/8) Updating the MIME type database...
+(4/8) Reloading device manager configuration...
+  Skipped: Current root is not booted.
+(5/8) Arming ConditionNeedsUpdate...
+(6/8) Updating fontconfig configuration...
+(7/8) Updating fontconfig cache...
+(8/8) Updating the desktop file MIME type cache...
+Cloning into '/home/builder/build/tera'...
+==> Making package: tera 3.11.0-1 (Sat Aug 15 17:49:16 2026)
+==> Checking runtime dependencies...
+==> Checking buildtime dependencies...
+==> Retrieving sources...
+  -> Downloading v3.11.0.tar.gz...
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+  0      0   0      0   0      0      0      0                              0  0      0   0      0   0      0      0      0           00:01              0  0      0   0      0   0      0      0      0           00:01              0
+  0      0   0      0   0      0      0      0           00:02              0100  51883   0  51883   0      0  16758      0           00:03          51157100 130.6k   0 130.6k   0      0  30956      0           00:04          59719100 374.9k   0 374.9k   0      0  77658      0           00:04          59719100 374.9k   0 374.9k   0      0  77656      0           00:04          59719100 374.9k   0 374.9k   0      0  77654      0           00:04          59719
+==> Validating source files with sha256sums...
+    v3.11.0.tar.gz ... Passed
+==> Extracting sources...
+  -> Extracting v3.11.0.tar.gz with bsdtar
+==> Starting build()...
+==> Entering fakeroot environment...
+==> Starting package()...
+go test -v ./...
+go: downloading github.com/zalando/go-keyring v0.2.6
+go: downloading gopkg.in/yaml.v3 v3.0.1
+go: downloading github.com/charmbracelet/lipgloss v1.1.0
+go: downloading github.com/charmbracelet/bubbletea v1.3.10
+go: downloading github.com/charmbracelet/bubbles v0.21.0
+go: downloading golang.org/x/text v0.3.8
+go: downloading github.com/charmbracelet/x/term v0.2.1
+go: downloading github.com/charmbracelet/x/ansi v0.10.1
+go: downloading github.com/muesli/cancelreader v0.2.2
+go: downloading github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
+go: downloading github.com/sahilm/fuzzy v0.1.1
+go: downloading github.com/atotto/clipboard v0.1.4
+go: downloading github.com/mattn/go-runewidth v0.0.16
+go: downloading github.com/rivo/uniseg v0.4.7
+go: downloading github.com/charmbracelet/x/cellbuf v0.0.13-0.20250311204145-2c3ea96c31dd
+go: downloading github.com/muesli/termenv v0.16.0
+go: downloading github.com/godbus/dbus/v5 v5.1.0
+go: downloading golang.org/x/sys v0.37.0
+go: downloading github.com/lucasb-eyer/go-colorful v1.2.0
+go: downloading github.com/aymanbagabas/go-osc52/v2 v2.0.1
+go: downloading github.com/mattn/go-isatty v0.0.20
+go: downloading github.com/charmbracelet/colorprofile v0.2.3-0.20250311203215-f60798e515dc
+go: downloading github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
+=== RUN   TestParseFavArgs_Defaults
+--- PASS: TestParseFavArgs_Defaults (0.00s)
+=== RUN   TestParseFavArgs_ListOnly
+--- PASS: TestParseFavArgs_ListOnly (0.00s)
+=== RUN   TestParseFavArgs_ListAndN
+--- PASS: TestParseFavArgs_ListAndN (0.00s)
+=== RUN   TestParseFavArgs_NumericOnlyTreatedAsN
+--- PASS: TestParseFavArgs_NumericOnlyTreatedAsN (0.00s)
+=== RUN   TestParseFavArgs_ListWithNonNumericN
+--- PASS: TestParseFavArgs_ListWithNonNumericN (0.00s)
+=== RUN   TestParseNArg_Default
+--- PASS: TestParseNArg_Default (0.00s)
+=== RUN   TestParseNArg_Explicit
+--- PASS: TestParseNArg_Explicit (0.00s)
+=== RUN   TestParseNArg_InvalidFallsBackToOne
+--- PASS: TestParseNArg_InvalidFallsBackToOne (0.00s)
+=== RUN   TestParseNArg_ZeroFallsBackToOne
+--- PASS: TestParseNArg_ZeroFallsBackToOne (0.00s)
+=== RUN   TestParseNArg_NegativeFallsBackToOne
+--- PASS: TestParseNArg_NegativeFallsBackToOne (0.00s)
+=== RUN   TestParseDuration_Valid
+--- PASS: TestParseDuration_Valid (0.00s)
+=== RUN   TestParseDuration_Invalid
+--- PASS: TestParseDuration_Invalid (0.00s)
+=== RUN   TestParseDuration_Negative
+--- PASS: TestParseDuration_Negative (0.00s)
+=== RUN   TestLuckyKeyword_SingleWord
+--- PASS: TestLuckyKeyword_SingleWord (0.00s)
+=== RUN   TestLuckyKeyword_MultiWord
+--- PASS: TestLuckyKeyword_MultiWord (0.00s)
+=== RUN   TestLuckyKeyword_ThreeWords
+--- PASS: TestLuckyKeyword_ThreeWords (0.00s)
+=== RUN   TestTruncate_ShortString
+--- PASS: TestTruncate_ShortString (0.00s)
+=== RUN   TestTruncate_ExactLength
+--- PASS: TestTruncate_ExactLength (0.00s)
+=== RUN   TestTruncate_Unicode
+--- PASS: TestTruncate_Unicode (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/cmd/tera	0.011s
+=== RUN   TestDetectInstallMethod
+--- PASS: TestDetectInstallMethod (0.00s)
+=== RUN   TestCheckGoInstall
+=== RUN   TestCheckGoInstall/binary_in_GOPATH/bin
+=== RUN   TestCheckGoInstall/binary_not_in_GOPATH
+=== RUN   TestCheckGoInstall/false_positive_-_bin2_directory
+=== RUN   TestCheckGoInstall/false_positive_-_binary_directory
+=== RUN   TestCheckGoInstall/exact_match_to_bin_directory
+--- PASS: TestCheckGoInstall (0.00s)
+    --- PASS: TestCheckGoInstall/binary_in_GOPATH/bin (0.00s)
+    --- PASS: TestCheckGoInstall/binary_not_in_GOPATH (0.00s)
+    --- PASS: TestCheckGoInstall/false_positive_-_bin2_directory (0.00s)
+    --- PASS: TestCheckGoInstall/false_positive_-_binary_directory (0.00s)
+    --- PASS: TestCheckGoInstall/exact_match_to_bin_directory (0.00s)
+=== RUN   TestCheckHomebrew
+--- PASS: TestCheckHomebrew (0.00s)
+=== RUN   TestCheckScoop
+    install_detector_test.go:99: Scoop is Windows-only
+--- SKIP: TestCheckScoop (0.00s)
+=== RUN   TestCheckWinget
+    install_detector_test.go:108: Winget is Windows-only
+--- SKIP: TestCheckWinget (0.00s)
+=== RUN   TestCheckAPT
+    install_detector_test.go:122: APT detection: false
+--- PASS: TestCheckAPT (0.00s)
+=== RUN   TestCheckRPM
+    install_detector_test.go:132: RPM detection: false
+--- PASS: TestCheckRPM (0.00s)
+=== RUN   TestInstallMethodStrings
+=== RUN   TestInstallMethodStrings/Homebrew
+=== RUN   TestInstallMethodStrings/Go
+=== RUN   TestInstallMethodStrings/Scoop
+=== RUN   TestInstallMethodStrings/Winget
+=== RUN   TestInstallMethodStrings/APT
+=== RUN   TestInstallMethodStrings/RPM
+=== RUN   TestInstallMethodStrings/Manual
+=== RUN   TestInstallMethodStrings/Unknown
+--- PASS: TestInstallMethodStrings (0.00s)
+    --- PASS: TestInstallMethodStrings/Homebrew (0.00s)
+    --- PASS: TestInstallMethodStrings/Go (0.00s)
+    --- PASS: TestInstallMethodStrings/Scoop (0.00s)
+    --- PASS: TestInstallMethodStrings/Winget (0.00s)
+    --- PASS: TestInstallMethodStrings/APT (0.00s)
+    --- PASS: TestInstallMethodStrings/RPM (0.00s)
+    --- PASS: TestInstallMethodStrings/Manual (0.00s)
+    --- PASS: TestInstallMethodStrings/Unknown (0.00s)
+=== RUN   TestDetectInstallMethodRealistic
+    install_detector_test.go:196: Detected install method: Manual/Binary
+    install_detector_test.go:197: Update command: 
+--- PASS: TestDetectInstallMethodRealistic (0.00s)
+=== RUN   TestExecutablePathDetection
+    install_detector_test.go:255: Executable path: /tmp/go-build1606030360/b274/api.test
+    install_detector_test.go:263: Real path: /tmp/go-build1606030360/b274/api.test
+--- PASS: TestExecutablePathDetection (0.00s)
+=== RUN   TestStation_Unmarshal
+--- PASS: TestStation_Unmarshal (0.00s)
+=== RUN   TestStation_VolumeNilByDefault
+--- PASS: TestStation_VolumeNilByDefault (0.00s)
+=== RUN   TestStation_VolumeWithValue
+--- PASS: TestStation_VolumeWithValue (0.00s)
+=== RUN   TestStation_VolumeZero
+--- PASS: TestStation_VolumeZero (0.00s)
+=== RUN   TestStation_SetVolume
+--- PASS: TestStation_SetVolume (0.00s)
+=== RUN   TestStation_VolumeOmittedInJSON
+--- PASS: TestStation_VolumeOmittedInJSON (0.00s)
+=== RUN   TestSearchByName
+--- PASS: TestSearchByName (0.00s)
+=== RUN   TestSearchByLanguage
+--- PASS: TestSearchByLanguage (0.00s)
+=== RUN   TestSearchByCountry
+--- PASS: TestSearchByCountry (0.00s)
+=== RUN   TestSearchByState
+--- PASS: TestSearchByState (0.00s)
+=== RUN   TestBuildFormValues
+=== RUN   TestBuildFormValues/Basic_tag_search
+=== RUN   TestBuildFormValues/Search_with_custom_limit
+=== RUN   TestBuildFormValues/Search_with_offset
+=== RUN   TestBuildFormValues/Search_with_reverse_order
+=== RUN   TestBuildFormValues/Advanced_search_with_multiple_params
+--- PASS: TestBuildFormValues (0.00s)
+    --- PASS: TestBuildFormValues/Basic_tag_search (0.00s)
+    --- PASS: TestBuildFormValues/Search_with_custom_limit (0.00s)
+    --- PASS: TestBuildFormValues/Search_with_offset (0.00s)
+    --- PASS: TestBuildFormValues/Search_with_reverse_order (0.00s)
+    --- PASS: TestBuildFormValues/Advanced_search_with_multiple_params (0.00s)
+=== RUN   TestSearchAdvanced
+--- PASS: TestSearchAdvanced (0.00s)
+=== RUN   TestSearchErrorHandling
+--- PASS: TestSearchErrorHandling (0.00s)
+=== RUN   TestSearchTrimming
+--- PASS: TestSearchTrimming (0.00s)
+=== RUN   TestSearchWithContext
+--- PASS: TestSearchWithContext (0.00s)
+=== RUN   TestCompareVersions
+=== RUN   TestCompareVersions/equal_versions
+=== RUN   TestCompareVersions/v1_less_than_v2
+=== RUN   TestCompareVersions/v1_greater_than_v2
+=== RUN   TestCompareVersions/major_version_diff
+=== RUN   TestCompareVersions/minor_version_diff
+=== RUN   TestCompareVersions/v_prefix_on_v1
+=== RUN   TestCompareVersions/v_prefix_on_v2
+=== RUN   TestCompareVersions/v_prefix_on_both
+=== RUN   TestCompareVersions/dev_is_older
+=== RUN   TestCompareVersions/any_version_newer_than_dev
+=== RUN   TestCompareVersions/dev_vs_dev
+=== RUN   TestCompareVersions/rc_less_than_release
+=== RUN   TestCompareVersions/release_greater_than_rc
+=== RUN   TestCompareVersions/equal_base_with_rc
+=== RUN   TestCompareVersions/short_vs_long
+=== RUN   TestCompareVersions/long_vs_short
+--- PASS: TestCompareVersions (0.00s)
+    --- PASS: TestCompareVersions/equal_versions (0.00s)
+    --- PASS: TestCompareVersions/v1_less_than_v2 (0.00s)
+    --- PASS: TestCompareVersions/v1_greater_than_v2 (0.00s)
+    --- PASS: TestCompareVersions/major_version_diff (0.00s)
+    --- PASS: TestCompareVersions/minor_version_diff (0.00s)
+    --- PASS: TestCompareVersions/v_prefix_on_v1 (0.00s)
+    --- PASS: TestCompareVersions/v_prefix_on_v2 (0.00s)
+    --- PASS: TestCompareVersions/v_prefix_on_both (0.00s)
+    --- PASS: TestCompareVersions/dev_is_older (0.00s)
+    --- PASS: TestCompareVersions/any_version_newer_than_dev (0.00s)
+    --- PASS: TestCompareVersions/dev_vs_dev (0.00s)
+    --- PASS: TestCompareVersions/rc_less_than_release (0.00s)
+    --- PASS: TestCompareVersions/release_greater_than_rc (0.00s)
+    --- PASS: TestCompareVersions/equal_base_with_rc (0.00s)
+    --- PASS: TestCompareVersions/short_vs_long (0.00s)
+    --- PASS: TestCompareVersions/long_vs_short (0.00s)
+=== RUN   TestIsNewerVersion
+=== RUN   TestIsNewerVersion/newer_available
+=== RUN   TestIsNewerVersion/up_to_date
+=== RUN   TestIsNewerVersion/ahead_of_latest
+=== RUN   TestIsNewerVersion/dev_to_release
+=== RUN   TestIsNewerVersion/rc_to_release
+--- PASS: TestIsNewerVersion (0.00s)
+    --- PASS: TestIsNewerVersion/newer_available (0.00s)
+    --- PASS: TestIsNewerVersion/up_to_date (0.00s)
+    --- PASS: TestIsNewerVersion/ahead_of_latest (0.00s)
+    --- PASS: TestIsNewerVersion/dev_to_release (0.00s)
+    --- PASS: TestIsNewerVersion/rc_to_release (0.00s)
+=== RUN   TestNormalizeVersion
+=== RUN   TestNormalizeVersion/v1.0.0
+=== RUN   TestNormalizeVersion/1.0.0
+=== RUN   TestNormalizeVersion/__v1.0.0__
+=== RUN   TestNormalizeVersion/V1.0.0
+=== RUN   TestNormalizeVersion/dev
+--- PASS: TestNormalizeVersion (0.00s)
+    --- PASS: TestNormalizeVersion/v1.0.0 (0.00s)
+    --- PASS: TestNormalizeVersion/1.0.0 (0.00s)
+    --- PASS: TestNormalizeVersion/__v1.0.0__ (0.00s)
+    --- PASS: TestNormalizeVersion/V1.0.0 (0.00s)
+    --- PASS: TestNormalizeVersion/dev (0.00s)
+=== RUN   TestParseVersion
+=== RUN   TestParseVersion/1.0.0
+=== RUN   TestParseVersion/1.2.3
+=== RUN   TestParseVersion/1.0.0-rc.1
+=== RUN   TestParseVersion/10.20.30
+=== RUN   TestParseVersion/1
+=== RUN   TestParseVersion/1.2
+--- PASS: TestParseVersion (0.00s)
+    --- PASS: TestParseVersion/1.0.0 (0.00s)
+    --- PASS: TestParseVersion/1.2.3 (0.00s)
+    --- PASS: TestParseVersion/1.0.0-rc.1 (0.00s)
+    --- PASS: TestParseVersion/10.20.30 (0.00s)
+    --- PASS: TestParseVersion/1 (0.00s)
+    --- PASS: TestParseVersion/1.2 (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/api	0.011s
+=== RUN   TestNewManager
+--- PASS: TestNewManager (0.00s)
+=== RUN   TestLoadEmptyBlocklist
+--- PASS: TestLoadEmptyBlocklist (0.00s)
+=== RUN   TestBlockStation
+--- PASS: TestBlockStation (0.00s)
+=== RUN   TestBlockDuplicateStation
+--- PASS: TestBlockDuplicateStation (0.00s)
+=== RUN   TestUnblockStation
+--- PASS: TestUnblockStation (0.00s)
+=== RUN   TestUnblockNonExistentStation
+--- PASS: TestUnblockNonExistentStation (0.00s)
+=== RUN   TestGetAll
+--- PASS: TestGetAll (0.00s)
+=== RUN   TestClear
+--- PASS: TestClear (0.00s)
+=== RUN   TestPersistence
+--- PASS: TestPersistence (0.00s)
+=== RUN   TestUndoLastBlock
+--- PASS: TestUndoLastBlock (0.00s)
+=== RUN   TestWarningMessages
+--- PASS: TestWarningMessages (0.03s)
+=== RUN   TestConcurrentAccess
+--- PASS: TestConcurrentAccess (0.02s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/blocklist	0.070s
+=== RUN   TestDefaultConfig
+--- PASS: TestDefaultConfig (0.00s)
+=== RUN   TestPlayerConfigValidation
+=== RUN   TestPlayerConfigValidation/valid_config
+=== RUN   TestPlayerConfigValidation/volume_too_low
+=== RUN   TestPlayerConfigValidation/volume_too_high
+=== RUN   TestPlayerConfigValidation/buffer_too_small
+=== RUN   TestPlayerConfigValidation/buffer_too_large
+=== RUN   TestPlayerConfigValidation/buffer_disabled_(0)
+--- PASS: TestPlayerConfigValidation (0.00s)
+    --- PASS: TestPlayerConfigValidation/valid_config (0.00s)
+    --- PASS: TestPlayerConfigValidation/volume_too_low (0.00s)
+    --- PASS: TestPlayerConfigValidation/volume_too_high (0.00s)
+    --- PASS: TestPlayerConfigValidation/buffer_too_small (0.00s)
+    --- PASS: TestPlayerConfigValidation/buffer_too_large (0.00s)
+    --- PASS: TestPlayerConfigValidation/buffer_disabled_(0) (0.00s)
+=== RUN   TestNetworkConfigValidation
+=== RUN   TestNetworkConfigValidation/valid_config
+=== RUN   TestNetworkConfigValidation/delay_too_short
+=== RUN   TestNetworkConfigValidation/delay_too_long
+--- PASS: TestNetworkConfigValidation (0.00s)
+    --- PASS: TestNetworkConfigValidation/valid_config (0.00s)
+    --- PASS: TestNetworkConfigValidation/delay_too_short (0.00s)
+    --- PASS: TestNetworkConfigValidation/delay_too_long (0.00s)
+=== RUN   TestShuffleConfigValidation
+=== RUN   TestShuffleConfigValidation/valid_config
+=== RUN   TestShuffleConfigValidation/invalid_interval
+=== RUN   TestShuffleConfigValidation/invalid_max_history
+--- PASS: TestShuffleConfigValidation (0.00s)
+    --- PASS: TestShuffleConfigValidation/valid_config (0.00s)
+    --- PASS: TestShuffleConfigValidation/invalid_interval (0.00s)
+    --- PASS: TestShuffleConfigValidation/invalid_max_history (0.00s)
+=== RUN   TestAppearanceConfigValidation
+=== RUN   TestAppearanceConfigValidation/valid_config
+=== RUN   TestAppearanceConfigValidation/invalid_mode
+=== RUN   TestAppearanceConfigValidation/invalid_alignment
+=== RUN   TestAppearanceConfigValidation/width_too_small
+=== RUN   TestAppearanceConfigValidation/width_too_large
+--- PASS: TestAppearanceConfigValidation (0.00s)
+    --- PASS: TestAppearanceConfigValidation/valid_config (0.00s)
+    --- PASS: TestAppearanceConfigValidation/invalid_mode (0.00s)
+    --- PASS: TestAppearanceConfigValidation/invalid_alignment (0.00s)
+    --- PASS: TestAppearanceConfigValidation/width_too_small (0.00s)
+    --- PASS: TestAppearanceConfigValidation/width_too_large (0.00s)
+=== RUN   TestPaddingConfigValidation
+=== RUN   TestPaddingConfigValidation/valid_config
+=== RUN   TestPaddingConfigValidation/negative_values
+=== RUN   TestPaddingConfigValidation/values_too_large
+--- PASS: TestPaddingConfigValidation (0.00s)
+    --- PASS: TestPaddingConfigValidation/valid_config (0.00s)
+    --- PASS: TestPaddingConfigValidation/negative_values (0.00s)
+    --- PASS: TestPaddingConfigValidation/values_too_large (0.00s)
+=== RUN   TestLoadAndSave
+--- PASS: TestLoadAndSave (0.00s)
+=== RUN   TestExists
+--- PASS: TestExists (0.00s)
+=== RUN   TestBackup
+--- PASS: TestBackup (0.00s)
+=== RUN   TestReset
+--- PASS: TestReset (0.00s)
+=== RUN   TestThemeConfigValidation
+=== RUN   TestThemeConfigValidation/valid_theme
+=== RUN   TestThemeConfigValidation/missing_colors
+=== RUN   TestThemeConfigValidation/empty_name
+--- PASS: TestThemeConfigValidation (0.00s)
+    --- PASS: TestThemeConfigValidation/valid_theme (0.00s)
+    --- PASS: TestThemeConfigValidation/missing_colors (0.00s)
+    --- PASS: TestThemeConfigValidation/empty_name (0.00s)
+=== RUN   TestPlayOptionsConfigDefaults
+--- PASS: TestPlayOptionsConfigDefaults (0.00s)
+=== RUN   TestPlayOptionsConfigValidation
+=== RUN   TestPlayOptionsConfigValidation/valid_defaults
+=== RUN   TestPlayOptionsConfigValidation/default_volume_too_low_—_clamped_to_0
+=== RUN   TestPlayOptionsConfigValidation/default_volume_too_high_—_clamped_to_100
+=== RUN   TestPlayOptionsConfigValidation/last_used_volume_too_low_—_clamped_to_0
+=== RUN   TestPlayOptionsConfigValidation/last_used_volume_too_high_—_clamped_to_100
+=== RUN   TestPlayOptionsConfigValidation/invalid_start_volume_mode_—_reset_to_default
+=== RUN   TestPlayOptionsConfigValidation/last_used_mode_valid
+--- PASS: TestPlayOptionsConfigValidation (0.00s)
+    --- PASS: TestPlayOptionsConfigValidation/valid_defaults (0.00s)
+    --- PASS: TestPlayOptionsConfigValidation/default_volume_too_low_—_clamped_to_0 (0.00s)
+    --- PASS: TestPlayOptionsConfigValidation/default_volume_too_high_—_clamped_to_100 (0.00s)
+    --- PASS: TestPlayOptionsConfigValidation/last_used_volume_too_low_—_clamped_to_0 (0.00s)
+    --- PASS: TestPlayOptionsConfigValidation/last_used_volume_too_high_—_clamped_to_100 (0.00s)
+    --- PASS: TestPlayOptionsConfigValidation/invalid_start_volume_mode_—_reset_to_default (0.00s)
+    --- PASS: TestPlayOptionsConfigValidation/last_used_mode_valid (0.00s)
+=== RUN   TestLoadLegacyConfig_MissingPlayOptions
+--- PASS: TestLoadLegacyConfig_MissingPlayOptions (0.00s)
+=== RUN   TestLoadLegacyConfig_MissingPlayHistory
+--- PASS: TestLoadLegacyConfig_MissingPlayHistory (0.00s)
+=== RUN   TestPlayHistoryConfigDefaults
+--- PASS: TestPlayHistoryConfigDefaults (0.00s)
+=== RUN   TestPlayHistoryConfigValidation
+=== RUN   TestPlayHistoryConfigValidation/valid_config
+=== RUN   TestPlayHistoryConfigValidation/size_at_minimum_boundary
+=== RUN   TestPlayHistoryConfigValidation/size_at_maximum_boundary
+=== RUN   TestPlayHistoryConfigValidation/size_zero_—_clamped_to_1
+=== RUN   TestPlayHistoryConfigValidation/size_negative_—_clamped_to_1
+=== RUN   TestPlayHistoryConfigValidation/size_too_large_—_clamped_to_20
+=== RUN   TestPlayHistoryConfigValidation/disabled_with_valid_size
+--- PASS: TestPlayHistoryConfigValidation (0.00s)
+    --- PASS: TestPlayHistoryConfigValidation/valid_config (0.00s)
+    --- PASS: TestPlayHistoryConfigValidation/size_at_minimum_boundary (0.00s)
+    --- PASS: TestPlayHistoryConfigValidation/size_at_maximum_boundary (0.00s)
+    --- PASS: TestPlayHistoryConfigValidation/size_zero_—_clamped_to_1 (0.00s)
+    --- PASS: TestPlayHistoryConfigValidation/size_negative_—_clamped_to_1 (0.00s)
+    --- PASS: TestPlayHistoryConfigValidation/size_too_large_—_clamped_to_20 (0.00s)
+    --- PASS: TestPlayHistoryConfigValidation/disabled_with_valid_size (0.00s)
+=== RUN   TestPlayOptionsConfig_RoundTrip
+--- PASS: TestPlayOptionsConfig_RoundTrip (0.00s)
+=== RUN   TestHasV2Config
+--- PASS: TestHasV2Config (0.00s)
+=== RUN   TestDetectV2Config
+--- PASS: TestDetectV2Config (0.00s)
+=== RUN   TestMigrateFromV2
+--- PASS: TestMigrateFromV2 (0.00s)
+=== RUN   TestMigrateFromV2_PartialConfigs
+--- PASS: TestMigrateFromV2_PartialConfigs (0.00s)
+=== RUN   TestBackupV2Configs
+--- PASS: TestBackupV2Configs (0.00s)
+=== RUN   TestRemoveV2Configs
+--- PASS: TestRemoveV2Configs (0.00s)
+=== RUN   TestReadV2Theme
+--- PASS: TestReadV2Theme (0.00s)
+=== RUN   TestReadV2Appearance
+--- PASS: TestReadV2Appearance (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/config	0.021s
+=== RUN   TestCreateGist
+--- PASS: TestCreateGist (0.00s)
+=== RUN   TestListGists
+--- PASS: TestListGists (0.00s)
+=== RUN   TestParseGistURL
+=== RUN   TestParseGistURL/full_github_URL
+=== RUN   TestParseGistURL/full_github_URL_with_trailing_path
+=== RUN   TestParseGistURL/http_URL
+=== RUN   TestParseGistURL/githubusercontent_URL
+=== RUN   TestParseGistURL/raw_gist_ID_32_chars
+=== RUN   TestParseGistURL/URL_with_query_params
+=== RUN   TestParseGistURL/URL_with_fragment
+=== RUN   TestParseGistURL/empty_input
+=== RUN   TestParseGistURL/whitespace_only
+=== RUN   TestParseGistURL/invalid_short_ID
+=== RUN   TestParseGistURL/invalid_characters_in_ID
+=== RUN   TestParseGistURL/invalid_URL_format
+--- PASS: TestParseGistURL (0.00s)
+    --- PASS: TestParseGistURL/full_github_URL (0.00s)
+    --- PASS: TestParseGistURL/full_github_URL_with_trailing_path (0.00s)
+    --- PASS: TestParseGistURL/http_URL (0.00s)
+    --- PASS: TestParseGistURL/githubusercontent_URL (0.00s)
+    --- PASS: TestParseGistURL/raw_gist_ID_32_chars (0.00s)
+    --- PASS: TestParseGistURL/URL_with_query_params (0.00s)
+    --- PASS: TestParseGistURL/URL_with_fragment (0.00s)
+    --- PASS: TestParseGistURL/empty_input (0.00s)
+    --- PASS: TestParseGistURL/whitespace_only (0.00s)
+    --- PASS: TestParseGistURL/invalid_short_ID (0.00s)
+    --- PASS: TestParseGistURL/invalid_characters_in_ID (0.00s)
+    --- PASS: TestParseGistURL/invalid_URL_format (0.00s)
+=== RUN   TestMetadataCRUD
+--- PASS: TestMetadataCRUD (0.01s)
+=== RUN   TestKeychainTokenStorage
+=== RUN   TestKeychainTokenStorage/SaveAndLoadFromKeychain
+=== RUN   TestKeychainTokenStorage/EnvironmentVariableTakesPrecedence
+=== RUN   TestKeychainTokenStorage/GetTokenSource
+=== RUN   TestKeychainTokenStorage/DeleteToken
+=== RUN   TestKeychainTokenStorage/HasTokenWithKeychain
+--- PASS: TestKeychainTokenStorage (0.00s)
+    --- PASS: TestKeychainTokenStorage/SaveAndLoadFromKeychain (0.00s)
+    --- PASS: TestKeychainTokenStorage/EnvironmentVariableTakesPrecedence (0.00s)
+    --- PASS: TestKeychainTokenStorage/GetTokenSource (0.00s)
+    --- PASS: TestKeychainTokenStorage/DeleteToken (0.00s)
+    --- PASS: TestKeychainTokenStorage/HasTokenWithKeychain (0.00s)
+=== RUN   TestTokenMigration
+=== RUN   TestTokenMigration/MigrateFileToKeychain
+=== RUN   TestTokenMigration/NoMigrationIfAlreadyInKeychain
+--- PASS: TestTokenMigration (0.00s)
+    --- PASS: TestTokenMigration/MigrateFileToKeychain (0.00s)
+    --- PASS: TestTokenMigration/NoMigrationIfAlreadyInKeychain (0.00s)
+=== RUN   TestTokenCRUD
+--- PASS: TestTokenCRUD (0.00s)
+=== RUN   TestGetMaskedToken
+--- PASS: TestGetMaskedToken (0.00s)
+=== RUN   TestEnvironmentVariableToken
+--- PASS: TestEnvironmentVariableToken (0.00s)
+=== RUN   TestFileTokenFallback
+--- PASS: TestFileTokenFallback (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/gist	0.017s
+=== RUN   TestNewMPVPlayer
+--- PASS: TestNewMPVPlayer (0.00s)
+=== RUN   TestMPVPlayer_IsPlaying
+--- PASS: TestMPVPlayer_IsPlaying (0.00s)
+=== RUN   TestMPVPlayer_GetCurrentStation
+--- PASS: TestMPVPlayer_GetCurrentStation (0.00s)
+=== RUN   TestMPVPlayer_Stop_WhenNotPlaying
+--- PASS: TestMPVPlayer_Stop_WhenNotPlaying (0.00s)
+=== RUN   TestMPVPlayer_Stop_SetsKilledFlag
+--- PASS: TestMPVPlayer_Stop_SetsKilledFlag (0.00s)
+=== RUN   TestMPVPlayer_KilledPlayer_IgnoresPlay
+--- PASS: TestMPVPlayer_KilledPlayer_IgnoresPlay (0.00s)
+=== RUN   TestMPVPlayer_ThreadSafety
+--- PASS: TestMPVPlayer_ThreadSafety (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/player	0.007s
+?   	github.com/shinokada/tera/v3/internal/shuffle	[no test files]
+=== RUN   TestExport_AllCategories
+--- PASS: TestExport_AllCategories (0.01s)
+=== RUN   TestExport_SelectiveCategories
+--- PASS: TestExport_SelectiveCategories (0.00s)
+=== RUN   TestExport_SkipsMissingFiles
+--- PASS: TestExport_SkipsMissingFiles (0.00s)
+=== RUN   TestListArchiveCategories
+--- PASS: TestListArchiveCategories (0.00s)
+=== RUN   TestListArchiveCategories_Selective
+--- PASS: TestListArchiveCategories_Selective (0.00s)
+=== RUN   TestRestore_AllCategories
+--- PASS: TestRestore_AllCategories (0.00s)
+=== RUN   TestRestore_SelectiveCategories
+--- PASS: TestRestore_SelectiveCategories (0.00s)
+=== RUN   TestRestore_OverwriteGuard
+--- PASS: TestRestore_OverwriteGuard (0.00s)
+=== RUN   TestRestore_ForceOverwrite
+--- PASS: TestRestore_ForceOverwrite (0.00s)
+=== RUN   TestResolveBackupPath_DirectoryAppendsFilename
+--- PASS: TestResolveBackupPath_DirectoryAppendsFilename (0.00s)
+=== RUN   TestResolveBackupPath_FilePathPassthrough
+--- PASS: TestResolveBackupPath_FilePathPassthrough (0.00s)
+=== RUN   TestLoadPlayOptionsConfigFromUnified
+--- PASS: TestLoadPlayOptionsConfigFromUnified (0.00s)
+=== RUN   TestSavePlayOptionsConfigToUnified
+--- PASS: TestSavePlayOptionsConfigToUnified (0.00s)
+=== RUN   TestStorage_SaveList
+--- PASS: TestStorage_SaveList (0.00s)
+=== RUN   TestStorage_AddStation
+--- PASS: TestStorage_AddStation (0.00s)
+=== RUN   TestStorage_AddStation_Duplicate
+--- PASS: TestStorage_AddStation_Duplicate (0.00s)
+=== RUN   TestStorage_AddStation_ToExistingList
+--- PASS: TestStorage_AddStation_ToExistingList (0.00s)
+=== RUN   TestStorage_StationExists
+--- PASS: TestStorage_StationExists (0.00s)
+=== RUN   TestGistFilename
+--- PASS: TestGistFilename (0.00s)
+=== RUN   TestGistFilenameToRelPath
+--- PASS: TestGistFilenameToRelPath (0.00s)
+=== RUN   TestCategorizePath_NoAliasCollision
+--- PASS: TestCategorizePath_NoAliasCollision (0.00s)
+=== RUN   TestGistFilenameRoundTrip
+--- PASS: TestGistFilenameRoundTrip (0.00s)
+=== RUN   TestSearchHistoryStore
+=== RUN   TestSearchHistoryStore/NewSearchHistoryStore
+=== RUN   TestSearchHistoryStore/AddSearchItem
+=== RUN   TestSearchHistoryStore/AddSearchItem_Duplicate_MovesToTop
+=== RUN   TestSearchHistoryStore/AddSearchItem_MaxSize_Trim
+=== RUN   TestSearchHistoryStore/AddLuckyQuery
+=== RUN   TestSearchHistoryStore/AddLuckyQuery_Duplicate_MovesToTop
+=== RUN   TestSearchHistoryStore/UpdateHistorySize_Increase
+=== RUN   TestSearchHistoryStore/UpdateHistorySize_Decrease_TrimsItems
+=== RUN   TestSearchHistoryStore/ClearSearchHistory
+=== RUN   TestSearchHistoryStore/LoadSearchHistory_FileNotExist
+--- PASS: TestSearchHistoryStore (0.01s)
+    --- PASS: TestSearchHistoryStore/NewSearchHistoryStore (0.00s)
+    --- PASS: TestSearchHistoryStore/AddSearchItem (0.00s)
+    --- PASS: TestSearchHistoryStore/AddSearchItem_Duplicate_MovesToTop (0.00s)
+    --- PASS: TestSearchHistoryStore/AddSearchItem_MaxSize_Trim (0.00s)
+    --- PASS: TestSearchHistoryStore/AddLuckyQuery (0.00s)
+    --- PASS: TestSearchHistoryStore/AddLuckyQuery_Duplicate_MovesToTop (0.00s)
+    --- PASS: TestSearchHistoryStore/UpdateHistorySize_Increase (0.00s)
+    --- PASS: TestSearchHistoryStore/UpdateHistorySize_Decrease_TrimsItems (0.00s)
+    --- PASS: TestSearchHistoryStore/ClearSearchHistory (0.00s)
+    --- PASS: TestSearchHistoryStore/LoadSearchHistory_FileNotExist (0.00s)
+=== RUN   TestMetadataManager
+=== RUN   TestMetadataManager/NewMetadataManager
+=== RUN   TestMetadataManager/StartPlay_RecordsMetadata
+=== RUN   TestMetadataManager/StartPlay_IncrementsCount
+=== RUN   TestMetadataManager/StartPlay_SameStation_NoDuplicate
+=== RUN   TestMetadataManager/StopPlay_RecordsDuration
+    station_metadata_test.go:154: TotalDurationSeconds: 0 (may be 0 for short duration)
+=== RUN   TestMetadataManager/StartPlay_SwitchStation_StopsOldStation
+=== RUN   TestMetadataManager/GetTopPlayed
+=== RUN   TestMetadataManager/GetRecentlyPlayed
+=== RUN   TestMetadataManager/SaveAndLoad
+=== RUN   TestMetadataManager/ClearAll
+=== RUN   TestMetadataManager/CorruptedFile_GracefulRecovery
+--- PASS: TestMetadataManager (0.17s)
+    --- PASS: TestMetadataManager/NewMetadataManager (0.00s)
+    --- PASS: TestMetadataManager/StartPlay_RecordsMetadata (0.00s)
+    --- PASS: TestMetadataManager/StartPlay_IncrementsCount (0.00s)
+    --- PASS: TestMetadataManager/StartPlay_SameStation_NoDuplicate (0.00s)
+    --- PASS: TestMetadataManager/StopPlay_RecordsDuration (0.10s)
+    --- PASS: TestMetadataManager/StartPlay_SwitchStation_StopsOldStation (0.05s)
+    --- PASS: TestMetadataManager/GetTopPlayed (0.00s)
+    --- PASS: TestMetadataManager/GetRecentlyPlayed (0.02s)
+    --- PASS: TestMetadataManager/SaveAndLoad (0.00s)
+    --- PASS: TestMetadataManager/ClearAll (0.00s)
+    --- PASS: TestMetadataManager/CorruptedFile_GracefulRecovery (0.00s)
+=== RUN   TestFormatLastPlayed
+=== RUN   TestFormatLastPlayed/Zero_time
+=== RUN   TestFormatLastPlayed/Just_now
+=== RUN   TestFormatLastPlayed/1_minute_ago
+=== RUN   TestFormatLastPlayed/5_minutes_ago
+=== RUN   TestFormatLastPlayed/1_hour_ago
+=== RUN   TestFormatLastPlayed/3_hours_ago
+=== RUN   TestFormatLastPlayed/Yesterday
+=== RUN   TestFormatLastPlayed/3_days_ago
+=== RUN   TestFormatLastPlayed/1_week_ago
+=== RUN   TestFormatLastPlayed/2_weeks_ago
+--- PASS: TestFormatLastPlayed (0.00s)
+    --- PASS: TestFormatLastPlayed/Zero_time (0.00s)
+    --- PASS: TestFormatLastPlayed/Just_now (0.00s)
+    --- PASS: TestFormatLastPlayed/1_minute_ago (0.00s)
+    --- PASS: TestFormatLastPlayed/5_minutes_ago (0.00s)
+    --- PASS: TestFormatLastPlayed/1_hour_ago (0.00s)
+    --- PASS: TestFormatLastPlayed/3_hours_ago (0.00s)
+    --- PASS: TestFormatLastPlayed/Yesterday (0.00s)
+    --- PASS: TestFormatLastPlayed/3_days_ago (0.00s)
+    --- PASS: TestFormatLastPlayed/1_week_ago (0.00s)
+    --- PASS: TestFormatLastPlayed/2_weeks_ago (0.00s)
+=== RUN   TestFormatDuration
+=== RUN   TestFormatDuration/30s
+=== RUN   TestFormatDuration/1m
+=== RUN   TestFormatDuration/1m_30s
+=== RUN   TestFormatDuration/1h
+=== RUN   TestFormatDuration/1h_1m
+=== RUN   TestFormatDuration/2h
+=== RUN   TestFormatDuration/2h_2m
+--- PASS: TestFormatDuration (0.00s)
+    --- PASS: TestFormatDuration/30s (0.00s)
+    --- PASS: TestFormatDuration/1m (0.00s)
+    --- PASS: TestFormatDuration/1m_30s (0.00s)
+    --- PASS: TestFormatDuration/1h (0.00s)
+    --- PASS: TestFormatDuration/1h_1m (0.00s)
+    --- PASS: TestFormatDuration/2h (0.00s)
+    --- PASS: TestFormatDuration/2h_2m (0.00s)
+=== RUN   TestRatingsManager
+=== RUN   TestRatingsManager/NewRatingsManager
+=== RUN   TestRatingsManager/SetRating_Valid
+=== RUN   TestRatingsManager/SetRating_Validation
+=== RUN   TestRatingsManager/SetRating_UpdateExisting
+=== RUN   TestRatingsManager/RemoveRating
+=== RUN   TestRatingsManager/RemoveRating_NonExistent
+=== RUN   TestRatingsManager/GetRating_NotFound
+=== RUN   TestRatingsManager/GetTopRated
+=== RUN   TestRatingsManager/GetByMinRating
+=== RUN   TestRatingsManager/GetRecentlyRated
+=== RUN   TestRatingsManager/GetAllRated
+=== RUN   TestRatingsManager/ClearAll
+=== RUN   TestRatingsManager/SaveAndLoad
+=== RUN   TestRatingsManager/CorruptedFile
+--- PASS: TestRatingsManager (0.04s)
+    --- PASS: TestRatingsManager/NewRatingsManager (0.00s)
+    --- PASS: TestRatingsManager/SetRating_Valid (0.00s)
+    --- PASS: TestRatingsManager/SetRating_Validation (0.00s)
+    --- PASS: TestRatingsManager/SetRating_UpdateExisting (0.01s)
+    --- PASS: TestRatingsManager/RemoveRating (0.00s)
+    --- PASS: TestRatingsManager/RemoveRating_NonExistent (0.00s)
+    --- PASS: TestRatingsManager/GetRating_NotFound (0.00s)
+    --- PASS: TestRatingsManager/GetTopRated (0.00s)
+    --- PASS: TestRatingsManager/GetByMinRating (0.00s)
+    --- PASS: TestRatingsManager/GetRecentlyRated (0.02s)
+    --- PASS: TestRatingsManager/GetAllRated (0.00s)
+    --- PASS: TestRatingsManager/ClearAll (0.00s)
+    --- PASS: TestRatingsManager/SaveAndLoad (0.00s)
+    --- PASS: TestRatingsManager/CorruptedFile (0.00s)
+=== RUN   TestRenderStars
+--- PASS: TestRenderStars (0.00s)
+=== RUN   TestRenderStarsCompact
+--- PASS: TestRenderStarsCompact (0.00s)
+=== RUN   TestRatingsConcurrentAccess
+--- PASS: TestRatingsConcurrentAccess (0.00s)
+=== RUN   TestAddTag
+--- PASS: TestAddTag (0.00s)
+=== RUN   TestAddTagNormalization
+--- PASS: TestAddTagNormalization (0.00s)
+=== RUN   TestAddTagValidation
+--- PASS: TestAddTagValidation (0.00s)
+=== RUN   TestAddTagIdempotent
+--- PASS: TestAddTagIdempotent (0.00s)
+=== RUN   TestRemoveTag
+--- PASS: TestRemoveTag (0.00s)
+=== RUN   TestSetTags
+--- PASS: TestSetTags (0.00s)
+=== RUN   TestClearTags
+--- PASS: TestClearTags (0.00s)
+=== RUN   TestMaxTagsLimit
+--- PASS: TestMaxTagsLimit (0.00s)
+=== RUN   TestAllTagsIndex
+--- PASS: TestAllTagsIndex (0.00s)
+=== RUN   TestGetStationsByTag
+--- PASS: TestGetStationsByTag (0.00s)
+=== RUN   TestGetStationsByTagsMatchAny
+--- PASS: TestGetStationsByTagsMatchAny (0.00s)
+=== RUN   TestGetStationsByTagsMatchAll
+--- PASS: TestGetStationsByTagsMatchAll (0.00s)
+=== RUN   TestCreatePlaylist
+--- PASS: TestCreatePlaylist (0.00s)
+=== RUN   TestCreatePlaylistDuplicate
+--- PASS: TestCreatePlaylistDuplicate (0.00s)
+=== RUN   TestCreatePlaylistValidation
+--- PASS: TestCreatePlaylistValidation (0.00s)
+=== RUN   TestDeletePlaylist
+--- PASS: TestDeletePlaylist (0.00s)
+=== RUN   TestDeletePlaylistNotFound
+--- PASS: TestDeletePlaylistNotFound (0.00s)
+=== RUN   TestGetPlaylistStations
+--- PASS: TestGetPlaylistStations (0.00s)
+=== RUN   TestGetAllPlaylists
+--- PASS: TestGetAllPlaylists (0.00s)
+=== RUN   TestSaveAndLoad
+--- PASS: TestSaveAndLoad (0.00s)
+=== RUN   TestCorruptedFile
+[WARN] station_tags: failed to load /tmp/TestCorruptedFile1588533578/001/station_tags.json: invalid character 'i' looking for beginning of object key string (starting with empty store)
+--- PASS: TestCorruptedFile (0.00s)
+=== RUN   TestConcurrentAccess
+--- PASS: TestConcurrentAccess (0.00s)
+=== RUN   TestDebouncedSave
+--- PASS: TestDebouncedSave (0.00s)
+=== RUN   TestGetTagsUnknownUUID
+--- PASS: TestGetTagsUnknownUUID (0.00s)
+=== RUN   TestRemoveTagNonexistentStation
+--- PASS: TestRemoveTagNonexistentStation (0.00s)
+=== RUN   TestSetTagsDeduplication
+--- PASS: TestSetTagsDeduplication (0.00s)
+=== RUN   TestMaxTagLengthLimit
+--- PASS: TestMaxTagLengthLimit (0.00s)
+=== RUN   TestPlaylistCreatedAt
+--- PASS: TestPlaylistCreatedAt (0.00s)
+=== RUN   TestDefaultSyncPrefs
+--- PASS: TestDefaultSyncPrefs (0.00s)
+=== RUN   TestLoadSyncPrefs_ReturnsDefaultsWhenMissing
+--- PASS: TestLoadSyncPrefs_ReturnsDefaultsWhenMissing (0.00s)
+=== RUN   TestSaveAndLoadSyncPrefs
+--- PASS: TestSaveAndLoadSyncPrefs (0.00s)
+=== RUN   TestSaveAndLoadSyncPrefs_Integration
+--- PASS: TestSaveAndLoadSyncPrefs_Integration (0.00s)
+=== RUN   TestLoadSyncPrefs_CorruptFile
+--- PASS: TestLoadSyncPrefs_CorruptFile (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/storage	0.268s
+?   	github.com/shinokada/tera/v3/internal/theme	[no test files]
+=== RUN   TestSessionRecordsStations
+--- PASS: TestSessionRecordsStations (0.00s)
+=== RUN   TestSessionDuration
+--- PASS: TestSessionDuration (0.05s)
+=== RUN   TestSessionSingleStation
+--- PASS: TestSessionSingleStation (0.03s)
+=== RUN   TestSessionEmptySession
+--- PASS: TestSessionEmptySession (0.00s)
+=== RUN   TestTimerFires
+--- PASS: TestTimerFires (0.15s)
+=== RUN   TestTimerCancel
+--- PASS: TestTimerCancel (0.30s)
+=== RUN   TestTimerIdempotentCancel
+--- PASS: TestTimerIdempotentCancel (0.00s)
+=== RUN   TestTimerExtend
+--- PASS: TestTimerExtend (0.20s)
+=== RUN   TestTimerExtendInactive
+--- PASS: TestTimerExtendInactive (0.15s)
+=== RUN   TestTimerRemaining
+--- PASS: TestTimerRemaining (0.00s)
+=== RUN   TestTimerToggle
+--- PASS: TestTimerToggle (0.55s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/timer	1.442s
+=== RUN   TestLoadRecentlyPlayed_DisabledReturnsNil
+--- PASS: TestLoadRecentlyPlayed_DisabledReturnsNil (0.00s)
+=== RUN   TestLoadRecentlyPlayed_NilManagerReturnsNil
+--- PASS: TestLoadRecentlyPlayed_NilManagerReturnsNil (0.00s)
+=== RUN   TestLoadRecentlyPlayed_EmptyHistory
+--- PASS: TestLoadRecentlyPlayed_EmptyHistory (0.00s)
+=== RUN   TestLoadRecentlyPlayed_SizeLimit
+--- PASS: TestLoadRecentlyPlayed_SizeLimit (0.00s)
+=== RUN   TestPlayRecentStation_ValidIndex
+--- PASS: TestPlayRecentStation_ValidIndex (0.00s)
+=== RUN   TestPlayRecentStation_OutOfRange
+--- PASS: TestPlayRecentStation_OutOfRange (0.00s)
+=== RUN   TestPlayRecentStation_EmptyList
+--- PASS: TestPlayRecentStation_EmptyList (0.00s)
+=== RUN   TestPlayRecentStation_FirstStation
+--- PASS: TestPlayRecentStation_FirstStation (0.00s)
+=== RUN   TestPlayRecentStation_LastStation
+--- PASS: TestPlayRecentStation_LastStation (0.00s)
+=== RUN   TestUpdateRPViewOffset_NoRP
+--- PASS: TestUpdateRPViewOffset_NoRP (0.00s)
+=== RUN   TestUpdateRPViewOffset_CursorAboveRP
+--- PASS: TestUpdateRPViewOffset_CursorAboveRP (0.00s)
+=== RUN   TestUpdateRPViewOffset_ScrollsDown
+--- PASS: TestUpdateRPViewOffset_ScrollsDown (0.00s)
+=== RUN   TestUpdateRPViewOffset_ScrollsUp
+--- PASS: TestUpdateRPViewOffset_ScrollsUp (0.00s)
+=== RUN   TestUpdateRPViewOffset_LargeWindowCoversAllEntries
+--- PASS: TestUpdateRPViewOffset_LargeWindowCoversAllEntries (0.00s)
+=== RUN   TestNavigateToScreenPlay_StopsScreenPlayers
+--- PASS: TestNavigateToScreenPlay_StopsScreenPlayers (0.00s)
+=== RUN   TestNavigateToScreenPlay_ContinueOnNavigate_PreservesActivePlayer
+--- PASS: TestNavigateToScreenPlay_ContinueOnNavigate_PreservesActivePlayer (0.00s)
+=== RUN   TestNavigateToScreenPlay_ContinueOff_ClearsActivePlayer
+--- PASS: TestNavigateToScreenPlay_ContinueOff_ClearsActivePlayer (0.00s)
+=== RUN   TestTopRated_EscFromList_ContinueOnNavigate_DoesNotStopPlayer
+--- PASS: TestTopRated_EscFromList_ContinueOnNavigate_DoesNotStopPlayer (0.00s)
+=== RUN   TestLucky_EscFromPlaying_ContinueOnNavigate_HandsOffAndNavigates
+--- PASS: TestLucky_EscFromPlaying_ContinueOnNavigate_HandsOffAndNavigates (0.00s)
+=== RUN   TestLucky_EscFromPlaying_ContinueOff_StopsAndReturnsToInput
+--- PASS: TestLucky_EscFromPlaying_ContinueOff_StopsAndReturnsToInput (0.00s)
+=== RUN   TestLucky_EscFromInput_NoStation_Navigates_Still
+--- PASS: TestLucky_EscFromInput_NoStation_Navigates_Still (0.00s)
+=== RUN   TestLucky_EscFromInput_ContinueOff_StopsAndNavigates
+--- PASS: TestLucky_EscFromInput_ContinueOff_StopsAndNavigates (0.00s)
+=== RUN   TestLucky_EscFromInput_NoStation_Navigates
+--- PASS: TestLucky_EscFromInput_NoStation_Navigates (0.00s)
+=== RUN   TestTopRated_EscFromList_ContinueOff_StopsPlayer
+--- PASS: TestTopRated_EscFromList_ContinueOff_StopsPlayer (0.00s)
+=== RUN   TestPlayStation_EmitsStopActivePlaybackMsg
+--- PASS: TestPlayStation_EmitsStopActivePlaybackMsg (2.00s)
+=== RUN   TestApp_HandleStopActivePlaybackMsg
+--- PASS: TestApp_HandleStopActivePlaybackMsg (0.00s)
+=== RUN   TestIsPlayerScreen
+--- PASS: TestIsPlayerScreen (0.00s)
+=== RUN   TestNowPlayingBar_HiddenOnPlayerScreens
+--- PASS: TestNowPlayingBar_HiddenOnPlayerScreens (0.00s)
+=== RUN   TestHandoffPlaybackMsg_SetsActivePlayer
+--- PASS: TestHandoffPlaybackMsg_SetsActivePlayer (0.00s)
+=== RUN   TestContinueOnNavigate_SourceHandoff
+=== RUN   TestContinueOnNavigate_SourceHandoff/Play(a)
+=== RUN   TestContinueOnNavigate_SourceHandoff/Search(b)
+=== RUN   TestContinueOnNavigate_SourceHandoff/MostPlayed(c)
+=== RUN   TestContinueOnNavigate_SourceHandoff/TopRated(d)
+=== RUN   TestContinueOnNavigate_SourceHandoff/BrowseTags(e)
+=== RUN   TestContinueOnNavigate_SourceHandoff/TagPlaylists(f)
+=== RUN   TestContinueOnNavigate_SourceHandoff/Lucky(g)
+--- PASS: TestContinueOnNavigate_SourceHandoff (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff/Play(a) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff/Search(b) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff/MostPlayed(c) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff/TopRated(d) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff/BrowseTags(e) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff/TagPlaylists(f) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff/Lucky(g) (0.00s)
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off/Play(a)
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off/Search(b)
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off/MostPlayed(c)
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off/TopRated(d)
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off/BrowseTags(e)
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off/TagPlaylists(f)
+=== RUN   TestContinueOnNavigate_SourceHandoff_Off/Lucky(g)
+--- PASS: TestContinueOnNavigate_SourceHandoff_Off (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff_Off/Play(a) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff_Off/Search(b) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff_Off/MostPlayed(c) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff_Off/TopRated(d) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff_Off/BrowseTags(e) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff_Off/TagPlaylists(f) (0.00s)
+    --- PASS: TestContinueOnNavigate_SourceHandoff_Off/Lucky(g) (0.00s)
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer/Play(a)
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer/Search(b)
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer/MostPlayed(c)
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer/TopRated(d)
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer/BrowseTags(e)
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer/TagPlaylists(f)
+=== RUN   TestContinueOnNavigate_DestinationPreservesActivePlayer/Lucky(g)
+--- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer (0.00s)
+    --- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer/Play(a) (0.00s)
+    --- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer/Search(b) (0.00s)
+    --- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer/MostPlayed(c) (0.00s)
+    --- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer/TopRated(d) (0.00s)
+    --- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer/BrowseTags(e) (0.00s)
+    --- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer/TagPlaylists(f) (0.00s)
+    --- PASS: TestContinueOnNavigate_DestinationPreservesActivePlayer/Lucky(g) (0.00s)
+=== RUN   TestContinueOnNavigate_DestinationClearsActivePlayer_WhenOff
+--- PASS: TestContinueOnNavigate_DestinationClearsActivePlayer_WhenOff (0.00s)
+=== RUN   TestContinueOnNavigate_NewStationStopsHandedOff
+=== RUN   TestContinueOnNavigate_NewStationStopsHandedOff/Play(a)
+--- PASS: TestContinueOnNavigate_NewStationStopsHandedOff (2.00s)
+    --- PASS: TestContinueOnNavigate_NewStationStopsHandedOff/Play(a) (2.00s)
+=== RUN   TestBug1_QFPlaying_NavigateToPlayScreen_PreservesStream
+--- PASS: TestBug1_QFPlaying_NavigateToPlayScreen_PreservesStream (0.00s)
+=== RUN   TestBug1_QFNotPlaying_NavigateToPlayScreen_HandoffHappens
+--- PASS: TestBug1_QFNotPlaying_NavigateToPlayScreen_HandoffHappens (0.00s)
+=== RUN   TestBug1_HandoffMsg_SetsPlayingFromMain_DoesNotBreakSubsequentNavigate
+--- PASS: TestBug1_HandoffMsg_SetsPlayingFromMain_DoesNotBreakSubsequentNavigate (0.00s)
+=== RUN   TestBug2_StopScreenPlayers_SkipsActivePlayer
+--- PASS: TestBug2_StopScreenPlayers_SkipsActivePlayer (0.00s)
+=== RUN   TestBug2_NavigateMostPlayedToTopRated_PreservesActivePlayer
+--- PASS: TestBug2_NavigateMostPlayedToTopRated_PreservesActivePlayer (0.00s)
+=== RUN   TestBug2_NavigatePlayToMostPlayed_PreservesActivePlayer
+--- PASS: TestBug2_NavigatePlayToMostPlayed_PreservesActivePlayer (0.00s)
+=== RUN   TestHandoffPlaybackMsg_StopsPreviousPlayer
+--- PASS: TestHandoffPlaybackMsg_StopsPreviousPlayer (0.00s)
+=== RUN   TestXKey_StopsActiveStation
+--- PASS: TestXKey_StopsActiveStation (0.00s)
+=== RUN   TestXKey_StopsPlayingFromMain
+--- PASS: TestXKey_StopsPlayingFromMain (0.00s)
+=== RUN   TestXKey_NoOpWhenNothingPlaying
+--- PASS: TestXKey_NoOpWhenNothingPlaying (0.00s)
+=== RUN   TestBuildNowPlayingBannerText_ContainsXStopHint
+--- PASS: TestBuildNowPlayingBannerText_ContainsXStopHint (0.00s)
+=== RUN   TestBuildNowPlayingBannerText_EmptyWhenNoStation
+--- PASS: TestBuildNowPlayingBannerText_EmptyWhenNoStation (0.00s)
+=== RUN   TestBuildNowPlayingBannerText_ContainsStationName
+--- PASS: TestBuildNowPlayingBannerText_ContainsStationName (0.00s)
+=== RUN   TestPlayQuickFavorite_StopsHandedOffActivePlayer
+--- PASS: TestPlayQuickFavorite_StopsHandedOffActivePlayer (0.00s)
+=== RUN   TestPlayQuickFavorite_ReplacesFreshPlayer
+--- PASS: TestPlayQuickFavorite_ReplacesFreshPlayer (0.00s)
+=== RUN   TestPlayRecentStation_StopsHandedOffActivePlayer
+--- PASS: TestPlayRecentStation_StopsHandedOffActivePlayer (0.00s)
+=== RUN   TestPlayRecentStation_ReplacesFreshPlayer
+--- PASS: TestPlayRecentStation_ReplacesFreshPlayer (0.00s)
+=== RUN   TestListManagementModel_Creation
+--- PASS: TestListManagementModel_Creation (0.00s)
+=== RUN   TestListManagementModel_States
+=== RUN   TestListManagementModel_States/Menu
+=== RUN   TestListManagementModel_States/Create
+=== RUN   TestListManagementModel_States/Delete
+=== RUN   TestListManagementModel_States/SelectListToDelete
+=== RUN   TestListManagementModel_States/Edit
+=== RUN   TestListManagementModel_States/SelectListToEdit
+=== RUN   TestListManagementModel_States/ShowAll
+=== RUN   TestListManagementModel_States/ConfirmDelete
+=== RUN   TestListManagementModel_States/EnterNewName
+--- PASS: TestListManagementModel_States (0.00s)
+    --- PASS: TestListManagementModel_States/Menu (0.00s)
+    --- PASS: TestListManagementModel_States/Create (0.00s)
+    --- PASS: TestListManagementModel_States/Delete (0.00s)
+    --- PASS: TestListManagementModel_States/SelectListToDelete (0.00s)
+    --- PASS: TestListManagementModel_States/Edit (0.00s)
+    --- PASS: TestListManagementModel_States/SelectListToEdit (0.00s)
+    --- PASS: TestListManagementModel_States/ShowAll (0.00s)
+    --- PASS: TestListManagementModel_States/ConfirmDelete (0.00s)
+    --- PASS: TestListManagementModel_States/EnterNewName (0.00s)
+=== RUN   TestListManagementModel_MenuFooter
+--- PASS: TestListManagementModel_MenuFooter (0.00s)
+=== RUN   TestListManagementModel_CreateFooter
+--- PASS: TestListManagementModel_CreateFooter (0.00s)
+=== RUN   TestListManagementModel_DeleteFooter
+--- PASS: TestListManagementModel_DeleteFooter (0.00s)
+=== RUN   TestListManagementModel_EditFooter
+--- PASS: TestListManagementModel_EditFooter (0.00s)
+=== RUN   TestListManagementModel_ShowAllFooter
+--- PASS: TestListManagementModel_ShowAllFooter (0.00s)
+=== RUN   TestListManagementModel_ConfirmDeleteFooter
+--- PASS: TestListManagementModel_ConfirmDeleteFooter (0.00s)
+=== RUN   TestListManagementModel_RenameFooter
+--- PASS: TestListManagementModel_RenameFooter (0.00s)
+=== RUN   TestListManagementModel_MenuListDisplay
+--- PASS: TestListManagementModel_MenuListDisplay (0.00s)
+=== RUN   TestListManagementModel_SelectListToEditFooter
+--- PASS: TestListManagementModel_SelectListToEditFooter (0.00s)
+=== RUN   TestListManagementModel_SelectListToDeleteFooter
+--- PASS: TestListManagementModel_SelectListToDeleteFooter (0.00s)
+=== RUN   TestNewLuckyModel
+--- PASS: TestNewLuckyModel (0.00s)
+=== RUN   TestLuckyModelInit
+--- PASS: TestLuckyModelInit (0.00s)
+=== RUN   TestLuckyInputStateEscNavigation
+--- PASS: TestLuckyInputStateEscNavigation (0.00s)
+=== RUN   TestLuckyInputStateEmptyKeyword
+--- PASS: TestLuckyInputStateEmptyKeyword (0.00s)
+=== RUN   TestLuckyInputStateValidKeyword
+--- PASS: TestLuckyInputStateValidKeyword (0.00s)
+=== RUN   TestLuckyInputStateKeywordWithWhitespace
+--- PASS: TestLuckyInputStateKeywordWithWhitespace (0.00s)
+=== RUN   TestLuckyInputStateWhitespaceOnlyKeyword
+--- PASS: TestLuckyInputStateWhitespaceOnlyKeyword (0.00s)
+=== RUN   TestLuckyPlayingStateEscNavigation
+--- PASS: TestLuckyPlayingStateEscNavigation (0.00s)
+=== RUN   TestLuckyPlayingStateZeroToMainMenu
+--- PASS: TestLuckyPlayingStateZeroToMainMenu (0.00s)
+=== RUN   TestLuckyPlayingStateFavoriteShortcut
+--- PASS: TestLuckyPlayingStateFavoriteShortcut (0.00s)
+=== RUN   TestLuckyPlayingStateSaveToListShortcut
+--- PASS: TestLuckyPlayingStateSaveToListShortcut (0.00s)
+=== RUN   TestLuckyPlayingStateVoteShortcut
+--- PASS: TestLuckyPlayingStateVoteShortcut (0.00s)
+=== RUN   TestLuckySavePromptYes
+=== RUN   TestLuckySavePromptYes/y_key
+=== RUN   TestLuckySavePromptYes/1_key
+--- PASS: TestLuckySavePromptYes (0.00s)
+    --- PASS: TestLuckySavePromptYes/y_key (0.00s)
+    --- PASS: TestLuckySavePromptYes/1_key (0.00s)
+=== RUN   TestLuckySavePromptNo
+=== RUN   TestLuckySavePromptNo/n_key
+=== RUN   TestLuckySavePromptNo/2_key
+=== RUN   TestLuckySavePromptNo/esc_key
+--- PASS: TestLuckySavePromptNo (0.00s)
+    --- PASS: TestLuckySavePromptNo/n_key (0.00s)
+    --- PASS: TestLuckySavePromptNo/2_key (0.00s)
+    --- PASS: TestLuckySavePromptNo/esc_key (0.00s)
+=== RUN   TestLuckySelectListEscNavigation
+--- PASS: TestLuckySelectListEscNavigation (0.00s)
+=== RUN   TestLuckySelectListNewListShortcut
+--- PASS: TestLuckySelectListNewListShortcut (0.00s)
+=== RUN   TestLuckyNewListInputEscNavigation
+--- PASS: TestLuckyNewListInputEscNavigation (0.00s)
+=== RUN   TestLuckyWindowSizeUpdate
+--- PASS: TestLuckyWindowSizeUpdate (0.00s)
+=== RUN   TestLuckySearchResultsMsg
+--- PASS: TestLuckySearchResultsMsg (0.00s)
+=== RUN   TestLuckySearchErrorMsg
+--- PASS: TestLuckySearchErrorMsg (0.00s)
+=== RUN   TestLuckySaveSuccessMsg
+--- PASS: TestLuckySaveSuccessMsg (0.00s)
+=== RUN   TestLuckySaveFailedMsgDuplicate
+--- PASS: TestLuckySaveFailedMsgDuplicate (0.00s)
+=== RUN   TestLuckyVoteSuccessMsg
+--- PASS: TestLuckyVoteSuccessMsg (0.00s)
+=== RUN   TestLuckyListsLoadedMsg
+--- PASS: TestLuckyListsLoadedMsg (0.00s)
+=== RUN   TestLuckyViewStates
+=== RUN   TestLuckyViewStates/Input_state
+=== RUN   TestLuckyViewStates/Searching_state
+=== RUN   TestLuckyViewStates/Playing_state
+=== RUN   TestLuckyViewStates/Save_prompt_state
+=== RUN   TestLuckyViewStates/Select_list_state
+=== RUN   TestLuckyViewStates/New_list_input_state
+--- PASS: TestLuckyViewStates (0.00s)
+    --- PASS: TestLuckyViewStates/Input_state (0.00s)
+    --- PASS: TestLuckyViewStates/Searching_state (0.00s)
+    --- PASS: TestLuckyViewStates/Playing_state (0.00s)
+    --- PASS: TestLuckyViewStates/Save_prompt_state (0.00s)
+    --- PASS: TestLuckyViewStates/Select_list_state (0.00s)
+    --- PASS: TestLuckyViewStates/New_list_input_state (0.00s)
+=== RUN   TestLuckyShuffleToggle
+--- PASS: TestLuckyShuffleToggle (0.00s)
+=== RUN   TestLuckyShuffleSearchTrigger
+--- PASS: TestLuckyShuffleSearchTrigger (0.00s)
+=== RUN   TestLuckyShufflePlayingStateStopShuffle
+--- PASS: TestLuckyShufflePlayingStateStopShuffle (0.00s)
+=== RUN   TestLuckyShufflePlayingStateEscNavigation
+--- PASS: TestLuckyShufflePlayingStateEscNavigation (0.00s)
+=== RUN   TestLuckyShufflePlayingStateZeroToMainMenu
+--- PASS: TestLuckyShufflePlayingStateZeroToMainMenu (0.00s)
+=== RUN   TestLuckyShufflePlayingStateFavoriteShortcut
+--- PASS: TestLuckyShufflePlayingStateFavoriteShortcut (0.00s)
+=== RUN   TestLuckyShufflePlayingStateSaveToListShortcut
+--- PASS: TestLuckyShufflePlayingStateSaveToListShortcut (0.00s)
+=== RUN   TestLuckyShufflePlayingStateVoteShortcut
+--- PASS: TestLuckyShufflePlayingStateVoteShortcut (0.00s)
+=== RUN   TestLuckyInputModeKeyRouting
+=== RUN   TestLuckyInputModeKeyRouting/j_stays_in_textInput_(no_history)
+=== RUN   TestLuckyInputModeKeyRouting/j_stays_in_textInput_(with_history)
+=== RUN   TestLuckyInputModeKeyRouting/k_stays_in_textInput_(with_history)
+=== RUN   TestLuckyInputModeKeyRouting/typing_jazz_stays_in_inputMode_throughout
+=== RUN   TestLuckyInputModeKeyRouting/typing_rock_stays_in_inputMode_throughout
+=== RUN   TestLuckyInputModeKeyRouting/typing_numeric_keyword_stays_in_inputMode_throughout
+=== RUN   TestLuckyInputModeKeyRouting/down_arrow_switches_to_nav_mode_when_history_exists
+=== RUN   TestLuckyInputModeKeyRouting/up_arrow_switches_to_nav_mode_when_history_exists
+=== RUN   TestLuckyInputModeKeyRouting/down_arrow_does_nothing_when_no_history
+=== RUN   TestLuckyInputModeKeyRouting/j_works_as_vim_nav_after_Tab_switches_to_nav_mode
+--- PASS: TestLuckyInputModeKeyRouting (0.01s)
+    --- PASS: TestLuckyInputModeKeyRouting/j_stays_in_textInput_(no_history) (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/j_stays_in_textInput_(with_history) (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/k_stays_in_textInput_(with_history) (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/typing_jazz_stays_in_inputMode_throughout (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/typing_rock_stays_in_inputMode_throughout (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/typing_numeric_keyword_stays_in_inputMode_throughout (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/down_arrow_switches_to_nav_mode_when_history_exists (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/up_arrow_switches_to_nav_mode_when_history_exists (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/down_arrow_does_nothing_when_no_history (0.00s)
+    --- PASS: TestLuckyInputModeKeyRouting/j_works_as_vim_nav_after_Tab_switches_to_nav_mode (0.00s)
+=== RUN   TestLuckyShuffleViewShufflePlaying
+--- PASS: TestLuckyShuffleViewShufflePlaying (0.00s)
+=== RUN   TestMostPlayedConfirmStopRouted
+--- PASS: TestMostPlayedConfirmStopRouted (0.00s)
+=== RUN   TestMostPlayedConfirmStopTriggered
+--- PASS: TestMostPlayedConfirmStopTriggered (0.00s)
+=== RUN   TestMostPlayedConfirmStopResolved
+--- PASS: TestMostPlayedConfirmStopResolved (0.00s)
+=== RUN   TestTopRatedConfirmStopRouted
+--- PASS: TestTopRatedConfirmStopRouted (0.00s)
+=== RUN   TestTopRatedConfirmStopTriggered
+--- PASS: TestTopRatedConfirmStopTriggered (0.00s)
+=== RUN   TestTopRatedConfirmStopResolved
+--- PASS: TestTopRatedConfirmStopResolved (0.00s)
+=== RUN   TestStationListItem
+--- PASS: TestStationListItem (0.00s)
+=== RUN   TestStationListItem_Blocked
+--- PASS: TestStationListItem_Blocked (0.00s)
+=== RUN   TestStationListItem_EmptyFields
+--- PASS: TestStationListItem_EmptyFields (0.00s)
+=== RUN   TestGetStationsFromList
+--- PASS: TestGetStationsFromList (0.00s)
+=== RUN   TestGetStationsFromList_EmptyList
+--- PASS: TestGetStationsFromList_EmptyList (0.00s)
+=== RUN   TestGetStationsFromList_NonexistentFile
+--- PASS: TestGetStationsFromList_NonexistentFile (0.00s)
+=== RUN   TestPlayModel_Update_StationsLoaded
+--- PASS: TestPlayModel_Update_StationsLoaded (0.00s)
+=== RUN   TestPlayModel_Update_StationSelectionNavigation
+=== RUN   TestPlayModel_Update_StationSelectionNavigation/Escape_key
+=== RUN   TestPlayModel_Update_StationSelectionNavigation/Other_key
+--- PASS: TestPlayModel_Update_StationSelectionNavigation (0.00s)
+    --- PASS: TestPlayModel_Update_StationSelectionNavigation/Escape_key (0.00s)
+    --- PASS: TestPlayModel_Update_StationSelectionNavigation/Other_key (0.00s)
+=== RUN   TestPlayModel_View_StationSelection
+--- PASS: TestPlayModel_View_StationSelection (0.00s)
+=== RUN   TestPlayModel_View_NoStations
+--- PASS: TestPlayModel_View_NoStations (0.00s)
+=== RUN   TestNoStationsView
+--- PASS: TestNoStationsView (0.00s)
+=== RUN   TestNewPlayModel
+--- PASS: TestNewPlayModel (0.00s)
+=== RUN   TestPlayFromFavoritesLayout
+=== RUN   TestPlayFromFavoritesLayout/Has_TERA_header
+=== RUN   TestPlayFromFavoritesLayout/Has_Play_from_Favorites_title_left-aligned
+=== RUN   TestPlayFromFavoritesLayout/Has_Select_a_Favorite_List_subtitle_left-aligned
+--- PASS: TestPlayFromFavoritesLayout (0.00s)
+    --- PASS: TestPlayFromFavoritesLayout/Has_TERA_header (0.00s)
+    --- PASS: TestPlayFromFavoritesLayout/Has_Play_from_Favorites_title_left-aligned (0.00s)
+    --- PASS: TestPlayFromFavoritesLayout/Has_Select_a_Favorite_List_subtitle_left-aligned (0.00s)
+=== RUN   TestGetAvailableLists
+--- PASS: TestGetAvailableLists (0.00s)
+=== RUN   TestPlayModel_Update_ListsLoaded
+--- PASS: TestPlayModel_Update_ListsLoaded (0.00s)
+=== RUN   TestPlayModel_Update_NavigationKeys
+=== RUN   TestPlayModel_Update_NavigationKeys/Escape_key
+=== RUN   TestPlayModel_Update_NavigationKeys/Other_key
+--- PASS: TestPlayModel_Update_NavigationKeys (0.00s)
+    --- PASS: TestPlayModel_Update_NavigationKeys/Escape_key (0.00s)
+    --- PASS: TestPlayModel_Update_NavigationKeys/Other_key (0.00s)
+=== RUN   TestPlayModel_View_NoLists
+--- PASS: TestPlayModel_View_NoLists (0.00s)
+=== RUN   TestPlayModel_View_WithLists
+--- PASS: TestPlayModel_View_WithLists (0.00s)
+=== RUN   TestPlayListItem
+--- PASS: TestPlayListItem (0.00s)
+=== RUN   TestErrorView
+--- PASS: TestErrorView (0.00s)
+=== RUN   TestPlayModel_Update_EnterKey
+--- PASS: TestPlayModel_Update_EnterKey (0.00s)
+=== RUN   TestBuildAdvancedSearchParams
+=== RUN   TestBuildAdvancedSearchParams/Country_Code_Logic_(2_letters)
+=== RUN   TestBuildAdvancedSearchParams/Country_Name_Logic_(>2_letters)
+=== RUN   TestBuildAdvancedSearchParams/Language_Lowercase_Logic
+=== RUN   TestBuildAdvancedSearchParams/Mixed_Logic
+=== RUN   TestBuildAdvancedSearchParams/Mixed_Logic_with_Country_Code
+=== RUN   TestBuildAdvancedSearchParams/Sort_by_Votes_(explicit_true)
+=== RUN   TestBuildAdvancedSearchParams/Sort_by_Relevance_(explicit_false)
+--- PASS: TestBuildAdvancedSearchParams (0.00s)
+    --- PASS: TestBuildAdvancedSearchParams/Country_Code_Logic_(2_letters) (0.00s)
+    --- PASS: TestBuildAdvancedSearchParams/Country_Name_Logic_(>2_letters) (0.00s)
+    --- PASS: TestBuildAdvancedSearchParams/Language_Lowercase_Logic (0.00s)
+    --- PASS: TestBuildAdvancedSearchParams/Mixed_Logic (0.00s)
+    --- PASS: TestBuildAdvancedSearchParams/Mixed_Logic_with_Country_Code (0.00s)
+    --- PASS: TestBuildAdvancedSearchParams/Sort_by_Votes_(explicit_true) (0.00s)
+    --- PASS: TestBuildAdvancedSearchParams/Sort_by_Relevance_(explicit_false) (0.00s)
+=== RUN   TestBitrateToggle
+--- PASS: TestBitrateToggle (0.00s)
+=== RUN   TestSearchModelInit
+--- PASS: TestSearchModelInit (0.00s)
+=== RUN   TestSearchMenuNavigation
+=== RUN   TestSearchMenuNavigation/Select_Tag_Search
+=== RUN   TestSearchMenuNavigation/Select_Name_Search
+=== RUN   TestSearchMenuNavigation/Select_Language_Search
+=== RUN   TestSearchMenuNavigation/Select_Country_Search
+=== RUN   TestSearchMenuNavigation/Select_State_Search
+=== RUN   TestSearchMenuNavigation/Select_Advanced_Search
+--- PASS: TestSearchMenuNavigation (0.00s)
+    --- PASS: TestSearchMenuNavigation/Select_Tag_Search (0.00s)
+    --- PASS: TestSearchMenuNavigation/Select_Name_Search (0.00s)
+    --- PASS: TestSearchMenuNavigation/Select_Language_Search (0.00s)
+    --- PASS: TestSearchMenuNavigation/Select_Country_Search (0.00s)
+    --- PASS: TestSearchMenuNavigation/Select_State_Search (0.00s)
+    --- PASS: TestSearchMenuNavigation/Select_Advanced_Search (0.00s)
+=== RUN   TestSearchMenuSingleDigitBuffered
+--- PASS: TestSearchMenuSingleDigitBuffered (0.00s)
+=== RUN   TestSearchMenuHistoryShortcut
+--- PASS: TestSearchMenuHistoryShortcut (0.00s)
+=== RUN   TestSearchMenuEnterOnHistoryItem
+--- PASS: TestSearchMenuEnterOnHistoryItem (0.00s)
+=== RUN   TestSearchBackNavigation
+=== RUN   TestSearchBackNavigation/Menu_-_Esc_key
+=== RUN   TestSearchBackNavigation/Input_-_Esc_key
+--- PASS: TestSearchBackNavigation (0.00s)
+    --- PASS: TestSearchBackNavigation/Menu_-_Esc_key (0.00s)
+    --- PASS: TestSearchBackNavigation/Input_-_Esc_key (0.00s)
+=== RUN   TestSearchTextInput
+--- PASS: TestSearchTextInput (0.00s)
+=== RUN   TestSearchEmptyQuery
+--- PASS: TestSearchEmptyQuery (0.00s)
+=== RUN   TestSearchResults
+--- PASS: TestSearchResults (0.00s)
+=== RUN   TestSearchError
+--- PASS: TestSearchError (0.00s)
+=== RUN   TestSearchStationSelection
+--- PASS: TestSearchStationSelection (0.00s)
+=== RUN   TestSearchTypeLabels
+=== RUN   TestSearchTypeLabels/Search_by_Tag_(genre,_style,_etc.)
+=== RUN   TestSearchTypeLabels/Search_by_Station_Name
+=== RUN   TestSearchTypeLabels/Search_by_Language
+=== RUN   TestSearchTypeLabels/Search_by_Country_Code
+=== RUN   TestSearchTypeLabels/Search_by_State
+=== RUN   TestSearchTypeLabels/Advanced_Search_(multiple_criteria)
+--- PASS: TestSearchTypeLabels (0.00s)
+    --- PASS: TestSearchTypeLabels/Search_by_Tag_(genre,_style,_etc.) (0.00s)
+    --- PASS: TestSearchTypeLabels/Search_by_Station_Name (0.00s)
+    --- PASS: TestSearchTypeLabels/Search_by_Language (0.00s)
+    --- PASS: TestSearchTypeLabels/Search_by_Country_Code (0.00s)
+    --- PASS: TestSearchTypeLabels/Search_by_State (0.00s)
+    --- PASS: TestSearchTypeLabels/Advanced_Search_(multiple_criteria) (0.00s)
+=== RUN   TestStationInfoMenu
+=== RUN   TestStationInfoMenu/Play_Station
+=== RUN   TestStationInfoMenu/Back_to_Results
+=== RUN   TestStationInfoMenu/Esc_to_Results
+--- PASS: TestStationInfoMenu (0.00s)
+    --- PASS: TestStationInfoMenu/Play_Station (0.00s)
+    --- PASS: TestStationInfoMenu/Back_to_Results (0.00s)
+    --- PASS: TestStationInfoMenu/Esc_to_Results (0.00s)
+=== RUN   TestWindowResize
+--- PASS: TestWindowResize (0.00s)
+=== RUN   TestRenderStationDetails
+--- PASS: TestRenderStationDetails (0.00s)
+=== RUN   TestNewSettingsModel
+--- PASS: TestNewSettingsModel (0.00s)
+=== RUN   TestSettingsModelInit
+--- PASS: TestSettingsModelInit (0.00s)
+=== RUN   TestSettingsMenuNavigation
+=== RUN   TestSettingsMenuNavigation/Press_1_for_Theme
+=== RUN   TestSettingsMenuNavigation/Press_5_for_Play_Options
+=== RUN   TestSettingsMenuNavigation/Press_6_for_History
+=== RUN   TestSettingsMenuNavigation/Press_7_for_Updates
+=== RUN   TestSettingsMenuNavigation/Press_8_for_About
+--- PASS: TestSettingsMenuNavigation (0.00s)
+    --- PASS: TestSettingsMenuNavigation/Press_1_for_Theme (0.00s)
+    --- PASS: TestSettingsMenuNavigation/Press_5_for_Play_Options (0.00s)
+    --- PASS: TestSettingsMenuNavigation/Press_6_for_History (0.00s)
+    --- PASS: TestSettingsMenuNavigation/Press_7_for_Updates (0.00s)
+    --- PASS: TestSettingsMenuNavigation/Press_8_for_About (0.00s)
+=== RUN   TestSettingsMenuEscNavigation
+=== RUN   TestSettingsMenuEscNavigation/Esc_key
+=== RUN   TestSettingsMenuEscNavigation/0_key
+--- PASS: TestSettingsMenuEscNavigation (0.00s)
+    --- PASS: TestSettingsMenuEscNavigation/Esc_key (0.00s)
+    --- PASS: TestSettingsMenuEscNavigation/0_key (0.00s)
+=== RUN   TestSettingsThemeEscBack
+--- PASS: TestSettingsThemeEscBack (0.00s)
+=== RUN   TestSettingsAboutEscBack
+--- PASS: TestSettingsAboutEscBack (0.00s)
+=== RUN   TestSettingsWindowSizeUpdate
+--- PASS: TestSettingsWindowSizeUpdate (0.00s)
+=== RUN   TestSettingsViewMenu
+--- PASS: TestSettingsViewMenu (0.00s)
+=== RUN   TestSettingsViewTheme
+--- PASS: TestSettingsViewTheme (0.00s)
+=== RUN   TestSettingsViewAbout
+--- PASS: TestSettingsViewAbout (0.00s)
+=== RUN   TestPredefinedThemesExist
+--- PASS: TestPredefinedThemesExist (0.00s)
+=== RUN   TestThemeItemInterface
+--- PASS: TestThemeItemInterface (0.00s)
+=== RUN   TestVersionVariable
+--- PASS: TestVersionVariable (0.00s)
+=== RUN   TestSettingsUpdatesEscBack
+--- PASS: TestSettingsUpdatesEscBack (0.00s)
+=== RUN   TestSettingsUpdatesRefresh
+--- PASS: TestSettingsUpdatesRefresh (0.00s)
+=== RUN   TestSettingsViewUpdates
+--- PASS: TestSettingsViewUpdates (0.00s)
+=== RUN   TestSettingsViewUpdatesChecking
+--- PASS: TestSettingsViewUpdatesChecking (0.00s)
+=== RUN   TestSettingsViewUpdatesAvailable
+--- PASS: TestSettingsViewUpdatesAvailable (0.00s)
+=== RUN   TestSettingsViewUpdatesUpToDate
+--- PASS: TestSettingsViewUpdatesUpToDate (0.00s)
+=== RUN   TestSettingsViewUpdatesError
+--- PASS: TestSettingsViewUpdatesError (0.00s)
+=== RUN   TestVersionCheckMsgHandling
+--- PASS: TestVersionCheckMsgHandling (0.00s)
+=== RUN   TestSettingsMenuNavigateToConnectionSettings
+--- PASS: TestSettingsMenuNavigateToConnectionSettings (0.00s)
+=== RUN   TestSettingsMenuNavigateToShuffleSettings
+--- PASS: TestSettingsMenuNavigateToShuffleSettings (0.00s)
+=== RUN   TestSettingsMenuNavigateToAppearanceSettings
+--- PASS: TestSettingsMenuNavigateToAppearanceSettings (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/ui	4.098s
+=== RUN   TestNewChecklistModel_InitialState
+--- PASS: TestNewChecklistModel_InitialState (0.00s)
+=== RUN   TestCursorDown
+--- PASS: TestCursorDown (0.00s)
+=== RUN   TestCursorUp
+--- PASS: TestCursorUp (0.00s)
+=== RUN   TestCursorDoesNotGoAboveZero
+--- PASS: TestCursorDoesNotGoAboveZero (0.00s)
+=== RUN   TestCursorDoesNotGoBelowLast
+--- PASS: TestCursorDoesNotGoBelowLast (0.00s)
+=== RUN   TestArrowKeys
+--- PASS: TestArrowKeys (0.00s)
+=== RUN   TestSpaceTogglesChecked
+--- PASS: TestSpaceTogglesChecked (0.00s)
+=== RUN   TestSpaceTogglesUnchecked
+--- PASS: TestSpaceTogglesUnchecked (0.00s)
+=== RUN   TestToggleAll_SelectsAllWhenSomeUnchecked
+--- PASS: TestToggleAll_SelectsAllWhenSomeUnchecked (0.00s)
+=== RUN   TestToggleAll_DeselectsAllWhenAllChecked
+--- PASS: TestToggleAll_DeselectsAllWhenAllChecked (0.00s)
+=== RUN   TestEnterEmitsConfirmedMsg
+--- PASS: TestEnterEmitsConfirmedMsg (0.00s)
+=== RUN   TestEscEmitsCancelledMsg
+--- PASS: TestEscEmitsCancelledMsg (0.00s)
+=== RUN   TestQKeyEmitsCancelledMsg
+--- PASS: TestQKeyEmitsCancelledMsg (0.00s)
+=== RUN   TestCheckedKeys
+--- PASS: TestCheckedKeys (0.00s)
+=== RUN   TestAnyChecked_True
+--- PASS: TestAnyChecked_True (0.00s)
+=== RUN   TestAnyChecked_False
+--- PASS: TestAnyChecked_False (0.00s)
+=== RUN   TestSetItems_ResetsCursor
+--- PASS: TestSetItems_ResetsCursor (0.00s)
+=== RUN   TestView_NonEmpty
+--- PASS: TestView_NonEmpty (0.00s)
+=== RUN   TestInit_ReturnsNil
+--- PASS: TestInit_ReturnsNil (0.00s)
+=== RUN   TestMenuCreation
+--- PASS: TestMenuCreation (0.00s)
+=== RUN   TestHandleMenuKey
+=== RUN   TestHandleMenuKey/Down_arrow
+=== RUN   TestHandleMenuKey/Up_arrow
+=== RUN   TestHandleMenuKey/Enter_key
+=== RUN   TestHandleMenuKey/Number_1
+=== RUN   TestHandleMenuKey/Number_2
+=== RUN   TestHandleMenuKey/Number_3
+=== RUN   TestHandleMenuKey/j_key
+=== RUN   TestHandleMenuKey/k_key
+--- PASS: TestHandleMenuKey (0.00s)
+    --- PASS: TestHandleMenuKey/Down_arrow (0.00s)
+    --- PASS: TestHandleMenuKey/Up_arrow (0.00s)
+    --- PASS: TestHandleMenuKey/Enter_key (0.00s)
+    --- PASS: TestHandleMenuKey/Number_1 (0.00s)
+    --- PASS: TestHandleMenuKey/Number_2 (0.00s)
+    --- PASS: TestHandleMenuKey/Number_3 (0.00s)
+    --- PASS: TestHandleMenuKey/j_key (0.00s)
+    --- PASS: TestHandleMenuKey/k_key (0.00s)
+=== RUN   TestMenuItemInterface
+--- PASS: TestMenuItemInterface (0.00s)
+=== RUN   TestMenuNavigation
+--- PASS: TestMenuNavigation (0.00s)
+=== RUN   TestStarRenderer
+=== RUN   TestStarRenderer/NewStarRenderer_Unicode
+=== RUN   TestStarRenderer/NewStarRenderer_ASCII
+=== RUN   TestStarRenderer/RenderPlain
+=== RUN   TestStarRenderer/RenderPlain_ASCII
+=== RUN   TestStarRenderer/RenderCompactPlain
+=== RUN   TestStarRenderer/Width
+=== RUN   TestStarRenderer/FilledStar_EmptyStar
+=== RUN   TestStarRenderer/DefaultStarRenderer
+--- PASS: TestStarRenderer (0.00s)
+    --- PASS: TestStarRenderer/NewStarRenderer_Unicode (0.00s)
+    --- PASS: TestStarRenderer/NewStarRenderer_ASCII (0.00s)
+    --- PASS: TestStarRenderer/RenderPlain (0.00s)
+    --- PASS: TestStarRenderer/RenderPlain_ASCII (0.00s)
+    --- PASS: TestStarRenderer/RenderCompactPlain (0.00s)
+    --- PASS: TestStarRenderer/Width (0.00s)
+    --- PASS: TestStarRenderer/FilledStar_EmptyStar (0.00s)
+    --- PASS: TestStarRenderer/DefaultStarRenderer (0.00s)
+=== RUN   TestRenderPillContainsTag
+--- PASS: TestRenderPillContainsTag (0.00s)
+=== RUN   TestRenderPillsEmpty
+--- PASS: TestRenderPillsEmpty (0.00s)
+=== RUN   TestRenderPillsSingleTag
+--- PASS: TestRenderPillsSingleTag (0.00s)
+=== RUN   TestRenderPillsOverflow
+--- PASS: TestRenderPillsOverflow (0.00s)
+=== RUN   TestRenderPillsNoOverflowAtExactMax
+--- PASS: TestRenderPillsNoOverflowAtExactMax (0.00s)
+=== RUN   TestRenderListEmpty
+--- PASS: TestRenderListEmpty (0.00s)
+=== RUN   TestRenderListShowsAllTags
+--- PASS: TestRenderListShowsAllTags (0.00s)
+=== RUN   TestRenderPillsLargeOverflow
+--- PASS: TestRenderPillsLargeOverflow (0.00s)
+PASS
+ok  	github.com/shinokada/tera/v3/internal/ui/components	0.006s
+?   	github.com/shinokada/tera/v3/pkg/utils	[no test files]
+go build -o tera ./cmd/tera/
+==> Tidying install...
+  -> Removing libtool files...
+  -> Removing static library files...
+  -> Purging unwanted files...
+  -> Stripping unneeded symbols from binaries and libraries...
+  -> Compressing man and info pages...
+==> Checking for packaging issues...
+==> WARNING: Package contains reference to $srcdir
+usr/bin/tera
+==> Creating package "tera"...
+  -> Generating .PKGINFO file...
+  -> Generating .BUILDINFO file...
+  -> Generating .MTREE file...
+  -> Compressing package...
+==> Creating package "tera-debug"...
+  -> Generating .PKGINFO file...
+  -> Generating .BUILDINFO file...
+  -> Generating .MTREE file...
+  -> Compressing package...
+==> Leaving fakeroot environment.
+==> Finished making: tera 3.11.0-1 (Sat Aug 15 17:50:00 2026)
+-rw-r--r-- 1 builder builder 4.2M Aug 15 17:50 /home/builder/build/tera/tera-3.11.0-1-x86_64.pkg.tar.zst
+-rw-r--r-- 1 builder builder 4.2M Aug 15 17:50 /home/builder/build/tera/tera-debug-3.11.0-1-x86_64.pkg.tar.zst
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/calamares-3.4.2-2-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/calamares-debug-3.4.2-2-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/octopi-0.19.0-2-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/octopi-debug-0.19.0-2-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/qt-sudo-2.4.1-1-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/qt-sudo-debug-2.4.1-1-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/swirl-1.13.0.r8567.gcd070469-2-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/swirl-debug-1.13.0.r8567.gcd070469-2-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/tera-3.11.0-1-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/tera-debug-3.11.0-1-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/yay-bin-13.0.1-1-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Adding package '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/yay-bin-debug-13.0.1-1-x86_64.pkg.tar.zst'
+  -> Computing checksums...
+  -> Creating 'desc' db entry...
+  -> Creating 'files' db entry...
+==> Creating updated database file '/var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/sweetpotatos.db.tar.gz'
+-rw-r--r-- 1 root root 4.2M Aug 15 17:50 /var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/tera-3.11.0-1-x86_64.pkg.tar.zst
+-rw-r--r-- 1 root root 4.2M Aug 15 17:50 /var/home/visnudeva/code/GITHUB/SweetPotatOs/repo/tera-debug-3.11.0-1-x86_64.pkg.tar.zst
