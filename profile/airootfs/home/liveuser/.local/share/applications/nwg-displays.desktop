@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Displays
+GenericName=Display Manager
+Comment=Manage display outputs
+Exec=sh -c 'nwg-displays -o "$HOME/.config/swirl/outputs"'
+Icon=video-display
+Categories=System;Settings;
+Keywords=display;monitor;resolution;output;
