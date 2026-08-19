@@ -24,9 +24,10 @@ set $editor geany
 
 ### Output configuration
 #
-# Wallpaper is applied by ensure-wallpaper.sh (avoids parse errors when
-# the image path is missing). Preference is stored in wallpaper.conf.
-exec_always ~/.config/swirl/scripts/ensure-wallpaper.sh
+# Wallpaper is restored by waypaper --restore on every start.
+
+exec_always waypaper --restore
+exec_always ~/.config/swirl/scripts/ensure-output.sh
 
 ### Idle configuration
 #
@@ -96,7 +97,7 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+i exec sweetpotatos-calamares
 
     # Wallpaper selector
-    bindsym $mod+Shift+w exec ~/.config/swirl/scripts/wallpaper.sh
+    bindsym $mod+Shift+w exec waypaper
 
     # Start your web browser
     bindsym $mod+w exec $web

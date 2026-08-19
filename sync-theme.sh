@@ -140,12 +140,13 @@ sync_common_into() {
   cp -f "${SP}/networkmanager-dmenu/config.ini" "${dest}/.config/networkmanager-dmenu/"
   cp -a "${SP}/themes/SweetPotato" "${dest}/.themes/"
   cp -f "${SP}/backgrounds/"*.png "${dest}/.local/share/backgrounds/"
+  cp -f "${SP}/backgrounds/"*.png "${dest}/Pictures/Wallpapers/" 2>/dev/null || true
   cp -f "${SP}/bin/swirl" "${dest}/.local/bin/swirl"
   chmod 755 "${dest}/.local/bin/swirl"
   rm -f "${dest}/.local/bin/sway"
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
-  printf 'output * bg "~/.local/share/backgrounds/DefaultBindsBG.png" fill\n' \
-    > "${dest}/.config/swirl/wallpaper.conf"
+  # Wallpaper is managed by waypaper; drop any legacy wallpaper.conf.
+  rm -f "${dest}/.config/swirl/wallpaper.conf"
   # Swirl reads ~/.config/sway/config *before* swirl — never leave a leftover sway dir.
   # Default terminal is foot — drop any leftover kitty config.
   rm -rf "${dest}/.config/sway" "${dest}/.config/kitty"

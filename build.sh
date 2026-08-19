@@ -141,6 +141,7 @@ if (( DO_ISO )); then
   need_repo_pkg yay-bin || DO_AUR_APPS=1
   need_repo_pkg shelly-bin || DO_AUR_APPS=1
   need_repo_pkg tera || DO_AUR_APPS=1
+  need_repo_pkg waypaper || DO_AUR_APPS=1
 fi
 
 if (( DO_CALAMARES )) && ! need_repo_pkg calamares; then
@@ -161,17 +162,18 @@ if (( DO_AUR_APPS )); then
   need_repo_pkg shelly-bin || build_local_pkg shelly-bin "${ROOT}/packaging/shelly-bin"
   # Local PKGBUILD: AUR tera omits go makedepend required by upstream Makefile
   need_repo_pkg tera || build_local_pkg tera "${ROOT}/packaging/tera"
+  need_repo_pkg waypaper || build_aur_pkg waypaper https://aur.archlinux.org/waypaper.git
 fi
 
 if ! need_repo_pkg calamares || ! need_repo_pkg swirl \
   || ! need_repo_pkg yay-bin || ! need_repo_pkg shelly-bin \
-  || ! need_repo_pkg tera; then
+  || ! need_repo_pkg tera || ! need_repo_pkg waypaper; then
   cat >&2 <<EOF
 [!] Local repo is missing required packages in ${REPO}/
 
 Build them first:
 
-  sudo ./build.sh --build-packages
+  sudo ./build.sh --build-packages   # builds calamares, swirl, yay-bin, shelly-bin, tera, waypaper
 
 EOF
   exit 1

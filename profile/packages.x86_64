@@ -114,6 +114,12 @@ thunar-archive-plugin
 gvfs
 gvfs-mtp
 gvfs-smb
+gvfs-gphoto2
+simple-scan
+sane
+cups
+cups-filters
+system-config-printer
 nwg-look
 firefox
 geany
@@ -127,6 +133,7 @@ ffmpeg
 mupdf
 audacious
 audacious-plugins
+audacity
 gimp
 transmission-gtk
 guvcview
@@ -141,6 +148,7 @@ pipewire
 pipewire-pulse
 wireplumber
 pavucontrol
+wdisplays
 xdg-desktop-portal
 xdg-desktop-portal-wlr
 xdg-desktop-portal-gtk
@@ -165,6 +173,8 @@ yay-bin
 shelly-bin
 # Terminal web radio (AUR)
 tera
+# GUI wallpaper picker (AUR)
+waypaper
 # AUR build deps for end users + tera runtime deps from official repos
 base-devel
 git
