@@ -3389,4 +3389,314 @@ mkfs.fat 4.2 (2021-01-31)
 [mkarchiso] INFO: Creating SquashFS image, this may take some time...
 Parallel mksquashfs: Using 8 processors
 Creating 4.0 filesystem on /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/iso/spotato/x86_64/airootfs.sfs, block size 1048576.
-[/                                                           ]     0/35450   0%
+[/                                                           ]     0/35450   0%[===========/                                              ]  39600/201643  19%[========================|                                 ]  85000/201643  42%[=========================================\                ] 147700/201643  73%[===========================================-              ] 152200/201643  75%[===========================================-              ] 153100/201643  75%[=================================================|        ] 175900/201643  87%llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.bash_logout failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.bash_profile failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.bashrc failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/environment.d/90-sweetpotato-csd.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/environment.d failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/fastfetch/SPLogo.asc failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/fastfetch/SPLogo.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/fastfetch/config.jsonc failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/fastfetch failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/foot/foot.ini failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/foot failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/geany/colorschemes/sweetpotato.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/geany/colorschemes failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/geany/geany.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/geany failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/gtk-3.0/gtk.css failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/gtk-3.0/settings.ini failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/gtk-3.0 failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/gtk-4.0/gtk.css failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/gtk-4.0/settings.ini failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/gtk-4.0 failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/kanshi/config failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/kanshi failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/mako/config failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/mako failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/networkmanager-dmenu/config.ini failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/networkmanager-dmenu failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/nwg-displays failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swaylock/config failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swaylock failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/config failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/config-fr failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/config-us failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/applauncher.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/apply-theme.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/autotile.lua failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/brightness.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/caffeine.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/expand.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/media.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/record.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/screenshot.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/status.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/tips.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts/volume.sh failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl/scripts failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/swirl failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/systemd/user/polkit-gnome-authentication-agent-1.service failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/systemd/user/xdg-desktop-portal-gtk.service.d/override.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/systemd/user/xdg-desktop-portal-gtk.service.d failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/systemd/user failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/systemd failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/waypaper/config.ini failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/waypaper failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xdg-desktop-portal/portals.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xdg-desktop-portal/sway-portals.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xdg-desktop-portal/swayfx-portals.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xdg-desktop-portal/wlroots-portals.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xdg-desktop-portal failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xfce4/xfconf/xfce-perchannel-xml failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xfce4/xfconf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xfce4 failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xsettingsd/xsettingsd.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config/xsettingsd failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.config failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/bin/swirl failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/bin failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/applications/nwg-displays.desktop failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/applications failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/DefaultBindsBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/SPixelBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/SweetNeonBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/SweetPOTATo.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/SweetPotatOsBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/SweetPotato.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/SweetPotatrixBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds/SwirlBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/backgrounds failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/glycin-loaders/2+/conf.d/glycin-svg.conf failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/glycin-loaders/2+/conf.d failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/glycin-loaders/2+ failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share/glycin-loaders failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local/share failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.local failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.themes/SweetPotato/gtk-3.0/gtk.css failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.themes/SweetPotato/gtk-3.0 failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.themes/SweetPotato/gtk-4.0/gtk.css failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.themes/SweetPotato/gtk-4.0 failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.themes/SweetPotato/index.theme failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.themes/SweetPotato failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.themes failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.zprofile failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/.zshrc failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Desktop/Install SweetPotatOs.desktop failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Desktop failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Screenshots failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/DefaultBindsBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/SPixelBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/SweetNeonBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/SweetPOTATo.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/SweetPotatOsBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/SweetPotato.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/SweetPotatrixBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers/SwirlBG.png failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures/Wallpapers failed in read_attrs, because No such file or directory.  Ignoring
+llistxattr for /var/home/visnudeva/code/GITHUB/SweetPotatOs/work/x86_64/airootfs/home/liveuser/Pictures failed in read_attrs, because No such file or directory.  Ignoring
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[========================================================/ ] 198900/201643  98%Unrecognised xattr prefix system.posix_acl_default
+Unrecognised xattr prefix system.posix_acl_default
+Unrecognised xattr prefix system.posix_acl_access
+
+[=========================================================|] 201643/201643 100%
+
+Exportable Squashfs 4.0 filesystem, xz compressed, data block size 1048576
+	compressed data, compressed metadata, compressed fragments,
+	compressed xattrs, compressed ids
+	duplicates are removed
+Filesystem size 1804829.12 Kbytes (1762.53 Mbytes)
+	34.28% of uncompressed filesystem size (5265146.38 Kbytes)
+Inode table size 2322500 bytes (2268.07 Kbytes)
+	16.17% of uncompressed inode table size (14365890 bytes)
+Directory table size 2719366 bytes (2655.63 Kbytes)
+	35.83% of uncompressed directory table size (7588675 bytes)
+Xattr table size 210 bytes (0.21 Kbytes)
+	28.11% of uncompressed xattr table size (747 bytes)
+Number of duplicate files found 12537
+Number of inodes 268043
+Number of files 189444
+Number of fragments 2838
+Number of symbolic links 67365
+Number of device nodes 0
+Number of fifo nodes 0
+Number of socket nodes 0
+Number of directories 11234
+Number of hard-links 2456
+Number of ids (unique uids + gids) 18
+Number of uids 9
+	root (0)
+	unknown (110)
+	builder (1000)
+	tss (971)
+	unknown (68)
+	unknown (34)
+	unknown (32)
+	unknown (980)
+	systemd-oom (975)
+Number of gids 18
+	root (0)
+	unknown (209)
+	unknown (40)
+	unknown (110)
+	unknown (102)
+	builder (1000)
+	ftp (11)
+	tty (5)
+	dbus (81)
+	empower (997)
+	games (50)
+	tss (971)
+	unknown (68)
+	unknown (34)
+	unknown (32)
+	rfkill (980)
+	systemd-oom (975)
+	users (982)
+[mkarchiso] INFO: Creating checksum file for self-test...
+[mkarchiso] INFO: Done!
+[mkarchiso] INFO: Creating ISO image...
+xorriso 1.5.8.pl02 : RockRidge filesystem manipulator, libburnia project.
+
+xorriso : NOTE : Environment variable SOURCE_DATE_EPOCH encountered with value 1787145122
+Drive current: -outdev 'stdio:/var/home/visnudeva/code/GITHUB/SweetPotatOs/out/SweetPotatOs-2026.08.19-x86_64.iso'
+Media current: stdio file, overwriteable
+Media status : is blank
+Media summary: 0 sessions, 0 data blocks, 0 data, 84.8g free
+Added to ISO image: directory '/'='/var/home/visnudeva/code/GITHUB/SweetPotatOs/work/iso'
+xorriso : UPDATE :     106 files added in 1 seconds
+xorriso : UPDATE :     106 files added in 1 seconds
+xorriso : NOTE : Copying to System Area: 432 bytes from file '/var/home/visnudeva/code/GITHUB/SweetPotatOs/work/iso/boot/syslinux/isohdpfx.bin'
+libisofs: NOTE : Automatically adjusted MBR geometry to 1017/127/32
+libisofs: NOTE : Aligned image size to cylinder size by 808 blocks
+xorriso : UPDATE :  4.54% done
+xorriso : UPDATE :  52.47% done
+xorriso : UPDATE :  82.70% done
+xorriso : UPDATE :  89.11% done
+xorriso : UPDATE :  93.70% done
+xorriso : UPDATE :  97.35% done
+ISO image produced: 1166408 sectors
+Written to medium : 1166408 sectors at LBA 0
+Writing to 'stdio:/var/home/visnudeva/code/GITHUB/SweetPotatOs/out/SweetPotatOs-2026.08.19-x86_64.iso' completed successfully.
+
+[mkarchiso] INFO: Done!
+2.3G	/var/home/visnudeva/code/GITHUB/SweetPotatOs/out/SweetPotatOs-2026.08.19-x86_64.iso
+
+[+] Done. ISO(s) in: /var/home/visnudeva/code/GITHUB/SweetPotatOs/out/
+total 2332816
+drwxr-xr-x 1 builder builder         68 Aug 19 13:39 .
+drwxr-xr-x 1 builder builder        488 Aug 19 13:12 ..
+-rw-r--r-- 1 root    root    2388803584 Aug 19 13:39 SweetPotatOs-2026.08.19-x86_64.iso
+[+] Done.
+total 2.3G
+drwxr-xr-x 1 builder builder   68 Aug 19 13:39 .
+drwxr-xr-x 1 builder builder  488 Aug 19 13:12 ..
+-rw-r--r-- 1 root    root    2.3G Aug 19 13:39 SweetPotatOs-2026.08.19-x86_64.iso
