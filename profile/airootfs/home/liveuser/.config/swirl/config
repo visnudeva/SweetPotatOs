@@ -27,6 +27,7 @@ set $editor geany
 # Wallpaper is restored by waypaper --restore on every start.
 
 exec_always waypaper --restore
+exec --no-startup-id sh -c 'mkdir -p "$HOME/.config/sway"'
 exec kanshi
 
 ### Idle configuration
@@ -100,7 +101,7 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Shift+w exec waypaper
 
     # Display layout (saves to ~/.config/sway/outputs, auto-loaded on next boot)
-    bindsym $mod+Shift+d exec sh -c 'mkdir -p ~/.config/sway && nwg-displays'
+    bindsym $mod+Shift+d exec ~/.config/swirl/scripts/nwg-displays.sh
 
     # Start your web browser
     bindsym $mod+w exec $web

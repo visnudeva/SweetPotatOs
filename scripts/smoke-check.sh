@@ -79,6 +79,9 @@ check_nogrep '^gammastep$' "${ROOT}/profile/packages.x86_64" "no gammastep packa
 check_grep '^foot$' "${ROOT}/profile/packages.x86_64" "foot package listed"
 check_grep '^btop$' "${ROOT}/profile/packages.x86_64" "btop package listed"
 check_grep '^power-profiles-daemon$' "${ROOT}/profile/packages.x86_64" "power-profiles-daemon listed"
+check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel nwg-displays wrapper keybind"
+check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.local/share/applications/nwg-displays.desktop" "skel Displays desktop uses wrapper"
+check_grep 'SWAYSOCK' "${ISO}/etc/skel/.config/swirl/scripts/nwg-displays.sh" "nwg-displays wrapper finds SWAYSOCK"
 
 if [[ "${FAIL}" -ne 0 ]]; then
   echo "== FAILED =="
