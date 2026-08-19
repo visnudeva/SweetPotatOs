@@ -190,10 +190,9 @@ EOF
   exit 1
 fi
 
-if [[ ! -f "${REPO}/sweetpotatos.db.tar.gz" ]]; then
-  echo "[*] Initializing repo database..."
-  repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.* 2>/dev/null || true
-fi
+# Always rebuild repo DB to ensure every package (including newly built AUR deps) is indexed.
+echo "[*] Refreshing local repo database..."
+repo-add -R "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
 
 if (( ! DO_ISO )); then
   echo "[+] Packages ready in ${REPO}/"
