@@ -149,6 +149,8 @@ pipewire-pulse
 wireplumber
 pavucontrol
 wdisplays
+kanshi
+wlr-randr
 xdg-desktop-portal
 xdg-desktop-portal-wlr
 xdg-desktop-portal-gtk

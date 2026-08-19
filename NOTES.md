@@ -80,6 +80,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Ly: `default_input = password` (saved user → type password immediately).
 - Session start: `rfkill unblock bluetooth`; one-shot tips via `tips.sh` (live every boot; installed once).
 - Enable `bluetooth.service` + `power-profiles-daemon.service` on live/install. Do **not** enable `sshd`, `ModemManager`, or VM guest helpers by default.
+- Display layout is managed by **kanshi** (`exec kanshi` in Swirl config). It auto-applies `~/.config/kanshi/config` profiles on startup and when monitors change. Use `wdisplays` to set layout visually, then add the output lines to `~/.config/kanshi/config` to persist. `wlr-randr` shows current output names/modes.
 - Wallpaper is managed by **waypaper** (AUR, bundled in local repo). Config at `~/.config/waypaper/config.ini`; default wallpaper is `DefaultBindsBG.png` from `~/Pictures/Wallpapers/`. `exec_always waypaper --restore` in Swirl config restores it on login. `Mod+Shift+w` opens the waypaper GUI. The old `wallpaper.sh`, `ensure-wallpaper.sh`, and `wallpaper.conf` are removed.
 - Live Calamares keyboard: on Wayland Calamares only updates **locale1**; Swirl ignores it. Live session runs `sweetpotatos-sway-xkb-watch` (busctl poll of locale1 → `swaymsg`). Do **not** use `dbus-monitor --system` for this: liveuser cannot BecomeMonitor on dbus-broker, so the watcher never saw French. Installed user gets `shellprocess@fix-sway-keyboard` (`config-us` / `config-fr`).
 - Smoke check: `./scripts/smoke-check.sh`.

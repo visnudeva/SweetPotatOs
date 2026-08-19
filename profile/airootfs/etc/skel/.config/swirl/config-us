@@ -27,7 +27,7 @@ set $editor geany
 # Wallpaper is restored by waypaper --restore on every start.
 
 exec_always waypaper --restore
-exec_always ~/.config/swirl/scripts/ensure-output.sh
+exec kanshi
 
 ### Idle configuration
 #
