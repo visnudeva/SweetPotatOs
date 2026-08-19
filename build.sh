@@ -164,9 +164,13 @@ if (( DO_AUR_APPS )); then
   need_repo_pkg shelly-bin || build_local_pkg shelly-bin "${ROOT}/packaging/shelly-bin"
   # Local PKGBUILD: AUR tera omits go makedepend required by upstream Makefile
   need_repo_pkg tera || build_local_pkg tera "${ROOT}/packaging/tera"
-  # waypaper AUR deps not in official repos — build them first
+  # waypaper AUR deps not in official repos — build and install them first
   need_repo_pkg python-screeninfo || build_aur_pkg python-screeninfo https://aur.archlinux.org/python-screeninfo.git
   need_repo_pkg python-imageio-ffmpeg || build_aur_pkg python-imageio-ffmpeg https://aur.archlinux.org/python-imageio-ffmpeg.git
+  # Install AUR deps into the build host so makepkg can resolve them for waypaper
+  pacman -U --needed --noconfirm \
+    "${REPO}"/python-screeninfo-*.pkg.tar.* \
+    "${REPO}"/python-imageio-ffmpeg-*.pkg.tar.* 2>/dev/null || true
   need_repo_pkg waypaper || build_aur_pkg waypaper https://aur.archlinux.org/waypaper.git
 fi
 
