@@ -99,6 +99,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Wallpaper selector
     bindsym $mod+Shift+w exec waypaper
 
+    # Display layout (saves to ~/.config/swirl/outputs, auto-loaded on next boot)
+    bindsym $mod+Shift+d exec nwg-displays -o ~/.config/swirl/outputs
+
     # Start your web browser
     bindsym $mod+w exec $web
 
@@ -285,6 +288,6 @@ exec sh -c 'sleep 5; sweetpotatos-calamares'
 # Calamares installer (Wayland app_id)
 for_window [app_id="io.calamares.calamares"] floating enable
 
-# nwg-displays saves output layout here; include so it persists across reboots
-include ~/.config/nwg-displays/outputs
+# nwg-displays saves output layout here (launched with -o to use swirl dir)
+include ~/.config/swirl/outputs
 include /etc/sway/config.d/*
