@@ -81,7 +81,9 @@ check_grep '^btop$' "${ROOT}/profile/packages.x86_64" "btop package listed"
 check_grep '^power-profiles-daemon$' "${ROOT}/profile/packages.x86_64" "power-profiles-daemon listed"
 check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel nwg-displays wrapper keybind"
 check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.local/share/applications/nwg-displays.desktop" "skel Displays desktop uses wrapper"
-check_grep 'SWAYSOCK' "${ISO}/etc/skel/.config/swirl/scripts/nwg-displays.sh" "nwg-displays wrapper finds SWAYSOCK"
+check_grep 'start-kanshi\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel starts kanshi from saved outputs"
+check_grep 'save-display-layout\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel save-display-layout keybind"
+check_grep 'sway/workspaces' "${ISO}/etc/skel/.config/swirl/config" "skel includes sway workspaces"
 
 if [[ "${FAIL}" -ne 0 ]]; then
   echo "== FAILED =="

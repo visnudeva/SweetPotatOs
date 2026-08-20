@@ -77,7 +77,36 @@ exec_always --no-startup-id /usr/local/bin/sweetpotatos-sway-xkb-watch
 ' "${f}"
 }
 
-inject_live_calamares() {
+inject_iso_display() {
+  local f="$1"
+  # ISO: waypaper + persistent display layout (nwg-displays / kanshi / sway includes).
+  sed -i 's|exec_always ~/.config/swirl/scripts/ensure-wallpaper.sh|exec_always waypaper --restore|' "${f}"
+  if ! grep -q 'start-kanshi.sh' "${f}"; then
+    sed -i '/^exec_always waypaper --restore/a\
+exec --no-startup-id ~/.config/swirl/scripts/start-kanshi.sh\
+exec --no-startup-id sh -c '\''sleep 0.5; [ -s "$HOME/.config/sway/outputs" ] && swaymsg source "$HOME/.config/sway/outputs" 2>/dev/null || true'\''' "${f}"
+  fi
+  if ! grep -q 'save-display-layout.sh' "${f}"; then
+    sed -i '/bindsym \$mod+Shift+d exec ~\/.config\/swirl\/scripts\/nwg-displays.sh/a\
+    bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh' "${f}"
+  fi
+  if ! grep -q 'sway/workspaces' "${f}"; then
+    sed -i '/^include \/etc\/sway\/config.d\/\*/i\
+# nwg-displays / save-display-layout persist monitor layout here\
+include ~/.config/sway/outputs\
+include ~/.config/sway/workspaces\
+' "${f}"
+  fi
+  if ! grep -q 'nwg-displays.sh' "${f}"; then
+    sed -i '/bindsym \$mod+Shift+w exec/a\
+\
+    # Display layout\
+    bindsym $mod+Shift+d exec ~/.config/swirl/scripts/nwg-displays.sh\
+    bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh' "${f}"
+    sed -i 's|bindsym \$mod+Shift+w exec ~/.config/swirl/scripts/wallpaper.sh|bindsym $mod+Shift+w exec waypaper|' "${f}"
+  fi
+}
+
   local f="$1"
   if ! grep -q 'bindsym \$mod+i exec sweetpotatos-calamares' "${f}"; then
     sed -i '/bindsym \$mod+n exec networkmanager_dmenu/a\
@@ -102,6 +131,7 @@ sync_common_into() {
   local dest="$1"
   mkdir -p \
     "${dest}/.config/swirl/scripts" \
+    "${dest}/.config/kanshi" \
     "${dest}/.config/gtk-3.0" "${dest}/.config/gtk-4.0" \
     "${dest}/.config/foot" "${dest}/.config/mako" "${dest}/.config/swaylock" \
     "${dest}/.config/geany/colorschemes" "${dest}/.config/xsettingsd" \
@@ -118,6 +148,9 @@ sync_common_into() {
   cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
   chmod 755 "${dest}/.config/swirl/scripts/"*.sh
+  if [[ -f "${SP}/kanshi/config" ]]; then
+    cp -f "${SP}/kanshi/config" "${dest}/.config/kanshi/config"
+  fi
   cp -f "${SP}/gtk-3.0/"* "${dest}/.config/gtk-3.0/"
   cp -f "${SP}/gtk-4.0/"* "${dest}/.config/gtk-4.0/"
   cp -f "${SP}/foot/foot.ini" "${dest}/.config/foot/"
@@ -193,8 +226,11 @@ fi
 # Skel (no calamares autostart; float rule harmless if installer absent)
 sync_common_into "${ISO}/etc/skel"
 cp -f "${SP}/swirl/config" "${ISO}/etc/skel/.config/swirl/config"
+inject_iso_display "${ISO}/etc/skel/.config/swirl/config"
 inject_calamares_float "${ISO}/etc/skel/.config/swirl/config"
+inject_iso_display "${ISO}/etc/skel/.config/swirl/config-us"
 inject_calamares_float "${ISO}/etc/skel/.config/swirl/config-us"
+inject_iso_display "${ISO}/etc/skel/.config/swirl/config-fr"
 inject_calamares_float "${ISO}/etc/skel/.config/swirl/config-fr"
 cat > "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
@@ -216,8 +252,11 @@ EOF
 # Liveuser (US default + calamares)
 sync_common_into "${ISO}/home/liveuser"
 cp -f "${SP}/swirl/config-us" "${ISO}/home/liveuser/.config/swirl/config"
+inject_iso_display "${ISO}/home/liveuser/.config/swirl/config"
 inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config"
+inject_iso_display "${ISO}/home/liveuser/.config/swirl/config-us"
 inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config-us"
+inject_iso_display "${ISO}/home/liveuser/.config/swirl/config-fr"
 inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config-fr"
 cat > "${ISO}/home/liveuser/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.

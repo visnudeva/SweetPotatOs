@@ -1,17 +1,8 @@
-# kanshi display profile configuration.
-# Kanshi auto-applies these profiles on startup and when monitors change.
+# kanshi reads profiles generated from ~/.config/sway/outputs.
+# Do not add "output * mode preferred" here — it resets custom resolutions on boot.
 #
-# To save your current display layout as a profile, run:
-#   wlr-randr   (to see output names and current modes)
-# Then add a profile block here, e.g.:
+# Configure layout with:
+#   Mod+Shift+d  nwg-displays (GUI — click Apply & Save)
+#   Mod+Ctrl+d   save current layout after wlr-randr / terminal changes
 #
-# profile {
-#   output HDMI-A-1 mode 1920x1080 position 0,0 scale 1
-#   output eDP-1 mode 1920x1080 position 1920,0 scale 1
-# }
-#
-# Kanshi matches profiles by connected outputs. The wildcard profile below
-# applies to any single output at its preferred mode.
-profile {
-  output * mode preferred position 0,0
-}
+# Regenerate this file: ~/.config/swirl/scripts/sync-kanshi-from-outputs.sh

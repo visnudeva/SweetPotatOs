@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Launch nwg-displays on Swirl: needs SWAYSOCK + ~/.config/sway (not shipped in skel).
+# Launch nwg-displays on Swirl and sync saved layout into kanshi afterward.
 set -euo pipefail
 
 find_swaysock() {
@@ -27,4 +27,12 @@ if ! find_swaysock; then
 fi
 
 mkdir -p "${HOME}/.config/sway"
-exec nwg-displays "$@"
+touch "${HOME}/.config/sway/outputs" "${HOME}/.config/sway/workspaces"
+
+nwg-displays "$@"
+
+if [[ -s "${HOME}/.config/sway/outputs" ]]; then
+  swaymsg source "${HOME}/.config/sway/outputs" 2>/dev/null || true
+  "${HOME}/.config/swirl/scripts/sync-kanshi-from-outputs.sh" 2>/dev/null || true
+  command -v kanshictl >/dev/null 2>&1 && kanshictl reload 2>/dev/null || true
+fi
