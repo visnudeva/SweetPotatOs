@@ -38,7 +38,7 @@ Get the ISO and `.sha256` from SourceForge Files (newest release folder):
 Verify after download:
 
 ```bash
-sha256sum -c SweetPotatOs-*-x86_64.iso.sha256
+sha256sum -c Sweetpotatos_*.iso.sha256
 ```
 
 To publish a new build from this repo:
@@ -70,7 +70,7 @@ sudo ./build.sh --build-packages
 sudo ./build.sh
 ```
 
-ISO output: `out/SweetPotatOs-*.iso`  
+ISO output: `out/Sweetpotatos_*.iso` (e.g. `Sweetpotatos_2026.08_First_Harvest.iso`)
 Work tree: `work/` (removed automatically at the start of each ISO build)
 
 ### Local Calamares repo
@@ -158,7 +158,7 @@ Or:
 
 ```bash
 lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
-sudo dd if=out/SweetPotatOs-*.iso of=/dev/sdX bs=4M status=progress oflag=sync
+sudo dd if=out/Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
 ## Layout
