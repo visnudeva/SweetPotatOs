@@ -25,6 +25,7 @@ file_permissions=(
   ["/usr/local/bin/livecd-sound"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-session"]="0:0:755"
   ["/usr/local/bin/swirl"]="0:0:755"
+  ["/usr/local/bin/sweetpotatos-displays"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-branding"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-plymouth"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-calamares"]="0:0:755"

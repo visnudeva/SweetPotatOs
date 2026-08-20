@@ -182,6 +182,8 @@ sync_common_into() {
   cp -f "${SP}/backgrounds/"*.png "${dest}/Pictures/Wallpapers/" 2>/dev/null || true
   cp -f "${SP}/bin/swirl" "${dest}/.local/bin/swirl"
   chmod 755 "${dest}/.local/bin/swirl"
+  cp -f "${SP}/bin/sweetpotatos-displays" "${dest}/.local/bin/sweetpotatos-displays"
+  chmod 755 "${dest}/.local/bin/sweetpotatos-displays"
   rm -f "${dest}/.local/bin/sway"
   cp -f "${SP}/glycin-loaders/glycin-svg.conf" "${dest}/.local/share/glycin-loaders/2+/conf.d/"
   # Wallpaper is managed by waypaper; drop any legacy wallpaper.conf.
@@ -299,6 +301,7 @@ cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatos/SPLogo.p
 cp -f "${ISO}/home/liveuser/.config/fastfetch/config.jsonc" "${ISO}/etc/fastfetch/config.jsonc"
 # System swirl wrapper (PATH: /usr/local/bin before /usr/bin)
 install -Dm755 "${SP}/bin/swirl" "${ISO}/usr/local/bin/swirl"
+install -Dm755 "${SP}/bin/sweetpotatos-displays" "${ISO}/usr/local/bin/sweetpotatos-displays"
 
 # System wallpapers (Mod+Shift+w also scans /usr/share/backgrounds)
 mkdir -p "${ISO}/usr/share/backgrounds/sweetpotatos"

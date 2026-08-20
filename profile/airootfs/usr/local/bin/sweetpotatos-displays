@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# App launcher entry for Displays — j4-dmenu-desktop does not expand %h in Exec lines.
+set -euo pipefail
+
+script="${HOME}/.config/swirl/scripts/nwg-displays.sh"
+if [[ ! -x "${script}" ]]; then
+  if command -v notify-send >/dev/null 2>&1; then
+    notify-send -u critical -t 8000 "Displays" "Missing ${script}"
+  fi
+  exit 1
+fi
+exec "${script}" "$@"

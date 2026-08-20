@@ -35,7 +35,7 @@ sleep 4
 if [[ "${LIVE}" -eq 1 ]]; then
   tip "Live tips (1/6)" "Mod+Space → apps
 Mod+Return → terminal"
-  tip "Live tips (2/6)" "Mod+n → Wi‑Fi
+  tip "Live tips (2/6)" "Mod+n → network manager
 Mod+w → web browser"
   tip "Live tips (3/6)" "Mod+f → files
 Mod+i → installer"
@@ -48,7 +48,7 @@ Mod+o → power off"
 else
   tip "Tips (1/5)" "Mod+Space → apps
 Mod+Return → terminal"
-  tip "Tips (2/5)" "Mod+n → Wi‑Fi
+  tip "Tips (2/5)" "Mod+n → network manager
 Mod+w → web browser"
   tip "Tips (3/5)" "Mod+f → files
 Mod+m → maximize/minimize window"
