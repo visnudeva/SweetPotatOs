@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034
 
-iso_name="SweetPotatOs"
-iso_label="SPOTATO_$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y%m)"
+iso_name="Sweetpotatos_Harvest"
+iso_label="SPOTATO_HARVEST202608"
 iso_publisher="SweetPotatOs"
-iso_application="SweetPotatOs Live"
-iso_version="$(date --date="@${SOURCE_DATE_EPOCH:-$(date +%s)}" +%Y.%m.%d)"
+iso_application="SweetPotatOs Harvest 2026.08 Stable"
+iso_version="2026.08_Stable"
 install_dir="spotato"
 buildmodes=('iso')
 bootmodes=('bios.syslinux'

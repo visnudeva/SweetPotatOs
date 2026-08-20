@@ -1,9 +1,12 @@
 [Desktop Entry]
 Type=Application
 Name=Displays
-GenericName=Display Manager
-Comment=Manage display outputs
-Exec=/usr/bin/env bash -lc '~/.config/swirl/scripts/nwg-displays.sh'
+GenericName=nwg-displays
+Comment=nwg-displays — manage monitor layout and resolution
+# %h = home; do not use bash -lc + ~ (j4-dmenu-desktop often fails to launch that)
+Exec=%h/.config/swirl/scripts/nwg-displays.sh
 Icon=video-display
+Terminal=false
+StartupNotify=true
 Categories=System;Settings;
-Keywords=display;monitor;resolution;output;
+Keywords=nwg;nwg-displays;display;monitor;resolution;output;kanshi;

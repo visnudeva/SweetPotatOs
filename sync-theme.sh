@@ -107,6 +107,7 @@ include ~/.config/sway/workspaces\
   fi
 }
 
+inject_live_calamares() {
   local f="$1"
   if ! grep -q 'bindsym \$mod+i exec sweetpotatos-calamares' "${f}"; then
     sed -i '/bindsym \$mod+n exec networkmanager_dmenu/a\
@@ -132,6 +133,7 @@ sync_common_into() {
   mkdir -p \
     "${dest}/.config/swirl/scripts" \
     "${dest}/.config/kanshi" \
+    "${dest}/.local/share/applications" \
     "${dest}/.config/gtk-3.0" "${dest}/.config/gtk-4.0" \
     "${dest}/.config/foot" "${dest}/.config/mako" "${dest}/.config/swaylock" \
     "${dest}/.config/geany/colorschemes" "${dest}/.config/xsettingsd" \
@@ -150,6 +152,10 @@ sync_common_into() {
   chmod 755 "${dest}/.config/swirl/scripts/"*.sh
   if [[ -f "${SP}/kanshi/config" ]]; then
     cp -f "${SP}/kanshi/config" "${dest}/.config/kanshi/config"
+  fi
+  if [[ -f "${SP}/applications/nwg-displays.desktop" ]]; then
+    cp -f "${SP}/applications/nwg-displays.desktop" \
+      "${dest}/.local/share/applications/nwg-displays.desktop"
   fi
   cp -f "${SP}/gtk-3.0/"* "${dest}/.config/gtk-3.0/"
   cp -f "${SP}/gtk-4.0/"* "${dest}/.config/gtk-4.0/"

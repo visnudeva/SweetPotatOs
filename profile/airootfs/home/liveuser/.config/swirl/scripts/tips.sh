@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One-shot keybind tips after Swirl starts (live every boot; installed once).
-# Short sequential toasts so mako stays readable.
+# Two binds per toast, longer display time so mako stays readable.
 set -euo pipefail
 
 CONF="${XDG_CONFIG_HOME:-${HOME}/.config}/swirl"
@@ -18,33 +18,44 @@ fi
 
 [[ -f "${MARKER}" ]] && exit 0
 
+# 8s visible + short gap so the next tip does not overlap
+TIP_MS=8000
+TIP_SLEEP=9
+
 tip() {
   local title="$1" body="$2"
-  notify-send -t 5000 -a "SweetPotato" -i "help-about" \
+  notify-send -t "${TIP_MS}" -a "SweetPotato" -i "help-about" \
     -h "string:x-canonical-private-synchronous:sweetpotato-tips" \
     "${title}" "${body}" 2>/dev/null || true
-  sleep 5
+  sleep "${TIP_SLEEP}"
 }
 
 sleep 4
 
 if [[ "${LIVE}" -eq 1 ]]; then
-  tip "Live tips (1/3)" "Mod+Space → apps
-Mod+Return → terminal
-Mod+n → Wi‑Fi"
-  tip "Live tips (2/3)" "Mod+w → browser
-Mod+f → files
+  tip "Live tips (1/6)" "Mod+Space → apps
+Mod+Return → terminal"
+  tip "Live tips (2/6)" "Mod+n → Wi‑Fi
+Mod+w → web browser"
+  tip "Live tips (3/6)" "Mod+f → files
 Mod+i → installer"
-  tip "Live tips (3/3)" "Mod+c → caffeine
-Mod+m → expand window
-Mod+l → lock"
+  tip "Live tips (4/6)" "Mod+c → caffeine
+Mod+m → maximize/minimize window"
+  tip "Live tips (5/6)" "Mod+l → lock
+Mod+Shift+d → displays"
+  tip "Live tips (6/6)" "Mod+Shift+w → wallpaper
+Mod+o → power off"
 else
-  tip "Tips (1/2)" "Mod+Space → apps
-Mod+Return → terminal
-Mod+n → Wi‑Fi"
-  tip "Tips (2/2)" "Mod+w browser · Mod+f files
-Mod+m expand · Mod+l lock
-Mod+c caffeine"
+  tip "Tips (1/5)" "Mod+Space → apps
+Mod+Return → terminal"
+  tip "Tips (2/5)" "Mod+n → Wi‑Fi
+Mod+w → web browser"
+  tip "Tips (3/5)" "Mod+f → files
+Mod+m → maximize/minimize window"
+  tip "Tips (4/5)" "Mod+l → lock
+Mod+c → caffeine"
+  tip "Tips (5/5)" "Mod+Shift+d → displays
+Mod+Shift+w → wallpaper"
 fi
 
 : > "${MARKER}"
