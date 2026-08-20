@@ -90,7 +90,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 - Project: `sweetpotatos`
 - Git: `ssh://visnudeva@git.code.sf.net/p/sweetpotatos/code`
-- Files release folder naming: `SF_RELEASE` (e.g. `2026.08.08`) matches ISO name `SweetPotatOs-${SF_RELEASE}-x86_64.iso`
+- Files release folder naming: `SF_RELEASE` (e.g. `2026.08_First_Harvest`) with ISO `Sweetpotatos_2026.08_First_Harvest.iso`
 - Web: `sourceforge/htdocs/` → `https://sweetpotatos.sourceforge.io/`
 - Optional: short `README.txt` next to the ISO is nice for Files browsers; `.sha256` is the important companion. Full docs stay in GitHub README + htdocs.
 
