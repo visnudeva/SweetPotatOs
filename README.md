@@ -54,7 +54,7 @@ Then in SourceForge: Files → that release → ⓘ on the `.iso` → set as def
 - Arch-based build host
 - Root privileges (`mkarchiso`)
 - Packages: `archiso`, `base-devel`, `git`
-- Local **Calamares** + **swirl** + **yay-bin/shelly-bin/tera** packages (see `sudo ./build.sh --build-packages`)
+- Local **Calamares** + **swirl** + **yay-bin/shelly-bin/localsend-bin/spore** packages (see `sudo ./build.sh --build-packages`)
 
 ## Build
 
@@ -96,6 +96,8 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 
 ### Default apps
 
+Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** (nearby file sharing) replace the earlier **tera** terminal radio and **Audacious** music player.
+
 | Role | App |
 |------|-----|
 | Browser | Firefox |
@@ -105,14 +107,14 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | Terminal | foot |
 | Video | mpv + yt-dlp |
 | Image edit | GIMP |
-| Music | Audacious |
+| Music / radio | Spore |
+| Nearby share | LocalSend |
 | PDF | mupdf |
 | Images | swayimg |
 | Torrents | Transmission |
 | Webcam | guvcview |
 | Color picker | hyprpicker |
 | Packages | Shelly (+ yay / AUR) |
-| Web radio | tera |
 | Disks | GNOME Disks |
 | System monitor | btop |
 
@@ -125,9 +127,11 @@ Update the `Server =` path if you clone the repo somewhere other than `/home/vis
 | `Mod+w` | Web browser (firefox) |
 | `Mod+f` | File manager (thunar) |
 | `Mod+e` | IDE (geany) |
+| `Mod+r` | Music / radio (Spore) |
 | `Mod+Return` | Terminal (foot) |
 | `Mod+m` | Expand focused column to 100% / restore 50/50 |
-| `Mod+Shift+w` | Wallpaper selector |
+| `Mod+Shift+w` | Wallpaper selector (waypaper) |
+| `Mod+Shift+r` | Resize mode (arrow keys; Enter/Esc to exit) |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |
 | `Mod+Print` | Screen record toggle (region + audio → `~/Videos`) |

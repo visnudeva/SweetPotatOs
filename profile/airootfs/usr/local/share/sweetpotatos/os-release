@@ -1,8 +1,10 @@
 NAME="SweetPotatOs"
-PRETTY_NAME="SweetPotatOs"
+PRETTY_NAME="SweetPotatOs 2026.08 First Harvest"
+VERSION_ID=2026.08
+VERSION="2026.08 First Harvest"
 ID=sweetpotatos
 ID_LIKE=arch
-BUILD_ID=rolling
+BUILD_ID=2026.08.1
 ANSI_COLOR="38;2;167;59;80"
 HOME_URL="https://github.com/visnudeva/SweetPotatOs"
 DOCUMENTATION_URL="https://github.com/visnudeva/SweetPotatOs"

@@ -21,11 +21,13 @@ set $web firefox
 set $file thunar
 # Your preferred editor
 set $editor geany
+# Web radio + local music (Spore TUI)
+set $music spore
 
 ### Output configuration
 #
-# Wallpaper is restored by waypaper --restore on every start.
-
+# Wallpaper is applied by ensure-wallpaper.sh (avoids parse errors when
+# the image path is missing). Preference is stored in wallpaper.conf.
 exec_always waypaper --restore
 exec --no-startup-id ~/.config/swirl/scripts/start-kanshi.sh
 exec --no-startup-id sh -c 'sleep 0.5; [ -s "$HOME/.config/sway/outputs" ] && swaymsg source "$HOME/.config/sway/outputs" 2>/dev/null || true'
@@ -96,9 +98,8 @@ seat * xcursor_theme capitaine-cursors 24
     # Wallpaper selector
     bindsym $mod+Shift+w exec waypaper
 
-    # Display layout (nwg-displays saves to ~/.config/sway/outputs)
+    # Display layout
     bindsym $mod+Shift+d exec ~/.config/swirl/scripts/nwg-displays.sh
-    # Save current layout after wlr-randr / terminal changes
     bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh
 
     # Start your web browser
@@ -109,6 +110,9 @@ seat * xcursor_theme capitaine-cursors 24
 
     # Start your editor
     bindsym $mod+e exec $editor
+
+    # Web radio + local music (Spore)
+    bindsym $mod+r exec $term -e spore
 
     # Lock screen (Mod+l — vim focus-right moved to arrow keys only)
     bindsym $mod+l exec swaylock -f
@@ -208,7 +212,7 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+r mode "resize"
+bindsym $mod+Shift+r mode "resize"
 #
 # Utilities:
 #
@@ -281,10 +285,9 @@ exec blueman-applet
 exec sh -c 'rfkill unblock bluetooth 2>/dev/null || true'
 exec ~/.config/swirl/scripts/tips.sh
 
-# Calamares installer (Wayland app_id)
 for_window [app_id="io.calamares.calamares"] floating enable
 
-# nwg-displays / save-display-layout persist monitor layout here
+# Saved monitor layout (nwg-displays / Mod+Ctrl+d)
 include ~/.config/sway/outputs
 include ~/.config/sway/workspaces
 include /etc/sway/config.d/*

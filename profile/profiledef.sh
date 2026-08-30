@@ -37,6 +37,7 @@ file_permissions=(
   ["/usr/local/bin/sweetpotatos-fix-sway-keyboard"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-sway-xkb-sync"]="0:0:755"
   ["/usr/local/bin/sweetpotatos-sway-xkb-watch"]="0:0:755"
+  ["/usr/local/bin/spo-upgrade"]="0:0:755"
   ["/home/liveuser"]="1000:1000:755"
   ["/etc/sudoers.d/liveuser"]="0:0:440"
   ["/home/liveuser/.config/swirl/scripts/applauncher.sh"]="1000:1000:755"

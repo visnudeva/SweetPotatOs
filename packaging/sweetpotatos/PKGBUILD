@@ -1,0 +1,88 @@
+# Maintainer: visnudeva
+pkgname=sweetpotatos
+pkgver=2026.08.1
+pkgrel=1
+pkgdesc='SweetPotatOs system overlay, upgrade tool, and branding'
+arch=('any')
+url='https://github.com/visnudeva/SweetPotatOs'
+license=('MIT')
+depends=('bash' 'pacman' 'plymouth' 'systemd')
+optdepends=(
+  'git: spo-upgrade --theme'
+  'swirl: desktop compositor'
+  'yay-bin: AUR helper'
+  'shelly-bin: package manager GUI'
+  'localsend-bin: nearby file sharing'
+  'spore: web radio and local music player'
+  'waypaper: wallpaper picker'
+)
+install=sweetpotatos.install
+source=(
+  'spo-upgrade'
+  'sweetpotatos.install'
+  'pacman/sweetpotatos.conf'
+  'migrations/001-lid-sleep.sh'
+  'migrations/002-pacman-repo.sh'
+)
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+package() {
+  local root
+  root="$(cd "${startdir}/../.." && pwd)"
+  local ai="${root}/profile/airootfs"
+
+  # Installed-system helpers (live-only tools stay in airootfs only).
+  local bin
+  for bin in \
+    sweetpotatos-session \
+    swirl \
+    sweetpotatos-displays \
+    sweetpotatos-branding \
+    sweetpotatos-plymouth \
+    sweetpotatos-fix-mkinitcpio \
+    sweetpotatos-fix-ly \
+    sweetpotatos-fix-sudo \
+    sweetpotatos-fix-sway-keyboard; do
+    install -Dm755 "${ai}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
+  done
+  install -Dm755 "${srcdir}/spo-upgrade" "${pkgdir}/usr/local/bin/spo-upgrade"
+  ln -sf spo-upgrade "${pkgdir}/usr/local/bin/sweetpotatos-upgrade"
+
+  install -Dm644 "${ai}/usr/local/share/sweetpotatos/os-release" \
+    "${pkgdir}/usr/local/share/sweetpotatos/os-release"
+  install -Dm644 "${ai}/usr/local/share/sweetpotatos/issue" \
+    "${pkgdir}/usr/local/share/sweetpotatos/issue"
+  if [[ -f "${ai}/usr/local/share/sweetpotatos/SPLogo.asc" ]]; then
+    install -Dm644 "${ai}/usr/local/share/sweetpotatos/SPLogo.asc" \
+      "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.asc"
+  fi
+  if [[ -f "${ai}/usr/local/share/sweetpotatos/SPLogo.png" ]]; then
+    install -Dm644 "${ai}/usr/local/share/sweetpotatos/SPLogo.png" \
+      "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.png"
+  fi
+
+  install -Dm644 "${ai}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.plymouth" \
+    "${pkgdir}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.plymouth"
+  install -Dm644 "${ai}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.script" \
+    "${pkgdir}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.script"
+
+  install -Dm644 "${ai}/etc/systemd/logind.conf.d/lid-sleep.conf" \
+    "${pkgdir}/etc/systemd/logind.conf.d/50-sweetpotatos-lid-sleep.conf"
+
+  local hook
+  for hook in \
+    sweetpotatos-branding.hook \
+    sweetpotatos-ly-swirl-session.hook \
+    sweetpotatos-hide-sway-session.hook \
+    89-sweetpotatos-plymouth.hook; do
+    install -Dm644 "${ai}/etc/pacman.d/hooks/${hook}" \
+      "${pkgdir}/etc/pacman.d/hooks/${hook}"
+  done
+
+  install -Dm644 "${srcdir}/pacman/sweetpotatos.conf" \
+    "${pkgdir}/usr/share/sweetpotatos/pacman/sweetpotatos.conf"
+  install -Dm644 "${srcdir}/migrations/001-lid-sleep.sh" \
+    "${pkgdir}/usr/share/sweetpotatos/migrations/001-lid-sleep.sh"
+  install -Dm644 "${srcdir}/migrations/002-pacman-repo.sh" \
+    "${pkgdir}/usr/share/sweetpotatos/migrations/002-pacman-repo.sh"
+}

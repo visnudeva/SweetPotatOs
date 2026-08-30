@@ -106,22 +106,23 @@ if ! ls "${ROOT}/repo/shelly-bin"-*.pkg.tar.* >/dev/null 2>&1; then
   cp "${pkgs[@]}" "${ROOT}/repo/"
   echo "[+] shelly-bin copied to repo/"
 fi
-# tera: local PKGBUILD (AUR omits go makedepend)
-if ! ls "${ROOT}/repo/tera"-*.pkg.tar.* >/dev/null 2>&1; then
-  echo "[*] Building tera from packaging/tera..."
-  build_dir="/home/${BUILD_USER}/build/tera-local"
+build_aur_to_repo localsend-bin https://aur.archlinux.org/localsend-bin.git
+
+if ! ls "${ROOT}/repo/spore"-*.pkg.tar.* >/dev/null 2>&1; then
+  echo "[*] Building spore from packaging/spore..."
+  build_dir="/home/${BUILD_USER}/build/spore-local"
   rm -rf "${build_dir}"
   sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
-  cp -a "${ROOT}/packaging/tera/." "${build_dir}/"
+  cp -a "${ROOT}/packaging/spore/." "${build_dir}/"
   chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
-  pacman -S --needed --noconfirm --asdeps go pipewire-jack 2>/dev/null || pacman -S --needed --noconfirm go
+  pacman -S --needed --noconfirm go
   sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
   shopt -s nullglob
   pkgs=( "${build_dir}"/*.pkg.tar.* )
   shopt -u nullglob
-  ((${#pkgs[@]})) || { echo "[!] tera build produced no packages" >&2; exit 1; }
+  ((${#pkgs[@]})) || { echo "[!] spore build produced no packages" >&2; exit 1; }
   cp "${pkgs[@]}" "${ROOT}/repo/"
-  echo "[+] tera copied to repo/"
+  echo "[+] spore copied to repo/"
 fi
 
 echo "[*] Refreshing local repo database..."

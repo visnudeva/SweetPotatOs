@@ -1,0 +1,55 @@
+# Maintainer: visnudeva
+pkgname=spore
+pkgver=0.1.0.r1.gd703e493
+pkgrel=1
+pkgdesc='TUI web radio and local music player with FFT visualizers'
+arch=('x86_64')
+url='https://github.com/visnudeva/spore'
+license=('MIT')
+depends=('ffmpeg')
+makedepends=('go')
+optdepends=(
+  'pipewire-pulse: PulseAudio/PipeWire audio output'
+  'alsa-lib: ALSA audio output'
+)
+source=("git+https://github.com/visnudeva/spore.git#commit=d703e4939a106f3c02788500075b3b7cf940faf7")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd spore
+  local ver
+  if ver=$(git describe --long --tags 2>/dev/null); then
+    printf '%s' "${ver}" | sed 's/^v//;s/-/./g'
+  else
+    printf '0.1.0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+  fi
+}
+
+build() {
+  cd spore
+  export CGO_ENABLED=0
+  go build -trimpath -ldflags='-s -w' -o spore ./cmd/spore
+}
+
+package() {
+  cd spore
+  install -Dm755 spore "${pkgdir}/usr/bin/spore"
+  install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 Logo.png "${pkgdir}/usr/share/icons/hicolor/256x256/apps/spore.png"
+  install -Dm644 Logo.png "${pkgdir}/usr/share/pixmaps/spore.png"
+
+  cat <<'EOF' | install -Dm644 /dev/stdin "${pkgdir}/usr/share/applications/spore.desktop"
+[Desktop Entry]
+Name=Spore
+GenericName=Music player
+Comment=Web radio and local music player with visualizers
+Exec=foot -e spore
+TryExec=foot
+Icon=spore
+Type=Application
+Categories=Audio;Player;Music;
+Keywords=radio;music;mp3;flac;player;terminal;tui;spore;
+Terminal=false
+StartupNotify=true
+EOF
+}

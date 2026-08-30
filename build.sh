@@ -111,14 +111,16 @@ mkdir -p "${REPO}" "${OUT}"
 
 DO_CALAMARES=0
 DO_SWIRL=0
+DO_SWEETPOTATOS=0
 DO_AUR_APPS=0
 DO_ISO=1
 for arg in "$@"; do
   case "${arg}" in
     --build-calamares) DO_CALAMARES=1; DO_ISO=0 ;;
     --build-swirl) DO_SWIRL=1; DO_ISO=0 ;;
+    --build-sweetpotatos) DO_SWEETPOTATOS=1; DO_ISO=0 ;;
     --build-aur-apps) DO_AUR_APPS=1; DO_ISO=0 ;;
-    --build-packages) DO_CALAMARES=1; DO_SWIRL=1; DO_AUR_APPS=1; DO_ISO=0 ;;
+    --build-packages) DO_CALAMARES=1; DO_SWIRL=1; DO_SWEETPOTATOS=1; DO_AUR_APPS=1; DO_ISO=0 ;;
     --help|-h)
       cat <<EOF
 Usage: sudo ./build.sh [options]
@@ -126,8 +128,9 @@ Usage: sudo ./build.sh [options]
   (no args)           Build ISO (requires calamares + swirl + AUR apps in repo/)
   --build-calamares   Build Calamares into repo/ only
   --build-swirl       Build Swirl compositor into repo/ only
-  --build-aur-apps    Build yay-bin + shelly-bin + tera into repo/ only
-  --build-packages    Build calamares + swirl + AUR apps into repo/ only
+  --build-sweetpotatos  Build sweetpotatos overlay + spo-upgrade into repo/ only
+  --build-aur-apps    Build yay-bin + shelly-bin + localsend-bin + spore into repo/ only
+  --build-packages    Build calamares + swirl + sweetpotatos + AUR apps into repo/ only
 EOF
       exit 0
       ;;
@@ -138,9 +141,11 @@ done
 if (( DO_ISO )); then
   need_repo_pkg calamares || DO_CALAMARES=1
   need_repo_pkg swirl || DO_SWIRL=1
+  need_repo_pkg sweetpotatos || DO_SWEETPOTATOS=1
   need_repo_pkg yay-bin || DO_AUR_APPS=1
   need_repo_pkg shelly-bin || DO_AUR_APPS=1
-  need_repo_pkg tera || DO_AUR_APPS=1
+  need_repo_pkg localsend-bin || DO_AUR_APPS=1
+  need_repo_pkg spore || DO_AUR_APPS=1
   need_repo_pkg python-screeninfo || DO_AUR_APPS=1
   need_repo_pkg python-imageio-ffmpeg || DO_AUR_APPS=1
   need_repo_pkg waypaper || DO_AUR_APPS=1
@@ -158,12 +163,18 @@ elif (( DO_SWIRL )); then
   echo "[*] swirl already in ${REPO}/ — skipping"
 fi
 
+if (( DO_SWEETPOTATOS )) && ! need_repo_pkg sweetpotatos; then
+  build_local_pkg sweetpotatos "${ROOT}/packaging/sweetpotatos"
+elif (( DO_SWEETPOTATOS )); then
+  echo "[*] sweetpotatos already in ${REPO}/ — skipping"
+fi
+
 if (( DO_AUR_APPS )); then
   need_repo_pkg yay-bin || build_aur_pkg yay-bin https://aur.archlinux.org/yay-bin.git
   # Local PKGBUILD: AUR shelly-bin often blocked/empty behind Anubis; no zig needed
   need_repo_pkg shelly-bin || build_local_pkg shelly-bin "${ROOT}/packaging/shelly-bin"
-  # Local PKGBUILD: AUR tera omits go makedepend required by upstream Makefile
-  need_repo_pkg tera || build_local_pkg tera "${ROOT}/packaging/tera"
+  need_repo_pkg localsend-bin || build_aur_pkg localsend-bin https://aur.archlinux.org/localsend-bin.git
+  need_repo_pkg spore || build_local_pkg spore "${ROOT}/packaging/spore"
   # waypaper AUR deps not in official repos — build and install them first
   need_repo_pkg python-screeninfo || build_aur_pkg python-screeninfo https://aur.archlinux.org/python-screeninfo.git
   need_repo_pkg python-imageio-ffmpeg || build_aur_pkg python-imageio-ffmpeg https://aur.archlinux.org/python-imageio-ffmpeg.git
@@ -174,9 +185,9 @@ if (( DO_AUR_APPS )); then
   need_repo_pkg waypaper || build_aur_pkg waypaper https://aur.archlinux.org/waypaper.git
 fi
 
-if ! need_repo_pkg calamares || ! need_repo_pkg swirl \
+if ! need_repo_pkg calamares || ! need_repo_pkg swirl || ! need_repo_pkg sweetpotatos \
   || ! need_repo_pkg yay-bin || ! need_repo_pkg shelly-bin \
-  || ! need_repo_pkg tera \
+  || ! need_repo_pkg localsend-bin || ! need_repo_pkg spore \
   || ! need_repo_pkg python-screeninfo || ! need_repo_pkg python-imageio-ffmpeg \
   || ! need_repo_pkg waypaper; then
   cat >&2 <<EOF
@@ -184,7 +195,7 @@ if ! need_repo_pkg calamares || ! need_repo_pkg swirl \
 
 Build them first:
 
-  sudo ./build.sh --build-packages   # builds calamares, swirl, yay-bin, shelly-bin, tera, waypaper
+  sudo ./build.sh --build-packages   # builds calamares, swirl, sweetpotatos, yay-bin, shelly-bin, localsend-bin, spore, waypaper
 
 EOF
   exit 1

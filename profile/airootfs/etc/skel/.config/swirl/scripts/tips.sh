@@ -36,24 +36,24 @@ if [[ "${LIVE}" -eq 1 ]]; then
   tip "Live tips (1/6)" "Mod+Space → apps
 Mod+Return → terminal"
   tip "Live tips (2/6)" "Mod+n → network manager
-Mod+w → web browser"
-  tip "Live tips (3/6)" "Mod+f → files
-Mod+i → installer"
-  tip "Live tips (4/6)" "Mod+c → caffeine
-Mod+m → maximize/minimize window"
-  tip "Live tips (5/6)" "Mod+l → lock
-Mod+Shift+d → displays"
-  tip "Live tips (6/6)" "Mod+Shift+w → wallpaper
-Mod+o → power off"
+Mod+r → music (Spore)"
+  tip "Live tips (3/6)" "Mod+w → web browser
+Mod+f → files"
+  tip "Live tips (4/6)" "Mod+i → installer
+Mod+c → caffeine"
+  tip "Live tips (5/6)" "Mod+m → maximize/minimize window
+Mod+l → lock"
+  tip "Live tips (6/6)" "Mod+Shift+d → displays
+Mod+Shift+w → wallpaper"
 else
   tip "Tips (1/5)" "Mod+Space → apps
 Mod+Return → terminal"
   tip "Tips (2/5)" "Mod+n → network manager
-Mod+w → web browser"
-  tip "Tips (3/5)" "Mod+f → files
-Mod+m → maximize/minimize window"
-  tip "Tips (4/5)" "Mod+l → lock
-Mod+c → caffeine"
+Mod+r → music (Spore)"
+  tip "Tips (3/5)" "Mod+w → web browser
+Mod+f → files"
+  tip "Tips (4/5)" "Mod+m → maximize/minimize window
+Mod+l → lock"
   tip "Tips (5/5)" "Mod+Shift+d → displays
 Mod+Shift+w → wallpaper"
 fi

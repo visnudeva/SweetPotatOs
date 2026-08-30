@@ -1,0 +1,189 @@
+#!/usr/bin/bash
+# Upgrade an installed SweetPotatOs system without reinstalling the ISO.
+set -euo pipefail
+
+BRAND=/usr/local/share/sweetpotatos/os-release
+REPO_CONF=/etc/pacman.d/sweetpotatos.conf
+MIGRATION_STATE=/var/lib/sweetpotatos/migrations
+SWEETPOTATO_REPO="${SWEETPOTATO_REPO:-https://github.com/visnudeva/SweetPotato.git}"
+SWEETPOTATO_REF="${SWEETPOTATO_REF:-main}"
+
+SPO_REPO_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper)
+
+DO_THEME=0
+DO_CHECK=0
+DO_DRY_RUN=0
+
+info() { echo "[spo-upgrade] $*"; }
+warn() { echo "[spo-upgrade] WARNING: $*" >&2; }
+die() { echo "[spo-upgrade] ERROR: $*" >&2; exit 1; }
+
+usage() {
+  cat <<'EOF'
+Usage: spo-upgrade [options]
+
+Upgrade SweetPotatOs in place (Arch packages + SweetPotatOs overlay repo).
+
+Options:
+  --check       Show installed vs available sweetpotatos version; exit
+  --dry-run     Show planned steps without changing the system
+  --theme       Also refresh the SweetPotato desktop theme (git clone + install.sh)
+  -h, --help    Show this help
+
+Requires root (sudo spo-upgrade).
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --theme) DO_THEME=1 ;;
+    --check) DO_CHECK=1 ;;
+    --dry-run) DO_DRY_RUN=1 ;;
+    -h|--help) usage; exit 0 ;;
+    *) die "unknown option: $1 (try --help)" ;;
+  esac
+  shift
+done
+
+[[ "${EUID}" -eq 0 ]] || die "run as root: sudo spo-upgrade"
+
+[[ -f "${BRAND}" ]] && grep -q '^ID=sweetpotatos' "${BRAND}" \
+  || die "this does not look like SweetPotatOs (${BRAND} missing or wrong ID)"
+
+installed_version() {
+  if [[ -f "${BRAND}" ]]; then
+    grep -E '^VERSION(_ID)?=' "${BRAND}" 2>/dev/null || true
+  fi
+  pacman -Q sweetpotatos 2>/dev/null || echo "sweetpotatos package: not installed"
+}
+
+fix_pacman_conf() {
+  local conf=/etc/pacman.conf
+  [[ -f "${conf}" ]] || return 0
+  if grep -q '^\[sweetpotatos\]' "${conf}"; then
+    info "Removing stale [sweetpotatos] file:// entry from ${conf}"
+    awk '
+      /^\[sweetpotatos\]/ { skip=1; next }
+      /^\[/ && skip { skip=0 }
+      !skip { print }
+    ' "${conf}" > "${conf}.spo-upgrade.tmp"
+    mv "${conf}.spo-upgrade.tmp" "${conf}"
+  fi
+  if ! grep -qF 'Include = /etc/pacman.d/sweetpotatos.conf' "${conf}"; then
+    info "Enabling SweetPotatOs pacman repo include in ${conf}"
+    printf '\nInclude = /etc/pacman.d/sweetpotatos.conf\n' >> "${conf}"
+  fi
+}
+
+ensure_repo_conf() {
+  if [[ ! -f "${REPO_CONF}" ]]; then
+    info "Installing ${REPO_CONF}"
+    if [[ -f /usr/share/sweetpotatos/pacman/sweetpotatos.conf ]]; then
+      install -Dm644 /usr/share/sweetpotatos/pacman/sweetpotatos.conf "${REPO_CONF}"
+    else
+      install -Dm644 /dev/stdin "${REPO_CONF}" <<'EOF'
+[sweetpotatos]
+SigLevel = Optional TrustAll
+Server = https://downloads.sourceforge.net/project/sweetpotatos/repo/$arch
+Server = https://sf-mirror.net/projects/sweetpotatos/repo/$arch
+EOF
+    fi
+  fi
+  fix_pacman_conf
+}
+
+run_migrations() {
+  local dir=/usr/share/sweetpotatos/migrations
+  [[ -d "${dir}" ]] || return 0
+  mkdir -p "${MIGRATION_STATE}"
+  local script base stamp
+  shopt -s nullglob
+  for script in "${dir}"/*.sh; do
+    base="$(basename "${script}")"
+    stamp="${MIGRATION_STATE}/${base}.done"
+    [[ -f "${stamp}" ]] && continue
+    info "Migration: ${base}"
+    if (( DO_DRY_RUN )); then
+      info "(dry-run) would run ${script}"
+      continue
+    fi
+    bash "${script}"
+    touch "${stamp}"
+  done
+  shopt -u nullglob
+}
+
+upgrade_theme() {
+  local work
+  work="$(mktemp -d /tmp/sweetpotato-upgrade.XXXXXX)"
+  trap 'rm -rf "${work}"' RETURN
+  info "Fetching SweetPotato theme (${SWEETPOTATO_REF})…"
+  if (( DO_DRY_RUN )); then
+    info "(dry-run) would clone ${SWEETPOTATO_REPO} and run install.sh as ${SPO_USER:-root}"
+    return 0
+  fi
+  local theme_user="${SPO_USER:-${SUDO_USER:-}}"
+  [[ -n "${theme_user}" && "${theme_user}" != "root" ]] || die "--theme needs a login user (set SPO_USER=yourname)"
+  git clone --depth 1 --branch "${SWEETPOTATO_REF}" "${SWEETPOTATO_REPO}" "${work}/SweetPotato"
+  info "Running SweetPotato install.sh as ${theme_user}…"
+  sudo -u "${theme_user}" bash -c "cd '${work}/SweetPotato' && ./install.sh"
+}
+
+ensure_repo_conf
+
+if (( DO_DRY_RUN )); then
+  info "Dry run — no packages will change"
+fi
+
+info "Installed: $(installed_version | tr '\n' ' '; echo)"
+
+if (( DO_CHECK )); then
+  pacman -Sy
+  if pacman -Si sweetpotatos &>/dev/null; then
+    info "Repository sweetpotatos version: $(pacman -Si sweetpotatos | awk '/^Version /{print $3; exit}')"
+    pacman -Qu sweetpotatos 2>/dev/null && info "Upgrade available for sweetpotatos" || info "sweetpotatos package is up to date"
+  else
+    warn "sweetpotatos package not found in configured repos (publish repo/ to SourceForge first?)"
+  fi
+  exit 0
+fi
+
+if (( DO_DRY_RUN )); then
+  info "Would run: pacman -Syu"
+  info "Would run: pacman -S --needed ${SPO_REPO_PKGS[*]}"
+  run_migrations
+  (( DO_THEME )) && upgrade_theme
+  exit 0
+fi
+
+kernel_before="$(pacman -Q linux 2>/dev/null | awk '{print $2}' || true)"
+
+info "Syncing package databases…"
+pacman -Sy
+
+info "Upgrading system packages…"
+pacman -Su --noconfirm
+
+info "Upgrading SweetPotatOs overlay packages…"
+# Some may live only on [sweetpotatos]; ignore if repo is not published yet.
+if ! pacman -S --needed --noconfirm "${SPO_REPO_PKGS[@]}"; then
+  warn "some SweetPotatOs repo packages could not be installed (is repo/ published?)"
+  pacman -S --needed --noconfirm sweetpotatos 2>/dev/null || true
+fi
+
+run_migrations
+
+if (( DO_THEME )); then
+  upgrade_theme
+fi
+
+/usr/local/bin/sweetpotatos-branding 2>/dev/null || true
+
+kernel_after="$(pacman -Q linux 2>/dev/null | awk '{print $2}' || true)"
+if [[ -n "${kernel_before}" && -n "${kernel_after}" && "${kernel_before}" != "${kernel_after}" ]]; then
+  info "Linux kernel updated (${kernel_before} → ${kernel_after}); rebuilding initramfs…"
+  mkinitcpio -P
+  warn "Reboot recommended to load the new kernel."
+fi
+
+info "Done. $(installed_version | tr '\n' ' '; echo)"

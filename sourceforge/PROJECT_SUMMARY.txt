@@ -2,6 +2,9 @@ SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetP
 
 Swirl (https://github.com/visnudeva/swirl) is the scrolling tiling Wayland compositor — columns on a horizontal strip, dynamic workspaces, Sway-compatible config, stock swaybar/swaymsg/swaynag.
 
+Default apps include Spore (web radio + local music; Mod+r), LocalSend (nearby file sharing), Firefox, foot, Thunar, Geany, Shelly, and waypaper. Spore and LocalSend replace tera and Audacious from earlier releases.
+
 Homepage / source: https://github.com/visnudeva/SweetPotatOs
 Theme: https://github.com/visnudeva/SweetPotato
 Compositor: https://github.com/visnudeva/swirl
+Music: https://github.com/visnudeva/spore

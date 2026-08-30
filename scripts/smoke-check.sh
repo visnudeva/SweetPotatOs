@@ -60,6 +60,10 @@ check_nogrep 'sweetpotatos-sway-xkb-watch' "${ISO}/etc/skel/.config/swirl/config
   "skel has no live Calamares xkb watcher"
 check_file "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch"
 check_file "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-sync"
+check_file "${ISO}/usr/local/bin/spo-upgrade"
+check_grep '^sweetpotatos$' "${ROOT}/profile/packages.x86_64" "sweetpotatos package listed"
+check_grep '^spore$' "${ROOT}/profile/packages.x86_64" "spore package listed"
+check_grep '^VERSION_ID=' "${ISO}/usr/local/share/sweetpotatos/os-release" "os-release has VERSION_ID"
 check_grep 'fingerprint' "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch" \
   "xkb watcher polls locale1 via busctl"
 check_nogrep '^[[:space:]]*dbus-monitor' "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch" \

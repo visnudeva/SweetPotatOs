@@ -2,6 +2,9 @@
 # SweetPotato: drop Archcraft gtk-nocsd so GTK apps keep close buttons
 unset LD_PRELOAD
 export GTK_CSD=1
+if [ -n "${HOME:-}" ] && [ -x "${HOME}/.config/swirl/scripts/ensure-display-state.sh" ]; then
+  /usr/bin/env bash "${HOME}/.config/swirl/scripts/ensure-display-state.sh" 2>/dev/null || true
+fi
 dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
 for bin in /usr/bin/swirl /usr/local/bin/swirl \
            "${HOME}/.local/libexec/swirl" \

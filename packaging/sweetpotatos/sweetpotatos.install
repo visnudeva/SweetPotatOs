@@ -1,0 +1,12 @@
+post_install() {
+  post_upgrade "$@"
+}
+
+post_upgrade() {
+  if [[ -f /etc/pacman.conf ]] && ! grep -qF 'Include = /etc/pacman.d/sweetpotatos.conf' /etc/pacman.conf; then
+    echo 'Include = /etc/pacman.d/sweetpotatos.conf' >> /etc/pacman.conf
+  fi
+  if command -v sweetpotatos-branding >/dev/null 2>&1; then
+    sweetpotatos-branding || true
+  fi
+}
