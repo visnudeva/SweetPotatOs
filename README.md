@@ -137,6 +137,9 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+Print` | Screen record toggle (region + audio → `~/Videos`) |
 | `Mod+q` | Kill focused window |
 | `Mod+number` | Change workspaces |
+| `Mod+Up` / `Mod+Down` | Switch workspace up / down |
+| `Mod+Ctrl+Up` / `Mod+Ctrl+Down` | Move window to workspace above / below |
+| `Mod+Shift+number` | Move window to workspace 1–10 |
 | `Mod+l` | Lock screen |
 | `Mod+c` | Caffeine toggle (on by default on live ISO) |
 | `Mod+i` | Installer (Calamares) |

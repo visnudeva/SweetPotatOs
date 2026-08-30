@@ -227,7 +227,7 @@ mkarchiso -v -w "${WORK}" -o "${OUT}" "${PROFILE}"
 mv -f "${PACMAN_BACKUP}" "${PACMAN_CONF}"
 trap - EXIT
 
-ISO_FINAL_NAME="${SWEETPOTATOS_ISO_NAME:-Sweetpotatos_2026.08_First_Harvest.iso}"
+ISO_FINAL_NAME="${SWEETPOTATOS_ISO_NAME:-Sweetpotatos_2026.09_Second_Harvest.iso}"
 if [[ -n "${ISO_FINAL_NAME}" ]]; then
   latest_iso="$(find "${OUT}" -maxdepth 1 -name '*.iso' -type f -printf '%T@ %p\n' 2>/dev/null \
     | sort -rn | head -1 | cut -d' ' -f2-)"

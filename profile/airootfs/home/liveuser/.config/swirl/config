@@ -179,6 +179,10 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Shift+8 move container to workspace number 8
     bindsym $mod+Shift+9 move container to workspace number 9
     bindsym $mod+Shift+0 move container to workspace number 10
+
+    # Move focused window to workspace above/below (stay on current desktop)
+    bindsym $mod+Ctrl+Up move container to workspace prev_on_output
+    bindsym $mod+Ctrl+Down move container to workspace next_on_output
 #
 # Layout stuff:
 #

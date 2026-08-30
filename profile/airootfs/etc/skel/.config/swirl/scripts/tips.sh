@@ -33,28 +33,32 @@ tip() {
 sleep 4
 
 if [[ "${LIVE}" -eq 1 ]]; then
-  tip "Live tips (1/6)" "Mod+Space → apps
+  tip "Live tips (1/7)" "Mod+Space → apps
 Mod+Return → terminal"
-  tip "Live tips (2/6)" "Mod+n → network manager
+  tip "Live tips (2/7)" "Mod+n → network manager
 Mod+r → music (Spore)"
-  tip "Live tips (3/6)" "Mod+w → web browser
+  tip "Live tips (3/7)" "Mod+w → web browser
 Mod+f → files"
-  tip "Live tips (4/6)" "Mod+i → installer
+  tip "Live tips (4/7)" "Mod+i → installer
 Mod+c → caffeine"
-  tip "Live tips (5/6)" "Mod+m → maximize/minimize window
+  tip "Live tips (5/7)" "Mod+m → maximize/minimize window
 Mod+l → lock"
-  tip "Live tips (6/6)" "Mod+Shift+d → displays
+  tip "Live tips (6/7)" "Mod+Shift+d → displays
 Mod+Shift+w → wallpaper"
+  tip "Live tips (7/7)" "Mod+Up/Down → switch workspace
+Mod+Ctrl+Up/Down → move window"
 else
-  tip "Tips (1/5)" "Mod+Space → apps
+  tip "Tips (1/6)" "Mod+Space → apps
 Mod+Return → terminal"
-  tip "Tips (2/5)" "Mod+n → network manager
+  tip "Tips (2/6)" "Mod+n → network manager
 Mod+r → music (Spore)"
-  tip "Tips (3/5)" "Mod+w → web browser
+  tip "Tips (3/6)" "Mod+w → web browser
 Mod+f → files"
-  tip "Tips (4/5)" "Mod+m → maximize/minimize window
+  tip "Tips (4/6)" "Mod+m → maximize/minimize window
 Mod+l → lock"
-  tip "Tips (5/5)" "Mod+Shift+d → displays
+  tip "Tips (5/6)" "Mod+Up/Down → switch workspace
+Mod+Ctrl+Up/Down → move window"
+  tip "Tips (6/6)" "Mod+Shift+d → displays
 Mod+Shift+w → wallpaper"
 fi
 

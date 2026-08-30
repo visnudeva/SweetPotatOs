@@ -3,15 +3,15 @@
 # Usage:
 #   SF_USER=your_sf_username ./sourceforge/upload.sh
 # Optional:
-#   SF_RELEASE=2026.08_First_Harvest ./sourceforge/upload.sh   # FRS folder name
-#   ISO_NAME=Sweetpotatos_2026.08_First_Harvest.iso ./sourceforge/upload.sh
+#   SF_RELEASE=2026.09_Second_Harvest ./sourceforge/upload.sh   # FRS folder name
+#   ISO_NAME=Sweetpotatos_2026.09_Second_Harvest.iso ./sourceforge/upload.sh
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SF_USER="${SF_USER:-}"
 SF_PROJECT="${SF_PROJECT:-sweetpotatos}"
-SF_RELEASE="${SF_RELEASE:-2026.08_First_Harvest}"
-ISO_NAME="${ISO_NAME:-Sweetpotatos_2026.08_First_Harvest.iso}"
+SF_RELEASE="${SF_RELEASE:-2026.09_Second_Harvest}"
+ISO_NAME="${ISO_NAME:-Sweetpotatos_2026.09_Second_Harvest.iso}"
 ISO_SRC="${ROOT}/out/${ISO_NAME}"
 FILES_DIR="${ROOT}/sourceforge/files"
 HTDOCS="${ROOT}/sourceforge/htdocs"

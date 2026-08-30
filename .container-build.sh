@@ -125,6 +125,26 @@ if ! ls "${ROOT}/repo/spore"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[+] spore copied to repo/"
 fi
 
+if ! ls "${ROOT}/repo/sweetpotatos"-*.pkg.tar.* >/dev/null 2>&1; then
+  echo "[*] Building sweetpotatos from packaging/sweetpotatos..."
+  build_dir="/home/${BUILD_USER}/build/sweetpotatos-local"
+  rm -rf "${build_dir}"
+  sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
+  cp -a "${ROOT}/packaging/sweetpotatos/." "${build_dir}/"
+  chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
+  sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
+  shopt -s nullglob
+  pkgs=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  ((${#pkgs[@]})) || { echo "[!] sweetpotatos build produced no packages" >&2; exit 1; }
+  cp "${pkgs[@]}" "${ROOT}/repo/"
+  echo "[+] sweetpotatos copied to repo/"
+fi
+
+build_aur_to_repo python-screeninfo https://aur.archlinux.org/python-screeninfo.git
+build_aur_to_repo python-imageio-ffmpeg https://aur.archlinux.org/python-imageio-ffmpeg.git
+build_aur_to_repo waypaper https://aur.archlinux.org/waypaper.git
+
 echo "[*] Refreshing local repo database..."
 rm -f "${ROOT}/repo/sweetpotatos".db* "${ROOT}/repo/sweetpotatos".files* 2>/dev/null || true
 repo-add "${ROOT}/repo/sweetpotatos.db.tar.gz" "${ROOT}/repo"/*.pkg.tar.*

@@ -1,6 +1,6 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
-pkgver=2026.08.1
+pkgver=2026.09.1
 pkgrel=1
 pkgdesc='SweetPotatOs system overlay, upgrade tool, and branding'
 arch=('any')
