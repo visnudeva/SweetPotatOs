@@ -35,6 +35,10 @@ repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.*
 mkdir -p "${STAGE}"
 cp -a "${REPO}"/*.pkg.tar.* "${STAGE}/"
 cp -a "${REPO}/sweetpotatos.db.tar.gz" "${STAGE}/"
+cp -a "${REPO}/sweetpotatos.files.tar.gz" "${STAGE}/" 2>/dev/null || true
+# Pacman fetches $repo.db (gzip); HTTP must serve these names, not only *.tar.gz.
+cp -a "${REPO}/sweetpotatos.db.tar.gz" "${STAGE}/sweetpotatos.db"
+[[ -f "${REPO}/sweetpotatos.files.tar.gz" ]] && cp -a "${REPO}/sweetpotatos.files.tar.gz" "${STAGE}/sweetpotatos.files"
 
 FRS="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/"
 FRS_ARCH="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/${ARCH}/"

@@ -78,9 +78,33 @@ fix_pacman_conf() {
 fix_repo_urls() {
   local f=$1
   [[ -f "${f}" ]] || return 0
+  if grep -q 'sf-mirror.net' "${f}"; then
+    info "Removing dead sf-mirror.net entry from ${f}"
+    sed -i '/sf-mirror.net/d' "${f}"
+  fi
   if grep -q '/repo/\$arch' "${f}"; then
     info "Fixing stale repo/\$arch URL in ${f}"
-    sed -i 's|/repo/\$arch|/repo|g' "${f}"
+    sed -i 's|/repo/\$arch|/repo/x86_64|g' "${f}"
+  elif grep -qE 'project/sweetpotatos/repo[[:space:]]*$' "${f}"; then
+    info "Fixing flat repo URL in ${f}"
+    sed -i 's|project/sweetpotatos/repo$|project/sweetpotatos/repo/x86_64|g' "${f}"
+  fi
+}
+
+enable_xfer_command() {
+  local conf=/etc/pacman.conf
+  [[ -f "${conf}" ]] || return 0
+  if grep -qE '^XferCommand = /usr/bin/curl .*\ -L ' "${conf}"; then
+    return 0
+  fi
+  info "Enabling curl -L XferCommand in ${conf} (SourceForge redirects)"
+  sed -i '/^XferCommand = /d' "${conf}"
+  if grep -q '^#XferCommand = /usr/bin/curl -L ' "${conf}"; then
+    sed -i 's|^#XferCommand = /usr/bin/curl -L |XferCommand = /usr/bin/curl -L |' "${conf}"
+  elif grep -q '^#XferCommand = /usr/bin/curl ' "${conf}"; then
+    sed -i 's|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl -L |' "${conf}"
+  else
+    sed -i '/^\[options\]/a XferCommand = /usr/bin/curl -L -C - -f -o %o %u' "${conf}"
   fi
 }
 
@@ -93,8 +117,7 @@ ensure_repo_conf() {
       install -Dm644 /dev/stdin "${REPO_CONF}" <<'EOF'
 [sweetpotatos]
 SigLevel = Optional TrustAll
-Server = https://downloads.sourceforge.net/project/sweetpotatos/repo
-Server = https://sf-mirror.net/projects/sweetpotatos/repo
+Server = https://downloads.sourceforge.net/project/sweetpotatos/repo/x86_64
 EOF
     fi
   else
@@ -102,6 +125,7 @@ EOF
   fi
   fix_repo_urls /usr/share/sweetpotatos/pacman/sweetpotatos.conf
   fix_pacman_conf
+  enable_xfer_command
 }
 
 run_migrations() {
