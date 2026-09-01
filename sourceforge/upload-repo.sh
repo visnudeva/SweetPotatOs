@@ -5,13 +5,13 @@
 #   SF_USER=your_sf_username ./sourceforge/upload-repo.sh
 #
 # Layout on SourceForge (matches /etc/pacman.d/sweetpotatos.conf):
-#   project/sweetpotatos/repo/x86_64/sweetpotatos.db.tar.gz
-#   project/sweetpotatos/repo/x86_64/*.pkg.tar.*
+#   project/sweetpotatos/repo/sweetpotatos.db.tar.gz
+#   project/sweetpotatos/repo/*.pkg.tar.*
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO="${ROOT}/repo"
-STAGE="${ROOT}/sourceforge/repo-stage/x86_64"
+STAGE="${ROOT}/sourceforge/repo-stage"
 SF_USER="${SF_USER:-}"
 SF_PROJECT="${SF_PROJECT:-sweetpotatos}"
 ARCH="${ARCH:-x86_64}"
@@ -36,7 +36,7 @@ mkdir -p "${STAGE}"
 cp -a "${REPO}"/*.pkg.tar.* "${STAGE}/"
 cp -a "${REPO}/sweetpotatos.db.tar.gz" "${STAGE}/"
 
-FRS="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/${ARCH}/"
+FRS="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/"
 
 echo "[*] Uploading pacman repo to ${FRS}"
 rsync -avP --delete -e ssh "${STAGE}/" "${FRS}"
@@ -49,5 +49,5 @@ Installed systems can upgrade with:
   sudo spo-upgrade
 
 Repo URL (already in sweetpotatos package):
-  https://downloads.sourceforge.net/project/${SF_PROJECT}/repo/${ARCH}/
+  https://downloads.sourceforge.net/project/${SF_PROJECT}/repo/
 EOF

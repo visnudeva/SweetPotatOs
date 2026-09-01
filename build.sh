@@ -173,7 +173,8 @@ if (( DO_AUR_APPS )); then
   need_repo_pkg yay-bin || build_aur_pkg yay-bin https://aur.archlinux.org/yay-bin.git
   # Local PKGBUILD: AUR shelly-bin often blocked/empty behind Anubis; no zig needed
   need_repo_pkg shelly-bin || build_local_pkg shelly-bin "${ROOT}/packaging/shelly-bin"
-  need_repo_pkg localsend-bin || build_aur_pkg localsend-bin https://aur.archlinux.org/localsend-bin.git
+  # Local PKGBUILD: adds libayatana-indicator + ayatana-ido (Arch appindicator omits them)
+  need_repo_pkg localsend-bin || build_local_pkg localsend-bin "${ROOT}/packaging/localsend-bin"
   need_repo_pkg spore || build_local_pkg spore "${ROOT}/packaging/spore"
   # waypaper AUR deps not in official repos — build and install them first
   need_repo_pkg python-screeninfo || build_aur_pkg python-screeninfo https://aur.archlinux.org/python-screeninfo.git
@@ -216,8 +217,14 @@ if (( ! DO_ISO )); then
 fi
 
 echo "[*] Building SweetPotatOs ISO (profile: ${PROFILE})..."
-# Fresh work tree avoids leftover overlay/package file conflicts from failed builds
-rm -rf "${WORK}"
+# Fresh work tree avoids leftover overlay/package file conflicts from failed builds.
+# Container builds bind-mount work/; do not rmdir the mountpoint itself.
+if mountpoint -q "${WORK}" 2>/dev/null; then
+  find "${WORK}" -mindepth 1 -delete 2>/dev/null || true
+else
+  rm -rf "${WORK}"
+fi
+mkdir -p "${WORK}"
 PACMAN_CONF="${PROFILE}/pacman.conf"
 PACMAN_BACKUP="$(mktemp)"
 cp "${PACMAN_CONF}" "${PACMAN_BACKUP}"

@@ -84,8 +84,8 @@ ensure_repo_conf() {
       install -Dm644 /dev/stdin "${REPO_CONF}" <<'EOF'
 [sweetpotatos]
 SigLevel = Optional TrustAll
-Server = https://downloads.sourceforge.net/project/sweetpotatos/repo/$arch
-Server = https://sf-mirror.net/projects/sweetpotatos/repo/$arch
+Server = https://downloads.sourceforge.net/project/sweetpotatos/repo
+Server = https://sf-mirror.net/projects/sweetpotatos/repo
 EOF
     fi
   fi

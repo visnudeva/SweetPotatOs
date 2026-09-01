@@ -4,8 +4,10 @@ set -euo pipefail
 
 ROOT="/var/home/visnudeva/code/GITHUB/SweetPotatOs"
 BUILD_USER="builder"
+BUILD_ROOT="${ROOT}/.container-build"
 
 cd "${ROOT}"
+mkdir -p "${BUILD_ROOT}"
 
 echo "[*] Initializing pacman keys..."
 pacman-key --init
@@ -34,9 +36,9 @@ build_aur_to_repo() {
     return 0
   fi
   echo "[*] Building ${name} from AUR..."
-  local build_dir="/home/${BUILD_USER}/build/${name}"
+  local build_dir="${BUILD_ROOT}/${name}"
   rm -rf "${build_dir}"
-  sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
   sudo -u "${BUILD_USER}" git clone --depth 1 "${aur_url}" "${build_dir}"
   # Refresh local repo so earlier AUR builds resolve as deps if needed
   if ls "${ROOT}/repo"/*.pkg.tar.* >/dev/null 2>&1; then
@@ -74,9 +76,9 @@ build_swirl_to_repo() {
     return 0
   fi
   echo "[*] Building ${name} from packaging/swirl..."
-  local build_dir="/home/${BUILD_USER}/build/${name}"
+  local build_dir="${BUILD_ROOT}/${name}"
   rm -rf "${build_dir}"
-  sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
   cp -a "${ROOT}/packaging/swirl/." "${build_dir}/"
   chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
   sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
@@ -92,9 +94,9 @@ build_aur_to_repo yay-bin https://aur.archlinux.org/yay-bin.git
 # shelly-bin: local PKGBUILD (AUR clone often empty behind Anubis; no zig)
 if ! ls "${ROOT}/repo/shelly-bin"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[*] Building shelly-bin from packaging/shelly-bin..."
-  build_dir="/home/${BUILD_USER}/build/shelly-bin-local"
+  build_dir="${BUILD_ROOT}/shelly-bin-local"
   rm -rf "${build_dir}"
-  sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
   cp -a "${ROOT}/packaging/shelly-bin/." "${build_dir}/"
   chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
   pacman -S --needed --noconfirm --asdeps go-md2man
@@ -106,16 +108,30 @@ if ! ls "${ROOT}/repo/shelly-bin"-*.pkg.tar.* >/dev/null 2>&1; then
   cp "${pkgs[@]}" "${ROOT}/repo/"
   echo "[+] shelly-bin copied to repo/"
 fi
-build_aur_to_repo localsend-bin https://aur.archlinux.org/localsend-bin.git
+if ! ls "${ROOT}/repo/localsend-bin"-*.pkg.tar.* >/dev/null 2>&1; then
+  echo "[*] Building localsend-bin from packaging/localsend-bin..."
+  build_dir="${BUILD_ROOT}/localsend-bin-local"
+  rm -rf "${build_dir}"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
+  cp -a "${ROOT}/packaging/localsend-bin/." "${build_dir}/"
+  chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
+  sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
+  shopt -s nullglob
+  pkgs=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  ((${#pkgs[@]})) || { echo "[!] localsend-bin build produced no packages" >&2; exit 1; }
+  cp "${pkgs[@]}" "${ROOT}/repo/"
+  echo "[+] localsend-bin copied to repo/"
+fi
 
 if ! ls "${ROOT}/repo/spore"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[*] Building spore from packaging/spore..."
-  build_dir="/home/${BUILD_USER}/build/spore-local"
+  build_dir="${BUILD_ROOT}/spore-local"
   rm -rf "${build_dir}"
-  sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
   cp -a "${ROOT}/packaging/spore/." "${build_dir}/"
   chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
-  pacman -S --needed --noconfirm go
+  pacman -S --needed --noconfirm go gcc alsa-lib
   sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
   shopt -s nullglob
   pkgs=( "${build_dir}"/*.pkg.tar.* )
@@ -127,12 +143,12 @@ fi
 
 if ! ls "${ROOT}/repo/sweetpotatos"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[*] Building sweetpotatos from packaging/sweetpotatos..."
-  build_dir="/home/${BUILD_USER}/build/sweetpotatos-local"
+  build_dir="${BUILD_ROOT}/sweetpotatos-local"
   rm -rf "${build_dir}"
-  sudo -u "${BUILD_USER}" mkdir -p "/home/${BUILD_USER}/build"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
   cp -a "${ROOT}/packaging/sweetpotatos/." "${build_dir}/"
   chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
-  sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
+  sudo -u "${BUILD_USER}" env SWEETPOTATOS_ROOT="${ROOT}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
   shopt -s nullglob
   pkgs=( "${build_dir}"/*.pkg.tar.* )
   shopt -u nullglob

@@ -20,15 +20,14 @@ install=sweetpotatos.install
 source=(
   'spo-upgrade'
   'sweetpotatos.install'
-  'pacman/sweetpotatos.conf'
-  'migrations/001-lid-sleep.sh'
-  'migrations/002-pacman-repo.sh'
+  'sweetpotatos.conf'
+  '001-lid-sleep.sh'
+  '002-pacman-repo.sh'
 )
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
-  local root
-  root="$(cd "${startdir}/../.." && pwd)"
+  local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
   local ai="${root}/profile/airootfs"
 
   # Installed-system helpers (live-only tools stay in airootfs only).
@@ -79,10 +78,10 @@ package() {
       "${pkgdir}/etc/pacman.d/hooks/${hook}"
   done
 
-  install -Dm644 "${srcdir}/pacman/sweetpotatos.conf" \
+  install -Dm644 "${srcdir}/sweetpotatos.conf" \
     "${pkgdir}/usr/share/sweetpotatos/pacman/sweetpotatos.conf"
-  install -Dm644 "${srcdir}/migrations/001-lid-sleep.sh" \
+  install -Dm644 "${srcdir}/001-lid-sleep.sh" \
     "${pkgdir}/usr/share/sweetpotatos/migrations/001-lid-sleep.sh"
-  install -Dm644 "${srcdir}/migrations/002-pacman-repo.sh" \
+  install -Dm644 "${srcdir}/002-pacman-repo.sh" \
     "${pkgdir}/usr/share/sweetpotatos/migrations/002-pacman-repo.sh"
 }

@@ -140,8 +140,8 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+$up focus up
     # $right is "l" — reserved for lock; use arrows for focus right
     bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
+    bindsym $mod+Down workspace prev_on_output
+    bindsym $mod+Up workspace next_on_output
     bindsym $mod+Right focus right
 
     bindsym $mod+Shift+$left move left

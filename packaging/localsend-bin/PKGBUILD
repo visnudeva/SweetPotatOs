@@ -1,0 +1,57 @@
+# Local PKGBUILD: AUR localsend-bin plus explicit Ayatana tray deps.
+# Arch libayatana-appindicator 0.6.0-2 omits libayatana-indicator / ayatana-ido
+# from depends; LocalSend's tray plugin needs them at runtime.
+# Upstream: https://github.com/localsend/localsend
+pkgname=localsend-bin
+pkgver=1.18.0
+pkgrel=2
+pkgdesc='An open source cross-platform alternative to AirDrop'
+url=https://github.com/localsend/localsend
+arch=('x86_64' 'aarch64')
+license=(Apache-2.0)
+depends=(
+  fuse2
+  xdg-user-dirs
+  libayatana-appindicator
+  libayatana-indicator
+  ayatana-ido
+)
+conflicts=('localsend')
+provides=('localsend')
+options=(!debug)
+source_x86_64=("${url}/releases/download/v${pkgver}/LocalSend-${pkgver}-linux-x86-64.deb")
+source_aarch64=("${url}/releases/download/v${pkgver}/LocalSend-${pkgver}-linux-arm-64.deb")
+sha256sums_x86_64=('dae68192ad43a59a68df06454eb5fa4e9a9f86a343fe430165efd8b18863d0f4')
+sha256sums_aarch64=('eb24e724fbdf830c8fb07dfc66b76b8a649923d083278305a63d5d539db4b606')
+_pkgdesktop="localsend_app.desktop"
+
+prepare() {
+  tar -xf data.tar.zst
+}
+
+build() {
+  sed -i -E \
+    "s|Exec=localsend_app|Exec=localsend|" \
+    "${srcdir}/usr/share/applications/${_pkgdesktop}"
+
+  sed -i -E 's/^Icon=.+/Icon=localsend/' "${srcdir}/usr/share/applications/${_pkgdesktop}"
+}
+
+package() {
+  install -Dm644 "${srcdir}/usr/share/applications/${_pkgdesktop}" \
+    "${pkgdir}/usr/share/applications/${pkgname%-*}.desktop"
+
+  install -dm644 "${pkgdir}/usr/share/icons/"
+  cp -a "${srcdir}/usr/share/icons" "${pkgdir}/usr/share"
+  for res in "128x128" "256x256"; do
+    mv "${pkgdir}/usr/share/icons/hicolor/${res}/apps/localsend_app.png" \
+      "${pkgdir}/usr/share/icons/hicolor/${res}/apps/localsend.png"
+  done
+
+  install -dm755 "${pkgdir}/opt/${pkgname%-*}/"
+  cp -a "${srcdir}/opt/localsend_app/." "${pkgdir}/opt/${pkgname%-*}"
+  mv "${pkgdir}/opt/${pkgname%-*}/localsend_app" "${pkgdir}/opt/${pkgname%-*}/localsend"
+
+  install -dm755 "${pkgdir}/usr/bin"
+  ln -s "/opt/${pkgname%-*}/${pkgname%-*}" "${pkgdir}/usr/bin/${pkgname%-*}"
+}

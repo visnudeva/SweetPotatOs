@@ -2,7 +2,10 @@
 work/
 out/
 .aur-build/
+.container-build/
 sourceforge/files/
+sourceforge/repo-stage/
+out-build*.log
 
 # Accidental initramfs extract into repo root (do not commit)
 /bin

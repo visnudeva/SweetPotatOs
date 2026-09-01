@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SweetPotatOs First Harvest — Arch-based Linux for old potato PCs</title>
+  <title>SweetPotatOs — Arch-based Linux for old potato PCs</title>
   <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Swirl desktop, and Calamares installer.">
   <style>
     :root {
@@ -43,15 +43,6 @@
       font-size: clamp(1.8rem, 4vw, 2.6rem);
       color: var(--text);
       letter-spacing: -0.02em;
-    }
-    h1 .harvest {
-      display: inline-block;
-      margin-left: 0.35em;
-      vertical-align: 0.2em;
-      font-size: 0.42em;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      color: var(--orange);
     }
     .tag {
       display: inline-block;
@@ -231,7 +222,7 @@
 <body>
   <header>
     <img class="logo" src="SweetPotatOs.png" alt="SweetPotatOs logo">
-    <h1>SweetPotatOs <span class="harvest">First Harvest</span></h1>
+    <h1>SweetPotatOs</h1>
     <span class="tag">Arch-based Linux distro</span>
     <p class="lead">
       A live graphical ISO with the SweetPotato <strong>Swirl</strong> desktop and a Calamares installer,
@@ -241,6 +232,7 @@
       <a class="btn btn-primary" href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download ISO</a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotatOs">GitHub</a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/swirl">Swirl</a>
+      <a class="btn btn-secondary" href="https://github.com/visnudeva/spore">Spore</a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotato">SweetPotato theme</a>
     </div>
   </header>
@@ -254,13 +246,13 @@
         poster="First_Harvest-poster.jpg"
         width="1794"
         height="1004"
-        aria-label="SweetPotatOs First Harvest screencast">
+        aria-label="SweetPotatOs Swirl desktop screencast">
         <source src="First_Harvest.mp4" type="video/mp4">
       </video>
     </div>
     <p class="hero-caption">
       <strong>Swirl on SweetPotatOs</strong>
-      <span>75s First Harvest screencast</span>
+      <span>75s screencast</span>
     </p>
   </div>
 
@@ -375,6 +367,25 @@
       <tr><td><code>Print</code></td><td>Screenshot</td></tr>
       <tr><td><code>Mod+Print</code></td><td>Screen record toggle</td></tr>
     </table>
+
+    <h2>Upgrade without reinstalling</h2>
+    <p>
+      If SweetPotatOs is already installed, you do <strong>not</strong> need to download and flash a new ISO for every release.
+      New versions ship as Arch packages through the SweetPotatOs pacman repository. The
+      <code>spo-upgrade</code> tool updates the base system, SweetPotatOs overlay packages (Swirl, Spore, branding, hooks),
+      and runs one-time migrations — your home folder and installed apps stay put.
+    </p>
+    <pre><code>sudo spo-upgrade</code></pre>
+    <p>Useful options:</p>
+    <ul>
+      <li><code>sudo spo-upgrade --check</code> — see whether a newer release is available</li>
+      <li><code>sudo spo-upgrade --dry-run</code> — preview steps without changing the system</li>
+      <li><code>sudo spo-upgrade --theme</code> — also refresh the SweetPotato desktop theme from GitHub</li>
+    </ul>
+    <p>
+      After a kernel update, reboot when prompted. ISO downloads on the Files page are mainly for new installs
+      or recovery — not for routine updates on an existing system.
+    </p>
 
     <h2>Write ISO to USB</h2>
     <pre><code>lsblk   # find the USB disk, e.g. /dev/sdX — not a partition

@@ -6,8 +6,8 @@ pkgdesc='TUI web radio and local music player with FFT visualizers'
 arch=('x86_64')
 url='https://github.com/visnudeva/spore'
 license=('MIT')
-depends=('ffmpeg')
-makedepends=('go')
+depends=('ffmpeg' 'alsa-lib')
+makedepends=('go' 'gcc' 'alsa-lib')
 optdepends=(
   'pipewire-pulse: PulseAudio/PipeWire audio output'
   'alsa-lib: ALSA audio output'
@@ -27,7 +27,6 @@ pkgver() {
 
 build() {
   cd spore
-  export CGO_ENABLED=0
   go build -trimpath -ldflags='-s -w' -o spore ./cmd/spore
 }
 
