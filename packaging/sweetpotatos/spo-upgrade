@@ -4,9 +4,11 @@ set -euo pipefail
 
 BRAND=/usr/local/share/sweetpotatos/os-release
 REPO_CONF=/etc/pacman.d/sweetpotatos.conf
+REPO_CONF_DISABLED="${REPO_CONF}.spo-upgrade-off"
 MIGRATION_STATE=/var/lib/sweetpotatos/migrations
 SWEETPOTATO_REPO="${SWEETPOTATO_REPO:-https://github.com/visnudeva/SweetPotato.git}"
 SWEETPOTATO_REF="${SWEETPOTATO_REF:-main}"
+SPO_REPO_BASE="${SPO_REPO_BASE:-https://downloads.sourceforge.net/project/sweetpotatos/repo/x86_64}"
 
 SPO_REPO_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper)
 
@@ -95,20 +97,12 @@ fix_repo_urls() {
   fi
 }
 
-enable_xfer_command() {
+disable_xfer_command() {
   local conf=/etc/pacman.conf
   [[ -f "${conf}" ]] || return 0
-  if grep -qE '^XferCommand = /usr/bin/curl .*\ -L ' "${conf}"; then
-    return 0
-  fi
-  info "Enabling curl -L XferCommand in ${conf} (SourceForge redirects)"
-  sed -i '/^XferCommand = /d' "${conf}"
-  if grep -q '^#XferCommand = /usr/bin/curl -L ' "${conf}"; then
-    sed -i 's|^#XferCommand = /usr/bin/curl -L |XferCommand = /usr/bin/curl -L |' "${conf}"
-  elif grep -q '^#XferCommand = /usr/bin/curl ' "${conf}"; then
-    sed -i 's|^#XferCommand = /usr/bin/curl |XferCommand = /usr/bin/curl -L |' "${conf}"
-  else
-    sed -i '/^\[options\]/a XferCommand = /usr/bin/curl -L -C - -f -o %o %u' "${conf}"
+  if grep -q '^XferCommand = ' "${conf}"; then
+    info "Removing XferCommand from ${conf} (breaks official repo signature checks)"
+    sed -i '/^XferCommand = /d' "${conf}"
   fi
 }
 
@@ -129,7 +123,83 @@ EOF
   fi
   fix_repo_urls /usr/share/sweetpotatos/pacman/sweetpotatos.conf
   fix_pacman_conf
-  enable_xfer_command
+  disable_xfer_command
+}
+
+clear_bad_sync_dbs() {
+  local f
+  shopt -s nullglob
+  for f in /var/lib/pacman/sync/*.db; do
+    if ! file "${f}" | grep -q 'gzip compressed data'; then
+      warn "Removing corrupt sync db ${f} ($(file -b "${f}"))"
+      rm -f "${f}" "${f}.sig" "${f}.part"
+    fi
+  done
+  rm -f /var/lib/pacman/sync/sweetpotatos.db*
+  shopt -u nullglob
+}
+
+disable_overlay_repo() {
+  [[ -f "${REPO_CONF}" ]] && mv "${REPO_CONF}" "${REPO_CONF_DISABLED}"
+}
+
+enable_overlay_repo() {
+  [[ -f "${REPO_CONF_DISABLED}" ]] && mv "${REPO_CONF_DISABLED}" "${REPO_CONF}"
+}
+
+overlay_db_version() {
+  local db=$1 pkg=$2
+  tar -xOzf "${db}" --wildcards "${pkg}-*/desc" 2>/dev/null \
+    | awk '/^%VERSION%/{getline; print; exit}'
+}
+
+fetch_overlay_db() {
+  local dest=$1
+  curl -Lf -o "${dest}" "${SPO_REPO_BASE}/sweetpotatos.db" \
+    || die "could not download ${SPO_REPO_BASE}/sweetpotatos.db"
+  if ! file "${dest}" | grep -q 'gzip compressed data'; then
+    die "overlay repo db is not valid gzip (got $(file -b "${dest}"))"
+  fi
+}
+
+upgrade_overlay_via_curl() {
+  command -v curl >/dev/null || die "curl is required"
+  local work db pkg fn path
+  local -a to_install=()
+  work="$(mktemp -d /tmp/spo-repo.XXXXXX)"
+  db="${work}/sweetpotatos.db"
+  trap 'rm -rf "${work}"' RETURN
+
+  info "Fetching overlay package index from SourceForge…"
+  fetch_overlay_db "${db}"
+
+  for pkg in "${SPO_REPO_PKGS[@]}"; do
+    fn="$(tar -xOzf "${db}" --wildcards "${pkg}-*/desc" 2>/dev/null \
+      | awk '/^%FILENAME%/{getline; print; exit}')"
+    if [[ -z "${fn}" ]]; then
+      warn "package ${pkg} not listed in overlay repo"
+      continue
+    fi
+    if [[ -f "/var/cache/pacman/pkg/${fn}" ]] \
+      && file "/var/cache/pacman/pkg/${fn}" | grep -q 'Zstandard\|gzip compressed\|POSIX tar'; then
+      path="/var/cache/pacman/pkg/${fn}"
+      info "Using cached ${fn}"
+    else
+      path="${work}/${fn}"
+      info "Downloading ${fn}…"
+      curl -Lf -o "${path}" "${SPO_REPO_BASE}/${fn}" \
+        || { warn "failed to download ${fn}"; continue; }
+    fi
+    to_install+=("${path}")
+  done
+
+  if ((${#to_install[@]} == 0)); then
+    warn "no overlay packages downloaded"
+    return 1
+  fi
+
+  info "Installing overlay packages…"
+  pacman -U --needed --noconfirm "${to_install[@]}"
 }
 
 run_migrations() {
@@ -170,6 +240,7 @@ upgrade_theme() {
 }
 
 ensure_repo_conf
+clear_bad_sync_dbs
 
 if (( DO_DRY_RUN )); then
   info "Dry run — no packages will change"
@@ -178,19 +249,27 @@ fi
 info "Installed: $(installed_version | tr '\n' ' '; echo)"
 
 if (( DO_CHECK )); then
-  pacman -Sy
-  if pacman -Si sweetpotatos &>/dev/null; then
-    info "Repository sweetpotatos version: $(pacman -Si sweetpotatos | awk '/^Version /{print $3; exit}')"
-    pacman -Qu sweetpotatos 2>/dev/null && info "Upgrade available for sweetpotatos" || info "sweetpotatos package is up to date"
-  else
-    warn "sweetpotatos package not found in configured repos (publish repo/ to SourceForge first?)"
+  work="$(mktemp -d /tmp/spo-check.XXXXXX)"
+  fetch_overlay_db "${work}/sweetpotatos.db"
+  if ver="$(overlay_db_version "${work}/sweetpotatos.db" sweetpotatos)"; then
+    info "Overlay repo sweetpotatos version: ${ver}"
+    if pacman -Q sweetpotatos &>/dev/null; then
+      installed="$(pacman -Q sweetpotatos | awk '{print $2}')"
+      [[ "${installed}" == "${ver}" ]] \
+        && info "sweetpotatos package is up to date" \
+        || info "Upgrade available (${installed} → ${ver})"
+    else
+      info "sweetpotatos package is not installed yet"
+    fi
   fi
+  rm -rf "${work}"
   exit 0
 fi
 
 if (( DO_DRY_RUN )); then
-  info "Would run: pacman -Syu"
-  info "Would run: pacman -S --needed ${SPO_REPO_PKGS[*]}"
+  info "Would sync official repos (overlay repo disabled during sync)"
+  info "Would run: pacman -Su"
+  info "Would install overlay packages via curl from ${SPO_REPO_BASE}"
   run_migrations
   (( DO_THEME )) && upgrade_theme
   exit 0
@@ -198,18 +277,20 @@ fi
 
 kernel_before="$(pacman -Q linux 2>/dev/null | awk '{print $2}' || true)"
 
-info "Syncing package databases…"
-pacman -Sy
+info "Syncing official Arch repositories…"
+disable_overlay_repo
+if ! pacman -Sy; then
+  warn "pacman -Sy failed — clearing all sync dbs and retrying once"
+  rm -f /var/lib/pacman/sync/*.db /var/lib/pacman/sync/*.db.sig
+  pacman -Sy
+fi
+enable_overlay_repo
 
 info "Upgrading system packages…"
 pacman -Su --noconfirm
 
 info "Upgrading SweetPotatOs overlay packages…"
-# Some may live only on [sweetpotatos]; ignore if repo is not published yet.
-if ! pacman -S --needed --noconfirm "${SPO_REPO_PKGS[@]}"; then
-  warn "some SweetPotatOs repo packages could not be installed (is repo/ published?)"
-  pacman -S --needed --noconfirm sweetpotatos 2>/dev/null || true
-fi
+upgrade_overlay_via_curl || warn "some overlay packages could not be installed"
 
 run_migrations
 

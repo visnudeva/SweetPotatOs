@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.09.1
-pkgrel=3
+pkgrel=4
 pkgdesc='SweetPotatOs system overlay, upgrade tool, and branding'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -25,8 +25,9 @@ source=(
   '002-pacman-repo.sh'
   '003-repo-url.sh'
   '004-pacman-xfer.sh'
+  '005-remove-xfer.sh'
 )
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
   local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
@@ -90,4 +91,6 @@ package() {
     "${pkgdir}/usr/share/sweetpotatos/migrations/003-repo-url.sh"
   install -Dm644 "${srcdir}/004-pacman-xfer.sh" \
     "${pkgdir}/usr/share/sweetpotatos/migrations/004-pacman-xfer.sh"
+  install -Dm644 "${srcdir}/005-remove-xfer.sh" \
+    "${pkgdir}/usr/share/sweetpotatos/migrations/005-remove-xfer.sh"
 }
