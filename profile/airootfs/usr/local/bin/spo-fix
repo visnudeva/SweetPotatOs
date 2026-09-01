@@ -1,10 +1,15 @@
 #!/usr/bin/bash
 # Recover pacman + install SweetPotatOs overlay when spo-upgrade hits gpgme errors.
-# Run:  curl -Lf .../spo-fix-repo.sh | sudo bash -s
+#
+# Do NOT pipe into sudo (sudo cannot ask for your password on stdin):
+#   curl -LfO https://sweetpotatos.sourceforge.io/spo-fix-repo.sh
+#   sudo bash spo-fix-repo.sh
 set -eo pipefail
 
 if [[ "$(id -u)" -ne 0 ]]; then
-  echo "Run as root: curl -Lf .../spo-fix-repo.sh | sudo bash -s" >&2
+  echo "Do not pipe this script into sudo — download first, then run:" >&2
+  echo "  curl -LfO https://sweetpotatos.sourceforge.io/spo-fix-repo.sh" >&2
+  echo "  sudo bash spo-fix-repo.sh" >&2
   exit 1
 fi
 
@@ -62,7 +67,7 @@ rm -f /etc/pacman.d/sweetpotatos.conf.off
 work="$(mktemp -d /tmp/spo-fix.XXXXXX)"
 trap 'rm -rf "${work}"' EXIT
 db="${work}/sweetpotatos.db"
-curl -Lf -o "${db}" "${SPO_REPO_BASE}/sweetpotatos.db"
+curl -Lf --connect-timeout 20 --max-time 600 -o "${db}" "${SPO_REPO_BASE}/sweetpotatos.db"
 if ! file "${db}" | grep -q 'gzip compressed data'; then
   echo "[!] overlay repo db is not valid: $(file -b "${db}")" >&2
   exit 1
@@ -75,7 +80,7 @@ for pkg in "${OVERLAY_PKGS[@]}"; do
   [[ -n "${fn}" ]] || continue
   path="${work}/${fn}"
   echo "    downloading ${fn}…"
-  curl -Lf -o "${path}" "${SPO_REPO_BASE}/${fn}"
+  curl -Lf --connect-timeout 20 --max-time 600 -o "${path}" "${SPO_REPO_BASE}/${fn}"
   to_install+=("${path}")
 done
 
