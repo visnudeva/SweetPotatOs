@@ -89,6 +89,10 @@ fix_repo_urls() {
     info "Fixing flat repo URL in ${f}"
     sed -i 's|project/sweetpotatos/repo$|project/sweetpotatos/repo/x86_64|g' "${f}"
   fi
+  if grep -q 'Optional TrustAll' "${f}"; then
+    info "Fixing SigLevel in ${f} (unsigned repo)"
+    sed -i 's|^SigLevel = Optional TrustAll|SigLevel = Never|' "${f}"
+  fi
 }
 
 enable_xfer_command() {
@@ -116,7 +120,7 @@ ensure_repo_conf() {
     else
       install -Dm644 /dev/stdin "${REPO_CONF}" <<'EOF'
 [sweetpotatos]
-SigLevel = Optional TrustAll
+SigLevel = Never
 Server = https://downloads.sourceforge.net/project/sweetpotatos/repo/x86_64
 EOF
     fi
