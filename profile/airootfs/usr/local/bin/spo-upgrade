@@ -75,11 +75,32 @@ fix_pacman_conf() {
   fi
 }
 
+fix_repo_urls() {
+  local f=$1
+  [[ -f "${f}" ]] || return 0
+  if grep -q '/repo/\$arch' "${f}"; then
+    info "Fixing stale repo/\$arch URL in ${f}"
+    sed -i 's|/repo/\$arch|/repo|g' "${f}"
+  fi
+}
+
 ensure_repo_conf() {
   if [[ ! -f "${REPO_CONF}" ]]; then
     info "Installing ${REPO_CONF}"
-    install -Dm644 /usr/share/sweetpotatos/pacman/sweetpotatos.conf "${REPO_CONF}"
+    if [[ -f /usr/share/sweetpotatos/pacman/sweetpotatos.conf ]]; then
+      install -Dm644 /usr/share/sweetpotatos/pacman/sweetpotatos.conf "${REPO_CONF}"
+    else
+      install -Dm644 /dev/stdin "${REPO_CONF}" <<'EOF'
+[sweetpotatos]
+SigLevel = Optional TrustAll
+Server = https://downloads.sourceforge.net/project/sweetpotatos/repo
+Server = https://sf-mirror.net/projects/sweetpotatos/repo
+EOF
+    fi
+  else
+    fix_repo_urls "${REPO_CONF}"
   fi
+  fix_repo_urls /usr/share/sweetpotatos/pacman/sweetpotatos.conf
   fix_pacman_conf
 }
 

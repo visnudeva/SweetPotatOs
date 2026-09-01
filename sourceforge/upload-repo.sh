@@ -37,9 +37,13 @@ cp -a "${REPO}"/*.pkg.tar.* "${STAGE}/"
 cp -a "${REPO}/sweetpotatos.db.tar.gz" "${STAGE}/"
 
 FRS="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/"
+FRS_ARCH="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/${ARCH}/"
 
 echo "[*] Uploading pacman repo to ${FRS}"
 rsync -avP --delete -e ssh "${STAGE}/" "${FRS}"
+
+echo "[*] Uploading pacman repo to ${FRS_ARCH} (early Second Harvest used repo/\$arch/)"
+rsync -avP --delete -e ssh "${STAGE}/" "${FRS_ARCH}"
 
 cat <<EOF
 
