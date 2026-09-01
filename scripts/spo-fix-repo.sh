@@ -80,7 +80,8 @@ for pkg in "${OVERLAY_PKGS[@]}"; do
 done
 
 ((${#to_install[@]})) || { echo "[!] no overlay packages found" >&2; exit 1; }
-pacman -U --needed --noconfirm "${to_install[@]}"
+# ISO installs ship /usr/local/* in airootfs without pacman — allow overlay to take over.
+pacman -U --needed --noconfirm --overwrite '*' "${to_install[@]}"
 
 /usr/local/bin/sweetpotatos-branding 2>/dev/null || true
 echo "[+] Done. sweetpotatos package and overlay tools installed."

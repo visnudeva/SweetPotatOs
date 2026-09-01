@@ -199,7 +199,7 @@ upgrade_overlay_via_curl() {
   fi
 
   info "Installing overlay packages…"
-  pacman -U --needed --noconfirm "${to_install[@]}"
+  pacman -U --needed --noconfirm --overwrite '*' "${to_install[@]}"
 }
 
 run_migrations() {
