@@ -32,7 +32,8 @@ Options:
   --theme       Also refresh the SweetPotato desktop theme (git clone + install.sh)
   -h, --help    Show this help
 
-Requires root (sudo spo-upgrade).
+Safe to run from a desktop terminal: if Swirl is active, you are logged out
+briefly while the upgrade continues in the background (see /var/log/spo-upgrade.log).
 EOF
 }
 
@@ -48,6 +49,59 @@ while [[ $# -gt 0 ]]; do
 done
 
 [[ "${EUID}" -eq 0 ]] || die "run as root: sudo spo-upgrade"
+
+UPGRADE_LOG=/var/log/spo-upgrade.log
+SCRIPT_SELF="$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo /usr/local/bin/spo-upgrade)"
+
+desktop_session_active() {
+  pgrep -x swirl >/dev/null 2>&1 && return 0
+  [[ -n "${WAYLAND_DISPLAY:-}${SWAYSOCK:-}${SWIRLSOCK:-}" ]] && return 0
+  return 1
+}
+
+stop_swirl() {
+  pgrep -x swirl >/dev/null 2>&1 || return 0
+  info "Stopping Swirl so GPU/compositor packages can update safely…"
+  pkill -TERM -x swirl 2>/dev/null || true
+  local i
+  for (( i = 0; i < 20; i++ )); do
+    pgrep -x swirl >/dev/null 2>&1 || return 0
+    sleep 0.5
+  done
+  pkill -KILL -x swirl 2>/dev/null || true
+  sleep 1
+}
+
+finish_graphical_upgrade() {
+  local reboot_needed=${1:-0}
+  if systemctl is-active --quiet ly.service 2>/dev/null; then
+    systemctl restart ly.service 2>/dev/null || true
+  fi
+  if (( reboot_needed )); then
+    wall "SweetPotatOs upgrade finished — reboot to load the new kernel, then log in." \
+      2>/dev/null || true
+  else
+    wall "SweetPotatOs upgrade finished — you can log in again." 2>/dev/null || true
+  fi
+}
+
+launch_detached_upgrade() {
+  local -a cmd=(/usr/bin/bash "${SCRIPT_SELF}")
+  (( DO_THEME )) && cmd+=(--theme)
+
+  info "Desktop session detected — scheduling background upgrade."
+  info "You will return to the login screen shortly."
+  info "Progress log: ${UPGRADE_LOG}"
+
+  systemd-run --unit=spo-upgrade --collect \
+    --property=StandardOutput=append:"${UPGRADE_LOG}" \
+    --property=StandardError=append:"${UPGRADE_LOG}" \
+    --setenv=SPO_UPGRADE_DETACHED=1 \
+    --setenv=SPO_USER="${SUDO_USER:-}" \
+    "${cmd[@]}" || die "could not start background upgrade (systemd-run failed)"
+
+  exit 0
+}
 
 [[ -f "${BRAND}" ]] && grep -q '^ID=sweetpotatos' "${BRAND}" \
   || die "this does not look like SweetPotatOs (${BRAND} missing or wrong ID)"
@@ -275,6 +329,17 @@ if (( DO_DRY_RUN )); then
   exit 0
 fi
 
+if (( ! DO_CHECK && ! DO_DRY_RUN )) && [[ -z "${SPO_UPGRADE_DETACHED:-}" ]] && desktop_session_active; then
+  launch_detached_upgrade
+fi
+
+if [[ -n "${SPO_UPGRADE_DETACHED:-}" ]]; then
+  info "Background upgrade starting…"
+  sleep 3
+  stop_swirl
+  [[ -z "${SPO_USER:-}" && -n "${SUDO_USER:-}" ]] && export SPO_USER="${SUDO_USER}"
+fi
+
 kernel_before="$(pacman -Q linux 2>/dev/null | awk '{print $2}' || true)"
 
 info "Syncing official Arch repositories…"
@@ -301,10 +366,16 @@ fi
 /usr/local/bin/sweetpotatos-branding 2>/dev/null || true
 
 kernel_after="$(pacman -Q linux 2>/dev/null | awk '{print $2}' || true)"
+reboot_needed=0
 if [[ -n "${kernel_before}" && -n "${kernel_after}" && "${kernel_before}" != "${kernel_after}" ]]; then
   info "Linux kernel updated (${kernel_before} → ${kernel_after}); rebuilding initramfs…"
   mkinitcpio -P
-  warn "Reboot recommended to load the new kernel."
+  reboot_needed=1
+  warn "Reboot when convenient to load the new kernel."
+fi
+
+if [[ -n "${SPO_UPGRADE_DETACHED:-}" ]]; then
+  finish_graphical_upgrade "${reboot_needed}"
 fi
 
 info "Done. $(installed_version | tr '\n' ' '; echo)"
