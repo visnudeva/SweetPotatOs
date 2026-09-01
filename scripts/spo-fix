@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-# One-command updater recovery. Usage:  sudo spo-fix
-exec "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/spo-fix-repo.sh" "$@"
