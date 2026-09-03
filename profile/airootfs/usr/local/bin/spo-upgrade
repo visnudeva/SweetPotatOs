@@ -8,7 +8,8 @@ REPO_CONF_DISABLED="${REPO_CONF}.spo-upgrade-off"
 MIGRATION_STATE=/var/lib/sweetpotatos/migrations
 SWEETPOTATO_REPO="${SWEETPOTATO_REPO:-https://github.com/visnudeva/SweetPotato.git}"
 SWEETPOTATO_REF="${SWEETPOTATO_REF:-main}"
-SPO_REPO_BASE="${SPO_REPO_BASE:-https://downloads.sourceforge.net/project/sweetpotatos/repo/x86_64}"
+# Overlay packages: GitHub Release assets (ISO downloads stay on SourceForge).
+SPO_REPO_BASE="${SPO_REPO_BASE:-https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo}"
 
 SPO_REPO_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper)
 
@@ -138,6 +139,14 @@ fix_repo_urls() {
     info "Removing dead sf-mirror.net entry from ${f}"
     sed -i '/sf-mirror.net/d' "${f}"
   fi
+  # Prefer GitHub overlay release over any leftover SourceForge repo URL.
+  if grep -qE 'downloads\.sourceforge\.net/project/sweetpotatos/repo|sourceforge\.net/.*/sweetpotatos/repo' "${f}"; then
+    info "Migrating overlay repo URL from SourceForge to GitHub in ${f}"
+    sed -i \
+      -e "s|^Server = https://downloads\\.sourceforge\\.net/project/sweetpotatos/repo/.*|Server = ${SPO_REPO_BASE}|" \
+      -e "s|^Server = https://sourceforge\\.net/.*/sweetpotatos/repo/.*|Server = ${SPO_REPO_BASE}|" \
+      "${f}"
+  fi
   if grep -q '/repo/\$arch' "${f}"; then
     info "Fixing stale repo/\$arch URL in ${f}"
     sed -i 's|/repo/\$arch|/repo/x86_64|g' "${f}"
@@ -166,10 +175,10 @@ ensure_repo_conf() {
     if [[ -f /usr/share/sweetpotatos/pacman/sweetpotatos.conf ]]; then
       install -Dm644 /usr/share/sweetpotatos/pacman/sweetpotatos.conf "${REPO_CONF}"
     else
-      install -Dm644 /dev/stdin "${REPO_CONF}" <<'EOF'
+      install -Dm644 /dev/stdin "${REPO_CONF}" <<EOF
 [sweetpotatos]
 SigLevel = Never
-Server = https://downloads.sourceforge.net/project/sweetpotatos/repo/x86_64
+Server = ${SPO_REPO_BASE}
 EOF
     fi
   else
@@ -337,7 +346,7 @@ if [[ -n "${SPO_UPGRADE_DETACHED:-}" ]]; then
   info "Background upgrade starting…"
   sleep 3
   stop_swirl
-  (( DO_THEME )) || [[ -z "${SPO_USER:-}" && -n "${SUDO_USER:-}" ]] && export SPO_USER="${SUDO_USER}"
+  [[ -z "${SPO_USER:-}" && -n "${SUDO_USER:-}" ]] && export SPO_USER="${SUDO_USER}"
 fi
 
 kernel_before="$(pacman -Q linux 2>/dev/null | awk '{print $2}' || true)"

@@ -1,8 +1,11 @@
 SourceForge project setup checklist
 ====================================
 
-1) Upload ISO (needs your SF password or SSH key):
-   SF_USER=YOUR_SF_USERNAME /home/visnudeva/SweetPotatOs/sourceforge/upload.sh
+1) Upload ISO only (needs your SF password or SSH key):
+   SF_USER=YOUR_SF_USERNAME ./sourceforge/upload.sh
+
+   Overlay packages for spo-upgrade go to GitHub, not SourceForge Files:
+   ./github/upload-repo.sh
 
 2) Mirror GitHub → SourceForge Git (one-time, then push when releasing):
    # Add ~/.ssh/id_ed25519_sourceforge.pub under

@@ -20,4 +20,4 @@ Before non-trivial changes, read `NOTES.md` at the repo root.
 - Ly `default_input = password`. Enable `bluetooth.service` on live/install.
 - Wallpaper: `ensure-wallpaper.sh` must not overwrite a saved `wallpaper.conf` with the UsefulBinds fallback.
 - Live Calamares keyboard needs `sweetpotatos-sway-xkb-watch` (locale1 → Swirl via busctl poll). Do not assume Calamares Wayland apply changes the compositor by itself, and do not listen with a system-bus monitor as liveuser.
-- Push SweetPotatOs to **both** `origin` (GitHub) and `sourceforge` when the user asks to publish git. ISO upload is separate (`sourceforge/upload.sh`).
+- Push SweetPotatOs to **both** `origin` (GitHub) and `sourceforge` when the user asks to publish git. ISO upload is separate (`sourceforge/upload.sh`). Overlay packages for `spo-upgrade` go to GitHub (`./github/upload-repo.sh`), not SourceForge Files.

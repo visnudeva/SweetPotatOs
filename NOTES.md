@@ -31,7 +31,9 @@ Expected layout on a build machine (siblings):
 4. Build ISO: `sudo ./build.sh`.
 5. Publish:
    - Git: push SweetPotato → GitHub; SweetPotatOs → GitHub **and** `sourceforge`.
-   - ISO files: `SF_USER=… ./sourceforge/upload.sh` (rsync ISO + `.sha256` + `htdocs/`).
+   - Overlay packages (spo-upgrade): `./github/upload-repo.sh` (GitHub Release `pacman-repo`).
+   - ISO files only: `SF_USER=… ./sourceforge/upload.sh` (rsync ISO + `.sha256` + `htdocs/`).
+   - Theme updates: SweetPotato on GitHub (`spo-upgrade --theme` clones it).
 
 After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]` `Server = file://…` to the absolute path of `./repo`.
 
@@ -88,11 +90,18 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## SourceForge
 
-- Project: `sweetpotatos`
-- Git: `ssh://visnudeva@git.code.sf.net/p/sweetpotatos/code`
+- Project: `sweetpotatos` — **ISO downloads + project web only** (keep Files clean; no pacman `repo/` tree).
+- Git mirror: `ssh://visnudeva@git.code.sf.net/p/sweetpotatos/code`
 - Files release folder naming: `SF_RELEASE` (e.g. `2026.08_First_Harvest`) with ISO `Sweetpotatos_2026.08_First_Harvest.iso`
 - Web: `sourceforge/htdocs/` → `https://sweetpotatos.sourceforge.io/`
 - Optional: short `README.txt` next to the ISO is nice for Files browsers; `.sha256` is the important companion. Full docs stay in GitHub README + htdocs.
+
+## Overlay upgrades (GitHub)
+
+- Fixed Release tag `pacman-repo`: packages for `sudo spo-upgrade`
+- Upload: `./github/upload-repo.sh` (needs `gh` + `repo-add`)
+- URL in `sweetpotatos.conf`: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
+- Theme: [SweetPotato](https://github.com/visnudeva/SweetPotato) (`spo-upgrade --theme`)
 
 ## After reinstalling this OS on the build machine
 

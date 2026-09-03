@@ -5,6 +5,7 @@ out/
 .container-build/
 sourceforge/files/
 sourceforge/repo-stage/
+github/repo-stage/
 out-build*.log
 
 # Accidental initramfs extract into repo root (do not commit)
