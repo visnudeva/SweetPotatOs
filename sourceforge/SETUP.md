@@ -25,3 +25,10 @@ SourceForge project setup checklist
 
 5) Project web (uploaded by the script) appears at:
    https://sweetpotatos.sourceforge.io/
+
+6) After overlay packages live on GitHub, remove the old SF pacman tree (keep ISO folders):
+   SF_USER=YOUR_SF_USERNAME ./sourceforge/remove-repo.sh
+
+   If SSH fails with Permission denied, re-add ~/.ssh/id_ed25519_sourceforge.pub under
+   https://sourceforge.net/auth/shell_services then retry.
+

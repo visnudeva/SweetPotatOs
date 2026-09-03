@@ -99,9 +99,10 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 ## Overlay upgrades (GitHub)
 
 - Fixed Release tag `pacman-repo`: packages for `sudo spo-upgrade`
-- Upload: `./github/upload-repo.sh` (needs `gh` + `repo-add`)
+- Upload: `./github/upload-repo.sh` (needs `gh`; uses `repo-add` when present, else a Python db builder)
 - URL in `sweetpotatos.conf`: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
 - Theme: [SweetPotato](https://github.com/visnudeva/SweetPotato) (`spo-upgrade --theme`)
+- Clear leftover SF pacman tree after migrating: `SF_USER=… ./sourceforge/remove-repo.sh` (needs working SF shell SSH)
 
 ## After reinstalling this OS on the build machine
 
