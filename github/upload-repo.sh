@@ -14,13 +14,11 @@ REPO="${ROOT}/repo"
 STAGE="${ROOT}/github/repo-stage"
 GH_REPO="${GH_REPO:-visnudeva/SweetPotatOs}"
 GH_TAG="${GH_TAG:-pacman-repo}"
-ARCH="${ARCH:-x86_64}"
 
 # Packages spo-upgrade installs (not calamares / ISO-only build deps).
 OVERLAY_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper)
 
 command -v gh >/dev/null || { echo "gh (GitHub CLI) is required"; exit 1; }
-command -v repo-add >/dev/null || { echo "repo-add (pacman-contrib) is required"; exit 1; }
 
 rm -rf "${STAGE}"
 mkdir -p "${STAGE}"
@@ -32,7 +30,6 @@ for pkg in "${OVERLAY_PKGS[@]}"; do
   shopt -u nullglob
   for f in "${matches[@]}"; do
     base="$(basename "${f}")"
-    # Skip debug packages
     [[ "${base}" == *-debug-* ]] && continue
     cp -a "${f}" "${STAGE}/"
     copied=$((copied + 1))
@@ -45,11 +42,75 @@ if (( copied == 0 )); then
 fi
 
 echo "[*] Building overlay repo database (${copied} packages)…"
-repo-add "${STAGE}/sweetpotatos.db.tar.gz" "${STAGE}"/*.pkg.tar.*
-# Pacman / spo-upgrade fetch $repo.db (gzip); release assets need that name too.
-cp -a "${STAGE}/sweetpotatos.db.tar.gz" "${STAGE}/sweetpotatos.db"
-[[ -f "${STAGE}/sweetpotatos.files.tar.gz" ]] \
-  && cp -a "${STAGE}/sweetpotatos.files.tar.gz" "${STAGE}/sweetpotatos.files"
+if command -v repo-add >/dev/null; then
+  repo-add "${STAGE}/sweetpotatos.db.tar.gz" "${STAGE}"/*.pkg.tar.*
+  cp -a "${STAGE}/sweetpotatos.db.tar.gz" "${STAGE}/sweetpotatos.db"
+  [[ -f "${STAGE}/sweetpotatos.files.tar.gz" ]] \
+    && cp -a "${STAGE}/sweetpotatos.files.tar.gz" "${STAGE}/sweetpotatos.files"
+else
+  # Bluefin / non-Arch hosts: build a pacman-compatible db without pacman-contrib.
+  python3 - "${STAGE}" <<'PY'
+import hashlib, sys, tarfile, time
+from pathlib import Path
+
+stage = Path(sys.argv[1])
+pkgs = sorted(p for p in stage.glob("*.pkg.tar.*") if p.is_file())
+
+def read_pkginfo(pkg: Path) -> dict:
+    with tarfile.open(pkg, "r:*") as tf:
+        data = tf.extractfile(".PKGINFO").read().decode()
+    info: dict[str, list[str]] = {}
+    for line in data.splitlines():
+        if " = " not in line or line.startswith("#"):
+            continue
+        k, v = line.split(" = ", 1)
+        info.setdefault(k, []).append(v)
+    return info
+
+def one(info, key, default=""):
+    return info.get(key, [default])[0]
+
+entries = []
+for pkg in pkgs:
+    info = read_pkginfo(pkg)
+    name = one(info, "pkgname")
+    ver = one(info, "pkgver")
+    blob = pkg.read_bytes()
+    lines = [
+        "%FILENAME%", pkg.name, "",
+        "%NAME%", name, "",
+        "%BASE%", one(info, "pkgbase", name), "",
+        "%VERSION%", ver, "",
+        "%DESC%", one(info, "pkgdesc"), "",
+        "%CSIZE%", str(pkg.stat().st_size), "",
+        "%ISIZE%", one(info, "size", "0"), "",
+        "%MD5SUM%", hashlib.md5(blob).hexdigest(), "",
+        "%SHA256SUM%", hashlib.sha256(blob).hexdigest(), "",
+        "%URL%", one(info, "url"), "",
+        "%ARCH%", one(info, "arch", "any"), "",
+        "%BUILDDATE%", one(info, "builddate", str(int(time.time()))), "",
+        "%PACKAGER%", one(info, "packager", "Unknown Packager"), "",
+    ]
+    for lic in info.get("license", []):
+        lines += ["%LICENSE%", lic, ""]
+    deps = info.get("depend", [])
+    if deps:
+        lines.append("%DEPENDS%")
+        lines.extend(deps)
+        lines.append("")
+    entries.append((f"{name}-{ver}", "\n".join(lines) + "\n"))
+
+db_tar = stage / "sweetpotatos.db.tar.gz"
+with tarfile.open(db_tar, "w:gz") as tf:
+    for entry_name, desc in sorted(entries):
+        info = tarfile.TarInfo(f"{entry_name}/desc")
+        data = desc.encode()
+        info.size = len(data)
+        tf.addfile(info, fileobj=__import__("io").BytesIO(data))
+(db_tar.with_name("sweetpotatos.db")).write_bytes(db_tar.read_bytes())
+print(f"    wrote {db_tar.name} ({len(entries)} packages)")
+PY
+fi
 
 if ! gh release view "${GH_TAG}" --repo "${GH_REPO}" >/dev/null 2>&1; then
   echo "[*] Creating GitHub release ${GH_TAG}…"
@@ -61,7 +122,6 @@ if ! gh release view "${GH_TAG}" --repo "${GH_REPO}" >/dev/null 2>&1; then
 fi
 
 echo "[*] Uploading assets to ${GH_REPO} @ ${GH_TAG}…"
-# Upload one-by-one so a single large asset failure is obvious.
 shopt -s nullglob
 for f in "${STAGE}"/*; do
   [[ -f "${f}" ]] || continue

@@ -48,3 +48,4 @@ packaging/swirl/*.pkg.tar.*
 *~
 *.swp
 .DS_Store
+sourceforge/empty-repo-stage/
