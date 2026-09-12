@@ -26,6 +26,8 @@ FRS="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/"
 FRS_ARCH="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/x86_64/"
 
 echo "[*] Emptying ${FRS}"
+echo "WARNING: This breaks Second Harvest spo-upgrade until you run:"
+echo "  ./sourceforge/upload-bootstrap-repo.sh"
 rsync -avP --delete -e ssh "${EMPTY}/" "${FRS}"
 
 echo "[*] Emptying ${FRS_ARCH} (legacy path)"

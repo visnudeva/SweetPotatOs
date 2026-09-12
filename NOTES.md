@@ -96,13 +96,14 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Web: `sourceforge/htdocs/` → `https://sweetpotatos.sourceforge.io/`
 - Optional: short `README.txt` next to the ISO is nice for Files browsers; `.sha256` is the important companion. Full docs stay in GitHub README + htdocs.
 
-## Overlay upgrades (GitHub)
+## Overlay upgrades (GitHub + SourceForge bootstrap)
 
 - Fixed Release tag `pacman-repo`: packages for `sudo spo-upgrade`
 - Upload: `./github/upload-repo.sh` (needs `gh`; uses `repo-add` when present, else a Python db builder)
 - URL in `sweetpotatos.conf`: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
 - Theme: [SweetPotato](https://github.com/visnudeva/SweetPotato) (refreshed by default with `spo-upgrade`; `--no-theme` to skip)
-- Clear leftover SF pacman tree after migrating: `SF_USER=… ./sourceforge/remove-repo.sh` (needs working SF shell SSH)
+- **Second Harvest bootstrap:** systems still pointing at SourceForge need a live mirror at `Files/repo/x86_64/`. After clearing that tree, restore it with `./sourceforge/upload-bootstrap-repo.sh` (same overlay packages as GitHub). New `spo-upgrade` then migrates the Server line to GitHub.
+- Do **not** run `sourceforge/remove-repo.sh` unless you immediately re-publish the bootstrap mirror — otherwise Second Harvest `spo-upgrade` 404s.
 
 ## After reinstalling this OS on the build machine
 

@@ -26,7 +26,11 @@ SourceForge project setup checklist
 5) Project web (uploaded by the script) appears at:
    https://sweetpotatos.sourceforge.io/
 
-6) After overlay packages live on GitHub, remove the old SF pacman tree (keep ISO folders):
+6) Keep a SourceForge **bootstrap** pacman mirror for Second Harvest upgrades
+   (old Server URLs). After GitHub upload:
+   ./sourceforge/upload-bootstrap-repo.sh
+
+   Only empty the SF repo tree if you will re-publish that bootstrap immediately:
    SF_USER=YOUR_SF_USERNAME ./sourceforge/remove-repo.sh
 
    If SSH fails with Permission denied, re-add ~/.ssh/id_ed25519_sourceforge.pub under
