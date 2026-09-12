@@ -394,6 +394,13 @@
       </p>
     </aside>
     <pre><code>sudo spo-upgrade</code></pre>
+    <aside class="notice" aria-label="Second Harvest recovery">
+      <p>
+        If <code>spo-upgrade</code> fails syncing <code>sweetpotatos.db</code> (SourceForge timeout or
+        <code>sf-mirror.net</code>), run this once to switch the overlay to GitHub and continue:
+      </p>
+      <pre><code>curl -fsSL https://sweetpotatos.sourceforge.io/bootstrap-spo-upgrade.sh | sudo bash</code></pre>
+    </aside>
     <p>Useful options:</p>
     <ul>
       <li><code>sudo spo-upgrade --check</code> — see whether a newer release is available</li>
