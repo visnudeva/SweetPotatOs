@@ -13,7 +13,7 @@ SPO_REPO_BASE="${SPO_REPO_BASE:-https://github.com/visnudeva/SweetPotatOs/releas
 
 SPO_REPO_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper brave-origin-bin)
 
-DO_THEME=0
+DO_THEME=1
 DO_CHECK=0
 DO_DRY_RUN=0
 
@@ -25,12 +25,13 @@ usage() {
   cat <<'EOF'
 Usage: spo-upgrade [options]
 
-Upgrade SweetPotatOs in place (Arch packages + SweetPotatOs overlay repo).
+Upgrade SweetPotatOs in place (Arch packages + overlay + SweetPotato theme).
 
 Options:
   --check       Show installed vs available sweetpotatos version; exit
   --dry-run     Show planned steps without changing the system
-  --theme       Also refresh the SweetPotato desktop theme (git clone + install.sh)
+  --no-theme    Skip refreshing the SweetPotato desktop theme
+  --theme       Refresh theme (default; kept for compatibility)
   -h, --help    Show this help
 
 Safe to run from a desktop terminal: if Swirl is active, you are logged out
@@ -41,6 +42,7 @@ EOF
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --theme) DO_THEME=1 ;;
+    --no-theme) DO_THEME=0 ;;
     --check) DO_CHECK=1 ;;
     --dry-run) DO_DRY_RUN=1 ;;
     -h|--help) usage; exit 0 ;;
@@ -88,7 +90,7 @@ finish_graphical_upgrade() {
 
 launch_detached_upgrade() {
   local -a cmd=(/usr/bin/bash "${SCRIPT_SELF}")
-  (( DO_THEME )) && cmd+=(--theme)
+  (( DO_THEME )) || cmd+=(--no-theme)
 
   info "Desktop session detected — scheduling background upgrade."
   info "You will return to the login screen shortly."
@@ -296,10 +298,27 @@ upgrade_theme() {
     return 0
   fi
   local theme_user="${SPO_USER:-${SUDO_USER:-}}"
-  [[ -n "${theme_user}" && "${theme_user}" != "root" ]] || die "--theme needs a login user (set SPO_USER=yourname)"
-  git clone --depth 1 --branch "${SWEETPOTATO_REF}" "${SWEETPOTATO_REPO}" "${work}/SweetPotato"
-  info "Running SweetPotato install.sh as ${theme_user}…"
-  sudo -u "${theme_user}" bash -c "cd '${work}/SweetPotato' && ./install.sh"
+  if [[ -z "${theme_user}" || "${theme_user}" == "root" ]]; then
+    # Prefer a real desktop user if spo-upgrade was started without sudo's SUDO_USER.
+    theme_user="$(awk -F: '$3 >= 1000 && $1 != "nobody" { print $1; exit }' /etc/passwd || true)"
+  fi
+  if [[ -z "${theme_user}" || "${theme_user}" == "root" ]]; then
+    warn "Skipping theme refresh (no login user; set SPO_USER=yourname)"
+    return 0
+  fi
+  if ! command -v git >/dev/null 2>&1; then
+    warn "Skipping theme refresh (git not installed)"
+    return 0
+  fi
+  git clone --depth 1 --branch "${SWEETPOTATO_REF}" "${SWEETPOTATO_REPO}" "${work}/SweetPotato" \
+    || { warn "SweetPotato clone failed"; return 0; }
+  info "Running SweetPotato install.sh as ${theme_user} (non-interactive)…"
+  if ! sudo -u "${theme_user}" env SWEETPOTATO_NONINTERACTIVE=1 \
+    bash -c "cd '${work}/SweetPotato' && ./install.sh"; then
+    warn "SweetPotato install.sh reported errors (packages/theme may be partially updated)"
+    return 0
+  fi
+  info "SweetPotato theme refreshed for ${theme_user}"
 }
 
 ensure_repo_conf

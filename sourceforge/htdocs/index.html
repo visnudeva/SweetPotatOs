@@ -369,6 +369,8 @@
       <tr><td><code>Mod+c</code></td><td>Caffeine (idle lock off)</td></tr>
       <tr><td><code>Mod+i</code></td><td>Installer (live ISO)</td></tr>
       <tr><td><code>Mod+q</code></td><td>Close focused window</td></tr>
+      <tr><td><code>Mod+Tab</code></td><td>Workspace overview (Super+drag windows between desktops)</td></tr>
+      <tr><td><code>Mod+Shift+Tab</code></td><td>Overview of windows on the current desktop</td></tr>
       <tr><td><code>Mod+Up</code> / <code>Mod+Down</code></td><td>Switch workspace up / down</td></tr>
       <tr><td><code>Mod+Ctrl+Up</code> / <code>Mod+Ctrl+Down</code></td><td>Move window to workspace above / below</td></tr>
       <tr><td><code>Mod+Shift+1</code>–<code>0</code></td><td>Move window to workspace 1–10</td></tr>
@@ -382,7 +384,7 @@
       If SweetPotatOs is already installed, you do <strong>not</strong> need to download and flash a new ISO for every release.
       New versions ship as Arch packages through the SweetPotatOs pacman repository. The
       <code>spo-upgrade</code> tool updates the base system, SweetPotatOs overlay packages (Swirl, Spore, branding, hooks),
-      and runs one-time migrations — your home folder and installed apps stay put.
+      refreshes the SweetPotato desktop theme, and runs one-time migrations — your home folder and installed apps stay put.
     </p>
     <aside class="notice" aria-label="spo-upgrade requirements">
       <p>
@@ -396,7 +398,7 @@
     <ul>
       <li><code>sudo spo-upgrade --check</code> — see whether a newer release is available</li>
       <li><code>sudo spo-upgrade --dry-run</code> — preview steps without changing the system</li>
-      <li><code>sudo spo-upgrade --theme</code> — also refresh the SweetPotato desktop theme from GitHub</li>
+      <li><code>sudo spo-upgrade --no-theme</code> — skip refreshing the SweetPotato desktop theme</li>
     </ul>
     <p>
       After a kernel update, reboot when prompted. ISO downloads on the Files page are mainly for new installs

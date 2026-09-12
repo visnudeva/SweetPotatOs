@@ -45,8 +45,8 @@ Mod+c → caffeine"
 Mod+l → lock"
   tip "Live tips (6/7)" "Mod+Shift+d → displays
 Mod+Shift+w → wallpaper"
-  tip "Live tips (7/7)" "Mod+Up/Down → switch workspace
-Mod+Ctrl+Up/Down → move window"
+  tip "Live tips (7/7)" "Mod+Tab → workspace overview
+Mod+Up/Down → switch workspace"
 else
   tip "Tips (1/6)" "Mod+Space → apps
 Mod+Return → terminal"
@@ -56,8 +56,8 @@ Mod+r → music (Spore)"
 Mod+f → files"
   tip "Tips (4/6)" "Mod+m → maximize/minimize window
 Mod+l → lock"
-  tip "Tips (5/6)" "Mod+Up/Down → switch workspace
-Mod+Ctrl+Up/Down → move window"
+  tip "Tips (5/6)" "Mod+Tab → workspace overview
+Mod+Up/Down → switch workspace"
   tip "Tips (6/6)" "Mod+Shift+d → displays
 Mod+Shift+w → wallpaper"
 fi

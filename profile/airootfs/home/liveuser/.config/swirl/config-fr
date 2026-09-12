@@ -183,6 +183,11 @@ seat * xcursor_theme capitaine-cursors 24
     # Move focused window to workspace above/below (stay on current desktop)
     bindsym $mod+Ctrl+Up move container to workspace prev_on_output
     bindsym $mod+Ctrl+Down move container to workspace next_on_output
+
+    # Workspace overview: zoom out to all desktops (Super+drag windows between them)
+    bindsym --no-repeat $mod+Tab scale_workspaces toggle
+    # Current-desktop bird's eye (columns on this strip only)
+    bindsym --no-repeat $mod+Shift+Tab scale_workspace overview
 #
 # Layout stuff:
 #
