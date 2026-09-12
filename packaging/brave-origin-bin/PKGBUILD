@@ -5,7 +5,7 @@
 pkgname=brave-origin-bin
 pkgver=1.95.101
 pkgrel=1
-epoch=1
+# No epoch: GitHub Release asset names cannot contain ':' (epoch:pkgver).
 pkgdesc='The minimalist browser from the makers of Brave (binary release).'
 arch=(x86_64 aarch64)
 url=https://brave.com/origin/download
