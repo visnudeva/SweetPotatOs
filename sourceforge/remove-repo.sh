@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Remove the old SourceForge pacman overlay repo (ISO Files stay).
-# Overlay packages now live on GitHub: ./github/upload-repo.sh
+# Remove leftover SourceForge Files/repo/ tree (obsolete overlay mirror).
+# ISO release folders under Files are untouched.
 #
 # Usage:
 #   SF_USER=your_sf_username ./sourceforge/remove-repo.sh
@@ -26,17 +26,9 @@ FRS="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/"
 FRS_ARCH="${SF_USER}@frs.sourceforge.net:/home/frs/project/${SF_PROJECT}/repo/x86_64/"
 
 echo "[*] Emptying ${FRS}"
-echo "WARNING: This breaks Second Harvest spo-upgrade until you run:"
-echo "  ./sourceforge/upload-bootstrap-repo.sh"
 rsync -avP --delete -e ssh "${EMPTY}/" "${FRS}"
 
 echo "[*] Emptying ${FRS_ARCH} (legacy path)"
 rsync -avP --delete -e ssh "${EMPTY}/" "${FRS_ARCH}" || true
 
-cat <<EOF
-
-[+] SourceForge pacman repo tree cleared.
-
-Keep ISO release folders under Files; overlay upgrades use:
-  https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo/
-EOF
+echo "[+] SourceForge Files/repo/ cleared (keep ISO release folders)."

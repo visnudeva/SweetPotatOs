@@ -4,9 +4,6 @@ SourceForge project setup checklist
 1) Upload ISO only (needs your SF password or SSH key):
    SF_USER=YOUR_SF_USERNAME ./sourceforge/upload.sh
 
-   Overlay packages for spo-upgrade go to GitHub, not SourceForge Files:
-   ./github/upload-repo.sh
-
 2) Mirror GitHub → SourceForge Git (one-time, then push when releasing):
    # Add ~/.ssh/id_ed25519_sourceforge.pub under
    #   https://sourceforge.net/auth/shell_services  (Account Services → SSH keys)
@@ -26,13 +23,8 @@ SourceForge project setup checklist
 5) Project web (uploaded by the script) appears at:
    https://sweetpotatos.sourceforge.io/
 
-6) Keep a SourceForge **bootstrap** pacman mirror for Second Harvest upgrades
-   (old Server URLs). After GitHub upload:
-   ./sourceforge/upload-bootstrap-repo.sh
-
-   Only empty the SF repo tree if you will re-publish that bootstrap immediately:
+6) Optional: remove leftover Files/repo/ (obsolete overlay mirror):
    SF_USER=YOUR_SF_USERNAME ./sourceforge/remove-repo.sh
 
    If SSH fails with Permission denied, re-add ~/.ssh/id_ed25519_sourceforge.pub under
    https://sourceforge.net/auth/shell_services then retry.
-

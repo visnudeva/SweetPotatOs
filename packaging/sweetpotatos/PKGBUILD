@@ -1,14 +1,13 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.09.1
-pkgrel=7
-pkgdesc='SweetPotatOs system overlay, upgrade tool, and branding'
+pkgrel=8
+pkgdesc='SweetPotatOs system branding, hooks, and helpers'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
 license=('MIT')
 depends=('bash' 'pacman' 'plymouth' 'systemd')
 optdepends=(
-  'git: spo-upgrade theme refresh'
   'swirl: desktop compositor'
   'yay-bin: AUR helper'
   'shelly-bin: package manager GUI'
@@ -19,18 +18,9 @@ optdepends=(
 )
 install=sweetpotatos.install
 source=(
-  'spo-upgrade'
   'sweetpotatos.install'
-  'sweetpotatos.conf'
-  '001-lid-sleep.sh'
-  '002-pacman-repo.sh'
-  '003-repo-url.sh'
-  '004-pacman-xfer.sh'
-  '005-remove-xfer.sh'
-  '006-github-repo.sh'
-  '007-brave-origin.sh'
 )
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP')
 
 package() {
   local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
@@ -50,8 +40,6 @@ package() {
     sweetpotatos-fix-sway-keyboard; do
     install -Dm755 "${ai}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
   done
-  install -Dm755 "${srcdir}/spo-upgrade" "${pkgdir}/usr/local/bin/spo-upgrade"
-  ln -sf spo-upgrade "${pkgdir}/usr/local/bin/sweetpotatos-upgrade"
 
   install -Dm644 "${ai}/usr/local/share/sweetpotatos/os-release" \
     "${pkgdir}/usr/local/share/sweetpotatos/os-release"
@@ -83,21 +71,4 @@ package() {
     install -Dm644 "${ai}/etc/pacman.d/hooks/${hook}" \
       "${pkgdir}/etc/pacman.d/hooks/${hook}"
   done
-
-  install -Dm644 "${srcdir}/sweetpotatos.conf" \
-    "${pkgdir}/usr/share/sweetpotatos/pacman/sweetpotatos.conf"
-  install -Dm644 "${srcdir}/001-lid-sleep.sh" \
-    "${pkgdir}/usr/share/sweetpotatos/migrations/001-lid-sleep.sh"
-  install -Dm644 "${srcdir}/002-pacman-repo.sh" \
-    "${pkgdir}/usr/share/sweetpotatos/migrations/002-pacman-repo.sh"
-  install -Dm644 "${srcdir}/003-repo-url.sh" \
-    "${pkgdir}/usr/share/sweetpotatos/migrations/003-repo-url.sh"
-  install -Dm644 "${srcdir}/004-pacman-xfer.sh" \
-    "${pkgdir}/usr/share/sweetpotatos/migrations/004-pacman-xfer.sh"
-  install -Dm644 "${srcdir}/005-remove-xfer.sh" \
-    "${pkgdir}/usr/share/sweetpotatos/migrations/005-remove-xfer.sh"
-  install -Dm644 "${srcdir}/006-github-repo.sh" \
-    "${pkgdir}/usr/share/sweetpotatos/migrations/006-github-repo.sh"
-  install -Dm644 "${srcdir}/007-brave-origin.sh" \
-    "${pkgdir}/usr/share/sweetpotatos/migrations/007-brave-origin.sh"
 }

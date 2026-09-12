@@ -379,31 +379,6 @@
       <tr><td><code>Mod+Print</code></td><td>Screen record toggle</td></tr>
     </table>
 
-    <h2>Upgrade without reinstalling</h2>
-    <p>
-      If SweetPotatOs is already installed, you do <strong>not</strong> need to download and flash a new ISO for every release.
-      New versions ship as Arch packages through the SweetPotatOs pacman repository. The
-      <code>spo-upgrade</code> tool updates the base system, SweetPotatOs overlay packages (Swirl, Spore, branding, hooks),
-      refreshes the SweetPotato desktop theme, and runs one-time migrations — your home folder and installed apps stay put.
-    </p>
-    <aside class="notice" aria-label="spo-upgrade requirements">
-      <p>
-        <strong><code>spo-upgrade</code> is supported from Second Harvest (2026.09) onward only.</strong>
-        That release ships the upgrade tool and the SweetPotatOs pacman repository. First Harvest and earlier ISOs
-        do not — for those systems, install from a newer ISO instead of trying to upgrade in place.
-      </p>
-    </aside>
-    <pre><code>sudo spo-upgrade</code></pre>
-    <p>Useful options:</p>
-    <ul>
-      <li><code>sudo spo-upgrade --check</code> — see whether a newer release is available</li>
-      <li><code>sudo spo-upgrade --dry-run</code> — preview steps without changing the system</li>
-    </ul>
-    <p>
-      After a kernel update, reboot when prompted. ISO downloads on the Files page are mainly for new installs
-      or recovery — not for routine updates on an existing system.
-    </p>
-
     <h2>Write ISO to USB</h2>
     <pre><code>lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
 sudo dd if=Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>

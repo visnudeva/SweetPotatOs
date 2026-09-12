@@ -128,7 +128,7 @@ Usage: sudo ./build.sh [options]
   (no args)           Build ISO (requires calamares + swirl + AUR apps in repo/)
   --build-calamares   Build Calamares into repo/ only
   --build-swirl       Build Swirl compositor into repo/ only
-  --build-sweetpotatos  Build sweetpotatos overlay + spo-upgrade into repo/ only
+  --build-sweetpotatos  Build sweetpotatos branding package into repo/ only
   --build-aur-apps    Build yay-bin + shelly-bin + localsend-bin + spore + brave-origin-bin into repo/ only
   --build-packages    Build calamares + swirl + sweetpotatos + AUR apps into repo/ only
 EOF

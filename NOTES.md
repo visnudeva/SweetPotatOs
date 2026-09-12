@@ -31,9 +31,8 @@ Expected layout on a build machine (siblings):
 4. Build ISO: `sudo ./build.sh`.
 5. Publish:
    - Git: push SweetPotato → GitHub; SweetPotatOs → GitHub **and** `sourceforge`.
-   - Overlay packages (spo-upgrade): `./github/upload-repo.sh` (GitHub Release `pacman-repo`).
    - ISO files only: `SF_USER=… ./sourceforge/upload.sh` (rsync ISO + `.sha256` + `htdocs/`).
-   - Theme updates: SweetPotato on GitHub (cloned automatically by `spo-upgrade`; opt out with `--no-theme`).
+   - Point releases only — no in-place overlay upgrade channel. Desktop/theme on other distros: SweetPotato `install.sh`.
 
 After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]` `Server = file://…` to the absolute path of `./repo`.
 
@@ -95,16 +94,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Files release folder naming: `SF_RELEASE` (e.g. `2026.08_First_Harvest`) with ISO `Sweetpotatos_2026.08_First_Harvest.iso`
 - Web: `sourceforge/htdocs/` → `https://sweetpotatos.sourceforge.io/`
 - Optional: short `README.txt` next to the ISO is nice for Files browsers; `.sha256` is the important companion. Full docs stay in GitHub README + htdocs.
-
-## Overlay upgrades (GitHub + SourceForge bootstrap)
-
-- Fixed Release tag `pacman-repo`: packages for `sudo spo-upgrade`
-- Upload: `./github/upload-repo.sh` (needs `gh`; uses `repo-add` when present, else a Python db builder)
-- URL in `sweetpotatos.conf`: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
-- Theme: [SweetPotato](https://github.com/visnudeva/SweetPotato) (refreshed by default with `spo-upgrade`; `--no-theme` to skip)
-- **Second Harvest bootstrap:** systems still pointing at SourceForge need a live mirror. Keep `Files/repo/x86_64/` via `./sourceforge/upload-bootstrap-repo.sh`, **and** register/serve **`sf-mirror.net`** (shipped as a second `Server=` line; see `sourceforge/SF_MIRROR.md`). Without DNS for that host, a SourceForge timeout makes pacman abort fatally. New `spo-upgrade` then migrates Server lines to GitHub.
-- Do **not** run `sourceforge/remove-repo.sh` unless you immediately re-publish the bootstrap mirror — otherwise Second Harvest `spo-upgrade` 404s.
-- Emergency only (not advertised): `sourceforge/htdocs/bootstrap-spo-upgrade.sh` retargets one machine to GitHub via curl.
+- Optional cleanup of leftover Files/`repo/` (obsolete overlay mirror): `./sourceforge/remove-repo.sh`.
 
 ## After reinstalling this OS on the build machine
 

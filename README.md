@@ -49,12 +49,6 @@ SF_USER=your_sourceforge_username SF_RELEASE=YYYY.MM.DD ./sourceforge/upload.sh
 
 Then in SourceForge: Files → that release → ⓘ on the `.iso` → set as default download.
 
-Overlay packages for `spo-upgrade` are published to GitHub (not SourceForge):
-
-```bash
-./github/upload-repo.sh
-```
-
 ## Prerequisites
 
 - Arch-based build host
@@ -190,7 +184,6 @@ SweetPotatOs/
 │   ├── pacman.conf
 │   └── airootfs/     # live overlay (skel, Calamares, NetworkManager, …)
 ├── repo/             # local pacman repo (calamares + swirl *.pkg.tar.*)
-├── github/           # upload-repo.sh — overlay packages → GitHub Release pacman-repo
 ├── sourceforge/      # ISO + project web upload.sh (rsync); Files stay ISO-only
 ├── out/              # built ISOs (gitignored)
 └── work/             # mkarchiso work dir (gitignored)

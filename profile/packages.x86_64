@@ -90,7 +90,7 @@ vulkan-radeon
 xf86-video-amdgpu
 # Installer (built into local repo — see build.sh)
 calamares
-# sweetpotatos overlay: files ship in airootfs; pacman package installed on first spo-upgrade
+# sweetpotatos branding/helpers ship in airootfs (local repo package used at ISO build time)
 qt6-base
 qt5-base
 accountsservice
