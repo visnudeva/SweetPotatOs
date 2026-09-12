@@ -21,4 +21,4 @@ podman run --rm --privileged \
   -v "${ROOT}/out:${ROOT}/out" \
   -v "${ROOT}/work:${ROOT}/work:rshared" \
   -w "${ROOT}" \
-  docker.io/archlinux/archlinux:latest bash .container-build.sh 2>&1 | tee "${ROOT}/out-build-second-harvest.log"
+  docker.io/archlinux/archlinux:latest bash .container-build.sh 2>&1 | tee "${ROOT}/out-build-third-harvest.log"

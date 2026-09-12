@@ -93,7 +93,7 @@ check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel nwg-d
 check_grep 'sweetpotatos-displays' "${ISO}/etc/skel/.local/share/applications/nwg-displays.desktop" "skel Displays Exec uses PATH launcher"
 check_grep 'nwg-displays\.sh' "${ISO}/usr/local/bin/sweetpotatos-displays" "system sweetpotatos-displays delegates to swirl wrapper"
 check_grep 'GenericName=nwg-displays' "${ISO}/etc/skel/.local/share/applications/nwg-displays.desktop" "skel Displays shows nwg-displays generic name"
-check_grep 'SWAYSOCK\|I3SOCK' "${ISO}/etc/skel/.config/swirl/scripts/nwg-displays.sh" "nwg-displays wrapper finds IPC socket"
+check_grep 'SWAYSOCK|I3SOCK' "${ISO}/etc/skel/.config/swirl/scripts/nwg-displays.sh" "nwg-displays wrapper finds IPC socket"
 check_grep 'Mod\+\?' "${ISO}/etc/skel/.config/swirl/scripts/tips.sh" "tips mention Mod+? cheatsheet"
 check_nogrep 'Live tips' "${ISO}/etc/skel/.config/swirl/scripts/tips.sh" "no multi-tip notification sequence"
 check_grep 'cheatsheet\.sh' "${ISO}/etc/skel/.config/swirl/config" "Mod+? cheatsheet bind"
