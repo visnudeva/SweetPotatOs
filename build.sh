@@ -129,7 +129,7 @@ Usage: sudo ./build.sh [options]
   --build-calamares   Build Calamares into repo/ only
   --build-swirl       Build Swirl compositor into repo/ only
   --build-sweetpotatos  Build sweetpotatos overlay + spo-upgrade into repo/ only
-  --build-aur-apps    Build yay-bin + shelly-bin + localsend-bin + spore into repo/ only
+  --build-aur-apps    Build yay-bin + shelly-bin + localsend-bin + spore + brave-origin-bin into repo/ only
   --build-packages    Build calamares + swirl + sweetpotatos + AUR apps into repo/ only
 EOF
       exit 0
@@ -146,6 +146,7 @@ if (( DO_ISO )); then
   need_repo_pkg shelly-bin || DO_AUR_APPS=1
   need_repo_pkg localsend-bin || DO_AUR_APPS=1
   need_repo_pkg spore || DO_AUR_APPS=1
+  need_repo_pkg brave-origin-bin || DO_AUR_APPS=1
   need_repo_pkg python-screeninfo || DO_AUR_APPS=1
   need_repo_pkg python-imageio-ffmpeg || DO_AUR_APPS=1
   need_repo_pkg waypaper || DO_AUR_APPS=1
@@ -176,6 +177,8 @@ if (( DO_AUR_APPS )); then
   # Local PKGBUILD: adds libayatana-indicator + ayatana-ido (Arch appindicator omits them)
   need_repo_pkg localsend-bin || build_local_pkg localsend-bin "${ROOT}/packaging/localsend-bin"
   need_repo_pkg spore || build_local_pkg spore "${ROOT}/packaging/spore"
+  # Local PKGBUILD: AUR prepare() still chmods brave/; zip ships brave-origin
+  need_repo_pkg brave-origin-bin || build_local_pkg brave-origin-bin "${ROOT}/packaging/brave-origin-bin"
   # waypaper AUR deps not in official repos — build and install them first
   need_repo_pkg python-screeninfo || build_aur_pkg python-screeninfo https://aur.archlinux.org/python-screeninfo.git
   need_repo_pkg python-imageio-ffmpeg || build_aur_pkg python-imageio-ffmpeg https://aur.archlinux.org/python-imageio-ffmpeg.git
@@ -189,6 +192,7 @@ fi
 if ! need_repo_pkg calamares || ! need_repo_pkg swirl || ! need_repo_pkg sweetpotatos \
   || ! need_repo_pkg yay-bin || ! need_repo_pkg shelly-bin \
   || ! need_repo_pkg localsend-bin || ! need_repo_pkg spore \
+  || ! need_repo_pkg brave-origin-bin \
   || ! need_repo_pkg python-screeninfo || ! need_repo_pkg python-imageio-ffmpeg \
   || ! need_repo_pkg waypaper; then
   cat >&2 <<EOF
@@ -196,7 +200,7 @@ if ! need_repo_pkg calamares || ! need_repo_pkg swirl || ! need_repo_pkg sweetpo
 
 Build them first:
 
-  sudo ./build.sh --build-packages   # builds calamares, swirl, sweetpotatos, yay-bin, shelly-bin, localsend-bin, spore, waypaper
+  sudo ./build.sh --build-packages   # builds calamares, swirl, sweetpotatos, yay-bin, shelly-bin, localsend-bin, spore, brave-origin-bin, waypaper
 
 EOF
   exit 1

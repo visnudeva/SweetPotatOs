@@ -16,7 +16,7 @@ GH_REPO="${GH_REPO:-visnudeva/SweetPotatOs}"
 GH_TAG="${GH_TAG:-pacman-repo}"
 
 # Packages spo-upgrade installs (not calamares / ISO-only build deps).
-OVERLAY_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper)
+OVERLAY_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper brave-origin-bin)
 
 command -v gh >/dev/null || { echo "gh (GitHub CLI) is required"; exit 1; }
 

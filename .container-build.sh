@@ -141,6 +141,22 @@ if ! ls "${ROOT}/repo/spore"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[+] spore copied to repo/"
 fi
 
+if ! ls "${ROOT}/repo/brave-origin-bin"-*.pkg.tar.* >/dev/null 2>&1; then
+  echo "[*] Building brave-origin-bin from packaging/brave-origin-bin..."
+  build_dir="${BUILD_ROOT}/brave-origin-bin-local"
+  rm -rf "${build_dir}"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
+  cp -a "${ROOT}/packaging/brave-origin-bin/." "${build_dir}/"
+  chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
+  sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
+  shopt -s nullglob
+  pkgs=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  ((${#pkgs[@]})) || { echo "[!] brave-origin-bin build produced no packages" >&2; exit 1; }
+  cp "${pkgs[@]}" "${ROOT}/repo/"
+  echo "[+] brave-origin-bin copied to repo/"
+fi
+
 if ! ls "${ROOT}/repo/sweetpotatos"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[*] Building sweetpotatos from packaging/sweetpotatos..."
   build_dir="${BUILD_ROOT}/sweetpotatos-local"

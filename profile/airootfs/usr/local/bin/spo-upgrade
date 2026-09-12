@@ -11,7 +11,7 @@ SWEETPOTATO_REF="${SWEETPOTATO_REF:-main}"
 # Overlay packages: GitHub Release assets (ISO downloads stay on SourceForge).
 SPO_REPO_BASE="${SPO_REPO_BASE:-https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo}"
 
-SPO_REPO_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper)
+SPO_REPO_PKGS=(sweetpotatos swirl yay-bin shelly-bin localsend-bin spore waypaper brave-origin-bin)
 
 DO_THEME=0
 DO_CHECK=0

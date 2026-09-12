@@ -16,7 +16,7 @@ set $term foot
 # Your preferred application launcher (desktop apps only)
 set $menu ~/.config/swirl/scripts/applauncher.sh
 # Your preferred web browser
-set $web firefox
+set $web brave-origin
 # Your preferred file browser
 set $file thunar
 # Your preferred editor

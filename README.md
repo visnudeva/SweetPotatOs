@@ -60,7 +60,7 @@ Overlay packages for `spo-upgrade` are published to GitHub (not SourceForge):
 - Arch-based build host
 - Root privileges (`mkarchiso`)
 - Packages: `archiso`, `base-devel`, `git`
-- Local **Calamares** + **swirl** + **yay-bin/shelly-bin/localsend-bin/spore** packages (see `sudo ./build.sh --build-packages`)
+- Local **Calamares** + **swirl** + **yay-bin/shelly-bin/localsend-bin/spore/brave-origin-bin** packages (see `sudo ./build.sh --build-packages`)
 
 ## Build
 
@@ -106,7 +106,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 
 | Role | App |
 |------|-----|
-| Browser | Firefox |
+| Browser | Brave Origin |
 | Files | Thunar |
 | Editor | Geany |
 | Calculator | galculator |
@@ -130,7 +130,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 |------|--------|
 | `Mod+n` | Wi‑Fi / NetworkManager |
 | `Mod+Space` | App launcher |
-| `Mod+w` | Web browser (firefox) |
+| `Mod+w` | Web browser (Brave Origin) |
 | `Mod+f` | File manager (thunar) |
 | `Mod+e` | IDE (geany) |
 | `Mod+r` | Music / radio (Spore) |

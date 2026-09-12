@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.09.1
-pkgrel=5
+pkgrel=6
 pkgdesc='SweetPotatOs system overlay, upgrade tool, and branding'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -15,6 +15,7 @@ optdepends=(
   'localsend-bin: nearby file sharing'
   'spore: web radio and local music player'
   'waypaper: wallpaper picker'
+  'brave-origin-bin: default web browser (Mod+w)'
 )
 install=sweetpotatos.install
 source=(
@@ -27,8 +28,9 @@ source=(
   '004-pacman-xfer.sh'
   '005-remove-xfer.sh'
   '006-github-repo.sh'
+  '007-brave-origin.sh'
 )
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
   local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
@@ -96,4 +98,6 @@ package() {
     "${pkgdir}/usr/share/sweetpotatos/migrations/005-remove-xfer.sh"
   install -Dm644 "${srcdir}/006-github-repo.sh" \
     "${pkgdir}/usr/share/sweetpotatos/migrations/006-github-repo.sh"
+  install -Dm644 "${srcdir}/007-brave-origin.sh" \
+    "${pkgdir}/usr/share/sweetpotatos/migrations/007-brave-origin.sh"
 }
