@@ -130,6 +130,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+r` | Music / radio (Spore) |
 | `Mod+Return` | Terminal (foot) |
 | `Mod+m` | Expand focused column to 100% / restore 50/50 |
+| `Mod+?` | Floating keybind cheatsheet (toggle) |
 | `Mod+Shift+w` | Wallpaper selector (waypaper) |
 | `Mod+Shift+r` | Resize mode (arrow keys; Enter/Esc to exit) |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |

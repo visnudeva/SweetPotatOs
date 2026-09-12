@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# One-shot keybind tips after Swirl starts (live every boot; installed once).
-# Two binds per toast, longer display time so mako stays readable.
+# One-shot tip pointing at the Mod+? cheatsheet (live every boot; installed once).
 set -euo pipefail
 
 CONF="${XDG_CONFIG_HOME:-${HOME}/.config}/swirl"
@@ -18,48 +17,10 @@ fi
 
 [[ -f "${MARKER}" ]] && exit 0
 
-# 8s visible + short gap so the next tip does not overlap
-TIP_MS=8000
-TIP_SLEEP=9
-
-tip() {
-  local title="$1" body="$2"
-  notify-send -t "${TIP_MS}" -a "SweetPotato" -i "help-about" \
-    -h "string:x-canonical-private-synchronous:sweetpotato-tips" \
-    "${title}" "${body}" 2>/dev/null || true
-  sleep "${TIP_SLEEP}"
-}
-
 sleep 4
-
-if [[ "${LIVE}" -eq 1 ]]; then
-  tip "Live tips (1/7)" "Mod+Space → apps
-Mod+Return → terminal"
-  tip "Live tips (2/7)" "Mod+n → network manager
-Mod+r → music (Spore)"
-  tip "Live tips (3/7)" "Mod+w → web browser
-Mod+f → files"
-  tip "Live tips (4/7)" "Mod+i → installer
-Mod+c → caffeine"
-  tip "Live tips (5/7)" "Mod+m → maximize/minimize window
-Mod+l → lock"
-  tip "Live tips (6/7)" "Mod+Shift+d → displays
-Mod+Shift+w → wallpaper"
-  tip "Live tips (7/7)" "Mod+Tab → workspace overview
-Mod+Up/Down → switch workspace"
-else
-  tip "Tips (1/6)" "Mod+Space → apps
-Mod+Return → terminal"
-  tip "Tips (2/6)" "Mod+n → network manager
-Mod+r → music (Spore)"
-  tip "Tips (3/6)" "Mod+w → web browser
-Mod+f → files"
-  tip "Tips (4/6)" "Mod+m → maximize/minimize window
-Mod+l → lock"
-  tip "Tips (5/6)" "Mod+Tab → workspace overview
-Mod+Up/Down → switch workspace"
-  tip "Tips (6/6)" "Mod+Shift+d → displays
-Mod+Shift+w → wallpaper"
-fi
+notify-send -t 12000 -a "SweetPotato" -i "help-about" \
+  -h "string:x-canonical-private-synchronous:sweetpotato-tips" \
+  "Keybinds" "Press Mod+? for the cheatsheet (toggle). Mod is Super." \
+  2>/dev/null || true
 
 : > "${MARKER}"

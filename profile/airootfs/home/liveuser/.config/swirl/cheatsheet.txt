@@ -1,0 +1,33 @@
+  SweetPotato — useful binds
+  Mod = Super / Windows key
+
+  Mod+Space          App launcher
+  Mod+Return         Terminal (foot)
+  Mod+w              Web browser
+  Mod+f              Files
+  Mod+e              Editor
+  Mod+r              Music / radio (Spore)
+  Mod+n              Network
+  Mod+m              Expand column ↔ 50/50
+  Mod+l              Lock
+  Mod+c              Caffeine (idle off)
+  Mod+q              Close window
+  Mod+Tab            Workspace overview
+  Mod+Shift+Tab      Overview (current desktop)
+  Mod+Up / Down      Switch workspace
+  Mod+Ctrl+Up/Down   Move window to workspace
+  Mod+1…0            Workspace 1–10
+  Mod+Shift+1…0      Move window to workspace
+  Mod+Shift+w        Wallpaper
+  Mod+Shift+d        Displays
+  Mod+Shift+r        Resize mode
+  Mod+Shift+f        Fullscreen
+  Mod+Shift+c        Reload config
+  Mod+Shift+e        Exit Swirl
+  Mod+o              Power off
+  Print              Screenshot
+  Mod+Print          Screen record
+  Mod+Shift+Print    Region screenshot
+  Mod+i              Installer (live ISO)
+
+  Mod+?              This cheatsheet (toggle)

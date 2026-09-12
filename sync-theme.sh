@@ -149,7 +149,13 @@ sync_common_into() {
   cp -f "${SP}/swirl/config-us" "${dest}/.config/swirl/config-us"
   cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
+  cp -f "${SP}/swirl/cheatsheet.txt" "${dest}/.config/swirl/cheatsheet.txt"
   chmod 755 "${dest}/.config/swirl/scripts/"*.sh
+  # Drop retired bind-wallpaper assets if present from older syncs.
+  rm -f "${dest}/.local/share/backgrounds/UsefulBinds.png" \
+        "${dest}/.local/share/backgrounds/BindsBG.png" \
+        "${dest}/Pictures/Wallpapers/UsefulBinds.png" \
+        "${dest}/Pictures/Wallpapers/BindsBG.png"
   if [[ -f "${SP}/kanshi/config" ]]; then
     cp -f "${SP}/kanshi/config" "${dest}/.config/kanshi/config"
   fi
@@ -306,6 +312,8 @@ install -Dm755 "${SP}/bin/sweetpotatos-displays" "${ISO}/usr/local/bin/sweetpota
 # System wallpapers (Mod+Shift+w also scans /usr/share/backgrounds)
 mkdir -p "${ISO}/usr/share/backgrounds/sweetpotatos"
 cp -f "${SP}/backgrounds/"*.png "${ISO}/usr/share/backgrounds/sweetpotatos/"
+rm -f "${ISO}/usr/share/backgrounds/sweetpotatos/UsefulBinds.png" \
+      "${ISO}/usr/share/backgrounds/sweetpotatos/BindsBG.png"
 
 # Assets
 mkdir -p "${ROOT}/assets"
