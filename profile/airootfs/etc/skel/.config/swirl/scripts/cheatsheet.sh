@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Floating terminal cheatsheet (toggle with Mod+/).
+# Floating terminal cheatsheet (toggle with Mod+?).
 set -euo pipefail
 
 APP_ID="sweetpotato-cheatsheet"
@@ -23,6 +23,6 @@ if swaymsg -t get_tree 2>/dev/null | grep -Fq "\"app_id\": \"${APP_ID}\""; then
 fi
 
 exec "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato keybinds" \
-  sh -c 'cat "$1"; printf "\n  Press q to close (or Mod+/ again).\n"; while IFS= read -rsn1 k; do
+  sh -c 'cat "$1"; printf "\n  Press q to close (or Mod+? again).\n"; while IFS= read -rsn1 k; do
     case "$k" in q|Q) exit 0 ;; esac
   done' sh "${SHEET}"
