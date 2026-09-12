@@ -150,7 +150,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+o` | Power off |
 | `Mod+Shift+c` | Reload config |
 
-`Mod` is usually the Super/Windows key. A one-shot tips notification lists the main binds after login (every live boot; once on an installed user).
+`Mod` is usually the Super/Windows key. A login tip points at `Mod+?` for the floating cheatsheet (every session).
 
 ### Gestures
 
