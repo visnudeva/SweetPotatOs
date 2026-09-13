@@ -5,7 +5,7 @@ alwaysApply: true
 
 # SweetPotatOs context
 
-Before non-trivial changes, read `NOTES.md` at the repo root.
+Before non-trivial changes, read `NOTES.md` at the repo root. After a host reinstall / new machine, also read `AGENT_MEMORY_BACKUP.md` (full ISO workflow + restore checklist).
 
 ## Hard rules from prior work
 

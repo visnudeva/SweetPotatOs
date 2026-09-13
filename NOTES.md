@@ -2,6 +2,8 @@
 
 Durable context for humans and Cursor agents. Prefer this over chat history after a reinstall.
 
+**Full restore backup (host wipe / new Arch machine):** see [`AGENT_MEMORY_BACKUP.md`](./AGENT_MEMORY_BACKUP.md) — ISO recipe, hard rules, SourceForge/SSH checklist, and the first Cursor prompt to paste after reinstall.
+
 ## Repo map
 
 | Repo | Role | Remotes |
@@ -98,10 +100,13 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## After reinstalling this OS on the build machine
 
+Follow **`AGENT_MEMORY_BACKUP.md`** (sections 0–1 and 7). Short version:
+
 ```bash
 git clone https://github.com/visnudeva/SweetPotatOs.git
 git clone https://github.com/visnudeva/SweetPotato.git
 # add SourceForge remote on SweetPotatOs if needed (see sourceforge/SETUP.md)
+# fix profile/pacman.conf [sweetpotatos] Server= to this clone's repo/
 ```
 
-Open `SweetPotatOs` in Cursor. Agents should read this file and `.cursor/rules/project-notes.mdc`. Chat history under `~/.cursor/` is local — back it up separately if you care about old threads.
+Open `SweetPotatOs` in Cursor. Agents should read `AGENT_MEMORY_BACKUP.md`, this file, and `.cursor/rules/project-notes.mdc`. Chat history under `~/.cursor/` is local — back it up separately if you care about old threads. Before wiping Bluefin, also copy `~/.ssh/id_ed25519_sourceforge*` (and optionally `out/` + `repo/`).
