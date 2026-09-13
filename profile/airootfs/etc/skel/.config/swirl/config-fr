@@ -144,8 +144,8 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+$up focus up
     # $right is "l" — reserved for lock; use arrows for focus right
     bindsym $mod+Left focus left
-    bindsym $mod+Down workspace prev_on_output
-    bindsym $mod+Up workspace next_on_output
+    bindsym $mod+Down workspace prev_on_output; scale_workspaces disable
+    bindsym $mod+Up workspace next_on_output; scale_workspaces disable
     bindsym $mod+Right focus right
 
     bindsym $mod+Shift+$left move left
@@ -159,16 +159,16 @@ seat * xcursor_theme capitaine-cursors 24
 #
 # Workspaces (AZERTY):
 #
-    bindsym $mod+ampersand workspace number 1
-    bindsym $mod+eacute workspace number 2
-    bindsym $mod+quotedbl workspace number 3
-    bindsym $mod+apostrophe workspace number 4
-    bindsym $mod+parenleft workspace number 5
-    bindsym $mod+minus workspace number 6
-    bindsym $mod+egrave workspace number 7
-    bindsym $mod+underscore workspace number 8
-    bindsym $mod+ccedilla workspace number 9
-    bindsym $mod+agrave workspace number 10
+    bindsym $mod+ampersand workspace number 1; scale_workspaces disable
+    bindsym $mod+eacute workspace number 2; scale_workspaces disable
+    bindsym $mod+quotedbl workspace number 3; scale_workspaces disable
+    bindsym $mod+apostrophe workspace number 4; scale_workspaces disable
+    bindsym $mod+parenleft workspace number 5; scale_workspaces disable
+    bindsym $mod+minus workspace number 6; scale_workspaces disable
+    bindsym $mod+egrave workspace number 7; scale_workspaces disable
+    bindsym $mod+underscore workspace number 8; scale_workspaces disable
+    bindsym $mod+ccedilla workspace number 9; scale_workspaces disable
+    bindsym $mod+agrave workspace number 10; scale_workspaces disable
     bindsym $mod+Shift+ampersand move container to workspace number 1
     bindsym $mod+Shift+eacute move container to workspace number 2
     bindsym $mod+Shift+quotedbl move container to workspace number 3
@@ -184,7 +184,8 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Ctrl+Up move container to workspace prev_on_output
     bindsym $mod+Ctrl+Down move container to workspace next_on_output
 
-    # Workspace overview: zoom out to all desktops (Super+drag windows between them)
+    # Workspace overview: zoom out to all desktops (Super+drag windows between them).
+    # Plain click zooms back in (swirl overview-click-zoom). Mod+number / Up/Down also exit overview.
     bindsym --no-repeat $mod+Tab scale_workspaces toggle
     # Current-desktop bird's eye (columns on this strip only)
     bindsym --no-repeat $mod+Shift+Tab scale_workspace overview

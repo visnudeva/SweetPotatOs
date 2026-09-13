@@ -1,0 +1,57 @@
+diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
+index 8cdee70..5af3560 100644
+--- a/sway/input/seatop_default.c
++++ b/sway/input/seatop_default.c
+@@ -31,6 +31,24 @@ struct seatop_default_event {
+ /*-----------------------------------------\
+  * Functions shared by multiple callbacks  /
+  *---------------------------------------*/
++
++/**
++ * Leave multi-desktop / current-desktop overview after selecting a target.
++ * Used for click-to-zoom; Super+drag (mod pressed) must not call this.
++ */
++static bool overview_exit_on_select(struct sway_workspace *workspace) {
++	bool exited = false;
++	if (layout_overview_workspaces_enabled()) {
++		layout_overview_workspaces(false);
++		exited = true;
++	}
++	if (workspace && layout_overview_mode(workspace) != OVERVIEW_DISABLED) {
++		layout_overview_set(workspace, OVERVIEW_DISABLED);
++		exited = true;
++	}
++	return exited;
++}
++
+ static enum wlr_edges find_edge(struct sway_container *cont,
+ 		struct wlr_surface *surface, struct sway_cursor *cursor) {
+ 	if (!cont->view || (surface && cont->view->surface != surface)) {
+@@ -356,7 +374,13 @@ static void handle_button(struct sway_seat *seat, uint32_t time_msec,
+ 	if (node && node->type == N_WORKSPACE && surface == NULL) {
+ 		if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
+ 			seat_set_focus(seat, node);
++			bool zoomed = button == BTN_LEFT && !mod_pressed &&
++				overview_exit_on_select(node->sway_workspace);
+ 			transaction_commit_dirty();
++			if (zoomed) {
++				// Zoom in without delivering the click to clients
++				return;
++			}
+ 		}
+ 		seat_pointer_notify_button(seat, time_msec, button, state);
+ 		return;
+@@ -427,7 +451,13 @@ static void handle_button(struct sway_seat *seat, uint32_t time_msec,
+ 		}
+ 
+ 		seat_set_focus(seat, node);
++		bool zoomed = button == BTN_LEFT && !mod_pressed &&
++			overview_exit_on_select(cont->pending.workspace);
+ 		transaction_commit_dirty();
++		if (zoomed) {
++			// Zoom in on the selected window; skip client click / drag start
++			return;
++		}
+ 	}
+ 
+ 	// Handle beginning floating move
