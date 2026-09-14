@@ -148,8 +148,8 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+$up focus up
     # $right is "l" — reserved for lock; use arrows for focus right
     bindsym $mod+Left focus left
-    bindsym $mod+Down workspace prev_on_output; scale_workspaces disable
-    bindsym $mod+Up workspace next_on_output; scale_workspaces disable
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
     bindsym $mod+Right focus right
 
     bindsym $mod+Shift+$left move left
@@ -206,10 +206,11 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+m exec ~/.config/swirl/scripts/expand.sh
 
     # Toggle the current focus between tiling and floating mode
+    bindsym $mod+a floating toggle
     bindsym $mod+Shift+space floating toggle
 
     # Move focus to the parent container
-    bindsym $mod+a focus parent
+    bindsym $mod+Shift+a focus parent
 #
 # Resizing containers:
 #
