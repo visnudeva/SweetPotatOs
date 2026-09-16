@@ -130,6 +130,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+r` | Music / radio (Spore) |
 | `Mod+Return` | Terminal (foot) |
 | `Mod+m` | Expand focused column to 100% / restore 50/50 |
+| `Mod+a` / `Mod+Shift+space` | Floating toggle |
 | `Mod+?` | Floating keybind cheatsheet (toggle) |
 | `Mod+Shift+w` | Wallpaper selector (waypaper) |
 | `Mod+Shift+r` | Resize mode (arrow keys; Enter/Esc to exit) |
@@ -140,14 +141,15 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+number` | Change workspaces |
 | `Mod+Tab` | Workspace overview (Super+drag windows between desktops) |
 | `Mod+Shift+Tab` | Overview of windows on the current desktop |
-| `Mod+Up` / `Mod+Down` | Switch workspace up / down |
+| Click (in overview) | Zoom back in on that window / desktop |
+| `Mod+Up` / `Mod+Down` | Switch workspace up / down (also exits overview) |
 | `Mod+Ctrl+Up` / `Mod+Ctrl+Down` | Move window to workspace above / below |
 | `Mod+Shift+number` | Move window to workspace 1–10 |
 | `Mod+l` | Lock screen |
 | `Mod+c` | Caffeine toggle (on by default on live ISO) |
 | `Mod+i` | Installer (Calamares) |
 | `Mod+Shift+e` | Exit Swirl |
-| `Mod+o` | Power off |
+| `Mod+o` / `Mod+Escape` | Power off |
 | `Mod+Shift+c` | Reload config |
 
 `Mod` is usually the Super/Windows key. A login tip points at `Mod+?` for the floating cheatsheet (every session).

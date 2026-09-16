@@ -20,7 +20,7 @@
   Mod+b / Mod+v      Split horizontal / vertical
   Mod+Shift+a        Focus parent
   Mod+h/j/k          Focus left / down / up
-  Mod+arrows         Focus left / down / up / right
+  Mod+Left/Right     Focus left / right
   Mod+Shift+hjkl     Move window (vim keys)
   Mod+Shift+arrows   Move window
   Mod+drag           Move floating window
@@ -30,6 +30,7 @@
   Mod+Tab            Workspace overview (all desktops)
   Mod+Shift+Tab      Overview (current desktop)
   click              Zoom back in (focus that window/desktop)
+  Mod+Up/Down        Next / previous workspace (exits overview)
   Mod+Ctrl+Up/Down   Move window to workspace
   Mod+1…0            Workspace 1–10 (exits overview)
   Mod+Shift+1…0      Move window to workspace 1–10
@@ -44,7 +45,7 @@
   Mod+c              Caffeine (idle lock off)
   Mod+Shift+c        Reload config
   Mod+Shift+e        Exit Swirl
-  Mod+o              Power off
+  Mod+o / Mod+Esc    Power off
   Mod+Shift+r        Resize mode
   Mod+?              This cheatsheet (toggle)
 

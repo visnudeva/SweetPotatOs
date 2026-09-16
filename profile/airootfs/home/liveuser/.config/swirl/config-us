@@ -140,16 +140,18 @@ seat * xcursor_theme capitaine-cursors 24
 
     # Power off
     bindsym $mod+o exec swaynag -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
+    bindsym $mod+Escape exec swaynag -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
 #
 # Moving around:
 #
     bindsym $mod+$left focus left
     bindsym $mod+$down focus down
     bindsym $mod+$up focus up
-    # $right is "l" — reserved for lock; use arrows for focus right
+    # $right is "l" — reserved for lock; use arrows for focus right.
+    # Mod+Up/Down switch desktops (and exit overview); Left/Right stay visual focus.
     bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
+    bindsym $mod+Down workspace prev_on_output; scale_workspaces disable
+    bindsym $mod+Up workspace next_on_output; scale_workspaces disable
     bindsym $mod+Right focus right
 
     bindsym $mod+Shift+$left move left
