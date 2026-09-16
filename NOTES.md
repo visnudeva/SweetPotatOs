@@ -35,6 +35,7 @@ Expected layout on a build machine (siblings):
    - Git: push SweetPotato → GitHub; SweetPotatOs → GitHub **and** `sourceforge`.
    - ISO files only: `SF_USER=… ./sourceforge/upload.sh` (rsync ISO + `.sha256` + `htdocs/`).
    - Point releases only — no in-place overlay upgrade channel. Desktop/theme on other distros: SweetPotato `install.sh`.
+   - Draft for a future Ryoku-style package + materialize channel (not built yet): [`docs/updates-design.md`](./docs/updates-design.md).
 
 After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]` `Server = file://…` to the absolute path of `./repo`.
 
@@ -61,7 +62,12 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Packages / AUR
 
-- No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin** (Shelly GUI; local `packaging/shelly-bin` from upstream prebuilt release — avoids AUR Anubis / zig), **localsend-bin** (nearby file sharing), **brave-origin-bin** (default Mod+w browser; local `packaging/brave-origin-bin`), and **spore** (web radio + local music; local `packaging/spore` from https://github.com/visnudeva/spore) via the local `repo/` (built in `build.sh`). Firefox is not shipped by default; upgrades keep an existing Firefox install but retarget Mod+w.
+- No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin**, **localsend-bin**, **brave-origin-bin**, and **spore** via the local `repo/` (built in `build.sh`) for ISO builds.
+- **Installed-system package channel (GitHub, not SourceForge):**
+  - Publish: `./scripts/publish-repo.sh` → GitHub release tag `pacman-repo`
+  - Server: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
+  - CLI: `sweetpotatos-update` (SPO packages only) + `sweetpotatos-materialize` (shipped `~/.config` with user overlay)
+  - SourceForge Files stays **ISO + project web only** (see `docs/updates-design.md`)
 - Official deps: `base-devel`, `git`, `pacman-contrib`, `fzf`, `github-cli`, `wget`, `python` (mpv already present).
 - `packaging/shelly-bin`: local PKGBUILD wrapping Seafoam Labs release tarball (no Flatpak backend package).
 - `packaging/spore`: local PKGBUILD for visnudeva/spore (Go TUI radio + local files; optional `ffmpeg` for some codecs).

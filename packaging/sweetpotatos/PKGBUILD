@@ -1,12 +1,12 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
-pkgver=2026.10.1
+pkgver=2026.10.2
 pkgrel=1
-pkgdesc='SweetPotatOs system branding, hooks, and helpers'
+pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
 license=('MIT')
-depends=('bash' 'pacman' 'plymouth' 'systemd')
+depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils')
 optdepends=(
   'swirl: desktop compositor'
   'yay-bin: AUR helper'
@@ -19,12 +19,16 @@ optdepends=(
 install=sweetpotatos.install
 source=(
   'sweetpotatos.install'
+  'sweetpotatos.conf'
+  'sweetpotatos-update'
+  'sweetpotatos-materialize'
 )
-sha256sums=('SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
   local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
   local ai="${root}/profile/airootfs"
+  local skel="${ai}/etc/skel/.config"
 
   # Installed-system helpers (live-only tools stay in airootfs only).
   local bin
@@ -40,6 +44,14 @@ package() {
     sweetpotatos-fix-sway-keyboard; do
     install -Dm755 "${ai}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
   done
+
+  install -Dm755 "${srcdir}/sweetpotatos-update" \
+    "${pkgdir}/usr/local/bin/sweetpotatos-update"
+  install -Dm755 "${srcdir}/sweetpotatos-materialize" \
+    "${pkgdir}/usr/local/bin/sweetpotatos-materialize"
+
+  install -Dm644 "${srcdir}/sweetpotatos.conf" \
+    "${pkgdir}/etc/pacman.d/sweetpotatos.conf"
 
   install -Dm644 "${ai}/usr/local/share/sweetpotatos/os-release" \
     "${pkgdir}/usr/local/share/sweetpotatos/os-release"
@@ -70,5 +82,15 @@ package() {
     89-sweetpotatos-plymouth.hook; do
     install -Dm644 "${ai}/etc/pacman.d/hooks/${hook}" \
       "${pkgdir}/etc/pacman.d/hooks/${hook}"
+  done
+
+  # Shipped desktop config base for sweetpotatos-materialize.
+  local dir
+  for dir in swirl foot mako gtk-3.0 gtk-4.0 fastfetch swaylock xsettingsd \
+             networkmanager-dmenu geany environment.d kanshi; do
+    if [[ -d "${skel}/${dir}" ]]; then
+      mkdir -p "${pkgdir}/usr/share/sweetpotato/config/${dir}"
+      cp -a "${skel}/${dir}/." "${pkgdir}/usr/share/sweetpotato/config/${dir}/"
+    fi
   done
 }

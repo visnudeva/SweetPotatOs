@@ -2,7 +2,19 @@ post_install() {
   post_upgrade "$@"
 }
 
+_ensure_pacman_include() {
+  local conf=/etc/pacman.conf
+  local drop=/etc/pacman.d/sweetpotatos.conf
+  [[ -f "${drop}" ]] || return 0
+  [[ -f "${conf}" ]] || return 0
+  if grep -qE '^[[:space:]]*Include[[:space:]]*=[[:space:]]*/etc/pacman\.d/sweetpotatos\.conf' "${conf}"; then
+    return 0
+  fi
+  printf '\n# SweetPotatOs package channel (GitHub Releases; ISOs stay on SourceForge)\nInclude = /etc/pacman.d/sweetpotatos.conf\n' >>"${conf}"
+}
+
 post_upgrade() {
+  _ensure_pacman_include
   if command -v sweetpotatos-branding >/dev/null 2>&1; then
     sweetpotatos-branding || true
   fi

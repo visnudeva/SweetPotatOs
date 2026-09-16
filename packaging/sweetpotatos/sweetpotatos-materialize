@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Lay shipped SweetPotato desktop files into ~/.config without wiping user intent.
+#
+# - Clobbers files that exist under /usr/share/sweetpotato/config/
+# - Never touches paths listed as seed-only if they already exist
+# - Overlay ~/.config/sweetpotatos/user_edits/ wins over the shipped base
+set -euo pipefail
+
+BASE="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}"
+DEST="${XDG_CONFIG_HOME:-${HOME}/.config}"
+OVERLAY="${DEST}/sweetpotatos/user_edits"
+STATE_DIR="${XDG_STATE_HOME:-${HOME}/.local/state}/sweetpotatos"
+MANIFEST="${STATE_DIR}/materialized"
+
+# Relative to DEST — copy from base only when missing.
+SEED_ONLY=(
+  kanshi/config
+)
+
+if [[ ! -d "${BASE}" ]]; then
+  echo "[!] No shipped config at ${BASE} (install/upgrade sweetpotatos)." >&2
+  exit 0
+fi
+
+mkdir -p "${DEST}" "${STATE_DIR}"
+: >"${MANIFEST}.new"
+
+is_seed_only() {
+  local rel="$1"
+  local s
+  for s in "${SEED_ONLY[@]}"; do
+    [[ "${rel}" == "${s}" ]] && return 0
+  done
+  return 1
+}
+
+copy_one() {
+  local src="$1"
+  local rel="${src#"${BASE}"/}"
+  local out="${DEST}/${rel}"
+  local over="${OVERLAY}/${rel}"
+
+  if [[ -e "${over}" || -L "${over}" ]]; then
+    mkdir -p "$(dirname "${out}")"
+    cp -a "${over}" "${out}"
+    printf '%s\n' "${rel}" >>"${MANIFEST}.new"
+    return
+  fi
+
+  if is_seed_only "${rel}" && [[ -e "${out}" || -L "${out}" ]]; then
+    printf '%s\n' "${rel}" >>"${MANIFEST}.new"
+    return
+  fi
+
+  mkdir -p "$(dirname "${out}")"
+  cp -a "${src}" "${out}"
+  printf '%s\n' "${rel}" >>"${MANIFEST}.new"
+}
+
+while IFS= read -r -d '' src; do
+  copy_one "${src}"
+done < <(find "${BASE}" -type f -print0)
+
+mv -f "${MANIFEST}.new" "${MANIFEST}"
+echo "[+] Materialized shipped config into ${DEST}"
+echo "    Overlay: ${OVERLAY}"
