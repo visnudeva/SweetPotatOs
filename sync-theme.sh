@@ -150,6 +150,7 @@ sync_common_into() {
   cp -f "${SP}/swirl/config-us" "${dest}/.config/swirl/config-us"
   cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
+  cp -f "${SP}/swirl/scripts/autotile_lib.lua" "${dest}/.config/swirl/scripts/autotile_lib.lua"
   cp -f "${SP}/swirl/cheatsheet.txt" "${dest}/.config/swirl/cheatsheet.txt"
   chmod 755 "${dest}/.config/swirl/scripts/"*.sh
   # User override drop-in: always refresh ISO templates; seed-only for a live $HOME.

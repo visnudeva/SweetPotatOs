@@ -103,6 +103,13 @@ check_grep 'SPixelBG' "${ISO}/etc/skel/.config/waypaper/config.ini" "default wal
 check_grep 'start-kanshi\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel starts kanshi from saved outputs"
 check_grep 'save-display-layout\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel save-display-layout keybind"
 check_grep 'sway/workspaces' "${ISO}/etc/skel/.config/swirl/config" "skel includes sway workspaces"
+check_grep '^sweetpotatos$' "${ROOT}/profile/packages.x86_64" "sweetpotatos package listed"
+check_file "${ISO}/etc/skel/.config/swirl/config.d/user"
+check_grep 'include ~/.config/swirl/config.d/user' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel loads user override last"
+check_file "${ISO}/etc/skel/.config/swirl/scripts/autotile_lib.lua"
+check_grep 'autotile_lib' "${ISO}/etc/skel/.config/swirl/scripts/autotile.lua" \
+  "autotile loads shared lib"
 
 if [[ "${FAIL}" -ne 0 ]]; then
   echo "== FAILED =="

@@ -64,9 +64,14 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 - No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin**, **localsend-bin**, **brave-origin-bin**, and **spore** via the local `repo/` (built in `build.sh`) for ISO builds.
 - **Installed-system package channel (GitHub, not SourceForge):**
+  - **Primary delivery for Third Harvest+ installs:** theme/desktop fixes ship via
+    `sweetpotatos-update` — bump `packaging/sweetpotatos` (and swirl when needed),
+    rebuild into `repo/`, then `./scripts/publish-repo.sh`. Point-release ISOs are
+    for new installs / marketing, not required for existing boxes.
   - Publish: `./scripts/publish-repo.sh` → GitHub release tag `pacman-repo`
   - Server: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
   - CLI: `sweetpotatos-update` (SPO packages only) + `sweetpotatos-materialize` (shipped `~/.config` with user overlay)
+  - Unit tests: `./tests/run.sh`
   - SourceForge Files stays **ISO + project web only** (see `docs/updates-design.md`)
 - Official deps: `base-devel`, `git`, `pacman-contrib`, `fzf`, `github-cli`, `wget`, `python` (mpv already present).
 - `packaging/shelly-bin`: local PKGBUILD wrapping Seafoam Labs release tarball (no Flatpak backend package).
@@ -92,7 +97,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Display layout is managed by **nwg-displays** (GUI) + saved **`~/.config/sway/outputs`**. App launcher entry is **Displays** (`GenericName=nwg-displays`, search `nwg`) — same binary as terminal `nwg-displays`. Desktop `Exec` must be **`sweetpotatos-displays`** on PATH (not `%h/…` — j4-dmenu-desktop does not expand it; not `bash -lc '~…'`). `Mod+Shift+d` opens the swirl wrapper directly. After **wlr-randr**, press **`Mod+Ctrl+d`**. The swirl wrapper creates empty `outputs`/`workspaces` before parse; kanshi profiles are generated from `outputs` (no `mode preferred` reset). **Do not** ship `~/.config/sway/` in skel.
 - Wallpaper is managed by **waypaper** (AUR, bundled in local repo). Config at `~/.config/waypaper/config.ini`; default wallpaper is `SPixelBG.png` from `~/Pictures/Wallpapers/`. `exec_always waypaper --restore` in Swirl config restores it on login. `Mod+Shift+w` opens the waypaper GUI. Do not ship UsefulBinds/BindsBG. Keybinds tip: `tips.sh` points at `Mod+?` floating cheatsheet.
 - Live Calamares keyboard: on Wayland Calamares only updates **locale1**; Swirl ignores it. Live session runs `sweetpotatos-sway-xkb-watch` (busctl poll of locale1 → `swaymsg`). Do **not** use `dbus-monitor --system` for this: liveuser cannot BecomeMonitor on dbus-broker, so the watcher never saw French. Installed user gets `shellprocess@fix-sway-keyboard` (`config-us` / `config-fr`).
-- Smoke check: `./scripts/smoke-check.sh`.
+- Smoke check: `./scripts/smoke-check.sh`. Unit tests: `./tests/run.sh`.
 - **Gotcha:** shellprocess GS vars must be `${gs[keyboardLayout]}` / `${gs[keyboardVariant]}`. Bare `gs[...]` is passed literally, hits a sed path, and aborts install (seen on 2026.08.12 ISO). Command is prefixed with `-` so a future tweak failure cannot fail the whole install.
 
 ## SourceForge
