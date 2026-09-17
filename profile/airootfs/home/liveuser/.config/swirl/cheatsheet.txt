@@ -30,8 +30,8 @@
   Mod+Tab            Workspace overview (all desktops)
   Mod+Shift+Tab      Overview (current desktop)
   click              Zoom back in (focus that window/desktop)
-  Mod+Up/Down        Next / previous workspace (exits overview)
-  Mod+Ctrl+Up/Down   Move window to workspace
+  Mod+Up/Down        Workspace above / below (exits overview)
+  Mod+Ctrl+Up/Down   Move window to workspace above / below
   Mod+1…0            Workspace 1–10 (exits overview)
   Mod+Shift+1…0      Move window to workspace 1–10
 

@@ -90,7 +90,8 @@ vulkan-radeon
 xf86-video-amdgpu
 # Installer (built into local repo — see build.sh)
 calamares
-# sweetpotatos branding/helpers ship in airootfs (local repo package used at ISO build time)
+# Branding + sweetpotatos-update / materialize + GitHub pacman channel
+sweetpotatos
 qt6-base
 qt5-base
 accountsservice

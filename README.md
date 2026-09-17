@@ -142,7 +142,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+Tab` | Workspace overview (Super+drag windows between desktops) |
 | `Mod+Shift+Tab` | Overview of windows on the current desktop |
 | Click (in overview) | Zoom back in on that window / desktop |
-| `Mod+Up` / `Mod+Down` | Switch workspace up / down (also exits overview) |
+| `Mod+Up` / `Mod+Down` | Workspace above / below (also exits overview) |
 | `Mod+Ctrl+Up` / `Mod+Ctrl+Down` | Move window to workspace above / below |
 | `Mod+Shift+number` | Move window to workspace 1–10 |
 | `Mod+l` | Lock screen |

@@ -148,10 +148,10 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+$down focus down
     bindsym $mod+$up focus up
     # $right is "l" — reserved for lock; use arrows for focus right.
-    # Mod+Up/Down switch desktops (and exit overview); Left/Right stay visual focus.
+    # Mod+Up/Down follow the visual stack (higher numbers sit below); Left/Right = focus.
     bindsym $mod+Left focus left
-    bindsym $mod+Down workspace prev_on_output; scale_workspaces disable
-    bindsym $mod+Up workspace next_on_output; scale_workspaces disable
+    bindsym $mod+Up workspace prev_on_output; scale_workspaces disable
+    bindsym $mod+Down workspace next_on_output; scale_workspaces disable
     bindsym $mod+Right focus right
 
     bindsym $mod+Shift+$left move left
@@ -186,7 +186,7 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Shift+ccedilla move container to workspace number 9
     bindsym $mod+Shift+agrave move container to workspace number 10
 
-    # Move focused window to workspace above/below (stay on current desktop)
+    # Move focused window to workspace above/below (same visual direction as Mod+Up/Down)
     bindsym $mod+Ctrl+Up move container to workspace prev_on_output
     bindsym $mod+Ctrl+Down move container to workspace next_on_output
 
