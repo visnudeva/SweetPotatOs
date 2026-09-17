@@ -306,14 +306,23 @@ if ! grep -q 'Live ISO: liveuser has an empty password' "${ISO}/home/liveuser/.c
 ' "${ISO}/home/liveuser/.config/swaylock/config"
 fi
 
-# System logo for fastfetch (absolute path in config.jsonc)
-mkdir -p "${ISO}/usr/local/share/sweetpotatos" "${ISO}/etc/fastfetch"
-cp -f "${SP}/fastfetch/SPLogo.asc" "${ISO}/usr/local/share/sweetpotatos/SPLogo.asc"
-cp -f "${SP}/fastfetch/SPLogo.png" "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
+# System logo + wrappers are owned by the sweetpotatos package
+# (packaging/sweetpotatos/files). Keep airootfs free of those paths so pacstrap
+# can install the package without conflicting files. Refresh package sources:
+PKG_FILES="${ROOT}/packaging/sweetpotatos/files"
+mkdir -p "${PKG_FILES}/usr/local/share/sweetpotatos" \
+         "${PKG_FILES}/usr/local/bin" \
+         "${ISO}/etc/fastfetch"
+cp -f "${SP}/fastfetch/SPLogo.asc" "${PKG_FILES}/usr/local/share/sweetpotatos/SPLogo.asc"
+cp -f "${SP}/fastfetch/SPLogo.png" "${PKG_FILES}/usr/local/share/sweetpotatos/SPLogo.png"
+install -Dm755 "${SP}/bin/swirl" "${PKG_FILES}/usr/local/bin/swirl"
+install -Dm755 "${SP}/bin/sweetpotatos-displays" "${PKG_FILES}/usr/local/bin/sweetpotatos-displays"
+# Drop any leftover copies under airootfs from older syncs.
+rm -f "${ISO}/usr/local/bin/swirl" \
+      "${ISO}/usr/local/bin/sweetpotatos-displays" \
+      "${ISO}/usr/local/share/sweetpotatos/SPLogo.asc" \
+      "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
 cp -f "${ISO}/home/liveuser/.config/fastfetch/config.jsonc" "${ISO}/etc/fastfetch/config.jsonc"
-# System swirl wrapper (PATH: /usr/local/bin before /usr/bin)
-install -Dm755 "${SP}/bin/swirl" "${ISO}/usr/local/bin/swirl"
-install -Dm755 "${SP}/bin/sweetpotatos-displays" "${ISO}/usr/local/bin/sweetpotatos-displays"
 
 # System wallpapers (Mod+Shift+w also scans /usr/share/backgrounds)
 mkdir -p "${ISO}/usr/share/backgrounds/sweetpotatos"

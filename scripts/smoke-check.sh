@@ -39,8 +39,13 @@ check_nogrep() {
 
 echo "== SweetPotatOs smoke check =="
 
-check_file "${ISO}/usr/local/bin/swirl"
+PKG_FILES="${ROOT}/packaging/sweetpotatos/files"
+
 check_file "${ISO}/etc/skel/.local/bin/swirl"
+check_file "${PKG_FILES}/usr/local/bin/swirl"
+check_file "${PKG_FILES}/usr/local/bin/sweetpotatos-session"
+check_file "${PKG_FILES}/usr/local/bin/sweetpotatos-displays"
+check_file "${PKG_FILES}/usr/local/share/sweetpotatos/os-release"
 check_file "${ISO}/etc/skel/.config/foot/foot.ini"
 check_file "${ISO}/etc/skel/.config/swirl/scripts/tips.sh"
 check_file "${ISO}/etc/skel/.config/swirl/scripts/cheatsheet.sh"
@@ -69,7 +74,7 @@ else
   ok "no spo-upgrade references in airootfs"
 fi
 check_grep '^spore$' "${ROOT}/profile/packages.x86_64" "spore package listed"
-check_grep '^VERSION_ID=' "${ISO}/usr/local/share/sweetpotatos/os-release" "os-release has VERSION_ID"
+check_grep '^VERSION_ID=' "${PKG_FILES}/usr/local/share/sweetpotatos/os-release" "os-release has VERSION_ID"
 check_grep 'fingerprint' "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch" \
   "xkb watcher polls locale1 via busctl"
 check_nogrep '^[[:space:]]*dbus-monitor' "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch" \
@@ -91,7 +96,7 @@ check_grep '^btop$' "${ROOT}/profile/packages.x86_64" "btop package listed"
 check_grep '^power-profiles-daemon$' "${ROOT}/profile/packages.x86_64" "power-profiles-daemon listed"
 check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel nwg-displays wrapper keybind"
 check_grep 'sweetpotatos-displays' "${ISO}/etc/skel/.local/share/applications/nwg-displays.desktop" "skel Displays Exec uses PATH launcher"
-check_grep 'nwg-displays\.sh' "${ISO}/usr/local/bin/sweetpotatos-displays" "system sweetpotatos-displays delegates to swirl wrapper"
+check_grep 'nwg-displays\.sh' "${PKG_FILES}/usr/local/bin/sweetpotatos-displays" "package sweetpotatos-displays delegates to swirl wrapper"
 check_grep 'GenericName=nwg-displays' "${ISO}/etc/skel/.local/share/applications/nwg-displays.desktop" "skel Displays shows nwg-displays generic name"
 check_grep 'SWAYSOCK|I3SOCK' "${ISO}/etc/skel/.config/swirl/scripts/nwg-displays.sh" "nwg-displays wrapper finds IPC socket"
 check_grep 'Mod\+\?' "${ISO}/etc/skel/.config/swirl/scripts/tips.sh" "tips mention Mod+? cheatsheet"

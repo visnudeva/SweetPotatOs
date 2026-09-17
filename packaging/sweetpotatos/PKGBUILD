@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=1
+pkgrel=2
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -27,10 +27,12 @@ sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
   local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
+  local files="${startdir}/files"
   local ai="${root}/profile/airootfs"
   local skel="${ai}/etc/skel/.config"
 
-  # Installed-system helpers (live-only tools stay in airootfs only).
+  # System helpers live under packaging/sweetpotatos/files (not airootfs —
+  # airootfs only keeps live-ISO-only tools so pacstrap can install this package).
   local bin
   for bin in \
     sweetpotatos-session \
@@ -42,7 +44,7 @@ package() {
     sweetpotatos-fix-ly \
     sweetpotatos-fix-sudo \
     sweetpotatos-fix-sway-keyboard; do
-    install -Dm755 "${ai}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
+    install -Dm755 "${files}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
   done
 
   install -Dm755 "${srcdir}/sweetpotatos-update" \
@@ -53,25 +55,23 @@ package() {
   install -Dm644 "${srcdir}/sweetpotatos.conf" \
     "${pkgdir}/etc/pacman.d/sweetpotatos.conf"
 
-  install -Dm644 "${ai}/usr/local/share/sweetpotatos/os-release" \
+  install -Dm644 "${files}/usr/local/share/sweetpotatos/os-release" \
     "${pkgdir}/usr/local/share/sweetpotatos/os-release"
-  install -Dm644 "${ai}/usr/local/share/sweetpotatos/issue" \
+  install -Dm644 "${files}/usr/local/share/sweetpotatos/issue" \
     "${pkgdir}/usr/local/share/sweetpotatos/issue"
-  if [[ -f "${ai}/usr/local/share/sweetpotatos/SPLogo.asc" ]]; then
-    install -Dm644 "${ai}/usr/local/share/sweetpotatos/SPLogo.asc" \
-      "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.asc"
-  fi
-  if [[ -f "${ai}/usr/local/share/sweetpotatos/SPLogo.png" ]]; then
-    install -Dm644 "${ai}/usr/local/share/sweetpotatos/SPLogo.png" \
-      "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.png"
-  fi
+  install -Dm644 "${files}/usr/local/share/sweetpotatos/SPLogo.asc" \
+    "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.asc"
+  install -Dm644 "${files}/usr/local/share/sweetpotatos/SPLogo.png" \
+    "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.png"
 
-  install -Dm644 "${ai}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.plymouth" \
-    "${pkgdir}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.plymouth"
-  install -Dm644 "${ai}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.script" \
-    "${pkgdir}/usr/share/plymouth/themes/sweetpotatos/sweetpotatos.script"
+  local ply
+  for ply in sweetpotatos.plymouth sweetpotatos.script \
+             box.png bullet.png entry.png lock.png WhiteLogo.png; do
+    install -Dm644 "${files}/usr/share/plymouth/themes/sweetpotatos/${ply}" \
+      "${pkgdir}/usr/share/plymouth/themes/sweetpotatos/${ply}"
+  done
 
-  install -Dm644 "${ai}/etc/systemd/logind.conf.d/lid-sleep.conf" \
+  install -Dm644 "${files}/etc/systemd/logind.conf.d/lid-sleep.conf" \
     "${pkgdir}/etc/systemd/logind.conf.d/50-sweetpotatos-lid-sleep.conf"
 
   local hook
@@ -80,7 +80,7 @@ package() {
     sweetpotatos-ly-swirl-session.hook \
     sweetpotatos-hide-sway-session.hook \
     89-sweetpotatos-plymouth.hook; do
-    install -Dm644 "${ai}/etc/pacman.d/hooks/${hook}" \
+    install -Dm644 "${files}/etc/pacman.d/hooks/${hook}" \
       "${pkgdir}/etc/pacman.d/hooks/${hook}"
   done
 

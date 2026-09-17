@@ -2,6 +2,10 @@ alsa-utils
 amd-ucode
 arch-install-scripts
 base
+# Explicit providers so pacstrap stays noninteractive
+iptables
+jack2
+tesseract-data-eng
 bcachefs-tools
 bind
 bolt
