@@ -320,3 +320,5 @@ include ~/.config/sway/workspaces
 exec sh -c 'sleep 5; sweetpotatos-calamares'
 
 include /etc/sway/config.d/*
+# User overrides — seeded once; never overwritten by updates (see config.d/user).
+include ~/.config/swirl/config.d/user

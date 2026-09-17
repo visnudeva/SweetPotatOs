@@ -77,7 +77,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Calamares: float window, **Mod+i**, autostart after ~5s (`sweetpotatos-calamares`).
 - Liveuser: empty password, sudo NOPASSWD, autologin tty1 → **Swirl** (`sweetpotatos-session`).
 - Compositor package: `swirl` in local `repo/` (`packaging/swirl`, `sudo ./build.sh --build-swirl`).
-- Bar / IPC / nag: stock from Arch `sway` package. User config lives in `~/.config/swirl/` (never also ship `~/.config/sway/` — Swirl prefers that path first). `include /etc/sway/config.d/*` stays for package drop-ins.
+- Bar / IPC / nag: stock from Arch `sway` package. User config lives in `~/.config/swirl/` (never also ship `~/.config/sway/` — Swirl prefers that path first). `include /etc/sway/config.d/*` stays for package drop-ins. Durable user keybinds: `~/.config/swirl/config.d/user` (seed-only; materialize never overwrites).
 - Session files: do **not** ship `wayland-sessions/*.desktop` in airootfs (conflicts with pacstrap). `swirl.desktop` comes from the swirl package; stock `sway.desktop` is hidden by `sweetpotatos-hide-sway-session.hook`.
 - Desktop identity: Arch `sway` drop-in sets `XDG_CURRENT_DESKTOP=sway`; swirl’s `99-swirl-systemd-user.conf` overrides it. Live tty1 also exports Swirl in `sweetpotatos-session`. Fastfetch DE/WM labels are forced to Swirl in the theme config.
 - Ly: `waylandsessions = /etc/ly/wayland-sessions` (Swirl only). Pacman hooks **delete** `/usr/share/wayland-sessions/sway.desktop` (Ly ignores Hidden=). Keep the Arch `sway` package only for swaybar/swaymsg/swaynag.

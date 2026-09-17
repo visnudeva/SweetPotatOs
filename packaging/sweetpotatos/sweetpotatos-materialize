@@ -15,6 +15,7 @@ MANIFEST="${STATE_DIR}/materialized"
 # Relative to DEST — copy from base only when missing.
 SEED_ONLY=(
   kanshi/config
+  swirl/config.d/user
 )
 
 if [[ ! -d "${BASE}" ]]; then

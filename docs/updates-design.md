@@ -37,7 +37,7 @@ meaningful and a stuck Arch mirror does not block a desktop fix.
 |-------|------------------------|
 | `[ryoku]` | Remote `[sweetpotatos]` (`swirl`, `sweetpotatos`, maybe theme pkg) |
 | `/usr/share/ryoku/config` + materialize | `/usr/share/sweetpotato/` → `~/.config/swirl`, gtk, foot, … |
-| `user_edits` | `~/.config/sweetpotatos/user_edits/` (or Swirl `config.d/user`) |
+| `user_edits` | `~/.config/sweetpotatos/user_edits/` + Swirl `~/.config/swirl/config.d/user` (seed-only) |
 | `ryoku update` | Thin `sweetpotatos-update` / `spo` CLI |
 | Point-release ISO | Keep as golden path for new installs |
 
@@ -88,6 +88,7 @@ Skip for v1: testing channel, Snapper/boot-guard, Hub UI, doctor reconcilers.
 **MVP live:** GitHub release [`pacman-repo`](https://github.com/visnudeva/SweetPotatOs/releases/tag/pacman-repo)
 holds the package set. Publish with `./scripts/publish-repo.sh`. The `sweetpotatos`
 package (≥ 2026.10.2) installs `/etc/pacman.d/sweetpotatos.conf`,
-`sweetpotatos-update`, and `sweetpotatos-materialize`.
+`sweetpotatos-update`, and `sweetpotatos-materialize`. Swirl user overrides live in
+`~/.config/swirl/config.d/user` (seeded once; never overwritten).
 
 **Still later:** signed keyring, theme-only package split, richer doctor/reconcile.

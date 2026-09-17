@@ -132,6 +132,7 @@ sync_common_into() {
   local dest="$1"
   mkdir -p \
     "${dest}/.config/swirl/scripts" \
+    "${dest}/.config/swirl/config.d" \
     "${dest}/.config/kanshi" \
     "${dest}/.local/share/applications" \
     "${dest}/.config/gtk-3.0" "${dest}/.config/gtk-4.0" \
@@ -151,6 +152,10 @@ sync_common_into() {
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
   cp -f "${SP}/swirl/cheatsheet.txt" "${dest}/.config/swirl/cheatsheet.txt"
   chmod 755 "${dest}/.config/swirl/scripts/"*.sh
+  # User override drop-in: always refresh ISO templates; seed-only for a live $HOME.
+  if [[ "${dest}" == "${ISO}"/* ]] || [[ ! -f "${dest}/.config/swirl/config.d/user" ]]; then
+    cp -f "${SP}/swirl/config.d/user" "${dest}/.config/swirl/config.d/user"
+  fi
   # Drop retired bind-wallpaper assets if present from older syncs.
   rm -f "${dest}/.local/share/backgrounds/UsefulBinds.png" \
         "${dest}/.local/share/backgrounds/BindsBG.png" \

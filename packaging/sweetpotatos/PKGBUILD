@@ -1,6 +1,6 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
-pkgver=2026.10.2
+pkgver=2026.10.3
 pkgrel=1
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')

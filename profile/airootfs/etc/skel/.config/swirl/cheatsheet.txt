@@ -63,3 +63,7 @@
   Resize mode (after Mod+Shift+r)
   hjkl or arrows     Resize focused window
   Enter / Esc        Leave resize mode
+
+  Customize
+  Edit ~/.config/swirl/config.d/user then Mod+Shift+c
+  (survives updates; later binds win over defaults)

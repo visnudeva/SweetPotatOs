@@ -1,0 +1,24 @@
+# --- ~/.config/swirl/config.d/user ----------------------------------------
+# Your Swirl overrides. Loaded LAST, so anything here wins over SweetPotato
+# defaults. Updates (sweetpotatos-update / materialize / install.sh re-runs)
+# never overwrite this file once it exists.
+#
+# Edit this file, then reload: Mod+Shift+c
+#
+# --- who owns what --------------------------------------------------------
+#   SweetPotato defaults   ~/.config/swirl/config (+ scripts)   replaced by updates
+#   you                    this file                            yours forever
+#   whole-file fork        ~/.config/sweetpotatos/user_edits/…  also survives updates
+#
+# --- examples -------------------------------------------------------------
+# Extra bind (does not remove the default unless you unbind first):
+#    bindsym $mod+Shift+b exec firefox
+#
+# Replace a default bind:
+#    unbindsym $mod+w
+#    bindsym $mod+w exec firefox
+#
+# Floating rule:
+#    for_window [app_id="mpv"] floating enable
+#
+# --- end of header; add your lines below ----------------------------------

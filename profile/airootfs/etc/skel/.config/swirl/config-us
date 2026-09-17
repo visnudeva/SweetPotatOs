@@ -313,3 +313,5 @@ for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, bor
 include ~/.config/sway/outputs
 include ~/.config/sway/workspaces
 include /etc/sway/config.d/*
+# User overrides — seeded once; never overwritten by updates (see config.d/user).
+include ~/.config/swirl/config.d/user
