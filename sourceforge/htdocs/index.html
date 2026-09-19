@@ -387,6 +387,52 @@
       <tr><td><code>Mod+Print</code></td><td>Screen record toggle</td></tr>
     </table>
 
+    <h2>Staying updated</h2>
+    <p>
+      From <strong>Third Harvest</strong> onward, desktop and SweetPotatOs package fixes ship as a
+      <strong>rolling</strong> channel. On an installed system:
+    </p>
+    <pre><code>sudo sweetpotatos-update</code></pre>
+    <p>
+      That upgrades SPO-owned packages (theme, Swirl, Spore, …) and refreshes shipped
+      <code>~/.config</code> defaults. It does <strong>not</strong> run a full Arch
+      <code>pacman -Syu</code> (kernel / base stay on the Arch lane). New Harvest ISOs remain
+      for fresh installs; existing boxes do not need a new ISO just for desktop fixes.
+    </p>
+
+    <h2>Custom Swirl config (overrides)</h2>
+    <p>
+      Do <strong>not</strong> edit the main <code>~/.config/swirl/config</code> for personal
+      binds — updates replace that file. Put your changes in the override file instead:
+    </p>
+    <pre><code>~/.config/swirl/config.d/user</code></pre>
+    <p>
+      It is seeded once on first install, included <strong>last</strong> by the main config
+      (so your lines win), and is <strong>never overwritten</strong> by
+      <code>sweetpotatos-update</code> / materialize. Edit it, then reload with
+      <code>Mod+Shift+c</code>.
+    </p>
+    <p><strong>Who owns what</strong></p>
+    <table>
+      <tr><th>Path</th><th>Role</th></tr>
+      <tr><td><code>~/.config/swirl/config</code> (+ scripts)</td><td>SweetPotato defaults — replaced by updates</td></tr>
+      <tr><td><code>~/.config/swirl/config.d/user</code></td><td>Your overrides — yours forever</td></tr>
+      <tr><td><code>~/.config/sweetpotatos/user_edits/…</code></td><td>Optional whole-file forks that also survive updates</td></tr>
+    </table>
+    <p><strong>Examples</strong> (add under the header in <code>config.d/user</code>):</p>
+    <pre><code># Extra bind (keeps the default unless you unbind first):
+bindsym $mod+Shift+b exec firefox
+
+# Replace a default bind:
+unbindsym $mod+w
+bindsym $mod+w exec firefox
+
+# Floating rule:
+for_window [app_id="mpv"] floating enable</code></pre>
+    <p>
+      Tip: the floating cheatsheet (<code>Mod+?</code>) also points at this file.
+    </p>
+
     <h2>Write ISO to USB</h2>
     <pre><code>lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
 sudo dd if=Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
