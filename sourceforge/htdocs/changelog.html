@@ -299,7 +299,7 @@
       var daysEl = document.getElementById("countdown-days");
       if (!box || !daysEl) return;
 
-      var releaseIso = box.getAttribute("data-release") || "2026-11-01";
+      var releaseIso = box.getAttribute("data-release") || "2026-10-01";
       var parts = releaseIso.split("-").map(Number);
       var release = new Date(parts[0], parts[1] - 1, parts[2]);
       release.setHours(0, 0, 0, 0);
