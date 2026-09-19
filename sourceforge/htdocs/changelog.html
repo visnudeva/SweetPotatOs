@@ -154,6 +154,45 @@
     }
     article.release li { margin: 0.35rem 0; }
     article.release strong { color: var(--text); }
+    .countdown {
+      margin: 0 0 1.5rem;
+      padding: 1.1rem 1.25rem;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--red);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      text-align: center;
+    }
+    .countdown[hidden] { display: none; }
+    .countdown-label {
+      margin: 0 0 0.55rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .countdown-label strong { color: var(--text); }
+    .countdown-days {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--orange);
+      line-height: 1.1;
+    }
+    .countdown-days span {
+      color: var(--text);
+      font-size: 0.45em;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      vertical-align: middle;
+      margin-left: 0.35rem;
+    }
+    .countdown-sub {
+      margin: 0.55rem 0 0;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -180,6 +219,18 @@
   </header>
 
   <main>
+    <aside
+      class="countdown"
+      id="third-harvest-countdown"
+      aria-live="polite"
+      data-release="2026-11-01">
+      <p class="countdown-label">
+        <strong>Third Harvest</strong> ISO — planned release
+      </p>
+      <p class="countdown-days" id="countdown-days">— <span>days left</span></p>
+      <p class="countdown-sub">1 November 2026</p>
+    </aside>
+
     <nav class="toc" aria-label="Releases">
       <h2>Releases</h2>
       <ol>
@@ -192,7 +243,8 @@
     <article class="release" id="third-harvest">
       <h2>Third Harvest</h2>
       <p class="meta">
-        ISO <code>Sweetpotatos_2026.10_Third_Harvest.iso</code>
+        Planned release <strong>1 November 2026</strong>
+        · ISO <code>Sweetpotatos_2026.10_Third_Harvest.iso</code>
         · Files folder <code>2026.10_Third_Harvest</code>
       </p>
       <ul>
@@ -241,5 +293,34 @@
     · Source: <a href="https://github.com/visnudeva/SweetPotatOs">GitHub</a>
     · Downloads: <a href="https://sourceforge.net/projects/sweetpotatos/files/">SourceForge Files</a>
   </footer>
+  <script>
+    (function () {
+      var box = document.getElementById("third-harvest-countdown");
+      var daysEl = document.getElementById("countdown-days");
+      if (!box || !daysEl) return;
+
+      var releaseIso = box.getAttribute("data-release") || "2026-11-01";
+      var parts = releaseIso.split("-").map(Number);
+      var release = new Date(parts[0], parts[1] - 1, parts[2]);
+      release.setHours(0, 0, 0, 0);
+
+      var now = new Date();
+      now.setHours(0, 0, 0, 0);
+      var msPerDay = 24 * 60 * 60 * 1000;
+      var days = Math.round((release - now) / msPerDay);
+
+      if (days > 1) {
+        daysEl.innerHTML = days + ' <span>days left</span>';
+      } else if (days === 1) {
+        daysEl.innerHTML = '1 <span>day left</span>';
+      } else if (days === 0) {
+        daysEl.innerHTML = 'Today <span>release day</span>';
+      } else {
+        daysEl.innerHTML = 'Out now';
+        box.querySelector(".countdown-sub").textContent =
+          "Released 1 November 2026";
+      }
+    })();
+  </script>
 </body>
 </html>
