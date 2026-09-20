@@ -39,6 +39,23 @@ if ((${#to_touch[@]} == 0)); then
   exit 0
 fi
 
+# tuber replaces Transmission — --noconfirm will not auto-remove conflicts.
+for t in "${to_touch[@]}"; do
+  if [[ "${t}" == "${REPO_NAME}/tuber" ]]; then
+    remove=()
+    for old in transmission-gtk transmission-cli transmission-qt transmission; do
+      if pacman -Q "${old}" >/dev/null 2>&1; then
+        remove+=("${old}")
+      fi
+    done
+    if ((${#remove[@]} > 0)); then
+      echo "[*] Removing Transmission (replaced by tuber): ${remove[*]}"
+      pacman -Rdd --noconfirm "${remove[@]}" || true
+    fi
+    break
+  fi
+done
+
 echo "[*] Installing/upgrading: ${to_touch[*]}"
 pacman -S --needed --noconfirm "${to_touch[@]}"
 
