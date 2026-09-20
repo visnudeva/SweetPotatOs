@@ -70,7 +70,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
     for new installs / marketing, not required for existing boxes.
   - Publish: `./scripts/publish-repo.sh` → GitHub release tag `pacman-repo`
   - Server: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
-  - CLI: `sweetpotatos-update` (SPO packages only) + `sweetpotatos-materialize` (shipped `~/.config` with user overlay)
+  - CLI: `sweetpotatos-update` (installs new SPO packages on the channel + upgrades existing) + `sweetpotatos-materialize` (shipped `~/.config` with user overlay)
   - Unit tests: `./tests/run.sh`
   - SourceForge Files stays **ISO + project web only** (see `docs/updates-design.md`)
 - Official deps: `base-devel`, `git`, `pacman-contrib`, `fzf`, `github-cli`, `wget`, `python` (mpv already present).
