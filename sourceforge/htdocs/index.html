@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Arch-based Linux for old potato PCs</title>
   <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Swirl desktop, and Calamares installer.">
+  <link rel="icon" href="SweetPotatOs.png" type="image/png">
   <style>
     :root {
       --red: #a73b50;
@@ -339,7 +340,7 @@
       <tr><td>Nearby share</td><td>LocalSend</td></tr>
       <tr><td>PDF</td><td>mupdf</td></tr>
       <tr><td>Images</td><td>swayimg</td></tr>
-      <tr><td>Torrents</td><td>Transmission</td></tr>
+      <tr><td>Torrents</td><td>tuber</td></tr>
       <tr><td>Webcam</td><td>guvcview</td></tr>
       <tr><td>Color picker</td><td>hyprpicker</td></tr>
       <tr><td>Packages</td><td>Shelly (+ yay / AUR)</td></tr>
@@ -362,6 +363,7 @@
       <tr><td><code>Mod+f</code></td><td>Files (Thunar)</td></tr>
       <tr><td><code>Mod+e</code></td><td>Editor (Geany)</td></tr>
       <tr><td><code>Mod+r</code></td><td>Music / radio (Spore)</td></tr>
+      <tr><td><code>Mod+t</code></td><td>Torrents (tuber)</td></tr>
       <tr><td><code>Mod+m</code></td><td>Expand focused column ↔ 50/50</td></tr>
       <tr><td><code>Mod+a</code> / <code>Mod+Shift+space</code></td><td>Floating toggle</td></tr>
       <tr><td><code>Mod+Shift+w</code></td><td>Wallpaper (waypaper)</td></tr>
@@ -390,7 +392,7 @@
     </p>
     <pre><code>sudo sweetpotatos-update</code></pre>
     <p>
-      That upgrades SPO-owned packages (theme, Swirl, Spore, …) and refreshes shipped
+      That upgrades SPO-owned packages (theme, Swirl, Spore, Tuber, …) and refreshes shipped
       <code>~/.config</code> defaults. It does <strong>not</strong> run a full Arch
       <code>pacman -Syu</code> (kernel / base stay on the Arch lane). New Harvest ISOs remain
       for fresh installs; existing boxes do not need a new ISO just for desktop fixes.

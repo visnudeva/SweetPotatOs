@@ -29,7 +29,7 @@ Expected layout on a build machine (siblings):
    - `profile/airootfs/home/liveuser`
    - system logo dir `profile/airootfs/usr/local/share/sweetpotatos/`
    - `profile/airootfs/etc/fastfetch/config.jsonc`
-3. Build packages if needed: `sudo ./build.sh --build-packages` (calamares + swirl + yay-bin/shelly-bin/localsend-bin/spore/brave-origin-bin).
+3. Build packages if needed: `sudo ./build.sh --build-packages` (calamares + swirl + yay-bin/shelly-bin/localsend-bin/spore/tuber/brave-origin-bin).
 4. Build ISO: `sudo ./build.sh`.
 5. Publish:
    - Git: push SweetPotato → GitHub; SweetPotatOs → GitHub **and** `sourceforge`.
@@ -62,7 +62,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Packages / AUR
 
-- No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin**, **localsend-bin**, **brave-origin-bin**, and **spore** via the local `repo/` (built in `build.sh`) for ISO builds.
+- No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin**, **localsend-bin**, **brave-origin-bin**, **spore**, and **tuber** via the local `repo/` (built in `build.sh`) for ISO builds.
 - **Installed-system package channel (GitHub, not SourceForge):**
   - **Primary delivery for Third Harvest+ installs:** theme/desktop fixes ship via
     `sweetpotatos-update` — bump `packaging/sweetpotatos` (and swirl when needed),
@@ -76,6 +76,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Official deps: `base-devel`, `git`, `pacman-contrib`, `fzf`, `github-cli`, `wget`, `python` (mpv already present).
 - `packaging/shelly-bin`: local PKGBUILD wrapping Seafoam Labs release tarball (no Flatpak backend package).
 - `packaging/spore`: local PKGBUILD for visnudeva/spore (Go TUI radio + local files; optional `ffmpeg` for some codecs).
+- `packaging/tuber`: local PKGBUILD for visnudeva/tuber (Go BitTorrent TUI; replaces transmission-gtk; Mod+t).
 
 ## Live ISO specifics (`sync-theme.sh` injects into liveuser Swirl config)
 

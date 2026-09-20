@@ -1,0 +1,58 @@
+# Maintainer: visnudeva
+pkgname=tuber
+pkgver=0.1.0.r1.g600af8b
+pkgrel=1
+pkgdesc='Light BitTorrent TUI client'
+arch=('x86_64')
+url='https://github.com/visnudeva/tuber'
+license=('MIT')
+depends=()
+makedepends=('go' 'git')
+optdepends=(
+  'foot: terminal for desktop launcher and magnet opens'
+  'kitty: preferred terminal for magnet handoff launcher'
+)
+source=("git+https://github.com/visnudeva/tuber.git#commit=600af8bb9c149f270760bf03c5786c80025c430c")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd tuber
+  local ver
+  if ver=$(git describe --long --tags 2>/dev/null); then
+    printf '%s' "${ver}" | sed 's/^v//;s/-/./g'
+  else
+    printf '0.1.0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+  fi
+}
+
+build() {
+  cd tuber
+  go build -trimpath -ldflags='-s -w' -o tuber ./cmd/tuber
+}
+
+package() {
+  cd tuber
+  install -Dm755 tuber "${pkgdir}/usr/bin/tuber"
+  install -Dm755 packaging/tuber-open "${pkgdir}/usr/bin/tuber-open"
+  install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  if [[ -f assets/tuber.png ]]; then
+    install -Dm644 assets/tuber.png "${pkgdir}/usr/share/icons/hicolor/256x256/apps/tuber.png"
+    install -Dm644 assets/tuber.png "${pkgdir}/usr/share/pixmaps/tuber.png"
+  fi
+
+  cat <<'EOF' | install -Dm644 /dev/stdin "${pkgdir}/usr/share/applications/tuber.desktop"
+[Desktop Entry]
+Type=Application
+Name=tuber
+GenericName=BitTorrent Client
+Comment=Light terminal BitTorrent client
+Exec=tuber-open %U
+Icon=tuber
+Terminal=false
+Categories=Network;FileTransfer;P2P;
+MimeType=x-scheme-handler/magnet;application/x-bittorrent;
+Keywords=torrent;magnet;bittorrent;download;
+StartupNotify=false
+EOF
+}

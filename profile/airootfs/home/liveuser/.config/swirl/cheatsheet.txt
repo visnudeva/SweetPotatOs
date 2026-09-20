@@ -8,6 +8,7 @@
   Mod+f              Files
   Mod+e              Editor
   Mod+r              Music / radio (Spore)
+  Mod+t              Torrents (tuber)
   Mod+n              Network (Wi‑Fi)
   Mod+i              Installer (live ISO)
 

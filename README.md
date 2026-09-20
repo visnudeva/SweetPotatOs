@@ -111,7 +111,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | Nearby share | LocalSend |
 | PDF | mupdf |
 | Images | swayimg |
-| Torrents | Transmission |
+| Torrents | tuber |
 | Webcam | guvcview |
 | Color picker | hyprpicker |
 | Packages | Shelly (+ yay / AUR) |
@@ -128,6 +128,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+f` | File manager (thunar) |
 | `Mod+e` | IDE (geany) |
 | `Mod+r` | Music / radio (Spore) |
+| `Mod+t` | Torrents (tuber) |
 | `Mod+Return` | Terminal (foot) |
 | `Mod+m` | Expand focused column to 100% / restore 50/50 |
 | `Mod+a` / `Mod+Shift+space` | Floating toggle |

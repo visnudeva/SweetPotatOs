@@ -141,6 +141,23 @@ if ! ls "${ROOT}/repo/spore"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[+] spore copied to repo/"
 fi
 
+if ! ls "${ROOT}/repo/tuber"-*.pkg.tar.* >/dev/null 2>&1; then
+  echo "[*] Building tuber from packaging/tuber..."
+  build_dir="${BUILD_ROOT}/tuber-local"
+  rm -rf "${build_dir}"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
+  cp -a "${ROOT}/packaging/tuber/." "${build_dir}/"
+  chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
+  pacman -S --needed --noconfirm go git
+  sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && makepkg -sr --noconfirm"
+  shopt -s nullglob
+  pkgs=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  ((${#pkgs[@]})) || { echo "[!] tuber build produced no packages" >&2; exit 1; }
+  cp "${pkgs[@]}" "${ROOT}/repo/"
+  echo "[+] tuber copied to repo/"
+fi
+
 if ! ls "${ROOT}/repo/brave-origin-bin"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[*] Building brave-origin-bin from packaging/brave-origin-bin..."
   build_dir="${BUILD_ROOT}/brave-origin-bin-local"

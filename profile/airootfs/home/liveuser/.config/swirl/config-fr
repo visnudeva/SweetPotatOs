@@ -118,6 +118,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Web radio + local music (Spore)
     bindsym $mod+r exec $term -e spore
 
+    # Torrents (tuber)
+    bindsym $mod+t exec $term -e tuber
+
     # Lock screen (Mod+l — vim focus-right moved to arrow keys only)
     bindsym $mod+l exec swaylock -f
 

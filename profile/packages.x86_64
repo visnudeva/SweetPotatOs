@@ -140,7 +140,6 @@ ffmpeg
 mupdf
 audacity
 gimp
-transmission-gtk
 guvcview
 hyprpicker
 unzip
@@ -184,6 +183,8 @@ ayatana-ido
 localsend-bin
 # Web radio + local music (local PKGBUILD)
 spore
+# Torrents TUI (local PKGBUILD — replaces transmission-gtk)
+tuber
 # GUI wallpaper picker (AUR)
 waypaper
 # AUR build deps for end users from official repos
