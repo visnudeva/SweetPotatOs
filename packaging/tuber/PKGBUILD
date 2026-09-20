@@ -14,7 +14,7 @@ optdepends=(
   'foot: terminal for desktop launcher and magnet opens'
   'kitty: preferred terminal for magnet handoff launcher'
 )
-source=("git+https://github.com/visnudeva/tuber.git#commit=01f61ff29bd9d064eb8d4692ccafaee1a77db851")
+source=("git+https://github.com/visnudeva/tuber.git#commit=e36ebd2b18c35039acbcbbac31ae72a80d3fac98")
 sha256sums=('SKIP')
 
 pkgver() {
