@@ -8,6 +8,8 @@ url='https://github.com/visnudeva/tuber'
 license=('MIT')
 depends=()
 makedepends=('go' 'git')
+conflicts=('transmission-gtk')
+replaces=('transmission-gtk')
 optdepends=(
   'foot: terminal for desktop launcher and magnet opens'
   'kitty: preferred terminal for magnet handoff launcher'

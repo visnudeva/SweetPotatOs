@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Upgrade SweetPotatOs-owned packages from [sweetpotatos], then refresh shipped config.
+# Upgrade SweetPotatOs-owned packages from [sweetpotatos], install any that are
+# new on the channel, then refresh shipped config.
 # Does not run a full pacman -Syu (kernel / Arch base stay on the Arch lane).
 set -euo pipefail
 
 REPO_NAME=sweetpotatos
-# Packages we may move on this channel (only those already installed are touched).
+# Desktop lane packages. If present on [sweetpotatos], install (when missing) or upgrade.
 CANDIDATES=(
   sweetpotatos
   swirl
@@ -26,20 +27,20 @@ fi
 echo "[*] Syncing package databases…"
 pacman -Sy --noconfirm
 
-to_upgrade=()
+to_touch=()
 for pkg in "${CANDIDATES[@]}"; do
-  if pacman -Q "${pkg}" >/dev/null 2>&1; then
-    to_upgrade+=("${REPO_NAME}/${pkg}")
+  if pacman -Si "${REPO_NAME}/${pkg}" >/dev/null 2>&1; then
+    to_touch+=("${REPO_NAME}/${pkg}")
   fi
 done
 
-if ((${#to_upgrade[@]} == 0)); then
-  echo "[!] No SweetPotatOs packages installed; nothing to upgrade."
+if ((${#to_touch[@]} == 0)); then
+  echo "[!] No SweetPotatOs packages available from [${REPO_NAME}]; check the repo is enabled."
   exit 0
 fi
 
-echo "[*] Upgrading: ${to_upgrade[*]}"
-pacman -S --needed --noconfirm "${to_upgrade[@]}"
+echo "[*] Installing/upgrading: ${to_touch[*]}"
+pacman -S --needed --noconfirm "${to_touch[@]}"
 
 if command -v sweetpotatos-materialize >/dev/null 2>&1; then
   # Materialize as the invoking user when possible.
