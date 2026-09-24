@@ -150,6 +150,7 @@ sync_common_into() {
   cp -f "${SP}/swirl/config" "${dest}/.config/swirl/config-fr"
   cp -f "${SP}/swirl/config-us" "${dest}/.config/swirl/config-us"
   cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
+  cp -f "${SP}/swirl/scripts/network-applet.py" "${dest}/.config/swirl/scripts/network-applet.py"
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
   cp -f "${SP}/swirl/scripts/autotile_lib.lua" "${dest}/.config/swirl/scripts/autotile_lib.lua"
   cp -f "${SP}/swirl/cheatsheet.txt" "${dest}/.config/swirl/cheatsheet.txt"
@@ -325,11 +326,11 @@ rm -f "${ISO}/usr/local/bin/swirl" \
       "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
 cp -f "${ISO}/home/liveuser/.config/fastfetch/config.jsonc" "${ISO}/etc/fastfetch/config.jsonc"
 
-# System wallpapers (Mod+Shift+w also scans /usr/share/backgrounds)
-mkdir -p "${ISO}/usr/share/backgrounds/sweetpotatos"
-cp -f "${SP}/backgrounds/"*.png "${ISO}/usr/share/backgrounds/sweetpotatos/"
-rm -f "${ISO}/usr/share/backgrounds/sweetpotatos/UsefulBinds.png" \
-      "${ISO}/usr/share/backgrounds/sweetpotatos/BindsBG.png"
+# System wallpapers are owned by the sweetpotatos package (PKGBUILD copies from
+# skel Pictures/Wallpapers → /usr/share/backgrounds/sweetpotatos). Keep airootfs
+# free of that path so pacstrap does not conflict. Skel/liveuser user copies
+# remain above for the live session and first login.
+rm -rf "${ISO}/usr/share/backgrounds/sweetpotatos"
 
 # Assets
 mkdir -p "${ROOT}/assets"

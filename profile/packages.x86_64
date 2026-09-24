@@ -195,6 +195,7 @@ fzf
 github-cli
 wget
 python
+python-gobject
 power-profiles-daemon
 gtk3
 gtk4

@@ -1,12 +1,12 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=6
+pkgrel=7
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
 license=('MIT')
-depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils')
+depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'python-gobject')
 optdepends=(
   'swirl: desktop compositor'
   'yay-bin: AUR helper'
@@ -16,6 +16,7 @@ optdepends=(
   'tuber: light BitTorrent TUI client'
   'waypaper: wallpaper picker'
   'brave-origin-bin: default web browser (Mod+w)'
+  'networkmanager-dmenu: Wi‑Fi tray icon and Mod+n'
 )
 install=sweetpotatos.install
 source=(
@@ -94,4 +95,14 @@ package() {
       cp -a "${skel}/${dir}/." "${pkgdir}/usr/share/sweetpotato/config/${dir}/"
     fi
   done
+
+  # System wallpapers — materialize copies these into ~/Pictures/Wallpapers.
+  # Owned by this package (not airootfs) so pacstrap does not conflict.
+  local walls="${ai}/etc/skel/Pictures/Wallpapers"
+  if [[ -d "${walls}" ]]; then
+    mkdir -p "${pkgdir}/usr/share/backgrounds/sweetpotatos"
+    cp -f "${walls}/"*.png "${pkgdir}/usr/share/backgrounds/sweetpotatos/" 2>/dev/null || true
+    rm -f "${pkgdir}/usr/share/backgrounds/sweetpotatos/UsefulBinds.png" \
+          "${pkgdir}/usr/share/backgrounds/sweetpotatos/BindsBG.png"
+  fi
 }

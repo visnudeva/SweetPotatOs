@@ -73,6 +73,21 @@ echo "OVERLAY_CONFIG" >"${DEST}/sweetpotatos/user_edits/swirl/config"
 bash "${MAT}" >/dev/null
 assert_eq "OVERLAY_CONFIG" "$(cat "${DEST}/swirl/config")" "user_edits overlay wins"
 
+# Wallpapers: add/refresh shipped images into user folders; leave extras alone.
+WALLS="${TMP}/backgrounds"
+export SWEETPOTATO_BACKGROUNDS="${WALLS}"
+mkdir -p "${WALLS}"
+printf 'PNG_A' >"${WALLS}/SpoNeon.png"
+printf 'PNG_B' >"${WALLS}/SPixelBG.png"
+mkdir -p "${HOME}/Pictures/Wallpapers" "${HOME}/.local/share/backgrounds"
+printf 'USER_EXTRA' >"${HOME}/Pictures/Wallpapers/my-custom.png"
+printf 'OLD' >"${HOME}/Pictures/Wallpapers/SpoNeon.png"
+bash "${MAT}" >/dev/null
+assert_eq "PNG_A" "$(cat "${HOME}/Pictures/Wallpapers/SpoNeon.png")" "wallpaper refreshed in Pictures"
+assert_eq "PNG_B" "$(cat "${HOME}/Pictures/Wallpapers/SPixelBG.png")" "wallpaper added in Pictures"
+assert_eq "USER_EXTRA" "$(cat "${HOME}/Pictures/Wallpapers/my-custom.png")" "user wallpaper preserved"
+assert_eq "PNG_A" "$(cat "${HOME}/.local/share/backgrounds/SpoNeon.png")" "wallpaper synced to local backgrounds"
+
 echo
 echo "materialize: ${PASS} passed, ${FAIL} failed"
 [[ "${FAIL}" -eq 0 ]]

@@ -26,8 +26,10 @@ assert "grep -q 'sweetpotatos-materialize' '${UPD}'" "runs materialize after upg
 assert "grep -q 'pacman -Syu' '${UPD}'" "reminds Arch lane is separate"
 assert "! grep -q 'spo-upgrade' '${UPD}'" "no spo-upgrade"
 assert "grep -q '^sweetpotatos$' '${ROOT}/profile/packages.x86_64'" "ISO lists sweetpotatos package"
-assert "grep -q 'swirl/config.d/user' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
-  "materialize seeds config.d/user"
+assert "grep -q 'Pictures/Wallpapers' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
+  "materialize syncs wallpapers into Pictures/Wallpapers"
+assert "grep -q 'usr/share/backgrounds/sweetpotatos' '${ROOT}/packaging/sweetpotatos/PKGBUILD'" \
+  "sweetpotatos package ships system wallpapers"
 assert "[[ -f '${ROOT}/profile/airootfs/etc/skel/.config/swirl/config.d/user' ]]" \
   "skel ships config.d/user"
 assert "grep -q 'include ~/.config/swirl/config.d/user' \

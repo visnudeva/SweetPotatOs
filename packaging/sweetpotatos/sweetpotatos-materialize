@@ -4,9 +4,12 @@
 # - Clobbers files that exist under /usr/share/sweetpotato/config/
 # - Never touches paths listed as seed-only if they already exist
 # - Overlay ~/.config/sweetpotatos/user_edits/ wins over the shipped base
+# - Refreshes shipped wallpapers into ~/Pictures/Wallpapers (and backgrounds);
+#   never deletes extra user images; does not change waypaper's active choice
 set -euo pipefail
 
 BASE="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}"
+BACKGROUNDS_SRC="${SWEETPOTATO_BACKGROUNDS:-/usr/share/backgrounds/sweetpotatos}"
 DEST="${XDG_CONFIG_HOME:-${HOME}/.config}"
 OVERLAY="${DEST}/sweetpotatos/user_edits"
 STATE_DIR="${XDG_STATE_HOME:-${HOME}/.local/state}/sweetpotatos"
@@ -61,6 +64,29 @@ copy_one() {
 while IFS= read -r -d '' src; do
   copy_one "${src}"
 done < <(find "${BASE}" -type f -print0)
+
+sync_wallpapers() {
+  local src="$1"
+  local dest_dir="$2"
+  local f
+  local n=0
+
+  [[ -d "${src}" ]] || return 0
+  mkdir -p "${dest_dir}"
+  shopt -s nullglob
+  for f in "${src}"/*.png "${src}"/*.jpg "${src}"/*.jpeg "${src}"/*.webp; do
+    [[ -f "${f}" ]] || continue
+    cp -f "${f}" "${dest_dir}/"
+    n=$((n + 1))
+  done
+  shopt -u nullglob
+  if ((n > 0)); then
+    echo "    Wallpapers → ${dest_dir} (${n} file(s))"
+  fi
+}
+
+sync_wallpapers "${BACKGROUNDS_SRC}" "${HOME}/Pictures/Wallpapers"
+sync_wallpapers "${BACKGROUNDS_SRC}" "${HOME}/.local/share/backgrounds"
 
 mv -f "${MANIFEST}.new" "${MANIFEST}"
 echo "[+] Materialized shipped config into ${DEST}"
