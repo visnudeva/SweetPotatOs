@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=8
+pkgrel=9
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -96,13 +96,14 @@ package() {
     fi
   done
 
-  # System wallpapers — materialize copies these into ~/Pictures/Wallpapers.
-  # Owned by this package (not airootfs) so pacstrap does not conflict.
+  # Shipped wallpapers for materialize → ~/Pictures/Wallpapers.
+  # Use /usr/share/sweetpotato/backgrounds (not /usr/share/backgrounds/…) so
+  # upgrades do not conflict with ISO airootfs leftovers of the same names.
   local walls="${ai}/etc/skel/Pictures/Wallpapers"
   if [[ -d "${walls}" ]]; then
-    mkdir -p "${pkgdir}/usr/share/backgrounds/sweetpotatos"
-    cp -f "${walls}/"*.png "${pkgdir}/usr/share/backgrounds/sweetpotatos/" 2>/dev/null || true
-    rm -f "${pkgdir}/usr/share/backgrounds/sweetpotatos/UsefulBinds.png" \
-          "${pkgdir}/usr/share/backgrounds/sweetpotatos/BindsBG.png"
+    mkdir -p "${pkgdir}/usr/share/sweetpotato/backgrounds"
+    cp -f "${walls}/"*.png "${pkgdir}/usr/share/sweetpotato/backgrounds/" 2>/dev/null || true
+    rm -f "${pkgdir}/usr/share/sweetpotato/backgrounds/UsefulBinds.png" \
+          "${pkgdir}/usr/share/sweetpotato/backgrounds/BindsBG.png"
   fi
 }

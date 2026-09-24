@@ -10,7 +10,7 @@
 set -euo pipefail
 
 BASE="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}"
-BACKGROUNDS_SRC="${SWEETPOTATO_BACKGROUNDS:-/usr/share/backgrounds/sweetpotatos}"
+BACKGROUNDS_SRC="${SWEETPOTATO_BACKGROUNDS:-/usr/share/sweetpotato/backgrounds}"
 DEST="${XDG_CONFIG_HOME:-${HOME}/.config}"
 OVERLAY="${DEST}/sweetpotatos/user_edits"
 STATE_DIR="${XDG_STATE_HOME:-${HOME}/.local/state}/sweetpotatos"

@@ -326,10 +326,10 @@ rm -f "${ISO}/usr/local/bin/swirl" \
       "${ISO}/usr/local/share/sweetpotatos/SPLogo.png"
 cp -f "${ISO}/home/liveuser/.config/fastfetch/config.jsonc" "${ISO}/etc/fastfetch/config.jsonc"
 
-# System wallpapers are owned by the sweetpotatos package (PKGBUILD copies from
-# skel Pictures/Wallpapers → /usr/share/backgrounds/sweetpotatos). Keep airootfs
-# free of that path so pacstrap does not conflict. Skel/liveuser user copies
-# remain above for the live session and first login.
+# Shipped wallpapers live in the sweetpotatos package at
+# /usr/share/sweetpotato/backgrounds (not airootfs /usr/share/backgrounds/…,
+# which conflicted with pacman upgrades on existing installs). Skel/liveuser
+# user copies remain above for the live session and first login.
 rm -rf "${ISO}/usr/share/backgrounds/sweetpotatos"
 
 # Assets

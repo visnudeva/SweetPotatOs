@@ -29,7 +29,7 @@ assert "grep -q '^sweetpotatos$' '${ROOT}/profile/packages.x86_64'" "ISO lists s
 assert "grep -q 'getent passwd' '${UPD}'" "materialize uses getent for user home"
 assert "grep -q 'Pictures/Wallpapers' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
   "materialize syncs wallpapers into Pictures/Wallpapers"
-assert "grep -q 'usr/share/backgrounds/sweetpotatos' '${ROOT}/packaging/sweetpotatos/PKGBUILD'" \
+assert "grep -q 'usr/share/sweetpotato/backgrounds' '${ROOT}/packaging/sweetpotatos/PKGBUILD'" \
   "sweetpotatos package ships system wallpapers"
 assert "[[ -f '${ROOT}/profile/airootfs/etc/skel/.config/swirl/config.d/user' ]]" \
   "skel ships config.d/user"
