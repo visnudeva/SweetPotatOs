@@ -93,7 +93,7 @@ seat * xcursor_theme capitaine-cursors 24
     # App launcher
     bindsym $mod+space exec $menu
 
-    # Wi‑Fi: tray icon + Mod+n open networkmanager-dmenu (quick connect).
+    # Wi‑Fi: click WiFi:… in the status bar, or Mod+n (networkmanager-dmenu).
     bindsym $mod+n exec networkmanager_dmenu
 
     # Install SweetPotatOs to disk
@@ -308,8 +308,8 @@ exec ~/.config/swirl/scripts/apply-theme.sh
 # Notifications, USB automount, tray applets
 exec mako
 exec udiskie --tray
-# Wi‑Fi tray → networkmanager-dmenu (exec_always: survive Swirl reload)
-exec_always --no-startup-id ~/.config/swirl/scripts/network-tray.sh
+# Kill any leftover custom Wi‑Fi tray (red-face SNI) from older builds
+exec_always --no-startup-id sh -c 'pkill -f "/.config/swirl/scripts/network-applet.py" 2>/dev/null || true'
 exec blueman-applet
 exec sh -c 'rfkill unblock bluetooth 2>/dev/null || true'
 exec ~/.config/swirl/scripts/tips.sh
