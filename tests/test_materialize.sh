@@ -73,7 +73,7 @@ echo "OVERLAY_CONFIG" >"${DEST}/sweetpotatos/user_edits/swirl/config"
 bash "${MAT}" >/dev/null
 assert_eq "OVERLAY_CONFIG" "$(cat "${DEST}/swirl/config")" "user_edits overlay wins"
 
-# Wallpapers: add/refresh shipped images into user folders; leave extras alone.
+# Wallpapers: always sync before config; land in Pictures/Wallpapers (+ local backgrounds).
 WALLS="${TMP}/backgrounds"
 export SWEETPOTATO_BACKGROUNDS="${WALLS}"
 mkdir -p "${WALLS}"
@@ -82,6 +82,16 @@ printf 'PNG_B' >"${WALLS}/SPixelBG.png"
 mkdir -p "${HOME}/Pictures/Wallpapers" "${HOME}/.local/share/backgrounds"
 printf 'USER_EXTRA' >"${HOME}/Pictures/Wallpapers/my-custom.png"
 printf 'OLD' >"${HOME}/Pictures/Wallpapers/SpoNeon.png"
+
+# Even with no config base, wallpapers should still sync.
+rm -rf "${BASE}"
+bash "${MAT}" >/dev/null 2>&1 || true
+assert_eq "PNG_A" "$(cat "${HOME}/Pictures/Wallpapers/SpoNeon.png")" "wallpaper synced without config base"
+
+mkdir -p "${BASE}/swirl/config.d" "${BASE}/swirl/scripts" "${BASE}/kanshi"
+echo "SHIPPED_CONFIG" >"${BASE}/swirl/config"
+echo "SEED_USER_V1" >"${BASE}/swirl/config.d/user"
+echo "KANSHI_V1" >"${BASE}/kanshi/config"
 bash "${MAT}" >/dev/null
 assert_eq "PNG_A" "$(cat "${HOME}/Pictures/Wallpapers/SpoNeon.png")" "wallpaper refreshed in Pictures"
 assert_eq "PNG_B" "$(cat "${HOME}/Pictures/Wallpapers/SPixelBG.png")" "wallpaper added in Pictures"

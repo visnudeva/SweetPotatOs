@@ -4,8 +4,9 @@
 # - Clobbers files that exist under /usr/share/sweetpotato/config/
 # - Never touches paths listed as seed-only if they already exist
 # - Overlay ~/.config/sweetpotatos/user_edits/ wins over the shipped base
-# - Refreshes shipped wallpapers into ~/Pictures/Wallpapers (and backgrounds);
-#   never deletes extra user images; does not change waypaper's active choice
+# - Always refreshes shipped wallpapers into the user wallpaper folders first
+#   (before config copy), so a config cp failure cannot skip SpoNeon etc.
+#   Never deletes extra user images; does not change waypaper's active choice
 set -euo pipefail
 
 BASE="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}"
@@ -20,6 +21,51 @@ SEED_ONLY=(
   kanshi/config
   swirl/config.d/user
 )
+
+wallpaper_dests() {
+  local pictures
+  pictures="${XDG_PICTURES_DIR:-${HOME}/Pictures}"
+  printf '%s\n' \
+    "${pictures}/Wallpapers" \
+    "${HOME}/Pictures/Wallpapers" \
+    "${HOME}/.local/share/backgrounds"
+}
+
+sync_wallpapers() {
+  local src="${BACKGROUNDS_SRC}"
+  local dest_dir
+  local f
+  local n
+  local seen="|"
+
+  if [[ ! -d "${src}" ]]; then
+    echo "[!] No shipped wallpapers at ${src}" >&2
+    return 0
+  fi
+
+  while IFS= read -r dest_dir; do
+    [[ -n "${dest_dir}" ]] || continue
+    # De-dupe when XDG_PICTURES_DIR is already ~/Pictures
+    [[ "${seen}" == *"|${dest_dir}|"* ]] && continue
+    seen="${seen}${dest_dir}|"
+
+    mkdir -p "${dest_dir}"
+    n=0
+    shopt -s nullglob
+    for f in "${src}"/*.png "${src}"/*.jpg "${src}"/*.jpeg "${src}"/*.webp; do
+      [[ -f "${f}" ]] || continue
+      cp -f "${f}" "${dest_dir}/"
+      n=$((n + 1))
+    done
+    shopt -u nullglob
+    if ((n > 0)); then
+      echo "    Wallpapers → ${dest_dir} (${n} file(s))"
+    fi
+  done < <(wallpaper_dests)
+}
+
+# Wallpapers first — independent of config tree / copy errors.
+sync_wallpapers
 
 if [[ ! -d "${BASE}" ]]; then
   echo "[!] No shipped config at ${BASE} (install/upgrade sweetpotatos)." >&2
@@ -64,29 +110,6 @@ copy_one() {
 while IFS= read -r -d '' src; do
   copy_one "${src}"
 done < <(find "${BASE}" -type f -print0)
-
-sync_wallpapers() {
-  local src="$1"
-  local dest_dir="$2"
-  local f
-  local n=0
-
-  [[ -d "${src}" ]] || return 0
-  mkdir -p "${dest_dir}"
-  shopt -s nullglob
-  for f in "${src}"/*.png "${src}"/*.jpg "${src}"/*.jpeg "${src}"/*.webp; do
-    [[ -f "${f}" ]] || continue
-    cp -f "${f}" "${dest_dir}/"
-    n=$((n + 1))
-  done
-  shopt -u nullglob
-  if ((n > 0)); then
-    echo "    Wallpapers → ${dest_dir} (${n} file(s))"
-  fi
-}
-
-sync_wallpapers "${BACKGROUNDS_SRC}" "${HOME}/Pictures/Wallpapers"
-sync_wallpapers "${BACKGROUNDS_SRC}" "${HOME}/.local/share/backgrounds"
 
 mv -f "${MANIFEST}.new" "${MANIFEST}"
 echo "[+] Materialized shipped config into ${DEST}"

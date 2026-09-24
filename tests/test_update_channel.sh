@@ -26,6 +26,7 @@ assert "grep -q 'sweetpotatos-materialize' '${UPD}'" "runs materialize after upg
 assert "grep -q 'pacman -Syu' '${UPD}'" "reminds Arch lane is separate"
 assert "! grep -q 'spo-upgrade' '${UPD}'" "no spo-upgrade"
 assert "grep -q '^sweetpotatos$' '${ROOT}/profile/packages.x86_64'" "ISO lists sweetpotatos package"
+assert "grep -q 'getent passwd' '${UPD}'" "materialize uses getent for user home"
 assert "grep -q 'Pictures/Wallpapers' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
   "materialize syncs wallpapers into Pictures/Wallpapers"
 assert "grep -q 'usr/share/backgrounds/sweetpotatos' '${ROOT}/packaging/sweetpotatos/PKGBUILD'" \

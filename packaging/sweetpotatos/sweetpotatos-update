@@ -60,13 +60,23 @@ echo "[*] Installing/upgrading: ${to_touch[*]}"
 pacman -S --needed --noconfirm "${to_touch[@]}"
 
 if command -v sweetpotatos-materialize >/dev/null 2>&1; then
-  # Materialize as the invoking user when possible.
-  if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != root ]]; then
-    echo "[*] Materializing desktop config for ${SUDO_USER}…"
-    sudo -u "${SUDO_USER}" -H sweetpotatos-materialize || true
+  # Materialize as the real desktop user (never root's HOME).
+  target_user="${SUDO_USER:-}"
+  if [[ -z "${target_user}" || "${target_user}" == root ]]; then
+    target_user="$(logname 2>/dev/null || true)"
+  fi
+  if [[ -n "${target_user}" && "${target_user}" != root ]]; then
+    target_home="$(getent passwd "${target_user}" | cut -d: -f6 || true)"
+    if [[ -z "${target_home}" || ! -d "${target_home}" ]]; then
+      target_home="$(eval echo "~${target_user}")"
+    fi
+    echo "[*] Materializing desktop config for ${target_user} (${target_home})…"
+    sudo -u "${target_user}" HOME="${target_home}" \
+      XDG_CONFIG_HOME="${target_home}/.config" \
+      XDG_STATE_HOME="${target_home}/.local/state" \
+      sweetpotatos-materialize || true
   else
-    echo "[*] Materializing desktop config…"
-    sweetpotatos-materialize || true
+    echo "[!] Skipping materialize — no non-root user to target (ran as root?)." >&2
   fi
 fi
 
