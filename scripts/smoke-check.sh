@@ -102,9 +102,12 @@ check_grep 'SWAYSOCK|I3SOCK' "${ISO}/etc/skel/.config/swirl/scripts/nwg-displays
 check_grep 'Mod\+\?' "${ISO}/etc/skel/.config/swirl/scripts/tips.sh" "tips mention Mod+? cheatsheet"
 check_nogrep 'Live tips' "${ISO}/etc/skel/.config/swirl/scripts/tips.sh" "no multi-tip notification sequence"
 check_grep 'cheatsheet\.sh' "${ISO}/etc/skel/.config/swirl/config" "Mod+? cheatsheet bind"
-check_grep 'network-applet\.py' "${ISO}/etc/skel/.config/swirl/config" "Wi‑Fi tray opens network-applet"
+check_grep 'network-tray\.sh' "${ISO}/etc/skel/.config/swirl/config" "Wi‑Fi tray opens network-applet"
 check_file "${ISO}/etc/skel/.config/swirl/scripts/network-applet.py"
+check_file "${ISO}/etc/skel/.config/swirl/scripts/network-tray.sh"
 check_nogrep 'exec nm-applet' "${ISO}/etc/skel/.config/swirl/config" "no nm-applet tray (menus broken on swaybar)"
+check_nogrep '^[[:space:]]*exec python3 ~/.config/swirl/scripts/network-applet\.py' \
+  "${ISO}/etc/skel/.config/swirl/config" "Wi‑Fi tray uses exec_always wrapper"
 check_grep 'SpoNeon' "${ISO}/etc/skel/.config/waypaper/config.ini" "default wallpaper SpoNeon"
 [[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/UsefulBinds.png" ]] && ok "no UsefulBinds wallpaper" || bad "UsefulBinds still present"
 [[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/BindsBG.png" ]] && ok "no BindsBG wallpaper" || bad "BindsBG still present"
