@@ -1,6 +1,6 @@
 # Maintainer: visnudeva
 pkgname=spore
-pkgver=0.1.0.r1.gd703e493
+pkgver=0.1.0.r2.gc45013a
 pkgrel=1
 pkgdesc='TUI web radio and local music player with FFT visualizers'
 arch=('x86_64')
@@ -12,7 +12,7 @@ optdepends=(
   'pipewire-pulse: PulseAudio/PipeWire audio output'
   'alsa-lib: ALSA audio output'
 )
-source=("git+https://github.com/visnudeva/spore.git#commit=d703e4939a106f3c02788500075b3b7cf940faf7")
+source=("git+https://github.com/visnudeva/spore.git#commit=c45013a58f0660c2ac2c08ff0ba7ccdabe2b6091")
 sha256sums=('SKIP')
 
 pkgver() {
