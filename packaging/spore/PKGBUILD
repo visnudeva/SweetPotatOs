@@ -1,6 +1,6 @@
 # Maintainer: visnudeva
 pkgname=spore
-pkgver=0.1.0.r2.gc45013a
+pkgver=0.1.0.r8.gc45013a
 pkgrel=1
 pkgdesc='TUI web radio and local music player with FFT visualizers'
 arch=('x86_64')
