@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Changelog</title>
-  <meta name="description" content="Release notes for SweetPotatOs Harvest ISOs from First through Third Harvest.">
+  <meta name="description" content="Release notes for SweetPotatOs Harvest ISOs from First Harvest onward.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     :root {
@@ -155,8 +155,17 @@
     }
     article.release li { margin: 0.35rem 0; }
     article.release strong { color: var(--text); }
-    .countdown {
+    .banner-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
       margin: 0 0 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .banner-row { grid-template-columns: 1fr 1fr; }
+    }
+    .countdown {
+      margin: 0;
       padding: 1.1rem 1.25rem;
       border-radius: 12px;
       background: var(--surface);
@@ -164,6 +173,9 @@
       border-left: 4px solid var(--red);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
       text-align: center;
+    }
+    .countdown.out {
+      border-left-color: var(--orange);
     }
     .countdown[hidden] { display: none; }
     .countdown-label {
@@ -194,6 +206,15 @@
       color: var(--text-dim);
       font-size: 0.9rem;
     }
+    .countdown.out .countdown-days {
+      font-size: clamp(1.55rem, 4.5vw, 2.1rem);
+      color: var(--text);
+    }
+    .countdown.out a {
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .countdown.out a:hover { text-decoration: underline; }
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -209,8 +230,8 @@
     <h1>Changelog</h1>
     <span class="tag">Harvest releases</span>
     <p class="lead">
-      What changed in each SweetPotatOs ISO from <strong>First Harvest</strong> through
-      <strong>Third Harvest</strong>. Newer releases are listed first.
+      What changed in each SweetPotatOs ISO from <strong>First Harvest</strong> onward.
+      Newer releases are listed first.
     </p>
     <div class="actions">
       <a class="btn btn-primary" href="index.html">← Project home</a>
@@ -220,17 +241,29 @@
   </header>
 
   <main>
-    <aside
-      class="countdown"
-      id="third-harvest-countdown"
-      aria-live="polite"
-      data-release="2026-10-01">
-      <p class="countdown-label">
-        <strong>Third Harvest</strong> ISO — planned release
-      </p>
-      <p class="countdown-days" id="countdown-days">— <span>days left</span></p>
-      <p class="countdown-sub">1 October 2026</p>
-    </aside>
+    <div class="banner-row">
+      <aside
+        class="countdown"
+        id="fourth-harvest-countdown"
+        aria-live="polite"
+        data-release="2026-11-01">
+        <p class="countdown-label">
+          <strong>Fourth Harvest</strong> ISO — planned release
+        </p>
+        <p class="countdown-days" id="countdown-days">— <span>days left</span></p>
+        <p class="countdown-sub">1 November 2026</p>
+      </aside>
+      <aside class="countdown out" aria-label="Third Harvest released">
+        <p class="countdown-label">
+          <strong>Third Harvest</strong> ISO
+        </p>
+        <p class="countdown-days">Out now</p>
+        <p class="countdown-sub">
+          Released 24 September 2026 ·
+          <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.10_Third_Harvest/">Download</a>
+        </p>
+      </aside>
+    </div>
 
     <nav class="toc" aria-label="Releases">
       <h2>Releases</h2>
@@ -244,7 +277,7 @@
     <article class="release" id="third-harvest">
       <h2>Third Harvest</h2>
       <p class="meta">
-        Planned release <strong>1 October 2026</strong>
+        Released <strong>24 September 2026</strong>
         · ISO <code>Sweetpotatos_2026.10_Third_Harvest.iso</code>
         · Files folder <code>2026.10_Third_Harvest</code>
       </p>
@@ -300,11 +333,11 @@
   </footer>
   <script>
     (function () {
-      var box = document.getElementById("third-harvest-countdown");
+      var box = document.getElementById("fourth-harvest-countdown");
       var daysEl = document.getElementById("countdown-days");
       if (!box || !daysEl) return;
 
-      var releaseIso = box.getAttribute("data-release") || "2026-10-01";
+      var releaseIso = box.getAttribute("data-release") || "2026-11-01";
       var parts = releaseIso.split("-").map(Number);
       var release = new Date(parts[0], parts[1] - 1, parts[2]);
       release.setHours(0, 0, 0, 0);
@@ -323,7 +356,7 @@
       } else {
         daysEl.innerHTML = 'Out now';
         box.querySelector(".countdown-sub").textContent =
-          "Released 1 October 2026";
+          "Released 1 November 2026";
       }
     })();
   </script>
