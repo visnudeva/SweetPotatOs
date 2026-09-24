@@ -144,7 +144,8 @@ sync_common_into() {
     "${dest}/.themes" "${dest}/.local/share/backgrounds" "${dest}/.local/bin" \
     "${dest}/.local/share/glycin-loaders/2+/conf.d" \
     "${dest}/.config/xfce4/xfconf/xfce-perchannel-xml" \
-    "${dest}/Pictures/Screenshots"
+    "${dest}/Pictures/Screenshots" \
+    "${dest}/Pictures/Wallpapers"
 
   cp -f "${SP}/swirl/config" "${dest}/.config/swirl/config-fr"
   cp -f "${SP}/swirl/config-us" "${dest}/.config/swirl/config-us"

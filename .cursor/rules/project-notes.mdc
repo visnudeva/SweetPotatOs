@@ -18,6 +18,6 @@ Before non-trivial changes, read `NOTES.md` at the repo root. After a host reins
 - After install, `shellprocess@cleanup-live` must remove Install SweetPotatOs / calamares `.desktop` leftovers from the app launcher.
 - Default terminal is **foot** (opaque); do not switch `Mod+Return` to kitty without updating skel + SweetPotato + sync. Do not ship `~/.config/kitty/`.
 - Ly `default_input = password`. Enable `bluetooth.service` on live/install.
-- Wallpaper: `ensure-wallpaper.sh` must not overwrite a saved `wallpaper.conf` with the SPixelBG fallback. Default wallpaper is `SPixelBG.png`; do not ship UsefulBinds/BindsBG.
+- Wallpaper: `ensure-wallpaper.sh` must not overwrite a saved `wallpaper.conf` with the SpoNeon fallback. Default wallpaper is `SpoNeon.png`; do not ship UsefulBinds/BindsBG.
 - Live Calamares keyboard needs `sweetpotatos-sway-xkb-watch` (locale1 → Swirl via busctl poll). Do not assume Calamares Wayland apply changes the compositor by itself, and do not listen with a system-bus monitor as liveuser.
 - Push SweetPotatOs to **both** `origin` (GitHub) and `sourceforge` when the user asks to publish git. ISO upload is separate (`sourceforge/upload.sh`). Point-release ISOs only — do not reintroduce an in-place `spo-upgrade` / overlay pacman channel.

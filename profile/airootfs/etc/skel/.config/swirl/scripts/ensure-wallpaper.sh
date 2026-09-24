@@ -7,6 +7,7 @@ set -euo pipefail
 CONF="${HOME}/.config/swirl/wallpaper.conf"
 DIR="${HOME}/.local/share/backgrounds"
 FALLBACKS=(
+  "${DIR}/SpoNeon.png"
   "${DIR}/SPixelBG.png"
   "${DIR}/SweetPotato.png"
   "${DIR}/SweetPOTATo.png"

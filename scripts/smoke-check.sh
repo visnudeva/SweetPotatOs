@@ -102,7 +102,7 @@ check_grep 'SWAYSOCK|I3SOCK' "${ISO}/etc/skel/.config/swirl/scripts/nwg-displays
 check_grep 'Mod\+\?' "${ISO}/etc/skel/.config/swirl/scripts/tips.sh" "tips mention Mod+? cheatsheet"
 check_nogrep 'Live tips' "${ISO}/etc/skel/.config/swirl/scripts/tips.sh" "no multi-tip notification sequence"
 check_grep 'cheatsheet\.sh' "${ISO}/etc/skel/.config/swirl/config" "Mod+? cheatsheet bind"
-check_grep 'SPixelBG' "${ISO}/etc/skel/.config/waypaper/config.ini" "default wallpaper SPixelBG"
+check_grep 'SpoNeon' "${ISO}/etc/skel/.config/waypaper/config.ini" "default wallpaper SpoNeon"
 [[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/UsefulBinds.png" ]] && ok "no UsefulBinds wallpaper" || bad "UsefulBinds still present"
 [[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/BindsBG.png" ]] && ok "no BindsBG wallpaper" || bad "BindsBG still present"
 check_grep 'start-kanshi\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel starts kanshi from saved outputs"

@@ -153,7 +153,7 @@ Bump together: `profile/profiledef.sh`, `build.sh` `SWEETPOTATOS_ISO_NAME` defau
 - User config: `~/.config/swirl/` **only** — never ship `~/.config/sway/` in skel (Swirl prefers sway path first). Keep `include /etc/sway/config.d/*`.
 - Display layouts: nwg-displays + `~/.config/sway/outputs` created at runtime; launcher Exec = `sweetpotatos-displays` on PATH. Do not ship `~/.config/sway/` in skel.
 - Default terminal = **foot** (opaque `alpha=1.0` under `[colors-dark]`). Do not ship kitty / switch Mod+Return without SweetPotato + sync.
-- Default wallpaper = **SPixelBG.png**; no UsefulBinds/BindsBG. `ensure-wallpaper.sh` must not clobber a saved `wallpaper.conf`.
+- Default wallpaper = **SpoNeon.png**; no UsefulBinds/BindsBG. `ensure-wallpaper.sh` must not clobber a saved `wallpaper.conf`.
 - Fastfetch primary logo = colored **`SPLogo.png`** via `logo.type: chafa`. Not sixel/`auto`/monochrome `.asc` as primary.
 
 ### Lid / caffeine / services
