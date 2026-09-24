@@ -1,12 +1,12 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=10
+pkgrel=11
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
 license=('MIT')
-depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'python-gobject')
+depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'python-gobject' 'libayatana-appindicator' 'gtk3')
 optdepends=(
   'swirl: desktop compositor'
   'yay-bin: AUR helper'
@@ -17,6 +17,7 @@ optdepends=(
   'waypaper: wallpaper picker'
   'brave-origin-bin: default web browser (Mod+w)'
   'networkmanager-dmenu: Wi‑Fi tray icon and Mod+n'
+  'papirus-icon-theme: Wi‑Fi tray icon artwork'
 )
 install=sweetpotatos.install
 source=(
