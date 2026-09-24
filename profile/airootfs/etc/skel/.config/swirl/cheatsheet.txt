@@ -9,7 +9,7 @@
   Mod+e              Editor
   Mod+r              Music / radio (Spore)
   Mod+t              Torrents (tuber)
-  Mod+n              Network / Wi‑Fi (or click WiFi: in the status bar)
+  Mod+n              Network (Wi‑Fi)
   Mod+i              Installer (live ISO)
 
   Window / layout

@@ -112,5 +112,8 @@ while IFS= read -r -d '' src; do
 done < <(find "${BASE}" -type f -print0)
 
 mv -f "${MANIFEST}.new" "${MANIFEST}"
+# Drop retired Wi‑Fi tray experiments from older builds.
+rm -f "${DEST}/swirl/scripts/network-applet.py" \
+      "${DEST}/swirl/scripts/network-tray.sh"
 echo "[+] Materialized shipped config into ${DEST}"
 echo "    Overlay: ${OVERLAY}"

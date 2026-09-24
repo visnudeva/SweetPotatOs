@@ -179,7 +179,6 @@ yay-bin
 shelly-bin
 # Nearby file sharing (AUR prebuilt; tray needs Ayatana indicator libs)
 libayatana-indicator
-libayatana-appindicator
 ayatana-ido
 localsend-bin
 # Web radio + local music (local PKGBUILD)
