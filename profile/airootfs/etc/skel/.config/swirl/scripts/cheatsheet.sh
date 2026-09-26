@@ -33,35 +33,6 @@ export SPO_CHEATSHEET="${SHEET}"
 export SPO_SITE_URL="${SITE_URL}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
-# How many tiled windows already on this workspace? Alone → full width; else → half.
-others_here="$(python3 - <<'PY' 2>/dev/null || echo 0
-import json, subprocess
-tree = json.loads(subprocess.check_output(["swaymsg", "-t", "get_tree"], text=True))
-
-def workspace_for_focused(node, ws=None):
-    if node.get("type") == "workspace":
-        ws = node
-    if node.get("focused"):
-        return ws
-    for child in (node.get("nodes") or []) + (node.get("floating_nodes") or []):
-        found = workspace_for_focused(child, ws)
-        if found is not None:
-            return found
-    return None
-
-def tiled_leaves(node):
-    children = node.get("nodes") or []
-    if not children:
-        if node.get("app_id") or node.get("window_properties"):
-            return 1
-        return 0
-    return sum(tiled_leaves(c) for c in children)
-
-ws = workspace_for_focused(tree)
-print(tiled_leaves(ws) if ws else 0)
-PY
-)"
-
 "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
   -W 78x42 \
   -o colors-dark.background=1d1f21 \
@@ -110,15 +81,90 @@ done
 ' &
 foot_pid=$!
 
-# Only share the strip when something else is already here.
-if [[ "${others_here}" =~ ^[0-9]+$ ]] && (( others_here >= 1 )); then
-  for _ in 1 2 3 4 5 6 7 8; do
-    if swaymsg -t get_tree 2>/dev/null | grep -Fq "\"app_id\": \"${APP_ID}\""; then
-      swaymsg "[app_id=\"${APP_ID}\"] resize set width 50 ppt" >/dev/null 2>&1 || true
-      break
-    fi
-    sleep 0.05
-  done
-fi
+# Swirl column widths use set_size (same as Mod+m / autotile), not sway resize ppt.
+export APP_ID
+python3 - <<'PY' >/dev/null 2>&1 || true
+import json, os, subprocess, time
+
+app_id = os.environ["APP_ID"]
+
+def sway(*args):
+    return subprocess.check_output(["swaymsg", *args], text=True)
+
+def sway_cmd(cmd):
+    subprocess.run(["swaymsg", cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def iter_nodes(node):
+    yield node
+    for key in ("nodes", "floating_nodes"):
+        for child in node.get(key) or []:
+            yield from iter_nodes(child)
+
+def find_cheat(tree):
+    for n in iter_nodes(tree):
+        if n.get("app_id") == app_id:
+            return n
+    return None
+
+def workspace_of(node, tree):
+    target = node["id"]
+    def contains(n):
+        if n.get("id") == target:
+            return True
+        for key in ("nodes", "floating_nodes"):
+            for c in n.get(key) or []:
+                if contains(c):
+                    return True
+        return False
+    for n in iter_nodes(tree):
+        if n.get("type") == "workspace" and contains(n):
+            return n
+    return None
+
+def top_columns(workspace):
+    return [n for n in (workspace.get("nodes") or []) if n.get("type") != "floating_con"]
+
+def first_view_id(column):
+    leaves = []
+    for n in iter_nodes(column):
+        if n.get("id") == column.get("id"):
+            continue
+        if not (n.get("nodes") or []) and (n.get("app_id") or n.get("window") or n.get("pid") or n.get("name")):
+            leaves.append(n)
+    if leaves:
+        return leaves[-1]["id"]
+    for n in iter_nodes(column):
+        if n.get("id") != column.get("id") and not (n.get("nodes") or []):
+            return n["id"]
+    return column["id"]
+
+def set_width(con_id, fraction):
+    sway_cmd(f"[con_id={con_id}] set_size h {fraction}")
+
+cheat = None
+for _ in range(20):
+    tree = json.loads(sway("-t", "get_tree"))
+    cheat = find_cheat(tree)
+    if cheat:
+        break
+    time.sleep(0.05)
+if not cheat:
+    raise SystemExit(0)
+
+ws = workspace_of(cheat, tree)
+if not ws:
+    raise SystemExit(0)
+
+columns = top_columns(ws)
+if not columns:
+    raise SystemExit(0)
+
+if len(columns) == 1:
+    set_width(first_view_id(columns[0]), 1.0)
+else:
+    for i, col in enumerate(columns, start=1):
+        frac = 1.0 if (len(columns) % 2 == 1 and i == len(columns)) else 0.5
+        set_width(first_view_id(col), frac)
+PY
 
 wait "${foot_pid}"
