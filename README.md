@@ -132,7 +132,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+Return` | Terminal (foot) |
 | `Mod+m` | Expand focused column to 100% / restore 50/50 |
 | `Mod+a` / `Mod+Shift+space` | Floating toggle |
-| `Mod+?` | Floating keybind cheatsheet (toggle) |
+| `Mod+?` | Keybind cheatsheet (toggle) |
 | `Mod+Shift+w` | Wallpaper selector (waypaper) |
 | `Mod+Shift+r` | Resize mode (arrow keys; Enter/Esc to exit) |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
@@ -153,7 +153,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+o` / `Mod+Escape` | Power off |
 | `Mod+Shift+c` | Reload config |
 
-`Mod` is usually the Super/Windows key. A login tip points at `Mod+?` for the floating cheatsheet (every session).
+`Mod` is usually the Super/Windows key. A login tip points at `Mod+?` for the cheatsheet (every session).
 
 ### Gestures
 

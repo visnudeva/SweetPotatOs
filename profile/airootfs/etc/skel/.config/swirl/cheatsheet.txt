@@ -68,3 +68,7 @@
   Customize
   Edit ~/.config/swirl/config.d/user then Mod+Shift+c
   (survives updates; later binds win over defaults)
+  sudo sweetpotatos-update   Desktop / package updates
+
+  Project
+  w / Enter          Open project website

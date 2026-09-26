@@ -215,6 +215,33 @@
       text-decoration: none;
     }
     .countdown.out a:hover { text-decoration: underline; }
+    .fourth-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+    .rolling-note {
+      margin: 0;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--orange);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      text-align: left;
+    }
+    .rolling-note strong { color: var(--text); }
+    .rolling-note code {
+      background: var(--surface-raised);
+      color: var(--orange);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.92em;
+      border: 1px solid var(--border);
+    }
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -252,27 +279,52 @@
           <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.10_Third_Harvest/">Download</a>
         </p>
       </aside>
-      <aside
-        class="countdown"
-        id="fourth-harvest-countdown"
-        aria-live="polite"
-        data-release="2026-11-01">
-        <p class="countdown-label">
-          <strong>Fourth Harvest</strong> ISO — planned release
+      <div class="fourth-stack">
+        <p class="rolling-note" aria-label="Fourth Harvest changes on the update channel">
+          Desktop changes below are already on the
+          <code>sweetpotatos-update</code> channel for <strong>Third Harvest</strong> installs —
+          no need to wait for the Fourth Harvest ISO.
         </p>
-        <p class="countdown-days" id="countdown-days">— <span>days left</span></p>
-        <p class="countdown-sub">1 November 2026</p>
-      </aside>
+        <aside
+          class="countdown"
+          id="fourth-harvest-countdown"
+          aria-live="polite"
+          data-release="2026-11-01">
+          <p class="countdown-label">
+            <strong>Fourth Harvest</strong> ISO — planned release
+          </p>
+          <p class="countdown-days" id="countdown-days">— <span>days left</span></p>
+          <p class="countdown-sub">1 November 2026</p>
+        </aside>
+      </div>
     </div>
 
     <nav class="toc" aria-label="Releases">
       <h2>Releases</h2>
       <ol>
+        <li><a href="#fourth-harvest">2026.11 — Fourth Harvest</a> (rolling + planned ISO)</li>
         <li><a href="#third-harvest">2026.10 — Third Harvest</a></li>
         <li><a href="#second-harvest">2026.09 — Second Harvest</a></li>
         <li><a href="#first-harvest">2026.08 — First Harvest</a></li>
       </ol>
     </nav>
+
+    <article class="release" id="fourth-harvest">
+      <h2>Fourth Harvest</h2>
+      <p class="meta">
+        Planned ISO <strong>1 November 2026</strong>
+        · Desktop changes already on the
+        <code>sweetpotatos-update</code> channel for Third Harvest installs
+      </p>
+      <ul>
+        <li><strong>swaylock-effects</strong> replaces stock <code>swaylock</code> — same SweetPotato charcoal / orange / pink lock theme, now with a lock-screen <strong>clock and date</strong> in the indicator.</li>
+        <li>Clock uses a larger bold SPO-pink time/date; lock always loads
+          <code>~/.config/swaylock/config</code> so the theme cannot fall back to a blank white screen.</li>
+        <li><strong>Mod+?</strong> cheatsheet is a normal tiled window (not floating), with SPO colors, a
+          <code>sudo sweetpotatos-update</code> hint, and <code>w</code> / Enter to open the project website.</li>
+        <li>Third Harvest systems pick this up with <code>sudo sweetpotatos-update</code> (stock <code>swaylock</code> is replaced automatically). Reload Swirl with <code>Mod+Shift+c</code>, then lock with <code>Mod+l</code> or open help with <code>Mod+?</code>.</li>
+      </ul>
+    </article>
 
     <article class="release" id="third-harvest">
       <h2>Third Harvest</h2>

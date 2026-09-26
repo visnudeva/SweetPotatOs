@@ -8,7 +8,7 @@ MARKER="${XDG_RUNTIME_DIR:-/tmp}/sweetpotato-tips-shown"
 sleep 4
 notify-send -t 12000 -a "SweetPotato" -i "help-about" \
   -h "string:x-canonical-private-synchronous:sweetpotato-tips" \
-  "Keybinds" "Press Mod+? for the cheatsheet (toggle). Mod is Super." \
+  "Keybinds" "Mod+? — keybinds & project links. Mod is Super." \
   2>/dev/null || true
 
 : > "${MARKER}"

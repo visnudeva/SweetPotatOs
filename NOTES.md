@@ -97,10 +97,33 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Session start: `rfkill unblock bluetooth`; login tip via `tips.sh` → Mod+? cheatsheet (every session).
 - Enable `bluetooth.service` + `power-profiles-daemon.service` on live/install. Do **not** enable `sshd`, `ModemManager`, or VM guest helpers by default.
 - Display layout is managed by **nwg-displays** (GUI) + saved **`~/.config/sway/outputs`**. App launcher entry is **Displays** (`GenericName=nwg-displays`, search `nwg`) — same binary as terminal `nwg-displays`. Desktop `Exec` must be **`sweetpotatos-displays`** on PATH (not `%h/…` — j4-dmenu-desktop does not expand it; not `bash -lc '~…'`). `Mod+Shift+d` opens the swirl wrapper directly. After **wlr-randr**, press **`Mod+Ctrl+d`**. The swirl wrapper creates empty `outputs`/`workspaces` before parse; kanshi profiles are generated from `outputs` (no `mode preferred` reset). **Do not** ship `~/.config/sway/` in skel.
-- Wallpaper is managed by **waypaper** (AUR, bundled in local repo). Config at `~/.config/waypaper/config.ini`; default wallpaper is `SpoNeon.png` from `~/Pictures/Wallpapers/`. `exec_always waypaper --restore` in Swirl config restores it on login. `Mod+Shift+w` opens the waypaper GUI. Do not ship UsefulBinds/BindsBG. Keybinds tip: `tips.sh` points at `Mod+?` floating cheatsheet. Shipped copies live in the **sweetpotatos** package at `/usr/share/sweetpotato/backgrounds/` (not under `/usr/share/backgrounds/`, which conflicts with ISO leftovers on upgrade); `sweetpotatos-materialize` refreshes those into the user wallpaper folders but does not switch the active waypaper selection.
+- Wallpaper is managed by **waypaper** (AUR, bundled in local repo). Config at `~/.config/waypaper/config.ini`; default wallpaper is `SpoNeon.png` from `~/Pictures/Wallpapers/`. `exec_always waypaper --restore` in Swirl config restores it on login. `Mod+Shift+w` opens the waypaper GUI. Do not ship UsefulBinds/BindsBG. Keybinds tip: `tips.sh` points at `Mod+?` cheatsheet. Shipped copies live in the **sweetpotatos** package at `/usr/share/sweetpotato/backgrounds/` (not under `/usr/share/backgrounds/`, which conflicts with ISO leftovers on upgrade); `sweetpotatos-materialize` refreshes those into the user wallpaper folders but does not switch the active waypaper selection.
 - Live Calamares keyboard: on Wayland Calamares only updates **locale1**; Swirl ignores it. Live session runs `sweetpotatos-sway-xkb-watch` (busctl poll of locale1 → `swaymsg`). Do **not** use `dbus-monitor --system` for this: liveuser cannot BecomeMonitor on dbus-broker, so the watcher never saw French. Installed user gets `shellprocess@fix-sway-keyboard` (`config-us` / `config-fr`).
 - Smoke check: `./scripts/smoke-check.sh`. Unit tests: `./tests/run.sh`.
 - **Gotcha:** shellprocess GS vars must be `${gs[keyboardLayout]}` / `${gs[keyboardVariant]}`. Bare `gs[...]` is passed literally, hits a sed path, and aborts install (seen on 2026.08.12 ISO). Command is prefixed with `-` so a future tweak failure cannot fail the whole install.
+
+## Backlog / ideas (not started)
+
+### Theme selector (hue + dark/light)
+
+Goal: a small GUI so users can recolor the desktop without editing configs by hand.
+
+**Controls (agreed direction)**
+- **Toggle:** Dark / Light (charcoal surfaces ↔ light surfaces; not a charcoal hue slider — near-grey has no useful hue).
+- **Slider 1:** hue of SPO pink/red (`#a73b50`).
+- **Slider 2:** hue of SPO orange (`#f79b29`).
+
+**Apply path (MVP)**
+1. Store user hues + mode under `~/.config/sweetpotatos/` (survive `sweetpotatos-update` / materialize).
+2. Generate a small palette (hex) from base HSL/OKLCH + hue offsets.
+3. Write the consumers that are easy to reload: **Swirl** client/colors, **swaylock**, **mako**, **foot**.
+4. Reload Swirl (`Mod+Shift+c`) + restart mako/foot as needed. Not true live-preview everywhere.
+
+**Harder later:** full GTK theme regen (apps often need restart); bar if it hardcodes colors.
+
+**Light-mode caveat:** needs a real light text/border set for contrast — don’t only swap the charcoal hex.
+
+**Build-host rule:** develop/publish on the SweetPotatOs channel only; do **not** install SPO packages or run SPO lockers on the Ryoku host (mixing broke that desktop before).
 
 ## SourceForge
 
