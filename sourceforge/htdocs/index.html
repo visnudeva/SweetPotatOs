@@ -233,6 +233,58 @@
       padding: 0;
       color: var(--text);
     }
+    .contact {
+      margin: 2rem 0 0.5rem;
+      padding: 1.25rem 1.35rem;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+    }
+    .contact > p {
+      margin: 0 0 1rem;
+      max-width: 36rem;
+    }
+    .contact-form {
+      display: grid;
+      gap: 0.85rem;
+      max-width: 32rem;
+    }
+    .contact-form label {
+      display: grid;
+      gap: 0.35rem;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface-raised);
+      color: var(--text);
+      font: inherit;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: var(--orange);
+    }
+    .contact-form textarea {
+      min-height: 8rem;
+      resize: vertical;
+    }
+    .contact-form .btn {
+      justify-self: start;
+      cursor: pointer;
+      border: 2px solid transparent;
+      font: inherit;
+    }
+    .contact-form .hp {
+      display: none !important;
+    }
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -256,6 +308,7 @@
       <div class="actions-row">
         <a class="btn btn-primary" href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download ISO</a>
         <a class="btn btn-primary" href="changelog.html">Changelog</a>
+        <a class="btn btn-primary" href="#contact">Contact</a>
         <a class="btn btn-donate" href="https://ko-fi.com/visnu_deva" target="_blank" rel="noopener noreferrer">Donate</a>
       </div>
       <div class="actions-row">
@@ -456,12 +509,47 @@ for_window [app_id="mpv"] floating enable</code></pre>
     <pre><code>lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
 sudo dd if=Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
     <p>Prefer verifying the download with the <code>.sha256</code> file next to the ISO on the Files page.</p>
+
+    <h2 id="contact">Contact</h2>
+    <div class="contact">
+      <p>
+        Questions, feedback, or “it runs on my potato”? Send a message —
+        it goes straight to the maintainer’s inbox. No account needed.
+      </p>
+      <p>
+        Your email is only used to reply to you — never shared, sold, or used for mailing lists.
+      </p>
+      <form class="contact-form"
+            action="https://formsubmit.co/visnudeva@protonmail.com"
+            method="POST"
+            onsubmit="this.querySelector('[name=_replyto]').value = this.querySelector('[name=email]').value;">
+        <input type="hidden" name="_subject" value="SweetPotatOs website contact">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://sweetpotatos.sourceforge.io/#contact">
+        <input type="hidden" name="_replyto" value="">
+        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label>
+          Name
+          <input type="text" name="name" required autocomplete="name">
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+        </label>
+        <label>
+          Message
+          <textarea name="message" required></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Send message</button>
+      </form>
+    </div>
   </main>
 
   <footer>
     Source: <a href="https://github.com/visnudeva/SweetPotatOs">github.com/visnudeva/SweetPotatOs</a>
     · Compositor: <a href="https://github.com/visnudeva/swirl">Swirl</a>
     · <a href="changelog.html">Changelog</a>
+    · <a href="#contact">Contact</a>
     · Downloads: <a href="https://sourceforge.net/projects/sweetpotatos/files/">SourceForge Files</a>
   </footer>
 </body>
