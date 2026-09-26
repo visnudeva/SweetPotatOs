@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Floating terminal cheatsheet (toggle with Mod+?). SPO colors; w → website.
+# Uses less so the sheet opens at the top (not scrolled to the bottom).
 set -euo pipefail
 
 APP_ID="sweetpotato-cheatsheet"
@@ -43,38 +44,54 @@ PINK="${SPO_PINK}" ORANGE="${SPO_ORANGE}" CREAM="${SPO_CREAM}" MUTED="${SPO_MUTE
 SHEET="${SPO_CHEATSHEET}"
 SITE_URL="${SPO_SITE_URL}"
 
-while IFS= read -r line || [[ -n "${line}" ]]; do
-  case "${line}" in
-    "  SweetPotato"*)
-      printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
-    "  Mod = "*)
-      printf "%s%s%s\n" "${MUTED}" "${line}" "${RESET}" ;;
-    "  Apps"|"  Window / layout"|"  Workspaces / overview"|"  Displays / look"|\
-    "  System"|"  Screenshots / media keys"|"  Gestures"|"  Resize mode"*|\
-    "  Customize"|"  Desktop / package updates"|"  Project")
-      printf "%s%s%s\n" "${ORANGE}" "${line}" "${RESET}" ;;
-    "  w  "*|"  sudo sweetpotatos-update"*)
-      printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
-    "")
-      printf "\n" ;;
-    *)
-      printf "%s%s%s\n" "${CREAM}" "${line}" "${RESET}" ;;
-  esac
-done < "${SHEET}"
-printf "\n%s  w  website · q or Mod+?  close%s\n" "${MUTED}" "${RESET}"
+content="$(mktemp)"
+keyfile="$(mktemp)"
+trap "rm -f \"${content}\" \"${keyfile}\"" EXIT
 
-open_site() {
-  if command -v xdg-open >/dev/null 2>&1; then
-    xdg-open "${SITE_URL}" >/dev/null 2>&1 || true
-  elif command -v brave-origin >/dev/null 2>&1; then
-    brave-origin "${SITE_URL}" >/dev/null 2>&1 || true
-  fi
-}
+{
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    case "${line}" in
+      "  SweetPotato"*)
+        printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
+      "  Mod = "*)
+        printf "%s%s%s\n" "${MUTED}" "${line}" "${RESET}" ;;
+      "  Apps"|"  Window / layout"|"  Workspaces / overview"|"  Displays / look"|\
+      "  System"|"  Screenshots / media keys"|"  Gestures"|"  Resize mode"*|\
+      "  Customize"|"  Desktop / package updates"|"  Project")
+        printf "%s%s%s\n" "${ORANGE}" "${line}" "${RESET}" ;;
+      "  w  "*|"  sudo sweetpotatos-update"*)
+        printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
+      "")
+        printf "\n" ;;
+      *)
+        printf "%s%s%s\n" "${CREAM}" "${line}" "${RESET}" ;;
+    esac
+  done < "${SHEET}"
+  printf "\n%s  w  website · q or Mod+?  close · arrows/pgup scroll%s\n" "${MUTED}" "${RESET}"
+} >"${content}"
 
-while IFS= read -rsn1 k; do
-  case "${k}" in
-    q|Q) exit 0 ;;
-    w|W) open_site ;;
-  esac
-done
+# less opens at the top; LESSKEYIN binds w without needing the lesskey binary.
+cat >"${keyfile}" <<EOF
+#command
+w shell xdg-open ${SITE_URL} &\n
+W shell xdg-open ${SITE_URL} &\n
+EOF
+
+if command -v less >/dev/null 2>&1; then
+  LESSKEYIN="${keyfile}" less -R -Ps"w website  q close" +1g "${content}"
+else
+  # Fallback: clear and print (may still end at bottom if the sheet is long).
+  printf "\033[2J\033[H"
+  cat "${content}"
+  while IFS= read -rsn1 k; do
+    case "${k}" in
+      q|Q) exit 0 ;;
+      w|W)
+        if command -v xdg-open >/dev/null 2>&1; then
+          xdg-open "${SITE_URL}" >/dev/null 2>&1 || true
+        fi
+        ;;
+    esac
+  done
+fi
 '
