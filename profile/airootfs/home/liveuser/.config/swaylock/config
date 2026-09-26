@@ -1,5 +1,5 @@
 # SweetPotato swaylock (swaylock-effects)
-# Colors: potato red #a73b50, potato orange #f79b29, charcoal #1d1f21
+# Colors: potato red/pink #a73b50, potato orange #f79b29, charcoal #1d1f21
 #
 # Theme colors first — if a later effects-only option fails to parse,
 # load_config stops and would otherwise leave a stock white lock screen.
@@ -13,12 +13,13 @@ show-failed-attempts
 color=1d1f21
 scaling=solid_color
 
-indicator-radius=150
+# Larger ring so clock + date (date scales with radius) stay readable
+indicator-radius=180
 indicator-thickness=8
-font=Noto Sans
-font-size=28
+font=Noto Sans Bold
+font-size=42
 
-# Inside — potato orange; text charcoal for contrast on the clock
+# Inside — potato orange; clock/status text in SPO pink
 inside-color=f79b29ff
 inside-clear-color=f79b29ff
 inside-ver-color=f79b29ff
@@ -44,11 +45,11 @@ line-caps-lock-color=00000000
 
 separator-color=00000000
 
-text-color=1d1f21ff
-text-clear-color=1d1f21ff
-text-ver-color=1d1f21ff
+text-color=a73b50ff
+text-clear-color=a73b50ff
+text-ver-color=a73b50ff
 text-wrong-color=a73b50ff
-text-caps-lock-color=1d1f21ff
+text-caps-lock-color=a73b50ff
 
 layout-bg-color=1d1f21cc
 layout-border-color=a73b50ff
