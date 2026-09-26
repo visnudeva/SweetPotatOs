@@ -76,15 +76,30 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
     if [[ -z "${target_home}" || ! -d "${target_home}" ]]; then
       target_home="$(eval echo "~${target_user}")"
     fi
+    target_uid="$(id -u "${target_user}" 2>/dev/null || true)"
     echo "[*] Materializing desktop config for ${target_user} (${target_home})…"
     sudo -u "${target_user}" HOME="${target_home}" \
       XDG_CONFIG_HOME="${target_home}/.config" \
       XDG_STATE_HOME="${target_home}/.local/state" \
       sweetpotatos-materialize || true
+
+    # Reload Swirl so shipped config changes apply — users should not need Mod+Shift+c.
+    if [[ -n "${target_uid}" ]]; then
+      shopt -s nullglob
+      socks=(/run/user/"${target_uid}"/sway-ipc.*.sock)
+      shopt -u nullglob
+      if ((${#socks[@]} > 0)) && command -v swaymsg >/dev/null 2>&1; then
+        echo "[*] Reloading Swirl session…"
+        sudo -u "${target_user}" SWAYSOCK="${socks[0]}" swaymsg reload >/dev/null 2>&1 || true
+      fi
+    fi
   else
     echo "[!] Skipping materialize — no non-root user to target (ran as root?)." >&2
   fi
 fi
 
 waiting="$(pacman -Qu 2>/dev/null | wc -l | tr -d ' ')"
-echo "[+] SweetPotatOs lane done. Arch/system packages waiting: ${waiting} (use: pacman -Syu)"
+echo "[+] SweetPotatOs update done. Open Mod+? for the help sheet — nothing else to run."
+if [[ "${waiting}" != 0 ]]; then
+  echo "    (Optional later: Arch/system packages waiting: ${waiting} — pacman -Syu)"
+fi
