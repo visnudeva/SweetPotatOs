@@ -83,6 +83,14 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
       XDG_STATE_HOME="${target_home}/.local/state" \
       sweetpotatos-materialize || true
 
+    # Guaranteed refresh of the help sheet script (no overlay / stale copy).
+    src_cheat="/usr/share/sweetpotato/config/swirl/scripts/cheatsheet.sh"
+    dst_cheat="${target_home}/.config/swirl/scripts/cheatsheet.sh"
+    if [[ -f "${src_cheat}" ]]; then
+      install -Dm755 "${src_cheat}" "${dst_cheat}"
+      chown "${target_user}:${target_user}" "${dst_cheat}" 2>/dev/null || true
+    fi
+
     # Reload Swirl so shipped config changes apply — users should not need Mod+Shift+c.
     if [[ -n "${target_uid}" ]]; then
       shopt -s nullglob

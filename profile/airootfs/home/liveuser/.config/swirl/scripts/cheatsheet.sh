@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 # Tiled terminal cheatsheet (toggle with Mod+?). SPO colors; w → website.
+# Opens on workspace "spo-help" so Swirl autotile gives a full-width column;
+# closing returns to the previous workspace.
 set -euo pipefail
 
 APP_ID="sweetpotato-cheatsheet"
+HELP_WS="spo-help"
 SHEET="${XDG_CONFIG_HOME:-${HOME}/.config}/swirl/cheatsheet.txt"
 TERM_BIN="${TERM_BIN:-foot}"
 SITE_URL="https://sweetpotatos.sourceforge.io/"
+STATE="${XDG_RUNTIME_DIR:-/tmp}/sweetpotato-cheatsheet-ws"
 
 PINK=$'\033[1;38;2;167;59;80m'
 ORANGE=$'\033[1;38;2;247;155;41m'
@@ -23,11 +27,31 @@ if [[ ! -f "${SHEET}" ]]; then
   exit 1
 fi
 
-# Toggle: second press closes an open sheet.
+restore_ws() {
+  if [[ -f "${STATE}" ]]; then
+    prev="$(cat "${STATE}" 2>/dev/null || true)"
+    rm -f "${STATE}"
+    if [[ -n "${prev}" ]]; then
+      swaymsg "workspace ${prev}" >/dev/null 2>&1 || true
+    fi
+  fi
+}
+
+# Toggle: second press closes and returns to the previous workspace.
 if swaymsg -t get_tree 2>/dev/null | grep -Fq "\"app_id\": \"${APP_ID}\""; then
   swaymsg "[app_id=\"${APP_ID}\"] kill" >/dev/null 2>&1 || true
+  restore_ws
   exit 0
 fi
+
+# Remember where we were, then open help alone on its own workspace (full width).
+prev_ws="$(
+  swaymsg -t get_workspaces 2>/dev/null \
+    | python3 -c 'import json,sys; ws=json.load(sys.stdin); print(next((w["name"] for w in ws if w.get("focused")),""))' \
+    2>/dev/null || true
+)"
+printf '%s\n' "${prev_ws}" >"${STATE}"
+swaymsg "workspace ${HELP_WS}" >/dev/null 2>&1 || true
 
 export SPO_CHEATSHEET="${SHEET}"
 export SPO_SITE_URL="${SITE_URL}"
@@ -80,8 +104,7 @@ done
 ' &
 foot_pid=$!
 
-# Column width on Swirl: set_size (see expand.sh / autotile).
-# "Alone" = only one column visible on this output (others may be scrolled off-strip).
+# Alone on spo-help → force full column (same IPC as Mod+m / autotile).
 export APP_ID
 python3 - <<'PY' || true
 import json, os, subprocess, time
@@ -111,109 +134,24 @@ def find_cheat(tree):
             return n
     return None
 
-def workspace_of(node, tree):
-    target = node["id"]
-
-    def contains(n):
-        if n.get("id") == target:
-            return True
-        for key in ("nodes", "floating_nodes"):
-            for c in n.get(key) or []:
-                if contains(c):
-                    return True
-        return False
-
-    for n in iter_nodes(tree):
-        if n.get("type") == "workspace" and contains(n):
-            return n
-    return None
-
-def output_of(workspace, tree):
-    wid = workspace["id"]
-
-    def contains(n):
-        if n.get("id") == wid:
-            return True
-        for key in ("nodes", "floating_nodes"):
-            for c in n.get(key) or []:
-                if contains(c):
-                    return True
-        return False
-
-    for n in iter_nodes(tree):
-        if n.get("type") == "output" and contains(n):
-            return n
-    return None
-
-def overlaps(a, b):
-    ax, aw = (a.get("x") or 0), (a.get("width") or 0)
-    bx, bw = (b.get("x") or 0), (b.get("width") or 0)
-    return ax < bx + bw and ax + aw > bx
-
-def top_columns(workspace):
-    return [n for n in (workspace.get("nodes") or []) if n.get("type") != "floating_con"]
-
-def column_has_view(column):
-    for n in iter_nodes(column):
-        if n.get("app_id") or n.get("window") or n.get("pid"):
-            if n.get("id") != column.get("id"):
-                return True
-    return False
-
-def first_view_id(column):
-    for n in iter_nodes(column):
-        if n.get("id") == column.get("id"):
-            continue
-        if not (n.get("nodes") or []) and (n.get("app_id") or n.get("window") or n.get("pid") or n.get("name")):
-            return n["id"]
-    return column["id"]
-
-def set_width(con_id, fraction):
-    sway_cmd(f"[con_id={con_id}] set_size h {fraction}")
-
-def apply():
+def force_full():
     tree = json.loads(sway("-t", "get_tree"))
     cheat = find_cheat(tree)
     if not cheat:
         return False
-    ws = workspace_of(cheat, tree)
-    if not ws:
-        return False
-    output = output_of(ws, tree)
-    out_rect = (output or {}).get("rect") or ws.get("rect") or {}
-
-    visible = []
-    for col in top_columns(ws):
-        if not column_has_view(col):
-            continue
-        if out_rect and not overlaps(col.get("rect") or {}, out_rect):
-            continue
-        visible.append(col)
-
-    if not visible:
-        visible = [c for c in top_columns(ws) if column_has_view(c)]
-
-    if len(visible) <= 1:
-        # Full strip — also hit app_id in case con_id targeting races map.
-        set_width(cheat["id"], 1.0)
-        sway_cmd(f'[app_id="{app_id}"] set_size h 1.0')
-        if visible:
-            set_width(first_view_id(visible[0]), 1.0)
-    else:
-        n = len(visible)
-        for i, col in enumerate(visible, start=1):
-            frac = 1.0 if (n % 2 == 1 and i == n) else 0.5
-            set_width(first_view_id(col), frac)
+    sway_cmd(f'[app_id="{app_id}"] focus')
+    sway_cmd(f'[app_id="{app_id}"] set_size h 1.0')
+    sway_cmd(f'[con_id={cheat["id"]}] set_size h 1.0')
     return True
 
-# Wait for map, then reinforce after autotile (set_size can race view_map).
-for _ in range(30):
-    if apply():
+for _ in range(40):
+    if force_full():
         break
     time.sleep(0.05)
-for delay in (0.15, 0.35, 0.6):
-    time.sleep(delay)
-    apply()
+for _ in range(8):
+    time.sleep(0.15)
+    force_full()
 PY
 
-wait "${foot_pid}"
+wait "${foot_pid}" || true
+restore_ws
