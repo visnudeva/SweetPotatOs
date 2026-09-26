@@ -128,7 +128,7 @@ seat * xcursor_theme capitaine-cursors 24
     # Caffeine: toggle idle lock / display off (lid-close still suspends)
     bindsym $mod+c exec ~/.config/swirl/scripts/caffeine.sh
 
-    # Keybind cheatsheet (tiled toggle)
+    # Floating keybind cheatsheet (toggle)
     bindsym $mod+question exec ~/.config/swirl/scripts/cheatsheet.sh
     bindsym $mod+slash exec ~/.config/swirl/scripts/cheatsheet.sh
 
@@ -315,7 +315,7 @@ exec sh -c 'rfkill unblock bluetooth 2>/dev/null || true'
 exec ~/.config/swirl/scripts/tips.sh
 
 for_window [app_id="io.calamares.calamares"] floating enable
-for_window [app_id="sweetpotato-cheatsheet"] floating disable, border pixel 2
+for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, border pixel 2, resize set width 50 ppt height 90 ppt, move position center
 
 # Saved monitor layout (nwg-displays / Mod+Ctrl+d)
 include ~/.config/sway/outputs
