@@ -34,7 +34,6 @@ export SPO_SITE_URL="${SITE_URL}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
 "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
-  -W 78x42 \
   -o colors-dark.background=1d1f21 \
   -o colors-dark.foreground=f5e6e8 \
   -o colors-dark.alpha=1.0 \
@@ -81,9 +80,10 @@ done
 ' &
 foot_pid=$!
 
-# Swirl column widths use set_size (same as Mod+m / autotile), not sway resize ppt.
+# Column width on Swirl: set_size (see expand.sh / autotile).
+# "Alone" = only one column visible on this output (others may be scrolled off-strip).
 export APP_ID
-python3 - <<'PY' >/dev/null 2>&1 || true
+python3 - <<'PY' || true
 import json, os, subprocess, time
 
 app_id = os.environ["APP_ID"]
@@ -92,7 +92,12 @@ def sway(*args):
     return subprocess.check_output(["swaymsg", *args], text=True)
 
 def sway_cmd(cmd):
-    subprocess.run(["swaymsg", cmd], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(
+        ["swaymsg", cmd],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
 
 def iter_nodes(node):
     yield node
@@ -108,6 +113,7 @@ def find_cheat(tree):
 
 def workspace_of(node, tree):
     target = node["id"]
+
     def contains(n):
         if n.get("id") == target:
             return True
@@ -116,55 +122,98 @@ def workspace_of(node, tree):
                 if contains(c):
                     return True
         return False
+
     for n in iter_nodes(tree):
         if n.get("type") == "workspace" and contains(n):
             return n
     return None
 
+def output_of(workspace, tree):
+    wid = workspace["id"]
+
+    def contains(n):
+        if n.get("id") == wid:
+            return True
+        for key in ("nodes", "floating_nodes"):
+            for c in n.get(key) or []:
+                if contains(c):
+                    return True
+        return False
+
+    for n in iter_nodes(tree):
+        if n.get("type") == "output" and contains(n):
+            return n
+    return None
+
+def overlaps(a, b):
+    ax, aw = (a.get("x") or 0), (a.get("width") or 0)
+    bx, bw = (b.get("x") or 0), (b.get("width") or 0)
+    return ax < bx + bw and ax + aw > bx
+
 def top_columns(workspace):
     return [n for n in (workspace.get("nodes") or []) if n.get("type") != "floating_con"]
 
+def column_has_view(column):
+    for n in iter_nodes(column):
+        if n.get("app_id") or n.get("window") or n.get("pid"):
+            if n.get("id") != column.get("id"):
+                return True
+    return False
+
 def first_view_id(column):
-    leaves = []
     for n in iter_nodes(column):
         if n.get("id") == column.get("id"):
             continue
         if not (n.get("nodes") or []) and (n.get("app_id") or n.get("window") or n.get("pid") or n.get("name")):
-            leaves.append(n)
-    if leaves:
-        return leaves[-1]["id"]
-    for n in iter_nodes(column):
-        if n.get("id") != column.get("id") and not (n.get("nodes") or []):
             return n["id"]
     return column["id"]
 
 def set_width(con_id, fraction):
     sway_cmd(f"[con_id={con_id}] set_size h {fraction}")
 
-cheat = None
-for _ in range(20):
+def apply():
     tree = json.loads(sway("-t", "get_tree"))
     cheat = find_cheat(tree)
-    if cheat:
+    if not cheat:
+        return False
+    ws = workspace_of(cheat, tree)
+    if not ws:
+        return False
+    output = output_of(ws, tree)
+    out_rect = (output or {}).get("rect") or ws.get("rect") or {}
+
+    visible = []
+    for col in top_columns(ws):
+        if not column_has_view(col):
+            continue
+        if out_rect and not overlaps(col.get("rect") or {}, out_rect):
+            continue
+        visible.append(col)
+
+    if not visible:
+        visible = [c for c in top_columns(ws) if column_has_view(c)]
+
+    if len(visible) <= 1:
+        # Full strip — also hit app_id in case con_id targeting races map.
+        set_width(cheat["id"], 1.0)
+        sway_cmd(f'[app_id="{app_id}"] set_size h 1.0')
+        if visible:
+            set_width(first_view_id(visible[0]), 1.0)
+    else:
+        n = len(visible)
+        for i, col in enumerate(visible, start=1):
+            frac = 1.0 if (n % 2 == 1 and i == n) else 0.5
+            set_width(first_view_id(col), frac)
+    return True
+
+# Wait for map, then reinforce after autotile (set_size can race view_map).
+for _ in range(30):
+    if apply():
         break
     time.sleep(0.05)
-if not cheat:
-    raise SystemExit(0)
-
-ws = workspace_of(cheat, tree)
-if not ws:
-    raise SystemExit(0)
-
-columns = top_columns(ws)
-if not columns:
-    raise SystemExit(0)
-
-if len(columns) == 1:
-    set_width(first_view_id(columns[0]), 1.0)
-else:
-    for i, col in enumerate(columns, start=1):
-        frac = 1.0 if (len(columns) % 2 == 1 and i == len(columns)) else 0.5
-        set_width(first_view_id(col), frac)
+for delay in (0.15, 0.35, 0.6):
+    time.sleep(delay)
+    apply()
 PY
 
 wait "${foot_pid}"
