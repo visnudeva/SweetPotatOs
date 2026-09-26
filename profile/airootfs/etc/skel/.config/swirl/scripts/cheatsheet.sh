@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Tiled terminal cheatsheet (toggle with Mod+?). SPO colors; w/Enter → website.
+# Tiled terminal cheatsheet (toggle with Mod+?). SPO colors; w → website.
 set -euo pipefail
 
 APP_ID="sweetpotato-cheatsheet"
@@ -33,7 +33,9 @@ export SPO_CHEATSHEET="${SHEET}"
 export SPO_SITE_URL="${SITE_URL}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
-exec "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
+# Request a readable column; compositor then tiles it (~half width via for_window).
+"${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
+  -W 78x42 \
   -o colors-dark.background=1d1f21 \
   -o colors-dark.foreground=f5e6e8 \
   -o colors-dark.alpha=1.0 \
@@ -51,9 +53,9 @@ while IFS= read -r line || [[ -n "${line}" ]]; do
       printf "%s%s%s\n" "${MUTED}" "${line}" "${RESET}" ;;
     "  Apps"|"  Window / layout"|"  Workspaces / overview"|"  Displays / look"|\
     "  System"|"  Screenshots / media keys"|"  Gestures"|"  Resize mode"*|\
-    "  Customize"|"  Project")
+    "  Customize"|"  Desktop / package updates"|"  Project")
       printf "%s%s%s\n" "${ORANGE}" "${line}" "${RESET}" ;;
-    "  w / Enter"*|"  sudo sweetpotatos-update"*)
+    "  w  "*|"  sudo sweetpotatos-update"*)
       printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
     "")
       printf "\n" ;;
@@ -61,7 +63,7 @@ while IFS= read -r line || [[ -n "${line}" ]]; do
       printf "%s%s%s\n" "${CREAM}" "${line}" "${RESET}" ;;
   esac
 done < "${SHEET}"
-printf "\n%s  w / Enter  website · q or Mod+?  close%s\n" "${MUTED}" "${RESET}"
+printf "\n%s  w  website · q or Mod+?  close%s\n" "${MUTED}" "${RESET}"
 
 open_site() {
   if command -v xdg-open >/dev/null 2>&1; then
@@ -72,10 +74,21 @@ open_site() {
 }
 
 while IFS= read -rsn1 k; do
-  # Enter arrives as empty; w opens the project site
   case "${k}" in
     q|Q) exit 0 ;;
-    w|W|"") open_site ;;
+    w|W) open_site ;;
   esac
 done
-'
+' &
+foot_pid=$!
+
+# Prefer a ~half-strip width so the bind list is not crammed into a thin column.
+for _ in 1 2 3 4 5 6 7 8; do
+  if swaymsg -t get_tree 2>/dev/null | grep -Fq "\"app_id\": \"${APP_ID}\""; then
+    swaymsg "[app_id=\"${APP_ID}\"] resize set width 50 ppt" >/dev/null 2>&1 || true
+    break
+  fi
+  sleep 0.05
+done
+
+wait "${foot_pid}"
