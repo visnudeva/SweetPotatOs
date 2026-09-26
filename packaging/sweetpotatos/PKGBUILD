@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=14
+pkgrel=15
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -14,6 +14,7 @@ optdepends=(
   'localsend-bin: nearby file sharing'
   'spore: web radio and local music player'
   'tuber: light BitTorrent TUI client'
+  'swaylock-effects: lock screen with clock (replaces swaylock)'
   'waypaper: wallpaper picker'
   'brave-origin-bin: default web browser (Mod+w)'
 )

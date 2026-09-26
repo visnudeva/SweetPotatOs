@@ -62,7 +62,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Packages / AUR
 
-- No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin**, **localsend-bin**, **brave-origin-bin**, **spore**, and **tuber** via the local `repo/` (built in `build.sh`) for ISO builds.
+- No Flatpak/Bazaar. Ship **yay-bin**, **shelly-bin**, **localsend-bin**, **brave-origin-bin**, **spore**, **tuber**, and **swaylock-effects** via the local `repo/` (built in `build.sh`) for ISO builds.
 - **Installed-system package channel (GitHub, not SourceForge):**
   - **Primary delivery for Third Harvest+ installs:** theme/desktop fixes ship via
     `sweetpotatos-update` — bump `packaging/sweetpotatos` (and swirl when needed),
@@ -77,6 +77,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - `packaging/shelly-bin`: local PKGBUILD wrapping Seafoam Labs release tarball (no Flatpak backend package).
 - `packaging/spore`: local PKGBUILD for visnudeva/spore (Go TUI radio + local files; optional `ffmpeg` for some codecs).
 - `packaging/tuber`: local PKGBUILD for visnudeva/tuber (Go BitTorrent TUI; replaces transmission-gtk; Mod+t).
+- `packaging/swaylock-effects`: jirutka fork with lock-screen clock; replaces Arch `swaylock` (ISO + `sweetpotatos-update`).
 
 ## Live ISO specifics (`sync-theme.sh` injects into liveuser Swirl config)
 

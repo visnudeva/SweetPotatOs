@@ -11,6 +11,7 @@ CANDIDATES=(
   swirl
   spore
   tuber
+  swaylock-effects
   shelly-bin
   localsend-bin
   brave-origin-bin
@@ -39,7 +40,7 @@ if ((${#to_touch[@]} == 0)); then
   exit 0
 fi
 
-# tuber replaces Transmission — --noconfirm will not auto-remove conflicts.
+# Replace conflicting Arch packages — --noconfirm will not auto-remove them.
 for t in "${to_touch[@]}"; do
   if [[ "${t}" == "${REPO_NAME}/tuber" ]]; then
     remove=()
@@ -52,7 +53,12 @@ for t in "${to_touch[@]}"; do
       echo "[*] Removing Transmission (replaced by tuber): ${remove[*]}"
       pacman -Rdd --noconfirm "${remove[@]}" || true
     fi
-    break
+  fi
+  if [[ "${t}" == "${REPO_NAME}/swaylock-effects" ]]; then
+    if pacman -Q swaylock >/dev/null 2>&1 && ! pacman -Q swaylock-effects >/dev/null 2>&1; then
+      echo "[*] Removing swaylock (replaced by swaylock-effects)"
+      pacman -Rdd --noconfirm swaylock || true
+    fi
   fi
 done
 

@@ -11,6 +11,11 @@ indicator-thickness=8
 font=Noto Sans
 font-size=42
 
+# swaylock-effects: clock in the indicator (ignored by stock swaylock)
+clock
+timestr=%H:%M
+datestr=%a, %b %d
+
 # Plain charcoal background (no image)
 color=1d1f21
 scaling=solid_color

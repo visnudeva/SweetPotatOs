@@ -1,0 +1,29 @@
+# Maintainer: visnudeva
+# Upstream: jirutka/swaylock-effects (fork with clock/effects; replaces Arch swaylock)
+pkgname=swaylock-effects
+pkgver=1.7.0.0
+pkgrel=1
+pkgdesc='Screen locker for Wayland with clock and visual effects (SweetPotatOs)'
+arch=('x86_64')
+url='https://github.com/jirutka/swaylock-effects'
+license=('MIT')
+depends=('libxkbcommon' 'cairo' 'gdk-pixbuf2' 'pam' 'wayland')
+makedepends=('git' 'meson' 'ninja' 'scdoc' 'wayland-protocols')
+provides=('swaylock')
+conflicts=('swaylock')
+replaces=('swaylock')
+backup=('etc/pam.d/swaylock')
+source=("${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('e94d79e189602694bedfbafb553ce3c6c976426e16f76d93bf7e226dc2876eb6')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  meson setup build --prefix=/usr
+  ninja -C build
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  DESTDIR="${pkgdir}" ninja -C build install
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

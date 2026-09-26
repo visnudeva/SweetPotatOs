@@ -25,7 +25,11 @@ assert "grep -q 'swirl$' '${UPD}'" "upgrades swirl package"
 assert "grep -q 'sweetpotatos-materialize' '${UPD}'" "runs materialize after upgrade"
 assert "grep -q 'pacman -Syu' '${UPD}'" "reminds Arch lane is separate"
 assert "! grep -q 'spo-upgrade' '${UPD}'" "no spo-upgrade"
-assert "grep -q '^sweetpotatos$' '${ROOT}/profile/packages.x86_64'" "ISO lists sweetpotatos package"
+assert "grep -q 'swaylock-effects' '${UPD}'" "upgrades swaylock-effects package"
+assert "grep -q 'Removing swaylock' '${UPD}'" "removes stock swaylock before effects"
+assert "grep -q '^swaylock-effects$' '${ROOT}/profile/packages.x86_64'" "ISO lists swaylock-effects"
+assert "grep -q '^clock$' '${ROOT}/profile/airootfs/etc/skel/.config/swaylock/config'" \
+  "skel swaylock config enables clock"
 assert "grep -q 'getent passwd' '${UPD}'" "materialize uses getent for user home"
 assert "grep -q 'Pictures/Wallpapers' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
   "materialize syncs wallpapers into Pictures/Wallpapers"
