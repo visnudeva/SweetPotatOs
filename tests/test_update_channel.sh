@@ -30,6 +30,11 @@ assert "grep -q 'Removing swaylock' '${UPD}'" "removes stock swaylock before eff
 assert "grep -q '^swaylock-effects$' '${ROOT}/profile/packages.x86_64'" "ISO lists swaylock-effects"
 assert "grep -q '^clock$' '${ROOT}/profile/airootfs/etc/skel/.config/swaylock/config'" \
   "skel swaylock config enables clock"
+assert "grep -q '^indicator$' '${ROOT}/profile/airootfs/etc/skel/.config/swaylock/config'" \
+  "skel swaylock config enables effects indicator"
+assert "grep -q 'set \\\$lockcmd swaylock' \
+  '${ROOT}/profile/airootfs/etc/skel/.config/swirl/config'" \
+  "skel uses explicit swaylock config path"
 assert "grep -q 'getent passwd' '${UPD}'" "materialize uses getent for user home"
 assert "grep -q 'Pictures/Wallpapers' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
   "materialize syncs wallpapers into Pictures/Wallpapers"

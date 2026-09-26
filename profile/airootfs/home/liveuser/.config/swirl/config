@@ -3,6 +3,7 @@
 # Read `man 5 sway` for a complete reference.
 
 ### Variables
+set $lockcmd swaylock -f -C $HOME/.config/swaylock/config
 #
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
@@ -122,7 +123,7 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+t exec $term -T tuber -a tuber -e tuber
 
     # Lock screen (Mod+l — vim focus-right moved to arrow keys only)
-    bindsym $mod+l exec swaylock -f
+    bindsym $mod+l exec $lockcmd
 
     # Caffeine: toggle idle lock / display off (lid-close still suspends)
     bindsym $mod+c exec ~/.config/swirl/scripts/caffeine.sh

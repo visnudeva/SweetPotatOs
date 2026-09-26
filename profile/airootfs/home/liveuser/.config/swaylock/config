@@ -1,26 +1,24 @@
-# SweetPotato swaylock
+# SweetPotato swaylock (swaylock-effects)
 # Colors: potato red #a73b50, potato orange #f79b29, charcoal #1d1f21
+#
+# Theme colors first — if a later effects-only option fails to parse,
+# load_config stops and would otherwise leave a stock white lock screen.
 
 daemonize
 show-failed-attempts
 # Live ISO: liveuser has an empty password — allow Enter to unlock.
 # (Installed systems keep ignore-empty-password via skel.)
-indicator-idle-visible
-indicator-radius=150
-indicator-thickness=8
-font=Noto Sans
-font-size=42
-
-# swaylock-effects: clock in the indicator (ignored by stock swaylock)
-clock
-timestr=%H:%M
-datestr=%a, %b %d
 
 # Plain charcoal background (no image)
 color=1d1f21
 scaling=solid_color
 
-# Inside — potato orange; text charcoal for contrast
+indicator-radius=150
+indicator-thickness=8
+font=Noto Sans
+font-size=28
+
+# Inside — potato orange; text charcoal for contrast on the clock
 inside-color=f79b29ff
 inside-clear-color=f79b29ff
 inside-ver-color=f79b29ff
@@ -46,12 +44,19 @@ line-caps-lock-color=00000000
 
 separator-color=00000000
 
-text-color=a73b50ff
-text-clear-color=a73b50ff
-text-ver-color=a73b50ff
+text-color=1d1f21ff
+text-clear-color=1d1f21ff
+text-ver-color=1d1f21ff
 text-wrong-color=a73b50ff
-text-caps-lock-color=a73b50ff
+text-caps-lock-color=1d1f21ff
 
 layout-bg-color=1d1f21cc
 layout-border-color=a73b50ff
 layout-text-color=ffffffff
+
+# swaylock-effects: always show indicator + clock while locked
+indicator
+indicator-idle-visible
+clock
+timestr=%H:%M
+datestr=%a %d %b

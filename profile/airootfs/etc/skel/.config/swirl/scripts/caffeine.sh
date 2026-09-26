@@ -29,9 +29,9 @@ start_swayidle() {
   pkill -x swayidle 2>/dev/null || true
   # Match timeouts from sway/config
   swayidle -w \
-    timeout 300 'swaylock -f' \
+    timeout 300 "swaylock -f -C ${HOME}/.config/swaylock/config" \
     timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep 'swaylock -f' &
+    before-sleep "swaylock -f -C ${HOME}/.config/swaylock/config" &
   disown || true
 }
 
