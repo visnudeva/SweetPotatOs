@@ -33,7 +33,35 @@ export SPO_CHEATSHEET="${SHEET}"
 export SPO_SITE_URL="${SITE_URL}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
-# Request a readable column; compositor then tiles it (~half width via for_window).
+# How many tiled windows already on this workspace? Alone → full width; else → half.
+others_here="$(python3 - <<'PY' 2>/dev/null || echo 0
+import json, subprocess
+tree = json.loads(subprocess.check_output(["swaymsg", "-t", "get_tree"], text=True))
+
+def workspace_for_focused(node, ws=None):
+    if node.get("type") == "workspace":
+        ws = node
+    if node.get("focused"):
+        return ws
+    for child in (node.get("nodes") or []) + (node.get("floating_nodes") or []):
+        found = workspace_for_focused(child, ws)
+        if found is not None:
+            return found
+    return None
+
+def tiled_leaves(node):
+    children = node.get("nodes") or []
+    if not children:
+        if node.get("app_id") or node.get("window_properties"):
+            return 1
+        return 0
+    return sum(tiled_leaves(c) for c in children)
+
+ws = workspace_for_focused(tree)
+print(tiled_leaves(ws) if ws else 0)
+PY
+)"
+
 "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
   -W 78x42 \
   -o colors-dark.background=1d1f21 \
@@ -82,13 +110,15 @@ done
 ' &
 foot_pid=$!
 
-# Prefer a ~half-strip width so the bind list is not crammed into a thin column.
-for _ in 1 2 3 4 5 6 7 8; do
-  if swaymsg -t get_tree 2>/dev/null | grep -Fq "\"app_id\": \"${APP_ID}\""; then
-    swaymsg "[app_id=\"${APP_ID}\"] resize set width 50 ppt" >/dev/null 2>&1 || true
-    break
-  fi
-  sleep 0.05
-done
+# Only share the strip when something else is already here.
+if [[ "${others_here}" =~ ^[0-9]+$ ]] && (( others_here >= 1 )); then
+  for _ in 1 2 3 4 5 6 7 8; do
+    if swaymsg -t get_tree 2>/dev/null | grep -Fq "\"app_id\": \"${APP_ID}\""; then
+      swaymsg "[app_id=\"${APP_ID}\"] resize set width 50 ppt" >/dev/null 2>&1 || true
+      break
+    fi
+    sleep 0.05
+  done
+fi
 
 wait "${foot_pid}"
