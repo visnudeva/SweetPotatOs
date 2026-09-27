@@ -3,16 +3,40 @@
 # SourceForge stays ISO + project web only — do not upload packages there.
 #
 # Usage (from SweetPotatOs root):
-#   ./scripts/publish-repo.sh
+#   ./scripts/publish-repo.sh testing      # default workflow: pacman-repo-testing (prerelease)
+#   ./scripts/publish-repo.sh              # stable/live tag pacman-repo (only when asked)
 # Optional:
 #   TAG=pacman-repo REPO=visnudeva/SweetPotatOs ./scripts/publish-repo.sh
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 REPO_DIR="${ROOT}/repo"
-TAG="${TAG:-pacman-repo}"
 GH_REPO="${REPO:-visnudeva/SweetPotatOs}"
 STAGE="${ROOT}/.publish-repo-stage"
+CHANNEL="${1:-stable}"
+
+case "${CHANNEL}" in
+  stable|live)
+    TAG="${TAG:-pacman-repo}"
+    TITLE="SweetPotatOs pacman repo"
+    PRERELEASE=false
+    ;;
+  testing|test)
+    # Explicit testing never follows a leftover TAG=pacman-repo.
+    TAG=pacman-repo-testing
+    TITLE="SweetPotatOs pacman repo (testing)"
+    PRERELEASE=true
+    ;;
+  -h|--help)
+    echo "Usage: $0 [stable|testing]" >&2
+    exit 0
+    ;;
+  *)
+    echo "Unknown channel: ${CHANNEL} (use stable or testing)" >&2
+    exit 2
+    ;;
+esac
+SERVER="https://github.com/${GH_REPO}/releases/download/${TAG}"
 
 command -v gh >/dev/null 2>&1 || { echo "gh CLI required" >&2; exit 1; }
 command -v repo-add >/dev/null 2>&1 || { echo "pacman-contrib (repo-add) required" >&2; exit 1; }
@@ -32,6 +56,11 @@ if ((${#upload[@]} == 0)); then
   exit 1
 fi
 
+if [[ "${PRERELEASE}" == true ]]; then
+  echo "[*] Channel: testing → ${TAG} (prerelease; live pacman-repo is left alone)"
+else
+  echo "[*] Channel: stable → ${TAG}"
+fi
 echo "[*] Staging ${#upload[@]} packages for ${GH_REPO} @ ${TAG}"
 rm -rf "${STAGE}"
 mkdir -p "${STAGE}"
@@ -62,30 +91,60 @@ if ((${#assets[@]} == 0)); then
 fi
 echo "[*] Uploading ${#assets[@]} assets…"
 
-NOTES="$(cat <<'EOF'
+if [[ "${PRERELEASE}" == true ]]; then
+  NOTES="$(cat <<EOF
+Testing pacman channel for SweetPotatOs. Not for general installs.
+
+Live systems stay on tag \`pacman-repo\`. This release is \`${TAG}\`.
+
+On a test install: \`sudo sweetpotatos-update --testing\`
+Back to live: \`sudo sweetpotatos-update --stable\`
+
+\`\`\`ini
+[sweetpotatos]
+SigLevel = Optional TrustAll
+Server = ${SERVER}
+\`\`\`
+EOF
+)"
+else
+  NOTES="$(cat <<EOF
 Pacman package channel for installed SweetPotatOs systems (not ISOs).
 
 SourceForge Files stays ISO-only. Point pacman at:
 
-```ini
+\`\`\`ini
 [sweetpotatos]
 SigLevel = Optional TrustAll
-Server = https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo
-```
+Server = ${SERVER}
+\`\`\`
 
-Then: `sudo sweetpotatos-update`
+Then: \`sudo sweetpotatos-update\`
+
+Testing builds go to tag \`pacman-repo-testing\` (\`./scripts/publish-repo.sh testing\`).
 EOF
 )"
+fi
+
+if [[ "${PRERELEASE}" == true ]]; then
+  create_flags=(--prerelease --latest=false)
+  edit_flags=(--prerelease --latest=false)
+else
+  create_flags=(--latest)
+  edit_flags=(--prerelease=false --latest)
+fi
 
 if gh release view "${TAG}" -R "${GH_REPO}" >/dev/null 2>&1; then
   echo "[*] Updating existing release ${TAG}"
   gh release upload "${TAG}" "${assets[@]}" -R "${GH_REPO}" --clobber
-  gh release edit "${TAG}" -R "${GH_REPO}" --notes "${NOTES}" >/dev/null
+  gh release edit "${TAG}" -R "${GH_REPO}" --title "${TITLE}" --notes "${NOTES}" \
+    "${edit_flags[@]}" >/dev/null
 else
   echo "[*] Creating release ${TAG}"
   gh release create "${TAG}" "${assets[@]}" -R "${GH_REPO}" \
-    --title "SweetPotatOs pacman repo" \
-    --notes "${NOTES}"
+    --title "${TITLE}" \
+    --notes "${NOTES}" \
+    "${create_flags[@]}"
 fi
 
 echo "[+] Published to https://github.com/${GH_REPO}/releases/tag/${TAG}"

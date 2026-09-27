@@ -156,6 +156,8 @@ sync_common_into() {
   rm -f "${dest}/.config/swirl/scripts/network-applet.py" \
         "${dest}/.config/swirl/scripts/network-tray.sh"
   cp -f "${SP}/swirl/cheatsheet.txt" "${dest}/.config/swirl/cheatsheet.txt"
+  # Drop polished first-hour sheet if a prior sync left one behind.
+  rm -f "${dest}/.config/swirl/cheatsheet-first-hour.txt"
   chmod 755 "${dest}/.config/swirl/scripts/"*.sh
   # User override drop-in: always refresh ISO templates; seed-only for a live $HOME.
   if [[ "${dest}" == "${ISO}"/* ]] || [[ ! -f "${dest}/.config/swirl/config.d/user" ]]; then

@@ -15,25 +15,14 @@ need_repo_pkg() {
 }
 
 ensure_local_repo_pacman() {
+  # Keep packages in ./repo for archiso / publish-repo.sh only.
+  # Never wire [sweetpotatos] into the build host's /etc/pacman.conf — that
+  # breaks Ryoku / GNOME / any non-SPO system when the sync db is missing.
   mkdir -p "${REPO}"
-  if [[ ! -f /etc/pacman.d/sweetpotatos-local.conf ]]; then
-    cat >/etc/pacman.d/sweetpotatos-local.conf <<EOF
-[sweetpotatos]
-SigLevel = Optional TrustAll
-Server = file://${REPO}
-EOF
-  else
-    sed -i "s|^Server = file://.*|Server = file://${REPO}|" /etc/pacman.d/sweetpotatos-local.conf
-  fi
-  if ! grep -q '^Include = /etc/pacman.d/sweetpotatos-local.conf' /etc/pacman.conf \
-    && ! grep -q '^\[sweetpotatos\]' /etc/pacman.conf; then
-    printf '\nInclude = /etc/pacman.d/sweetpotatos-local.conf\n' >>/etc/pacman.conf
-  fi
   if ls "${REPO}"/*.pkg.tar.* >/dev/null 2>&1; then
     repo-add -R "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.* >/dev/null 2>&1 \
       || repo-add "${REPO}/sweetpotatos.db.tar.gz" "${REPO}"/*.pkg.tar.* >/dev/null 2>&1 || true
   fi
-  pacman -Sy --noconfirm >/dev/null 2>&1 || true
 }
 
 build_local_pkg() {

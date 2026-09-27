@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Floating terminal cheatsheet (toggle with Mod+?). SPO colors; w → website.
 # Uses less so the sheet opens at the top (not scrolled to the bottom).
+# Website key is a temporary Swirl bind while this window is focused — less's
+# "shell" action always shows "!done (press RETURN)" and dumps browser stderr.
 set -euo pipefail
 
 APP_ID="sweetpotato-cheatsheet"
@@ -32,6 +34,7 @@ fi
 
 export SPO_CHEATSHEET="${SHEET}"
 export SPO_SITE_URL="${SITE_URL}"
+export SPO_APP_ID="${APP_ID}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
 exec "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
@@ -43,10 +46,21 @@ set -euo pipefail
 PINK="${SPO_PINK}" ORANGE="${SPO_ORANGE}" CREAM="${SPO_CREAM}" MUTED="${SPO_MUTED}" RESET="${SPO_RESET}"
 SHEET="${SPO_CHEATSHEET}"
 SITE_URL="${SPO_SITE_URL}"
+APP_ID="${SPO_APP_ID}"
 
 content="$(mktemp)"
-keyfile="$(mktemp)"
-trap "rm -f \"${content}\" \"${keyfile}\"" EXIT
+opener="$(mktemp)"
+watch_pid=""
+
+cleanup() {
+  if [[ -n "${watch_pid}" ]]; then
+    kill "${watch_pid}" >/dev/null 2>&1 || true
+  fi
+  swaymsg unbindsym w >/dev/null 2>&1 || true
+  swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
+  rm -f "${content}" "${opener}"
+}
+trap cleanup EXIT
 
 {
   while IFS= read -r line || [[ -n "${line}" ]]; do
@@ -67,28 +81,86 @@ trap "rm -f \"${content}\" \"${keyfile}\"" EXIT
         printf "%s%s%s\n" "${CREAM}" "${line}" "${RESET}" ;;
     esac
   done < "${SHEET}"
-  printf "\n%s  w  website · q or Mod+?  close · arrows/pgup scroll%s\n" "${MUTED}" "${RESET}"
 } >"${content}"
 
-# less opens at the top; LESSKEYIN binds w without needing the lesskey binary.
-cat >"${keyfile}" <<EOF
-#command
-w shell xdg-open ${SITE_URL} &\n
-W shell xdg-open ${SITE_URL} &\n
+# Opener: only acts when the cheatsheet is focused (bind is otherwise inactive).
+cat >"${opener}" <<EOF
+#!/bin/bash
+set -euo pipefail
+APP_ID=$(printf '%q' "${APP_ID}")
+SITE_URL=$(printf '%q' "${SITE_URL}")
+focused="\$(swaymsg -t get_tree 2>/dev/null | python3 -c "
+import json, sys
+def walk(n):
+    if n.get(\"focused\"):
+        return n.get(\"app_id\") or \"\"
+    for key in (\"nodes\", \"floating_nodes\"):
+        for c in n.get(key) or []:
+            r = walk(c)
+            if r is not None:
+                return r
+    return None
+print(walk(json.load(sys.stdin)) or \"\")
+" 2>/dev/null || true)"
+[[ "\${focused}" == "\${APP_ID}" ]] || exit 0
+setsid xdg-open "\${SITE_URL}" </dev/null >/dev/null 2>&1 &
 EOF
+chmod 755 "${opener}"
+
+cheat_focused() {
+  local focused
+  focused="$(swaymsg -t get_tree 2>/dev/null | python3 -c "
+import json, sys
+def walk(n):
+    if n.get(\"focused\"):
+        return n.get(\"app_id\") or \"\"
+    for key in (\"nodes\", \"floating_nodes\"):
+        for c in n.get(key) or []:
+            r = walk(c)
+            if r is not None:
+                return r
+    return None
+print(walk(json.load(sys.stdin)) or \"\")
+" 2>/dev/null || true)"
+  [[ "${focused}" == "${APP_ID}" ]]
+}
+
+# Bind w only while this sheet is focused so other apps keep their w key.
+(
+  local_bound=0
+  while true; do
+    if cheat_focused; then
+      if ((local_bound == 0)); then
+        swaymsg "bindsym --no-warn w exec ${opener}" >/dev/null 2>&1 || true
+        swaymsg "bindsym --no-warn Shift+w exec ${opener}" >/dev/null 2>&1 || true
+        local_bound=1
+      fi
+    else
+      if ((local_bound == 1)); then
+        swaymsg unbindsym w >/dev/null 2>&1 || true
+        swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
+        local_bound=0
+      fi
+    fi
+    sleep 0.2
+  done
+) &
+watch_pid=$!
+
+status="${PINK}w${RESET} ${CREAM}website${RESET}  ${PINK}q${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
 
 if command -v less >/dev/null 2>&1; then
-  LESSKEYIN="${keyfile}" less -R -Ps"w website  q close" +1g "${content}"
+  less -R -Ps"${status}" -Pm"${status}" -PM"${status}" +1g "${content}"
 else
-  # Fallback: clear and print (may still end at bottom if the sheet is long).
   printf "\033[2J\033[H"
   cat "${content}"
+  printf "\n%s\n" "${status}"
   while IFS= read -rsn1 k; do
     case "${k}" in
       q|Q) exit 0 ;;
       w|W)
         if command -v xdg-open >/dev/null 2>&1; then
-          xdg-open "${SITE_URL}" >/dev/null 2>&1 || true
+          setsid xdg-open "${SITE_URL}" </dev/null >/dev/null 2>&1 || true
         fi
         ;;
     esac

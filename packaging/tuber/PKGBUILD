@@ -1,6 +1,6 @@
 # Maintainer: visnudeva
 pkgname=tuber
-pkgver=0.1.0.r1.g600af8b
+pkgver=0.1.0.r31.g6995309
 pkgrel=1
 pkgdesc='Light BitTorrent TUI client'
 arch=('x86_64')
@@ -14,7 +14,7 @@ optdepends=(
   'foot: terminal for desktop launcher and magnet opens'
   'kitty: preferred terminal for magnet handoff launcher'
 )
-source=("git+https://github.com/visnudeva/tuber.git#commit=e5ffdf3c4d8eaf1432ace46cebce6d6fe7f3a9ed")
+source=("git+https://github.com/visnudeva/tuber.git#commit=699530930455b9438179cba7a7996c6bc7e97ffa")
 sha256sums=('SKIP')
 
 pkgver() {

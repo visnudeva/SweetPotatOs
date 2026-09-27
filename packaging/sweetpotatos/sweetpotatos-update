@@ -5,6 +5,12 @@
 set -euo pipefail
 
 REPO_NAME=sweetpotatos
+# Same repo name on both channels; the Server URL is the branch.
+# Live stays the default. --testing persists until --stable.
+CONF="${SWEETPOTATOS_UPDATE_CONF:-/etc/pacman.d/sweetpotatos.conf}"
+CHANNEL_FILE="${SWEETPOTATOS_UPDATE_CHANNEL_FILE:-/var/lib/sweetpotatos/update-channel}"
+LIVE_SERVER=https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo
+TESTING_SERVER=https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo-testing
 # Desktop lane packages. If present on [sweetpotatos], install (when missing) or upgrade.
 CANDIDATES=(
   sweetpotatos
@@ -21,8 +27,84 @@ CANDIDATES=(
   python-imageio-ffmpeg
 )
 
-if [[ "${EUID}" -ne 0 ]]; then
+usage() {
+  cat <<EOF
+Usage: sweetpotatos-update [--testing|--stable]
+  (no flag)   update from the channel this machine is already tracking
+  --testing   track pacman-repo-testing until --stable
+  --stable    track the live pacman-repo release
+EOF
+}
+
+requested=""
+case "${1:-}" in
+  "") ;;
+  --testing) requested=testing ;;
+  --stable) requested=stable ;;
+  -h|--help)
+    usage
+    exit 0
+    ;;
+  *)
+    echo "Unknown option: ${1}" >&2
+    usage >&2
+    exit 2
+    ;;
+esac
+if [[ -n "${2:-}" ]]; then
+  echo "Unexpected extra argument: ${2}" >&2
+  usage >&2
+  exit 2
+fi
+
+if [[ "${EUID}" -ne 0 && "${SWEETPOTATOS_UPDATE_APPLY_ONLY:-}" != 1 ]]; then
   exec sudo -- "$0" "$@"
+fi
+
+infer_channel() {
+  if [[ -f "${CHANNEL_FILE}" ]]; then
+    local saved
+    saved="$(tr -d '[:space:]' <"${CHANNEL_FILE}" || true)"
+    case "${saved}" in
+      testing|stable) printf '%s\n' "${saved}"; return ;;
+    esac
+  fi
+  if [[ -f "${CONF}" ]] && grep -qE '^[[:space:]]*Server[[:space:]]*=[[:space:]]*https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo-testing[[:space:]]*$' "${CONF}"; then
+    printf '%s\n' testing
+    return
+  fi
+  printf '%s\n' stable
+}
+
+apply_channel() {
+  local channel="$1" url
+  case "${channel}" in
+    testing) url="${TESTING_SERVER}" ;;
+    stable) url="${LIVE_SERVER}" ;;
+    *)
+      echo "[!] Unknown channel: ${channel}" >&2
+      exit 1
+      ;;
+  esac
+  if [[ ! -f "${CONF}" ]]; then
+    echo "[!] ${CONF} is missing; cannot select a channel." >&2
+    exit 1
+  fi
+  if ! grep -qE '^[[:space:]]*Server[[:space:]]*=[[:space:]]*https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo(-testing)?[[:space:]]*$' "${CONF}"; then
+    echo "[!] ${CONF} is not the GitHub package channel; refusing to switch it." >&2
+    exit 1
+  fi
+  sed -i -E "s|^[[:space:]]*Server[[:space:]]*=[[:space:]]*https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo(-testing)?[[:space:]]*$|Server = ${url}|" "${CONF}"
+  install -d "$(dirname "${CHANNEL_FILE}")"
+  printf '%s\n' "${channel}" >"${CHANNEL_FILE}"
+  echo "[*] Update channel: ${channel}"
+  echo "    Server = ${url}"
+}
+
+channel="${requested:-$(infer_channel)}"
+apply_channel "${channel}"
+if [[ "${SWEETPOTATOS_UPDATE_APPLY_ONLY:-}" == 1 ]]; then
+  exit 0
 fi
 
 echo "[*] Syncing package databases…"

@@ -76,7 +76,7 @@ Server = https://github.com/visnudeva/SweetPotatOs/releases/download/…/
 6. Keep **point-release ISOs on SourceForge**; do **not** bring back overlay
    `spo-upgrade` or SF `Files/repo/`.
 
-Skip for v1: testing channel, Snapper/boot-guard, Hub UI, doctor reconcilers.
+Skip for v1: Snapper/boot-guard, Hub UI, doctor reconcilers.
 
 ## Alternatives
 
@@ -90,5 +90,16 @@ holds the package set. Publish with `./scripts/publish-repo.sh`. The `sweetpotat
 package (≥ 2026.10.2) installs `/etc/pacman.d/sweetpotatos.conf`,
 `sweetpotatos-update`, and `sweetpotatos-materialize`. Swirl user overrides live in
 `~/.config/swirl/config.d/user` (seeded once; never overwritten).
+
+**Testing channel:** package builds stay here until an explicit “push to stable”.
+`./scripts/publish-repo.sh testing` uploads the same `repo/`
+snapshot to prerelease tag `pacman-repo-testing` and leaves `pacman-repo` alone.
+`./scripts/publish-repo.sh` (no argument) is the stable publish.
+Both tags serve a database named `sweetpotatos.db`; the branch is the Server URL.
+`sweetpotatos-update --testing` rewrites `/etc/pacman.d/sweetpotatos.conf` to that
+URL and remembers it in `/var/lib/sweetpotatos/update-channel` until `--stable`.
+The first package that contains `--testing` has to be installed on the test
+machine once (point its Server at `pacman-repo-testing`, then `pacman -Sy &&
+pacman -S sweetpotatos`) before the flag exists there.
 
 **Still later:** signed keyring, theme-only package split, richer doctor/reconcile.

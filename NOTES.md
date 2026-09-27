@@ -66,10 +66,17 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - **Installed-system package channel (GitHub, not SourceForge):**
   - **Primary delivery for Third Harvest+ installs:** theme/desktop fixes ship via
     `sweetpotatos-update` — bump `packaging/sweetpotatos` (and swirl when needed),
-    rebuild into `repo/`, then `./scripts/publish-repo.sh`. Point-release ISOs are
+    rebuild into `repo/`, then `./scripts/publish-repo.sh testing`. Point-release ISOs are
     for new installs / marketing, not required for existing boxes.
-  - Publish: `./scripts/publish-repo.sh` → GitHub release tag `pacman-repo`
-  - Server: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
+  - **Stay on testing until the user says to push to stable.** A plain “publish”
+    means the testing release. Live `pacman-repo` only after an explicit request
+    such as “push to stable”.
+  - Testing: `./scripts/publish-repo.sh testing` → prerelease tag `pacman-repo-testing`
+    (`https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo-testing`).
+    On a SweetPotatOs install, `sudo sweetpotatos-update --testing` tracks that tag
+    until `sudo sweetpotatos-update --stable`. Do not point this Ryoku host at either tag.
+  - Stable (only when asked): `./scripts/publish-repo.sh` → GitHub release tag `pacman-repo`
+  - Live server: `https://github.com/visnudeva/SweetPotatOs/releases/download/pacman-repo`
   - CLI: `sweetpotatos-update` (installs new SPO packages on the channel + upgrades existing) + `sweetpotatos-materialize` (shipped `~/.config` with user overlay; also refreshes shipped wallpapers into `~/Pictures/Wallpapers` and `~/.local/share/backgrounds` without changing waypaper’s active selection or deleting user extras)
   - Unit tests: `./tests/run.sh`
   - SourceForge Files stays **ISO + project web only** (see `docs/updates-design.md`)
@@ -123,7 +130,13 @@ Goal: a small GUI so users can recolor the desktop without editing configs by ha
 
 **Light-mode caveat:** needs a real light text/border set for contrast — don’t only swap the charcoal hex.
 
-**Build-host rule:** develop/publish on the SweetPotatOs channel only; do **not** install SPO packages or run SPO lockers on the Ryoku host (mixing broke that desktop before).
+**Build-host rule (Ryoku):** develop/publish SweetPotatOs packages without installing them on this host. Do **not** run SPO lockers / materialize / `sweetpotatos-update` here. `build.sh` must **never** add `[sweetpotatos]` / `sweetpotatos-local.conf` to the host’s `/etc/pacman.conf`.
+
+**After any SweetPotatOs build/publish session on this machine — clean Ryoku before stopping:**
+1. Remove host pacman wiring if present: drop `Include = /etc/pacman.d/sweetpotatos-local.conf` from `/etc/pacman.conf`; delete `/etc/pacman.d/sweetpotatos-local.conf` (+ `.bak`) and any `/var/lib/pacman/sync/sweetpotatos.*`.
+2. Confirm `grep -r sweetpotatos /etc/pacman.conf /etc/pacman.d/` is empty (aside from intentional unrelated files).
+3. Confirm `sudo pacman -Sy` (or a dry `pacman -S --print-format '%n' <pkg>`) works without “database file for 'sweetpotatos'”.
+4. Do not leave SPO packages installed on Ryoku (`pacman -Q sweetpotatos swirl` should be empty unless the user asked otherwise).
 
 ## SourceForge
 

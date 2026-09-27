@@ -160,9 +160,16 @@
       grid-template-columns: 1fr;
       gap: 1rem;
       margin: 0 0 1.5rem;
+      align-items: stretch;
     }
     @media (min-width: 640px) {
-      .banner-row { grid-template-columns: 1fr 1fr; }
+      .banner-row { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); }
+    }
+    .banner-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 0;
     }
     .countdown {
       margin: 0;
@@ -215,32 +222,38 @@
       text-decoration: none;
     }
     .countdown.out a:hover { text-decoration: underline; }
-    .fourth-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      min-width: 0;
-    }
     .rolling-note {
       margin: 0;
-      padding: 0.85rem 1rem;
+      padding: 1.25rem 1.4rem;
       border-radius: 12px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-left: 4px solid var(--orange);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 1.05rem;
+      line-height: 1.55;
       text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0.75rem;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .rolling-note p {
+      margin: 0;
     }
     .rolling-note strong { color: var(--text); }
     .rolling-note code {
+      display: inline;
       background: var(--surface-raised);
       color: var(--orange);
-      padding: 0.1rem 0.35rem;
-      border-radius: 4px;
-      font-size: 0.92em;
+      padding: 0.2rem 0.45rem;
+      border-radius: 6px;
+      font-size: 0.95em;
       border: 1px solid var(--border);
+      white-space: nowrap;
     }
     footer {
       text-align: center;
@@ -269,22 +282,22 @@
 
   <main>
     <div class="banner-row">
-      <aside class="countdown out" aria-label="Third Harvest released">
-        <p class="countdown-label">
-          <strong>Third Harvest</strong> ISO
-        </p>
-        <p class="countdown-days">Out now</p>
-        <p class="countdown-sub">
-          Released 24 September 2026 ·
-          <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.10_Third_Harvest/">Download</a>
-        </p>
-      </aside>
-      <div class="fourth-stack">
-        <p class="rolling-note" aria-label="Fourth Harvest changes on the update channel">
-          Desktop changes below are already on the
-          <code>sweetpotatos-update</code> channel for <strong>Third Harvest</strong> installs —
-          no need to wait for the Fourth Harvest ISO.
-        </p>
+      <div class="rolling-note" aria-label="Fourth Harvest changes on the update channel">
+        <p>Desktop changes below are already live for <strong>Third Harvest</strong></p>
+        <p>installs via <code>sudo sweetpotatos-update</code></p>
+        <p>No need to wait for the Fourth Harvest ISO.</p>
+      </div>
+      <div class="banner-stack">
+        <aside class="countdown out" aria-label="Third Harvest released">
+          <p class="countdown-label">
+            <strong>Third Harvest</strong> ISO
+          </p>
+          <p class="countdown-days">Out now</p>
+          <p class="countdown-sub">
+            Released 24 September 2026 ·
+            <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.10_Third_Harvest/">Download</a>
+          </p>
+        </aside>
         <aside
           class="countdown"
           id="fourth-harvest-countdown"
@@ -317,12 +330,13 @@
         <code>sweetpotatos-update</code> channel for Third Harvest installs
       </p>
       <ul>
-        <li><strong>swaylock-effects</strong> replaces stock <code>swaylock</code> — same SweetPotato charcoal / orange / pink lock theme, now with a lock-screen <strong>clock and date</strong> in the indicator.</li>
-        <li>Clock uses a larger bold SPO-pink time/date; lock always loads
-          <code>~/.config/swaylock/config</code> so the theme cannot fall back to a blank white screen.</li>
-        <li><strong>Mod+?</strong> floating cheatsheet (~50% width) with SPO colors, a
-          <code>sudo sweetpotatos-update</code> hint, and <code>w</code> to open the project website.</li>
-        <li>Third Harvest systems pick this up with <code>sudo sweetpotatos-update</code> only (stock <code>swaylock</code> is replaced automatically; Swirl reloads itself). Then try <code>Mod+l</code> or <code>Mod+?</code>.</li>
+        <li><strong>swaylock-effects</strong> replaces stock <code>swaylock</code>, keeping the SweetPotato charcoal / orange / pink lock theme and adding a lock-screen <strong>clock and date</strong> (larger bold SPO-pink text).</li>
+        <li><strong>Mod+?</strong> floating help cheatsheet (~50% × 90%, centered): SPO colors, opens at the <strong>top</strong> of the sheet, <code>w</code> opens the project website, and a <strong>Desktop / package updates</strong> line for <code>sudo sweetpotatos-update</code>.</li>
+        <li>Login tip now says <em>Mod+? — keybinds &amp; project links</em>.</li>
+        <li><code>sudo sweetpotatos-update</code> alone is enough: it upgrades packages, refreshes shipped config, reloads Swirl, and does not require <code>Mod+Shift+c</code>.</li>
+        <li>Project site: contact form on
+          <a href="https://sweetpotatos.sourceforge.io/#contact">sweetpotatos.sourceforge.io</a>
+          (email used only to reply).</li>
       </ul>
     </article>
 
