@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Changelog</title>
   <meta name="description" content="Release notes for SweetPotatOs Harvest ISOs from First Harvest onward.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
   <style>
     :root {
       --red: #a73b50;
@@ -330,15 +330,19 @@
         <code>sweetpotatos-update</code> channel for Third Harvest installs
       </p>
       <ul>
+        <li><strong>Cyberpunk</strong> is a new light theme: yellow <code>#ffef00</code> and blue <code>#51bad9</code> on a cool white desktop. The bar is dark so the yellow shows. It is in the light set, after Blueberry. Press <code>Mod+Shift+t</code> until the notice says Cyberpunk. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
+        <li><strong>Boot splash.</strong> The white logo is the cleaned mark: two leaves, a short stem, and the cut end of the potato facing you. Reboot after updating. It shows when you turn the computer on and when you turn it off.</li>
+        <li>Starting up was still showing an older white logo, because that picture is stored in the boot image. Updating rebuilds the boot image so startup matches shutdown.</li>
+        <li><strong>Thunar</strong> shows a preview of pictures, not only the image-file icon. Reopen Thunar after updating.</li>
+        <li><strong>Rebrand.</strong> The mark is a new sweet potato: two leaves on a short stem, the cut end facing you, and the word <strong>sweetpotatos</strong> underneath. The old leaning potato is retired. Fastfetch, the menu icon, the boot splash, and this website use the new mark. The boot splash is a white version of it. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
         <li>New wallpapers are in the picker (<code>Mod+Shift+w</code>). New installs start on <strong>NewSpoNeon</strong>. The wallpaper already on your PC stays, including any older ones you still have.</li>
-        <li>The boot splash uses the new white logo.</li>
         <li>An update keeps the color theme you picked. It no longer snaps back to Sweet potato.</li>
         <li><strong>Brave</strong> uses the same window frame as the other apps. It no longer draws its own rounded corners. Quit Brave and open it again after updating.</li>
         <li>Two wallpapers were added: <strong>SpoKawai</strong> and <strong>Spo3d</strong>. Open the wallpaper picker with <code>Mod+Shift+w</code>. The wallpaper you are using stays as it is.</li>
         <li>When two or more windows are open, an 8px gap shows the wallpaper around each one. The space between them is 16px. A single window stays edge to edge.</li>
         <li>In <strong>Spore</strong>, the first favorite lines up with the others. The first file on the Files tab and the search line on Radio do too. Quit Spore and open it again after updating.</li>
         <li>The thin border around windows such as foot is slightly rounded (8 pixels). Shadows stay off. Apps that draw their own title bar, such as Thunar, stay square. Close and reopen a window after updating to see the curve.</li>
-        <li><code>Mod+Shift+t</code> cycles color themes on the current surface. <code>Mod+Ctrl+t</code> switches between the dark set (Sweet potato, Ube, Lime, Monochrome) and the light set (Dragon fruit, Sweet potato, Blueberry, Monochrome). The bar, Thunar, foot, notifications, the lock screen, and fastfetch follow the theme. On light themes the tray icons are dark, and Thunar’s file list and menu bar use the same off-white as the bar. The Places selection uses the theme accent. Geany stays on its dark editor. <strong>Tuber</strong> and <strong>Spore</strong> follow the theme the next time they open.</li>
+        <li><code>Mod+Shift+t</code> cycles color themes on the current surface. <code>Mod+Ctrl+t</code> switches between the dark set (Sweet potato, Ube, Lime, Monochrome) and the light set (Dragon fruit, Sweet potato, Blueberry, Cyberpunk, Monochrome). The bar, Thunar, foot, notifications, the lock screen, and fastfetch follow the theme. On light themes the tray icons are dark, and Thunar’s file list and menu bar use the same off-white as the bar. The Places selection uses the theme accent. Geany stays on its dark editor. <strong>Tuber</strong> and <strong>Spore</strong> follow the theme the next time they open.</li>
         <li>The status line uses icons for CPU, memory, disk, brightness, battery, volume, and Wi-Fi. The percentages stay. Volume sits after brightness, and the battery sits just before Wi-Fi. The window title, the Wi-Fi name, and the date stay as text. The tray icons after the clock sit closer together. Opening the app menu (<code>Mod+Space</code>) no longer leaves a white pixel from the status line under the app names.</li>
         <li>The power-off confirmation (<code>Mod+Escape</code> or <code>Mod+O</code>) stays above the status bar. Open windows do not slide up under the yellow bar, including when you switch to an empty workspace. Pressing the shortcut again does not open a second bar.</li>
         <li>When a workspace has no window, the label next to the CPU percentage is just that workspace’s number. The dots on the left of the bar stay.</li>
