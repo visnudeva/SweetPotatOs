@@ -4,6 +4,24 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-92
+What changed: swayimg tiles with the other windows, and its corners are rounded. Escape closes a window, the same as Mod+q. Fish is installed. The login shell stays bash until you run chsh -s /usr/bin/fish.
+
+@2026.10.3-91
+What changed: Caffeine no longer leaves the computer half off. Power off turns it fully off. Closing the lid still sleeps, and it wakes again.
+
+@2026.10.3-90
+What changed: The install image is Fourth Harvest.
+
+@2026.10.3-89
+What changed: Neon kanji 2 is removed from the wallpaper folder. It was the same picture as Neon kanji default. The keyboard stays on the layout chosen during install.
+
+@2026.10.3-87
+What changed: The update copies Neon kanji default into the wallpaper folder, and replaces New Spo Neon with the lighter picture. The wallpaper you are using stays.
+
+@2026.10.3-86
+What changed: Neon kanji default is in the wallpaper picker. New Spo Neon is the lighter picture, and Pixel is the new one too. The wallpaper you are using stays.
+
 @2026.10.3-85
 What changed: Mod+g turns rounded corners and the gaps between windows off and on. Press it again to bring them back.
 

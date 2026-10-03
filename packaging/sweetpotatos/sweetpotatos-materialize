@@ -50,6 +50,8 @@ sync_wallpapers() {
     seen="${seen}${dest_dir}|"
 
     mkdir -p "${dest_dir}"
+    # Same picture as Neon kanji default. Drop the extra copy.
+    rm -f "${dest_dir}/SPONeonKanji2.png"
     n=0
     shopt -s nullglob
     for f in "${src}"/*.png "${src}"/*.jpg "${src}"/*.jpeg "${src}"/*.webp; do
@@ -117,6 +119,37 @@ if [[ -f "${HOME}/.swaylock/config" ]]; then
   echo "[*] Moving aside ~/.swaylock/config (shadows SweetPotato swaylock theme)"
   mv -f "${HOME}/.swaylock/config" "${HOME}/.swaylock/config.pre-sweetpotatos"
 fi
+
+# The shipped config carries a US line so new files have a layout. Each
+# install already recorded its own choice in the Xorg keyboard file.
+# Put that back after the copy, so an update does not give everyone US or FR.
+apply_install_keyboard() {
+  local cfg="${DEST}/swirl/config"
+  local xorg=/etc/X11/xorg.conf.d/00-keyboard.conf
+  local layout="" variant="" esc escv
+  [[ -f "${cfg}" && -r "${xorg}" ]] || return 0
+  layout="$(sed -n 's/.*Option[[:space:]]*"XkbLayout"[[:space:]]*"\([^"]*\)".*/\1/p' "${xorg}" | head -1)"
+  variant="$(sed -n 's/.*Option[[:space:]]*"XkbVariant"[[:space:]]*"\([^"]*\)".*/\1/p' "${xorg}" | head -1)"
+  [[ -n "${layout}" ]] || return 0
+  esc="${layout//\\/\\\\}"
+  esc="${esc//&/\\&}"
+  esc="${esc//|/\\|}"
+  if grep -q '^[[:space:]]*xkb_layout' "${cfg}"; then
+    sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc}\"|" "${cfg}" || true
+  fi
+  if [[ -n "${variant}" ]]; then
+    escv="${variant//\\/\\\\}"
+    escv="${escv//&/\\&}"
+    escv="${escv//|/\\|}"
+    if grep -q '^[[:space:]]*xkb_variant' "${cfg}"; then
+      sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${escv}\"|" "${cfg}" || true
+    else
+      sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${cfg}" || true
+    fi
+  fi
+}
+
+apply_install_keyboard
 
 mv -f "${MANIFEST}.new" "${MANIFEST}"
 # Drop retired Wi‑Fi tray experiments and the Mod+P pin helper.

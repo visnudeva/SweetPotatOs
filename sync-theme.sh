@@ -136,7 +136,8 @@ sync_common_into() {
     "${dest}/.config/kanshi" \
     "${dest}/.local/share/applications" \
     "${dest}/.config/gtk-3.0" "${dest}/.config/gtk-4.0" \
-    "${dest}/.config/foot" "${dest}/.config/mako" "${dest}/.config/swaylock" \
+    "${dest}/.config/foot" "${dest}/.config/swayimg" \
+    "${dest}/.config/mako" "${dest}/.config/swaylock" \
     "${dest}/.config/geany/colorschemes" "${dest}/.config/xsettingsd" \
     "${dest}/.config/fastfetch" "${dest}/.config/environment.d" \
     "${dest}/.config/xdg-desktop-portal" "${dest}/.config/networkmanager-dmenu" \
@@ -179,6 +180,8 @@ sync_common_into() {
   cp -f "${SP}/gtk-3.0/"* "${dest}/.config/gtk-3.0/"
   cp -f "${SP}/gtk-4.0/"* "${dest}/.config/gtk-4.0/"
   cp -f "${SP}/foot/foot.ini" "${dest}/.config/foot/"
+  rm -f "${dest}/.config/swayimg/config"
+  cp -f "${SP}/swayimg/init.lua" "${dest}/.config/swayimg/init.lua"
   cp -f "${SP}/mako/config" "${dest}/.config/mako/"
   cp -f "${SP}/swaylock/config" "${dest}/.config/swaylock/"
   cp -f "${SP}/geany/colorschemes/sweetpotato.conf" "${dest}/.config/geany/colorschemes/"

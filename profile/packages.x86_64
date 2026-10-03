@@ -87,6 +87,7 @@ wpa_supplicant
 xdg-utils
 xfsprogs
 zsh
+fish
 # Graphics
 mesa
 vulkan-intel

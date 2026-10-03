@@ -90,8 +90,10 @@ seat * xcursor_theme capitaine-cursors 24
     # Start a terminal
     bindsym $mod+Return exec $term
 
-    # Kill focused window
+    # Kill focused window. Escape is the same action.
+    # Resize mode still owns Escape (leave the mode).
     bindsym $mod+q kill
+    bindsym Escape kill
 
     # App launcher
     bindsym $mod+space exec $menu
@@ -151,9 +153,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Exit Swirl (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'You pressed the exit shortcut. Do you really want to exit Swirl? This will end your Wayland session.' -B 'Yes, exit Swirl' 'swaymsg exit'
 
-    # Power off
-    bindsym $mod+o exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
-    bindsym $mod+Escape exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
+    # Power off (drops the caffeine idle lock first)
+    bindsym $mod+o exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' ~/.config/swirl/scripts/poweroff.sh
+    bindsym $mod+Escape exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' ~/.config/swirl/scripts/poweroff.sh
 #
 # Moving around:
 #

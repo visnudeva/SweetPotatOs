@@ -42,8 +42,32 @@ _refresh_boot_splash() {
   mkinitcpio -P
 }
 
+# The updater copies these only when it can see a desktop user. Do it here too,
+# inside the package transaction, so an update still refreshes the picker.
+_sync_wallpapers() {
+  local src=/usr/share/sweetpotato/backgrounds
+  local uid gid home dest base
+  [[ -d "${src}" ]] || return 0
+  while IFS=: read -r _ _ uid gid _ home _; do
+    [[ "${uid}" =~ ^[0-9]+$ ]] || continue
+    [[ "${uid}" -ge 1000 ]] || continue
+    [[ "${home}" == /home/* && -d "${home}" ]] || continue
+    for dest in "${home}/Pictures/Wallpapers" "${home}/.local/share/backgrounds"; do
+      mkdir -p "${dest}"
+      rm -f "${dest}/SPONeonKanji2.png"
+      for base in "${src}"/*.png; do
+        [[ -f "${base}" ]] || continue
+        cp -f "${base}" "${dest}/"
+        chown "${uid}:${gid}" "${dest}/$(basename "${base}")" 2>/dev/null || true
+      done
+      chown "${uid}:${gid}" "${dest}" 2>/dev/null || true
+    done
+  done < /etc/passwd
+}
+
 post_upgrade() {
   _ensure_pacman_include
+  _sync_wallpapers
   _install_logos
   if command -v sweetpotatos-branding >/dev/null 2>&1; then
     sweetpotatos-branding || true

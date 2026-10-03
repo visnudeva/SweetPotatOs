@@ -1,7 +1,7 @@
 NAME="SweetPotatOs"
-PRETTY_NAME="SweetPotatOs 2026.10 Third Harvest"
+PRETTY_NAME="SweetPotatOs 2026.10 Fourth Harvest"
 VERSION_ID=2026.10
-VERSION="2026.10 Third Harvest"
+VERSION="2026.10 Fourth Harvest"
 ID=sweetpotatos
 ID_LIKE=arch
 BUILD_ID=2026.10.1

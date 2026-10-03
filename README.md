@@ -122,6 +122,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | Editor | Geany |
 | Calculator | galculator |
 | Terminal | foot |
+| Shell | fish (`chsh -s /usr/bin/fish`; login stays bash until then) |
 | Video | mpv + yt-dlp |
 | Image edit | GIMP |
 | Music / radio | Spore |
@@ -155,7 +156,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |
 | `Mod+Print` | Screen record toggle (region + audio → `~/Videos`) |
-| `Mod+q` | Kill focused window |
+| `Mod+q` / `Esc` | Kill focused window |
 | `Mod+number` | Change workspaces |
 | `Mod+Tab` | Workspace overview (Super+drag windows between desktops) |
 | `Mod+Shift+Tab` | Overview of windows on the current desktop |

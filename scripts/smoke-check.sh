@@ -56,6 +56,10 @@ check_file "${ISO}/etc/systemd/system/multi-user.target.wants/power-profiles-dae
 check_grep '\[colors-dark\]' "${ISO}/etc/skel/.config/foot/foot.ini" "foot uses [colors-dark]"
 check_grep 'alpha=1\.0' "${ISO}/etc/skel/.config/foot/foot.ini" "foot opaque alpha=1.0"
 check_grep 'set \$term foot' "${ISO}/etc/skel/.config/swirl/config" "skel Mod+Return → foot"
+check_grep 'bindsym Escape kill' "${ISO}/etc/skel/.config/swirl/config" "skel Escape closes the window"
+check_grep 'swayimg.overlay = false' "${ISO}/etc/skel/.config/swayimg/init.lua" "swayimg tiles instead of floating"
+check_grep 'swayimg.decoration = true' "${ISO}/etc/skel/.config/swayimg/init.lua" "swayimg uses a server border so corners round"
+[[ ! -e "${ISO}/etc/skel/.config/swayimg/config" ]] && ok "no leftover swayimg ini" || bad "swayimg ini still present"
 check_grep 'set \$term foot' "${ISO}/home/liveuser/.config/swirl/config" "liveuser Mod+Return → foot"
 check_grep 'sleep 3' "${ISO}/etc/skel/.config/swirl/scripts/status.sh" "status bar every 3s"
 check_grep 'default_input = password' "${ISO}/etc/ly/config.ini" "Ly focuses password"
@@ -113,6 +117,7 @@ check_grep 'start-kanshi\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel start
 check_grep 'save-display-layout\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel save-display-layout keybind"
 check_grep 'sway/workspaces' "${ISO}/etc/skel/.config/swirl/config" "skel includes sway workspaces"
 check_grep '^sweetpotatos$' "${ROOT}/profile/packages.x86_64" "sweetpotatos package listed"
+check_grep '^fish$' "${ROOT}/profile/packages.x86_64" "fish shell listed for the ISO"
 check_file "${ISO}/etc/skel/.config/swirl/config.d/user"
 check_grep 'include ~/.config/swirl/config.d/user' \
   "${ISO}/etc/skel/.config/swirl/config" "skel loads user override last"

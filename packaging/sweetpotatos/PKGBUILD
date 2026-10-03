@@ -1,12 +1,12 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=85
+pkgrel=92
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
 license=('MIT')
-depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'libnotify' 'ttf-nerd-fonts-symbols-mono' 'tumbler')
+depends=('bash' 'fish' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'libnotify' 'ttf-nerd-fonts-symbols-mono' 'tumbler')
 optdepends=(
   'swirl: desktop compositor'
   'yay-bin: AUR helper'
@@ -117,7 +117,7 @@ package() {
 
   # Shipped desktop config base for sweetpotatos-materialize.
   local dir
-  for dir in swirl foot mako gtk-3.0 gtk-4.0 fastfetch swaylock xsettingsd \
+  for dir in swirl foot swayimg mako gtk-3.0 gtk-4.0 fastfetch swaylock xsettingsd \
              networkmanager-dmenu geany environment.d kanshi; do
     if [[ -d "${skel}/${dir}" ]]; then
       mkdir -p "${pkgdir}/usr/share/sweetpotato/config/${dir}"
