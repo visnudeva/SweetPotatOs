@@ -152,9 +152,11 @@ sync_common_into() {
   cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
   cp -f "${SP}/swirl/scripts/autotile_lib.lua" "${dest}/.config/swirl/scripts/autotile_lib.lua"
-  # Drop retired Wi‑Fi tray experiments (nm-applet is the tray icon again).
+  # Drop retired Wi‑Fi tray experiments (nm-applet is the tray icon again)
+  # and the Mod+P pin helper.
   rm -f "${dest}/.config/swirl/scripts/network-applet.py" \
-        "${dest}/.config/swirl/scripts/network-tray.sh"
+        "${dest}/.config/swirl/scripts/network-tray.sh" \
+        "${dest}/.config/swirl/scripts/pin-window.sh"
   cp -f "${SP}/swirl/cheatsheet.txt" "${dest}/.config/swirl/cheatsheet.txt"
   # Drop polished first-hour sheet if a prior sync left one behind.
   rm -f "${dest}/.config/swirl/cheatsheet-first-hour.txt"

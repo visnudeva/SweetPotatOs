@@ -1,0 +1,39 @@
+diff --git a/internal/ui/favorites.go b/internal/ui/favorites.go
+index 18cb436..c67729c 100644
+--- a/internal/ui/favorites.go
++++ b/internal/ui/favorites.go
+@@ -63,7 +63,7 @@ func (m *FavModel) handleKey(msg tea.KeyPressMsg) tea.Cmd {
+ func (m *FavModel) view() string {
+ 	var sb strings.Builder
+ 	sb.WriteString(headerStyle.Render(" Favorites") + "\n")
+-	sb.WriteString(dimStyle.Render("  [enter: play  r: remove  up/down navigate]\n"))
++	sb.WriteString(dimStyle.Render("  [enter: play  r: remove  up/down navigate]") + "\n")
+ 	favs := m.app.favorites
+ 	if len(favs) == 0 {
+ 		sb.WriteString(dimStyle.Render("\n  No favorites yet.\n  Press f while browsing radio to add stations.\n"))
+diff --git a/internal/ui/local.go b/internal/ui/local.go
+index cc6e076..e0fef51 100644
+--- a/internal/ui/local.go
++++ b/internal/ui/local.go
+@@ -87,7 +87,7 @@ func (m *LocalModel) handleKey(msg tea.KeyPressMsg) tea.Cmd {
+ func (m *LocalModel) view() string {
+ 	var sb strings.Builder
+ 	sb.WriteString(headerStyle.Render(" Files: "+m.dir) + "\n")
+-	sb.WriteString(dimStyle.Render("  [up/down navigate  enter open/play  backspace up]\n"))
++	sb.WriteString(dimStyle.Render("  [up/down navigate  enter open/play  backspace up]") + "\n")
+ 	if m.err != nil {
+ 		sb.WriteString(errorStyle.Render("  Error: " + m.err.Error() + "\n"))
+ 		return sb.String()
+diff --git a/internal/ui/radio.go b/internal/ui/radio.go
+index b7d3e99..59145be 100644
+--- a/internal/ui/radio.go
++++ b/internal/ui/radio.go
+@@ -115,7 +115,7 @@ func (m *RadioModel) handleSearchInput(msg tea.KeyPressMsg) tea.Cmd {
+ func (m *RadioModel) view() string {
+ 	var sb strings.Builder
+ 	sb.WriteString(headerStyle.Render(" Radio"))
+-	sb.WriteString(dimStyle.Render("  [type to search  enter play  / new search  f fav]\n"))
++	sb.WriteString(dimStyle.Render("  [type to search  enter play  / new search  f fav]") + "\n")
+ 
+ 	prompt := m.search
+ 	if m.typing {

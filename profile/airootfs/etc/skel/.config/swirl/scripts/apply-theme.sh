@@ -73,10 +73,30 @@ iconview.content-view.check:checked:not(list),
 EOF
 }
 
+THEME_SCRIPT="${HOME}/.config/swirl/scripts/theme.sh"
+if [[ -x "${THEME_SCRIPT}" ]]; then
+  SPO_CONFIG_ROOT="${HOME}/.config" "${THEME_SCRIPT}" apply --quiet || true
+fi
+if [[ -f "${HOME}/.config/sweetpotatos/active.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "${HOME}/.config/sweetpotatos/active.sh"
+fi
+
 THEME="$(pick_gtk_theme)"
-ICONS="${ICONS:-Papirus-Dark}"
+if [[ -n "${SPO_GTK_THEME:-}" ]]; then
+  THEME="${SPO_GTK_THEME}"
+fi
+ICONS="${SPO_ICONS:-${ICONS:-Papirus-Dark}}"
 CURSOR="${CURSOR:-capitaine-cursors}"
 FONT="${FONT:-Noto Sans, 10}"
+SPO_MODE="${SPO_MODE:-dark}"
+SPO_SCHEME="${SPO_SCHEME:-prefer-dark}"
+SPO_ADWAITA_ACCENT="${SPO_ADWAITA_ACCENT:-orange}"
+if [[ "${SPO_MODE}" == light ]]; then
+  PREFER_DARK=0
+else
+  PREFER_DARK=1
+fi
 
 # Prefer installed capitaine variant if needed
 if [[ ! -d "/usr/share/icons/${CURSOR}" ]] && [[ ! -d "${HOME}/.icons/${CURSOR}" ]]; then
@@ -99,6 +119,7 @@ for ini in "${HOME}/.config/gtk-3.0/settings.ini" "${HOME}/.config/gtk-4.0/setti
       -e "s/^gtk-theme-name=.*/gtk-theme-name=${THEME}/" \
       -e "s/^gtk-icon-theme-name=.*/gtk-icon-theme-name=${ICONS}/" \
       -e "s/^gtk-cursor-theme-name=.*/gtk-cursor-theme-name=${CURSOR}/" \
+      -e "s/^gtk-application-prefer-dark-theme=.*/gtk-application-prefer-dark-theme=${PREFER_DARK}/" \
       "${ini}"
   fi
 done
@@ -108,8 +129,8 @@ if command -v gsettings >/dev/null 2>&1; then
   gsettings set org.gnome.desktop.interface gtk-theme "${THEME}" || true
   gsettings set org.gnome.desktop.interface icon-theme "${ICONS}" || true
   gsettings set org.gnome.desktop.interface cursor-theme "${CURSOR}" || true
-  gsettings set org.gnome.desktop.interface color-scheme prefer-dark 2>/dev/null || true
-  gsettings set org.gnome.desktop.interface accent-color orange 2>/dev/null || true
+  gsettings set org.gnome.desktop.interface color-scheme "${SPO_SCHEME}" 2>/dev/null || true
+  gsettings set org.gnome.desktop.interface accent-color "${SPO_ADWAITA_ACCENT}" 2>/dev/null || true
 fi
 
 # xfconf (Thunar / XFCE apps)

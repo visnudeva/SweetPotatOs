@@ -76,7 +76,9 @@ gesture_scroll_sensitivity 1.0
 bindgesture swipe:4:up workspace next_on_output
 bindgesture swipe:4:down workspace prev_on_output
 
-# Autotile: pair columns (odd last = full, even = 50/50)
+# Autotile: pair columns (odd last = full, even = 50/50).
+# Opens an 8px gap around tiled windows only when more than one is open.
+# Mod+g turns that gap and the rounded corners off together.
 lua ~/.config/swirl/scripts/autotile.lua
 
 seat * xcursor_theme capitaine-cursors 24
@@ -107,6 +109,10 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Shift+d exec ~/.config/swirl/scripts/nwg-displays.sh
     bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh
 
+    # Theme: next preset on this surface, or switch dark / light
+    bindsym $mod+Shift+t exec ~/.config/swirl/scripts/theme.sh next
+    bindsym $mod+Ctrl+t exec ~/.config/swirl/scripts/theme.sh toggle
+
     # Start your web browser
     bindsym $mod+w exec $web
 
@@ -128,6 +134,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Caffeine: toggle idle lock / display off (lid-close still suspends)
     bindsym $mod+c exec ~/.config/swirl/scripts/caffeine.sh
 
+    # Rounded corners and the gap between tiled windows
+    bindsym $mod+g exec ~/.config/swirl/scripts/frame.sh toggle
+
     # Floating keybind cheatsheet (toggle)
     bindsym $mod+question exec ~/.config/swirl/scripts/cheatsheet.sh
     bindsym $mod+slash exec ~/.config/swirl/scripts/cheatsheet.sh
@@ -140,11 +149,11 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Shift+c reload
 
     # Exit Swirl (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit Swirl? This will end your Wayland session.' -B 'Yes, exit Swirl' 'swaymsg exit'
+    bindsym $mod+Shift+e exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'You pressed the exit shortcut. Do you really want to exit Swirl? This will end your Wayland session.' -B 'Yes, exit Swirl' 'swaymsg exit'
 
     # Power off
-    bindsym $mod+o exec swaynag -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
-    bindsym $mod+Escape exec swaynag -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
+    bindsym $mod+o exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
+    bindsym $mod+Escape exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' 'systemctl poweroff'
 #
 # Moving around:
 #
@@ -258,26 +267,36 @@ bindsym $mod+Shift+r mode "resize"
     bindsym $mod+Print exec ~/.config/swirl/scripts/record.sh
 
 # ============================================
-# Window Decorations - Sweet Potato
+# Window Decorations
 # border | background | text | indicator | child_border
+# theme.sh rewrites the block between the SPO-CLIENT markers.
 # ============================================
 default_border pixel 2
 default_floating_border pixel 2
 hide_edge_borders smart
+# Server-drawn borders only. Shadows stay off. GTK title bars are left square.
+default_decoration border_radius 8
+# Mod+g saves off in ~/.config/sweetpotatos/frame. Put that back after reload.
+exec_always ~/.config/swirl/scripts/frame.sh apply
+# Brave paints its own rounded frame. A server border matches the other windows.
+for_window [app_id="brave-origin"] border pixel 2
+for_window [app_id="brave"] border pixel 2
 
+# SPO-CLIENT-START
 client.focused           #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 client.focused_inactive  #3a3a3a #1d1f21 #aaaaaa #3a3a3a #3a3a3a
 client.unfocused         #3a3a3a #1d1f21 #888888 #3a3a3a #3a3a3a
 client.urgent            #f79b29 #f79b29 #1d1f21 #a73b50 #f79b29
 client.placeholder       #1d1f21 #1d1f21 #888888 #1d1f21 #1d1f21
 client.background        #1d1f21
-# Sticky / pinned / selection (Swirl defaults are blue — match potato red)
+# Sticky / pinned / selection (Swirl defaults are blue — match the accent)
 client.sticky            #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 client.sticky_focused    #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 client.pinned            #3a3a3a #1d1f21 #aaaaaa #a73b50 #3a3a3a
 client.pinned_focused    #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 client.selected          #f79b29 #1d1f21 #ffffff #f79b29 #f79b29
 client.selected_focused  #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
+# SPO-CLIENT-END
 
 # ============================================
 # Status Bar
@@ -285,20 +304,30 @@ client.selected_focused  #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 bar {
     position top
     status_command ~/.config/swirl/scripts/status.sh
-    tray_padding 5
+    tray_padding 1
     icon_theme Papirus-Dark
     font pango:Noto Sans 10
+    # Status line uses icon spans from Symbols Nerd Font Mono.
+    pango_markup yes
+    # Names are "N:●" (workspace-dots.sh). Hide the number.
+    # Width 0 keeps swaybar's own padding, so the discs sit close together.
+    strip_workspace_numbers yes
+    workspace_min_width 0
 
     colors {
+        # SPO-BAR-START
         statusline #ffffff
         background #1d1f21
         separator  #a73b50
 
-        focused_workspace     #f79b29 #a73b50 #ffffff
-        active_workspace      #a73b50 #1d1f21 #ffffff
-        inactive_workspace    #1d1f21 #1d1f21 #aaaaaa
-        urgent_workspace      #f79b29 #f79b29 #1d1f21
+        # Border and fill match the bar, so each workspace is only a disc.
+        # Unselected uses the highlight; the selected one uses the accent.
+        focused_workspace     #1d1f21 #1d1f21 #a73b50
+        active_workspace      #1d1f21 #1d1f21 #f79b29
+        inactive_workspace    #1d1f21 #1d1f21 #f79b29
+        urgent_workspace      #1d1f21 #1d1f21 #ffffff
         binding_mode          #f79b29 #f79b29 #1d1f21
+        # SPO-BAR-END
     }
 }
 
@@ -313,6 +342,7 @@ exec nm-applet --indicator
 exec blueman-applet
 exec sh -c 'rfkill unblock bluetooth 2>/dev/null || true'
 exec ~/.config/swirl/scripts/tips.sh
+exec_always ~/.config/swirl/scripts/workspace-dots.sh
 
 for_window [app_id="io.calamares.calamares"] floating enable
 for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, border pixel 2, resize set width 50 ppt height 90 ppt, move position center

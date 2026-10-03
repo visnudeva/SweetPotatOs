@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly SweetPotatOs update check
+
+[Timer]
+OnCalendar=Mon *-*-* 10:00:00
+Persistent=true
+RandomizedDelaySec=30min
+
+[Install]
+WantedBy=timers.target

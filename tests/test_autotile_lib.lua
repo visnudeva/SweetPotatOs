@@ -70,6 +70,14 @@ check(lib.should_go_home({ { 1 } }, 1) == true, "go home when only dying view re
 check(lib.should_go_home({ { 1 }, { 2 } }, 1) == false, "stay when another workspace has a window")
 check(lib.should_go_home({ {}, {} }, nil) == true, "go home when all empty")
 
+check(lib.inner_gap_px(0) == 0, "no gap with no windows")
+check(lib.inner_gap_px(1) == 0, "no gap with one window")
+check(lib.inner_gap_px(2) == lib.INNER_GAP, "gap with two windows")
+check(lib.inner_gap_px(3) == lib.INNER_GAP, "gap with three windows")
+check(lib.inner_gap_px(3, false) == 0, "toggle off clears a multi-window gap")
+check(lib.inner_gap_px(3, true) == lib.INNER_GAP, "toggle on keeps a multi-window gap")
+check(lib.inner_gap_px(1, false) == 0, "toggle off stays flush with one window")
+
 print()
 print(string.format("autotile_lib: %d passed, %d failed", pass, fail))
 os.exit(fail == 0 and 0 or 1)

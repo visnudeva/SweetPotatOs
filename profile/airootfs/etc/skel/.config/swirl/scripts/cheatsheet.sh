@@ -10,10 +10,21 @@ SHEET="${XDG_CONFIG_HOME:-${HOME}/.config}/swirl/cheatsheet.txt"
 TERM_BIN="${TERM_BIN:-foot}"
 SITE_URL="https://sweetpotatos.sourceforge.io/"
 
-PINK=$'\033[1;38;2;167;59;80m'
-ORANGE=$'\033[1;38;2;247;155;41m'
-CREAM=$'\033[38;2;245;230;232m'
-MUTED=$'\033[38;2;170;170;170m'
+ACTIVE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/active.sh"
+if [[ -f "${ACTIVE}" ]]; then
+  # shellcheck disable=SC1090
+  source "${ACTIVE}"
+fi
+: "${SPO_ACCENT_RGB:=167;59;80}"
+: "${SPO_HIGHLIGHT_RGB:=247;155;41}"
+: "${SPO_TEXT_RGB:=245;230;232}"
+: "${SPO_MUTED_RGB:=170;170;170}"
+: "${SPO_SURFACE:=1d1f21}"
+: "${SPO_TEXT:=f5e6e8}"
+PINK=$'\033[1;38;2;'"${SPO_ACCENT_RGB}"'m'
+ORANGE=$'\033[1;38;2;'"${SPO_HIGHLIGHT_RGB}"'m'
+CREAM=$'\033[38;2;'"${SPO_TEXT_RGB}"'m'
+MUTED=$'\033[38;2;'"${SPO_MUTED_RGB}"'m'
 RESET=$'\033[0m'
 
 if ! command -v "${TERM_BIN}" >/dev/null 2>&1; then
@@ -38,8 +49,8 @@ export SPO_APP_ID="${APP_ID}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
 exec "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
-  -o colors-dark.background=1d1f21 \
-  -o colors-dark.foreground=f5e6e8 \
+  -o colors-dark.background="${SPO_SURFACE}" \
+  -o colors-dark.foreground="${SPO_TEXT}" \
   -o colors-dark.alpha=1.0 \
   bash -c '
 set -euo pipefail

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SweetPotatOs — Contact</title>
+  <meta name="description" content="Send a message to the SweetPotatOs maintainer.">
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <nav class="topnav" aria-label="Site">
+    <a class="brand" href="index.html">
+      <img src="SweetPotatOs.png" alt="">
+      <span>SweetPotatOs</span>
+    </a>
+    <div class="topnav-links">
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
+      <a href="showroom.html">Showroom</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="keybinds.html">Keybinds</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+      <a class="donate" href="https://ko-fi.com/visnu_deva" target="_blank" rel="noopener noreferrer">Donate</a>
+    </div>
+  </nav>
+
+  <header class="page">
+    <h1>Contact</h1>
+    <p class="lead">
+      Questions, feedback, or “it runs on my potato”? Send a message —
+      it goes straight to the maintainer’s inbox. No account needed.
+    </p>
+  </header>
+
+  <main>
+    <div class="contact">
+      <p>
+        Your email is only used to reply to you — never shared, sold, or used for mailing lists.
+      </p>
+      <form class="contact-form"
+            action="https://formsubmit.co/visnudeva@protonmail.com"
+            method="POST"
+            onsubmit="this.querySelector('[name=_replyto]').value = this.querySelector('[name=email]').value;">
+        <input type="hidden" name="_subject" value="SweetPotatOs website contact">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://sweetpotatos.sourceforge.io/contact.html">
+        <input type="hidden" name="_replyto" value="">
+        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label>
+          Name
+          <input type="text" name="name" required autocomplete="name">
+        </label>
+        <label>
+          Email
+          <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
+        </label>
+        <label>
+          Message
+          <textarea name="message" required></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Send message</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>sweetpotatos 2026</footer>
+</body>
+</html>

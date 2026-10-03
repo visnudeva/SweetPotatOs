@@ -1,12 +1,12 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=38
+pkgrel=85
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
 license=('MIT')
-depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils')
+depends=('bash' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'libnotify' 'ttf-nerd-fonts-symbols-mono' 'tumbler')
 optdepends=(
   'swirl: desktop compositor'
   'yay-bin: AUR helper'
@@ -24,8 +24,13 @@ source=(
   'sweetpotatos.conf'
   'sweetpotatos-update'
   'sweetpotatos-materialize'
+  'sweetpotatos-update-notify'
+  'sweetpotatos-update-check.service'
+  'sweetpotatos-update-check.timer'
+  'sweetpotatos-update-notify.service'
+  'update-news'
 )
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
   local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
@@ -45,7 +50,9 @@ package() {
     sweetpotatos-fix-mkinitcpio \
     sweetpotatos-fix-ly \
     sweetpotatos-fix-sudo \
-    sweetpotatos-fix-sway-keyboard; do
+    sweetpotatos-fix-sway-keyboard \
+    geany \
+    brave-origin; do
     install -Dm755 "${files}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
   done
 
@@ -53,9 +60,23 @@ package() {
     "${pkgdir}/usr/local/bin/sweetpotatos-update"
   install -Dm755 "${srcdir}/sweetpotatos-materialize" \
     "${pkgdir}/usr/local/bin/sweetpotatos-materialize"
+  install -Dm755 "${srcdir}/sweetpotatos-update-notify" \
+    "${pkgdir}/usr/local/bin/sweetpotatos-update-notify"
+
+  install -Dm644 "${srcdir}/sweetpotatos-update-check.service" \
+    "${pkgdir}/usr/lib/systemd/system/sweetpotatos-update-check.service"
+  install -Dm644 "${srcdir}/sweetpotatos-update-check.timer" \
+    "${pkgdir}/usr/lib/systemd/system/sweetpotatos-update-check.timer"
+  install -Dm644 "${srcdir}/sweetpotatos-update-notify.service" \
+    "${pkgdir}/usr/lib/systemd/user/sweetpotatos-update-notify.service"
+  mkdir -p "${pkgdir}/usr/lib/systemd/user/default.target.wants"
+  ln -s ../sweetpotatos-update-notify.service \
+    "${pkgdir}/usr/lib/systemd/user/default.target.wants/sweetpotatos-update-notify.service"
 
   install -Dm644 "${srcdir}/sweetpotatos.conf" \
     "${pkgdir}/etc/pacman.d/sweetpotatos.conf"
+  install -Dm644 "${srcdir}/update-news" \
+    "${pkgdir}/usr/share/sweetpotatos/update-news"
 
   install -Dm644 "${files}/usr/local/share/sweetpotatos/os-release" \
     "${pkgdir}/usr/local/share/sweetpotatos/os-release"
@@ -65,6 +86,14 @@ package() {
     "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.asc"
   install -Dm644 "${files}/usr/local/share/sweetpotatos/SPLogo.png" \
     "${pkgdir}/usr/local/share/sweetpotatos/SPLogo.png"
+  # These three paths already exist on installed systems from the ISO, and
+  # pacman refuses to claim them. Keep the art here and copy it in post_upgrade.
+  install -Dm644 "${files}/usr/share/icons/hicolor/256x256/apps/sweetpotatos.png" \
+    "${pkgdir}/usr/share/sweetpotatos/branding/hicolor-256.png"
+  install -Dm644 "${files}/usr/share/pixmaps/sweetpotatos.png" \
+    "${pkgdir}/usr/share/sweetpotatos/branding/pixmap.png"
+  install -Dm644 "${files}/usr/share/pixmaps/sweetpotatos-icon.png" \
+    "${pkgdir}/usr/share/sweetpotatos/branding/pixmap-icon.png"
 
   local ply
   for ply in sweetpotatos.plymouth sweetpotatos.script \

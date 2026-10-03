@@ -119,8 +119,18 @@ if [[ -f "${HOME}/.swaylock/config" ]]; then
 fi
 
 mv -f "${MANIFEST}.new" "${MANIFEST}"
-# Drop retired Wi‑Fi tray experiments from older builds.
+# Drop retired Wi‑Fi tray experiments and the Mod+P pin helper.
 rm -f "${DEST}/swirl/scripts/network-applet.py" \
-      "${DEST}/swirl/scripts/network-tray.sh"
+      "${DEST}/swirl/scripts/network-tray.sh" \
+      "${DEST}/swirl/scripts/pin-window.sh"
 echo "[+] Materialized shipped config into ${DEST}"
 echo "    Overlay: ${OVERLAY}"
+
+# Shipped files are the default Sweet potato colors. The chosen theme lives
+# in ${DEST}/sweetpotatos/theme and is not part of the shipped tree, so write
+# it back before Swirl reloads.
+theme_script="${DEST}/swirl/scripts/theme.sh"
+if [[ -f "${theme_script}" ]]; then
+  echo "[*] Restoring the selected theme…"
+  SPO_CONFIG_ROOT="${DEST}" "${theme_script}" --quiet apply || true
+fi

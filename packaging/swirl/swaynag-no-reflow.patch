@@ -1,0 +1,220 @@
+diff --git a/include/sway/layers.h b/include/sway/layers.h
+index 96c794b0..0f549757 100644
+--- a/include/sway/layers.h
++++ b/include/sway/layers.h
+@@ -3,6 +3,7 @@
+ #include <stdbool.h>
+ #include <wlr/types/wlr_compositor.h>
+ #include <wlr/types/wlr_layer_shell_v1.h>
++#include <wlr/util/box.h>
+ #include "sway/tree/view.h"
+ 
+ struct sway_layer_surface_state {
+@@ -71,6 +72,10 @@ struct wlr_layer_surface_v1 *toplevel_layer_surface_from_surface(
+ 
+ void arrange_layers(struct sway_output *output);
+ 
++// After layer placement: keep a confirmation bar's strip from resizing
++// windows, and paint the status bar just under that strip.
++void layer_finish_confirmation(struct sway_output *output, struct wlr_box *usable_area);
++
+ void destroy_layers(struct sway_output *output);
+ 
+ void layer_surface_get_box(struct sway_layer_surface *surface, struct wlr_box *box);
+diff --git a/sway/desktop/layer_shell.c b/sway/desktop/layer_shell.c
+index e51eb3e9..f5a91275 100644
+--- a/sway/desktop/layer_shell.c
++++ b/sway/desktop/layer_shell.c
+@@ -55,26 +55,123 @@ struct wlr_layer_surface_v1 *toplevel_layer_surface_from_surface(
+ 	} while (true);
+ }
+ 
++static bool layer_namespace_is(struct sway_layer_surface *surface, const char *ns) {
++	const char *name = surface->layer_surface->namespace;
++	return name && strcmp(name, ns) == 0;
++}
++
+ static void arrange_surface(struct sway_output *output, const struct wlr_box *full_area,
+ 		struct wlr_box *usable_area, struct wlr_scene_tree *tree, bool exclusive) {
+ 	struct wlr_scene_node *node;
+-	wl_list_for_each(node, &tree->children, link) {
+-		struct sway_layer_surface *surface = scene_descriptor_try_get(node,
+-			SWAY_SCENE_DESC_LAYER_SHELL);
+-		// surface could be null during destruction
+-		if (!surface) {
+-			continue;
++	// Confirmation bars first, then the status bar. The status bar is moved
++	// onto this same layer so it stays visible over windows; list order would
++	// otherwise place it above the yellow strip.
++	for (int confirmation_first = 1; confirmation_first >= 0; --confirmation_first) {
++		wl_list_for_each(node, &tree->children, link) {
++			struct sway_layer_surface *surface = scene_descriptor_try_get(node,
++				SWAY_SCENE_DESC_LAYER_SHELL);
++			// surface could be null during destruction
++			if (!surface) {
++				continue;
++			}
++
++			if (!surface->scene->layer_surface->initialized) {
++				continue;
++			}
++
++			if (layer_namespace_is(surface, "swaynag") != confirmation_first) {
++				continue;
++			}
++
++			if ((surface->scene->layer_surface->current.exclusive_zone > 0) != exclusive) {
++				continue;
++			}
++
++			wlr_scene_layer_surface_v1_configure(surface->scene, full_area, usable_area);
+ 		}
++	}
++}
+ 
+-		if (!surface->scene->layer_surface->initialized) {
+-			continue;
++static int confirmation_reserve(struct sway_output *output) {
++	int reserve = 0;
++	struct wlr_scene_tree *trees[] = {
++		output->layers.shell_overlay,
++		output->layers.shell_top,
++		output->layers.shell_bottom,
++		output->layers.shell_background,
++	};
++	for (size_t i = 0; i < sizeof(trees) / sizeof(trees[0]); ++i) {
++		struct wlr_scene_node *node;
++		wl_list_for_each(node, &trees[i]->children, link) {
++			struct sway_layer_surface *surface = scene_descriptor_try_get(node,
++				SWAY_SCENE_DESC_LAYER_SHELL);
++			if (!surface || !layer_namespace_is(surface, "swaynag")) {
++				continue;
++			}
++			struct wlr_layer_surface_v1 *layer = surface->layer_surface;
++			struct wlr_layer_surface_v1_state *state = &layer->current;
++			bool top = state->anchor & ZWLR_LAYER_SURFACE_V1_ANCHOR_TOP;
++			bool bottom = state->anchor & ZWLR_LAYER_SURFACE_V1_ANCHOR_BOTTOM;
++			if (!layer->surface->mapped || state->exclusive_zone <= 0 || !top || bottom) {
++				continue;
++			}
++			reserve += state->exclusive_zone + state->margin.top;
+ 		}
++	}
++	return reserve;
++}
+ 
+-		if ((surface->scene->layer_surface->current.exclusive_zone > 0) != exclusive) {
+-			continue;
++void layer_finish_confirmation(struct sway_output *output, struct wlr_box *usable_area) {
++	int reserve = confirmation_reserve(output);
++	// The yellow bar keeps its strip so the status bar sits under it.
++	// Windows keep the area they had before the confirmation opened.
++	if (usable_area && reserve > 0) {
++		usable_area->y -= reserve;
++		usable_area->height += reserve;
++		if (usable_area->y < 0) {
++			usable_area->height += usable_area->y;
++			usable_area->y = 0;
++		}
++		if (usable_area->height < 0) {
++			usable_area->height = 0;
++		}
++	}
++
++	struct wlr_scene_tree *trees[] = {
++		output->layers.shell_overlay,
++		output->layers.shell_top,
++		output->layers.shell_bottom,
++		output->layers.shell_background,
++	};
++	struct sway_layer_surface *panels[8];
++	int npanels = 0;
++	for (size_t i = 0; i < sizeof(trees) / sizeof(trees[0]); ++i) {
++		struct wlr_scene_node *node;
++		wl_list_for_each(node, &trees[i]->children, link) {
++			struct sway_layer_surface *surface = scene_descriptor_try_get(node,
++				SWAY_SCENE_DESC_LAYER_SHELL);
++			if (!surface || !layer_namespace_is(surface, "panel")) {
++				continue;
++			}
++			if (npanels < (int)(sizeof(panels) / sizeof(panels[0]))) {
++				panels[npanels++] = surface;
++			}
+ 		}
++	}
+ 
+-		wlr_scene_layer_surface_v1_configure(surface->scene, full_area, usable_area);
++	// Dock bars live under windows. While a confirmation is up the status
++	// bar is shifted down over that window area, so paint it above the
++	// windows and under the yellow strip.
++	struct wlr_scene_tree *dest = reserve > 0
++		? output->layers.shell_top : output->layers.shell_bottom;
++	for (int i = 0; i < npanels; ++i) {
++		struct wlr_scene_node *node = &panels[i]->scene->tree->node;
++		if (node->parent != dest) {
++			wlr_scene_node_reparent(node, dest);
++		}
++		if (reserve > 0) {
++			wlr_scene_node_lower_to_bottom(node);
++		}
+ 	}
+ }
+ 
+@@ -94,6 +191,8 @@ void arrange_layers(struct sway_output *output) {
+ 	arrange_surface(output, &full_area, &usable_area, output->layers.shell_bottom, false);
+ 	arrange_surface(output, &full_area, &usable_area, output->layers.shell_background, false);
+ 
++	layer_finish_confirmation(output, &usable_area);
++
+ 	if (!wlr_box_equal(&usable_area, &output->usable_area)) {
+ 		sway_log(SWAY_DEBUG, "Usable area changed, rearranging output");
+ 		output->usable_area = usable_area;
+diff --git a/sway/desktop/transaction.c b/sway/desktop/transaction.c
+index 419587ee..e5ea0fe3 100644
+--- a/sway/desktop/transaction.c
++++ b/sway/desktop/transaction.c
+@@ -1389,9 +1389,16 @@ static void layer_popup_resize_iterator(struct wlr_scene_buffer *buffer,
+ 	wlr_scene_node_set_position(&buffer->node, x, y);
+ }
+ 
++static bool animate_layer_is_swaynag(struct sway_layer_surface *surface) {
++	const char *ns = surface->layer_surface->namespace;
++	return ns && strcmp(ns, "swaynag") == 0;
++}
++
+ static void animate_layer(struct wlr_scene_tree *tree, double t,
+ 		const struct wlr_box *full_area, struct wlr_box *usable_area, bool exclusive) {
+ 	struct wlr_scene_node *node;
++	// Same order as arrange_surface: confirmation bar, then the status bar.
++	for (int confirmation_first = 1; confirmation_first >= 0; --confirmation_first) {
+ 	wl_list_for_each(node, &tree->children, link) {
+ 		struct sway_layer_surface *surface = scene_descriptor_try_get(node,
+ 			SWAY_SCENE_DESC_LAYER_SHELL);
+@@ -1404,6 +1411,10 @@ static void animate_layer(struct wlr_scene_tree *tree, double t,
+ 			continue;
+ 		}
+ 
++		if (animate_layer_is_swaynag(surface) != confirmation_first) {
++			continue;
++		}
++
+ 		if ((surface->scene->layer_surface->current.exclusive_zone > 0) != exclusive) {
+ 			continue;
+ 		}
+@@ -1432,6 +1443,7 @@ static void animate_layer(struct wlr_scene_tree *tree, double t,
+ 			wlr_scene_node_for_each_buffer(&popup->scene->node, layer_popup_resize_iterator, popup);
+ 		}
+ 	}
++	}
+ }
+ 
+ static void animate_layers(struct sway_output *output) {
+@@ -1453,6 +1465,8 @@ static void animate_layers(struct sway_output *output) {
+ 	animate_layer(output->layers.shell_top, t, &full_area, &usable_area, false);
+ 	animate_layer(output->layers.shell_bottom, t, &full_area, &usable_area, false);
+ 	animate_layer(output->layers.shell_background, t, &full_area, &usable_area, false);
++
++	layer_finish_confirmation(output, &usable_area);
+ }
+ 
+ static void arrange_output(struct sway_output *output) {

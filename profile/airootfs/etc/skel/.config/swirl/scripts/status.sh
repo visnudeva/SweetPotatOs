@@ -4,6 +4,21 @@
 prev_total=0
 prev_idle=0
 
+# Monochrome glyphs from Symbols Nerd Font Mono (ttf-nerd-fonts-symbols-mono).
+# The bar font stays Noto Sans; only these spans switch face.
+ico() {
+    printf '<span font="Symbols Nerd Font Mono 10">&#x%X;</span>' "$1"
+}
+
+pango_escape() {
+    local s=$1
+    # In ${var/pattern/repl}, & means the matched text, so a literal & is \&.
+    s=${s//&/\&amp;}
+    s=${s//</\&lt;}
+    s=${s//>/\&gt;}
+    printf '%s' "$s"
+}
+
 while true; do
     # CPU usage (current percentage)
     cpu_line=$(grep 'cpu ' /proc/stat)
@@ -40,70 +55,92 @@ while true; do
     # Disk
     disk_usage=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
 
-    # Brightness
-    brightness_display="BRT:off"
+    # Brightness. No backlight (a desktop) is a crossed-out sun.
+    # Otherwise the sun grows from dim to full with the percentage.
+    brightness_display="$(ico 0xF14E4)"
     for bl in /sys/class/backlight/*; do
         [ -d "$bl" ] || continue
         max_brightness=$(cat "$bl/max_brightness" 2>/dev/null) || continue
         current_brightness=$(cat "$bl/brightness" 2>/dev/null) || continue
         if [ -n "$max_brightness" ] && [ "$max_brightness" -gt 0 ]; then
             brightness=$((current_brightness * 100 / max_brightness))
-            brightness_display="BRT:${brightness}%"
+            sun=$((0xF00DA + brightness * 6 / 100))
+            if [ "$sun" -gt $((0xF00E0)) ]; then
+                sun=$((0xF00E0))
+            fi
+            brightness_display="$(ico "$sun") ${brightness}%"
             break
         fi
     done
 
-    # Battery with status
+    # Battery. The glyph changes for charging, low, and no battery.
     battery_percent=$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -1)
     battery_status=$(cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -1)
     if [ -z "$battery_percent" ]; then
-        battery_display="N/A"
-    elif [ "$battery_percent" -lt 15 ] && [ "$battery_status" != "Charging" ]; then
-        battery_display="LOW:${battery_percent}%!"
+        battery_display="$(ico 0xF125D)"
     elif [ "$battery_status" = "Charging" ]; then
-        battery_display="${battery_percent}%+"
+        battery_display="$(ico 0xF0084) ${battery_percent}%"
+    elif [ "$battery_percent" -lt 15 ]; then
+        battery_display="$(ico 0xF12A1) ${battery_percent}%"
+    elif [ "$battery_percent" -lt 50 ]; then
+        battery_display="$(ico 0xF12A2) ${battery_percent}%"
     else
-        battery_display="${battery_percent}%"
+        battery_display="$(ico 0xF12A3) ${battery_percent}%"
     fi
 
-    # WiFi (show SSID if connected)
+    # WiFi. The name stays text; off is a slashed icon.
     wifi_ssid=$(iwgetid -r 2>/dev/null)
     if [ -n "$wifi_ssid" ]; then
-        wifi_display="WiFi:${wifi_ssid}"
+        wifi_display="$(ico 0xF05A9) $(pango_escape "$wifi_ssid")"
     else
-        wifi_display="WiFi:off"
+        wifi_display="$(ico 0xF05AA)"
     fi
 
-    # Volume
+    # Volume. Muted and missing audio use their own icons.
     volume=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -o '[0-9]*%' | head -1 | sed 's/%//')
     if [ -n "$volume" ]; then
         muted=$(pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -o 'yes')
         if [ "$muted" = "yes" ]; then
-            volume_display="VOL:muted"
+            volume_display="$(ico 0xF075F)"
+        elif [ "$volume" -lt 30 ]; then
+            volume_display="$(ico 0xF057F) ${volume}%"
+        elif [ "$volume" -lt 70 ]; then
+            volume_display="$(ico 0xF0580) ${volume}%"
         else
-            volume_display="VOL:${volume}%"
+            volume_display="$(ico 0xF057E) ${volume}%"
         fi
     else
-        volume_display="VOL:off"
+        volume_display="$(ico 0xF0581)"
     fi
 
     # Date/Time
     datetime=$(date '+%a %d %b %H:%M')
 
-    # Focused window title (truncate so metrics stay readable)
+    # Focused window title (truncate so metrics stay readable).
+    # An empty workspace is focused as "N:●"; the buttons on the left stay
+    # discs, and this label is just the number.
     win_title=$(swaymsg -t get_tree 2>/dev/null \
       | jq -r '.. | objects | select(.focused == true) | .name // empty' 2>/dev/null \
       | head -1)
+    if [[ "${win_title}" =~ ^([0-9]+):●$ ]]; then
+        win_title="${BASH_REMATCH[1]}"
+    fi
     win_title=${win_title//$'\n'/ }
     if [ ${#win_title} -gt 48 ]; then
         win_title="${win_title:0:45}..."
     fi
+    win_title=$(pango_escape "$win_title")
 
+    meters="$(ico 0xF2DB) ${cpu_usage}% • $(ico 0xF035B) ${ram_usage}% • $(ico 0xF02CA) ${disk_usage}% • ${brightness_display} • ${volume_display} • ${battery_display} • ${wifi_display} • ${datetime}"
     if [ -n "$win_title" ]; then
-        echo "${win_title}  •  CPU:${cpu_usage}% • RAM:${ram_usage}% • DISK:${disk_usage}% • ${brightness_display} • BAT:${battery_display} • ${volume_display} • ${wifi_display} • ${datetime}"
+        line="${win_title}  •  ${meters}"
     else
-        echo "CPU:${cpu_usage}% • RAM:${ram_usage}% • DISK:${disk_usage}% • ${brightness_display} • BAT:${battery_display} • ${volume_display} • ${wifi_display} • ${datetime}"
+        line="${meters}"
     fi
+    # Extra space under the glyphs. swaybar centers the line, which lifts
+    # descenders (the p in a window title, the p in Sep) off the bottom
+    # edge that shows under the app menu.
+    echo "<span rise=\"8192\">${line}</span>"
 
     sleep 3
 done

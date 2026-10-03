@@ -2,12 +2,16 @@
 # charcoal #1d1f21 · potato red #a73b50 · potato orange #f79b29
 
 font=Noto Sans 11
+# SPO-THEME-START
 background-color=#1d1f21ee
 text-color=#f5e6e8ff
 border-color=#f79b29ff
+# SPO-THEME-END
 border-size=2
 border-radius=6
+# SPO-PROGRESS-START
 progress-color=over #a73b50ff
+# SPO-PROGRESS-END
 width=360
 height=120
 margin=8
@@ -22,15 +26,21 @@ markup=1
 actions=1
 
 [urgency=low]
+# SPO-LOW-START
 border-color=#3a3a3aff
+# SPO-LOW-END
 default-timeout=3000
 
 [urgency=normal]
+# SPO-NORMAL-START
 border-color=#f79b29ff
+# SPO-NORMAL-END
 default-timeout=5000
 
 [urgency=critical]
+# SPO-CRITICAL-START
 background-color=#1d1f21ff
 border-color=#a73b50ff
 text-color=#ffffffff
+# SPO-CRITICAL-END
 default-timeout=0

@@ -1,4 +1,5 @@
-/* SweetPotato — charcoal dark (#1d1f21) + potato accents over Adwaita-dark */
+/* SPO-THEME-START */
+/* Sweet potato — dark */
 @define-color potato_red #a73b50;
 @define-color potato_orange #f79b29;
 @define-color potato_charcoal #1d1f21;
@@ -6,6 +7,9 @@
 @define-color potato_panel #181a1b;
 @define-color potato_fg #f5e6e8;
 @define-color potato_muted #b8a8ab;
+@define-color potato_hover #2c3032;
+@define-color potato_slider #3a3f42;
+@define-color potato_menubar @potato_chrome;
 
 @define-color theme_bg_color @potato_charcoal;
 @define-color theme_fg_color @potato_fg;
@@ -26,6 +30,7 @@
 @define-color theme_unfocused_text_color @potato_muted;
 @define-color theme_unfocused_selected_bg_color #6e2a38;
 @define-color theme_unfocused_selected_fg_color #ffffff;
+/* SPO-THEME-END */
 
 /* Paint over base theme blues (Arc/Nord look) with charcoal */
 window,
@@ -90,11 +95,11 @@ headerbar button.titlebutton.close:hover,
 .titlebar button.titlebutton.close:hover {
   background-image: none;
   background-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
 }
 
 menubar {
-  background-color: @potato_chrome;
+  background-color: @potato_menubar;
   color: @potato_fg;
 }
 
@@ -111,7 +116,7 @@ button {
 
 button:hover {
   background-image: none;
-  background-color: #2c3032;
+  background-color: @potato_hover;
   color: @potato_fg;
 }
 
@@ -119,7 +124,7 @@ button:checked,
 button.suggested-action {
   background-image: none;
   background-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
   border-color: @potato_red;
 }
 
@@ -147,7 +152,7 @@ switch:checked {
   background-image: none;
   background-color: @potato_red;
   border-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
 }
 
 progressbar progress,
@@ -217,7 +222,7 @@ menubar > menuitem:hover,
 menubar > menuitem:selected,
 menu menuitem:hover {
   background-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
 }
 
 link,
@@ -231,7 +236,7 @@ scrollbar trough {
 }
 
 scrollbar slider {
-  background-color: #3a3f42;
+  background-color: @potato_slider;
   border-radius: 4px;
   min-width: 8px;
   min-height: 8px;
@@ -273,7 +278,7 @@ iconview.content-view.check:checked:hover:not(list),
 iconview.content-view.check:checked:active:not(list),
 .content-view:not(list) check:checked:active {
   background-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
 }
 
 /* Thunar — red only, no orange / no Adwaita blue outlines */
@@ -289,11 +294,28 @@ iconview.content-view.check:checked:active:not(list),
 .thunar .standard-view .view:selected:focus,
 .thunar .standard-view iconview:selected {
   background-color: alpha(@potato_red, 0.45);
-  color: #ffffff;
+  color: @accent_fg_color;
   outline-color: @potato_red;
   outline-style: solid;
   outline-width: 2px;
   outline-offset: -2px;
+  border-color: @potato_red;
+  box-shadow: none;
+}
+
+/* Places is a tree view inside .shortcuts-pane. The file-list rule above
+   paints every Thunar treeview with a translucent accent, which reads as a
+   softer shade. This pane uses the accent itself. */
+.thunar .shortcuts-pane treeview:selected,
+.thunar .shortcuts-pane treeview:selected:focus,
+.thunar .shortcuts-pane treeview:selected:backdrop,
+.thunar .shortcuts-pane treeview.view:selected,
+.thunar .shortcuts-pane treeview.view:selected:focus,
+.thunar .shortcuts-pane treeview.view:selected:backdrop {
+  background-color: @potato_red;
+  background-image: none;
+  color: @accent_fg_color;
+  outline-color: @potato_red;
   border-color: @potato_red;
   box-shadow: none;
 }
@@ -306,7 +328,7 @@ iconview.content-view.check:checked:active:not(list),
   background-image: none;
   background-color: @potato_red;
   border-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
   outline-color: alpha(@potato_red, 0.45);
 }
 
@@ -322,7 +344,7 @@ iconview.content-view.check:checked:active:not(list),
 .thunar menubar > menuitem:hover,
 .thunar menubar > menuitem:selected {
   background-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
 }
 
 /* Thunar chrome — kill Adwaita light borders around location / path bar */
@@ -333,7 +355,7 @@ iconview.content-view.check:checked:active:not(list),
 .thunar frame,
 .thunar frame > border {
   background-image: none;
-  background-color: @potato_chrome;
+  background-color: @potato_menubar;
   border-color: @borders_color;
   color: @potato_fg;
   box-shadow: none;
@@ -347,7 +369,7 @@ iconview.content-view.check:checked:active:not(list),
 .thunar toolbar button.flat,
 .thunar .linked > button {
   background-image: none;
-  background-color: @potato_chrome;
+  background-color: @potato_menubar;
   border-color: @borders_color;
   color: @potato_fg;
   box-shadow: none;
@@ -357,14 +379,14 @@ iconview.content-view.check:checked:active:not(list),
 .thunar .path-bar button:hover,
 .thunar .location-bar button:hover,
 .thunar toolbar button:hover {
-  background-color: #2c3032;
+  background-color: @potato_hover;
 }
 
 .thunar .path-bar button:checked,
 .thunar .location-bar button:checked {
   background-color: @potato_red;
   border-color: @potato_red;
-  color: #ffffff;
+  color: @accent_fg_color;
 }
 
 .thunar entry,
@@ -407,7 +429,7 @@ frame > border,
 
 .thunar paned > separator:hover,
 paned > separator:hover {
-  background-color: #3a3f42;
+  background-color: @potato_slider;
 }
 
 /* Editor host chrome (Geany Scintilla sits in a paned/notebook) */

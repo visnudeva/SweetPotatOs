@@ -1,0 +1,126 @@
+diff --git a/internal/ui/desktop.go b/internal/ui/desktop.go
+new file mode 100644
+index 0000000..9244148
+--- /dev/null
++++ b/internal/ui/desktop.go
+@@ -0,0 +1,23 @@
++package ui
++
++import (
++	"charm.land/lipgloss/v2"
++
++	"github.com/spore-player/spore/internal/vis"
++)
++
++// init copies the desktop theme onto the screen styles.
++// vis.init has already loaded ~/.config/sweetpotatos/tui-colors.
++func init() {
++	tabActiveStyle = lipgloss.NewStyle().Bold(true).Foreground(vis.ColorTitle).Underline(true)
++	tabInactiveStyle = lipgloss.NewStyle().Foreground(vis.ColorDim)
++	headerStyle = lipgloss.NewStyle().Foreground(vis.ColorAccent).Bold(true)
++	dimStyle = lipgloss.NewStyle().Foreground(vis.ColorDim)
++	errorStyle = lipgloss.NewStyle().Foreground(vis.ColorError)
++	greenStyle = lipgloss.NewStyle().Foreground(vis.ColorPlaying)
++
++	itemSelected = lipgloss.NewStyle().Bold(true).Foreground(vis.ColorTitle)
++	itemNormal = lipgloss.NewStyle().Foreground(vis.ColorText)
++	itemDim = lipgloss.NewStyle().Foreground(vis.ColorDim)
++	favStar = lipgloss.NewStyle().Foreground(vis.ColorAccent)
++}
+diff --git a/internal/vis/desktop.go b/internal/vis/desktop.go
+new file mode 100644
+index 0000000..6761847
+--- /dev/null
++++ b/internal/vis/desktop.go
+@@ -0,0 +1,91 @@
++package vis
++
++import (
++	"bufio"
++	"os"
++	"path/filepath"
++	"strings"
++
++	"charm.land/lipgloss/v2"
++)
++
++// init follows the desktop theme written by SweetPotato theme.sh.
++// A missing file keeps the ANSI colors, which already track the terminal.
++func init() {
++	vals := readDesktopColors()
++	if len(vals) == 0 {
++		return
++	}
++	// Title and the playing state use the theme title color.
++	// On dark themes that is the highlight. On light themes it is the accent,
++	// because the highlight is too pale to read on off-white.
++	if v, ok := vals["title"]; ok {
++		ColorTitle = lipgloss.Color(v)
++		ColorPlaying = lipgloss.Color(v)
++		ColorSeekBar = lipgloss.Color(v)
++		ColorVolume = lipgloss.Color(v)
++	}
++	if v, ok := vals["text"]; ok {
++		ColorText = lipgloss.Color(v)
++		ColorKeyFG = lipgloss.Color(v)
++	}
++	if v, ok := vals["muted"]; ok {
++		ColorDim = lipgloss.Color(v)
++	}
++	if v, ok := vals["header"]; ok {
++		ColorAccent = lipgloss.Color(v)
++		ColorWarning = lipgloss.Color(v)
++	}
++	if v, ok := vals["err"]; ok {
++		ColorError = lipgloss.Color(v)
++	}
++	if v, ok := vals["accent"]; ok {
++		ColorKeyBG = lipgloss.Color(v)
++		SpectrumMid = lipgloss.Color(v)
++		SpectrumHigh = lipgloss.Color(v)
++	}
++	if v, ok := vals["highlight"]; ok {
++		SpectrumLow = lipgloss.Color(v)
++	}
++	ColorBackground = nil
++
++	specLowStyle = lipgloss.NewStyle().Foreground(SpectrumLow)
++	specMidStyle = lipgloss.NewStyle().Foreground(SpectrumMid)
++	specHighStyle = lipgloss.NewStyle().Foreground(SpectrumHigh)
++	refreshSpecANSI()
++}
++
++func readDesktopColors() map[string]string {
++	dir := os.Getenv("XDG_CONFIG_HOME")
++	if dir == "" {
++		home, err := os.UserHomeDir()
++		if err != nil {
++			return nil
++		}
++		dir = filepath.Join(home, ".config")
++	}
++	f, err := os.Open(filepath.Join(dir, "sweetpotatos", "tui-colors"))
++	if err != nil {
++		return nil
++	}
++	defer f.Close()
++
++	vals := map[string]string{}
++	sc := bufio.NewScanner(f)
++	for sc.Scan() {
++		line := strings.TrimSpace(sc.Text())
++		if line == "" || strings.HasPrefix(line, "#") {
++			continue
++		}
++		key, val, ok := strings.Cut(line, "=")
++		if !ok {
++			continue
++		}
++		key = strings.TrimSpace(key)
++		val = strings.TrimSpace(val)
++		if len(val) == 7 && strings.HasPrefix(val, "#") {
++			vals[key] = val
++		}
++	}
++	return vals
++}

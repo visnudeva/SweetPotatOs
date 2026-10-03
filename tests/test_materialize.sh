@@ -98,6 +98,16 @@ assert_eq "PNG_B" "$(cat "${HOME}/Pictures/Wallpapers/SPixelBG.png")" "wallpaper
 assert_eq "USER_EXTRA" "$(cat "${HOME}/Pictures/Wallpapers/my-custom.png")" "user wallpaper preserved"
 assert_eq "PNG_A" "$(cat "${HOME}/.local/share/backgrounds/SpoNeon.png")" "wallpaper synced to local backgrounds"
 
+# After a clobber, the saved theme is written back before Swirl reloads.
+mkdir -p "${BASE}/swirl/scripts"
+cat >"${BASE}/swirl/scripts/theme.sh" << 'EOF'
+#!/bin/sh
+printf '%s\n' "$*" > "${SPO_CONFIG_ROOT}/theme-called"
+EOF
+chmod +x "${BASE}/swirl/scripts/theme.sh"
+bash "${MAT}" >/dev/null
+assert_eq "--quiet apply" "$(cat "${DEST}/theme-called")" "materialize reapplies the saved theme"
+
 echo
 echo "materialize: ${PASS} passed, ${FAIL} failed"
 [[ "${FAIL}" -eq 0 ]]

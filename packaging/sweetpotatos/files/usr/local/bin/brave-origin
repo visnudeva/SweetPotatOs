@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Brave otherwise paints the only rounded window frame on the desktop.
+# Ask it for the system frame before launch, then hand off to the real binary.
+set -euo pipefail
+
+if ! pgrep -x brave >/dev/null 2>&1; then
+	python - <<'PY'
+import json, os
+
+root = os.path.join(
+    os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config")),
+    "BraveSoftware",
+    "Brave-Origin",
+)
+os.makedirs(root, exist_ok=True)
+
+def write_json(path, data):
+    tmp = path + ".spo"
+    with open(tmp, "w", encoding="utf-8") as fh:
+        json.dump(data, fh, separators=(",", ":"))
+        fh.write("\n")
+    os.replace(tmp, path)
+
+init_path = os.path.join(root, "initial_preferences")
+try:
+    with open(init_path, encoding="utf-8") as fh:
+        initial = json.load(fh)
+except (OSError, json.JSONDecodeError):
+    initial = {}
+if not isinstance(initial, dict):
+    initial = {}
+browser = initial.get("browser")
+if not isinstance(browser, dict):
+    browser = {}
+    initial["browser"] = browser
+if browser.get("custom_chrome_frame") is not False:
+    browser["custom_chrome_frame"] = False
+    write_json(init_path, initial)
+
+try:
+    names = os.listdir(root)
+except OSError:
+    names = []
+for name in names:
+    prefs = os.path.join(root, name, "Preferences")
+    if not os.path.isfile(prefs):
+        continue
+    try:
+        with open(prefs, encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (OSError, json.JSONDecodeError):
+        continue
+    if not isinstance(data, dict):
+        continue
+    browser = data.get("browser")
+    if not isinstance(browser, dict):
+        browser = {}
+        data["browser"] = browser
+    if browser.get("custom_chrome_frame") is False:
+        continue
+    browser["custom_chrome_frame"] = False
+    write_json(prefs, data)
+PY
+fi
+
+exec /usr/bin/brave-origin "$@"

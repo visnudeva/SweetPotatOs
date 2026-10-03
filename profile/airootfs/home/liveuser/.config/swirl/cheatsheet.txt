@@ -38,6 +38,9 @@
 
   Displays / look
   Mod+Shift+w        Wallpaper
+  Mod+Shift+t        Next theme (this surface)
+  Mod+Ctrl+t         Switch dark / light
+  Mod+g              Corners and gaps
   Mod+Shift+d        Displays (nwg-displays)
   Mod+Ctrl+d         Save display layout
 
@@ -71,6 +74,8 @@
 
   Desktop / package updates
   sudo sweetpotatos-update
+  A notice once a week when updates are ready
+  After an update, a note says what changed
 
   Project
   w                    Open project website

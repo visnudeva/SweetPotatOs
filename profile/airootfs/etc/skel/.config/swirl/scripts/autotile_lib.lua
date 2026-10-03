@@ -68,4 +68,19 @@ function lib.should_go_home(workspace_view_lists, exclude_view)
 	return not lib.any_windows_left(workspace_view_lists, exclude_view)
 end
 
+-- Inner gap in px. Scroll insets every side, so two windows have twice this
+-- between them. A single tiled window stays edge to edge.
+-- enabled == false (Mod+g) forces 0. nil or true keeps the usual rule.
+lib.INNER_GAP = 8
+
+function lib.inner_gap_px(view_count, enabled)
+	if enabled == false then
+		return 0
+	end
+	if view_count > 1 then
+		return lib.INNER_GAP
+	end
+	return 0
+end
+
 return lib

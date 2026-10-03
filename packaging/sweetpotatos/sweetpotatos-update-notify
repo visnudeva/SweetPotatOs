@@ -1,0 +1,360 @@
+#!/usr/bin/env bash
+# SweetPotatOs update notices.
+#   check    (root) refresh the channel and record packages that would change
+#   show     (user) show that record once per check, after the desktop is up
+#   applied  (after sweetpotatos-update) show what changed
+set -euo pipefail
+
+# A short PATH (no /usr/bin) still has to find notify-send, sudo, and loginctl.
+# Append, so a test can place fakes ahead of the system binaries.
+export PATH="${PATH:-}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+STATE_DIR="${SWEETPOTATOS_UPDATE_STATE_DIR:-/var/lib/sweetpotatos}"
+PENDING="${STATE_DIR}/pending-updates"
+STAMP="${STATE_DIR}/update-notified"
+NEWS="${SWEETPOTATOS_UPDATE_NEWS:-/usr/share/sweetpotatos/update-news}"
+NEWS_SHOWN="${STATE_DIR}/update-news-shown"
+ICON=/usr/local/share/sweetpotatos/SPLogo.png
+
+live_iso() {
+  [[ -d /run/archiso || "${SWEETPOTATOS_UPDATE_LIVE:-}" == 1 ]]
+}
+
+ensure_session() {
+  local uid="${1:-$(id -u)}" bus
+  if [[ -z "${XDG_RUNTIME_DIR:-}" && -d "/run/user/${uid}" ]]; then
+    export XDG_RUNTIME_DIR="/run/user/${uid}"
+  fi
+  if [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]]; then
+    bus="${XDG_RUNTIME_DIR:-/run/user/${uid}}/bus"
+    if [[ -S "${bus}" ]]; then
+      export DBUS_SESSION_BUS_ADDRESS="unix:path=${bus}"
+    fi
+  fi
+}
+
+send_to_user() {
+  local uid="$1" user="$2" title="$3" body="$4" timeout="$5"
+  local bus="/run/user/${uid}/bus"
+  local -a icon_args=()
+  [[ -n "${user}" && "${user}" != root && "${user}" != liveuser ]] || return 1
+  [[ -S "${bus}" ]] || return 1
+  command -v notify-send >/dev/null 2>&1 || return 1
+  if [[ -f "${ICON}" ]]; then
+    icon_args=(-i "${ICON}")
+  fi
+  # runuser does not ask for a password. Nested sudo from the updater often does.
+  if command -v runuser >/dev/null 2>&1; then
+    runuser -u "${user}" -- env \
+      XDG_RUNTIME_DIR="/run/user/${uid}" \
+      DBUS_SESSION_BUS_ADDRESS="unix:path=${bus}" \
+      notify-send -t "${timeout}" -a "SweetPotatOs" "${icon_args[@]}" \
+      "${title}" "${body}"
+    return
+  fi
+  sudo -u "${user}" \
+    XDG_RUNTIME_DIR="/run/user/${uid}" \
+    DBUS_SESSION_BUS_ADDRESS="unix:path=${bus}" \
+    notify-send -t "${timeout}" -a "SweetPotatOs" "${icon_args[@]}" \
+    "${title}" "${body}"
+}
+
+notify_sessions() {
+  local title="$1" body="$2" timeout="${3:-15000}" uid user
+  local sent=0 attempt
+  try_user() {
+    local one_uid="$1" one_user="$2"
+    for attempt in 1 2 3; do
+      if send_to_user "${one_uid}" "${one_user}" "${title}" "${body}" "${timeout}"; then
+        sent=1
+        return 0
+      fi
+      [[ "${SWEETPOTATOS_NOTIFY_NO_SLEEP:-}" == 1 ]] && return 1
+      sleep 1
+    done
+    return 1
+  }
+  if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != root ]]; then
+    try_user "$(id -u "${SUDO_USER}" 2>/dev/null || true)" "${SUDO_USER}" || true
+  fi
+  if [[ "${sent}" != 1 ]] && command -v loginctl >/dev/null 2>&1; then
+    while read -r uid user _; do
+      try_user "${uid}" "${user}" || true
+      [[ "${sent}" == 1 ]] && break
+    done < <(loginctl list-users --no-legend 2>/dev/null || true)
+  fi
+  [[ "${sent}" == 1 ]]
+}
+
+send_notice() {
+  local title="$1" body="$2" timeout="${3:-15000}"
+  local -a icon_args=()
+  printf '%s\n%s\n' "${title}" "${body}" >&2
+  if [[ "${EUID}" -eq 0 && "${SWEETPOTATOS_UPDATE_APPLY_ONLY:-}" != 1 ]]; then
+    notify_sessions "${title}" "${body}" "${timeout}"
+    return
+  fi
+  command -v notify-send >/dev/null 2>&1 || return 1
+  ensure_session
+  if [[ -f "${ICON}" ]]; then
+    icon_args=(-i "${ICON}")
+  fi
+  notify-send -t "${timeout}" -a "SweetPotatOs" "${icon_args[@]}" \
+    "${title}" "${body}"
+}
+
+notice_body() {
+  local pending="$1" n names
+  n="$(printf '%s\n' "${pending}" | sed '/^$/d' | wc -l | tr -d ' ')"
+  names="$(printf '%s\n' "${pending}" | sed '/^$/d' | paste -sd ', ' -)"
+  if [[ "${n}" -le 4 && -n "${names}" ]]; then
+    printf '%s\nRun: sudo sweetpotatos-update\n' "${names}"
+  else
+    printf '%s\n' "Updates are available. Run: sudo sweetpotatos-update"
+  fi
+}
+
+cmd_check() {
+  live_iso && exit 0
+  if [[ "${EUID}" -ne 0 && "${SWEETPOTATOS_UPDATE_APPLY_ONLY:-}" != 1 ]]; then
+    exec sudo -- "$0" check
+  fi
+  install -d "${STATE_DIR}"
+  local pending
+  if ! pending="$(sweetpotatos-update --check)"; then
+    exit 0
+  fi
+  pending="$(printf '%s\n' "${pending}" | sed '/^$/d')"
+  if [[ -z "${pending}" ]]; then
+    rm -f "${PENDING}"
+    exit 0
+  fi
+  printf '%s\n' "${pending}" >"${PENDING}"
+  chmod 644 "${PENDING}"
+  if notify_sessions "SweetPotatOs updates" "$(notice_body "${pending}")"; then
+    touch "${STAMP}"
+    chmod 644 "${STAMP}"
+  fi
+}
+
+cmd_show() {
+  local interactive=0 body user_stamp
+  local -a icon_args=()
+  # A person running this in a terminal should always see the result.
+  # The login service is not a terminal, and still shows each check once.
+  [[ -t 1 || -t 2 ]] && interactive=1
+  live_iso && exit 0
+  if [[ ! -s "${PENDING}" ]]; then
+    if [[ "${interactive}" == 1 ]]; then
+      echo "sweetpotatos-update-notify: no pending updates" >&2
+    fi
+    exit 0
+  fi
+  user_stamp="${XDG_STATE_HOME:-${HOME}/.local/state}/sweetpotatos/update-notified"
+  if [[ "${interactive}" != 1 ]]; then
+    if [[ -f "${STAMP}" && ! "${PENDING}" -nt "${STAMP}" ]]; then
+      exit 0
+    fi
+    if [[ -f "${user_stamp}" && ! "${PENDING}" -nt "${user_stamp}" ]]; then
+      exit 0
+    fi
+    # mako is started by the Swirl session; give it a moment at login.
+    if [[ "${SWEETPOTATOS_NOTIFY_NO_SLEEP:-}" != 1 ]]; then
+      sleep 4
+    fi
+  fi
+  if ! command -v notify-send >/dev/null 2>&1; then
+    echo "sweetpotatos-update-notify: notify-send is not installed" >&2
+    exit 0
+  fi
+  ensure_session
+  body="$(notice_body "$(cat "${PENDING}")")"
+  if [[ "${interactive}" == 1 ]]; then
+    printf 'SweetPotatOs updates\n%s\n' "${body}" >&2
+  fi
+  if [[ -f "${ICON}" ]]; then
+    icon_args=(-i "${ICON}")
+  fi
+  if ! notify-send -t 15000 -a "SweetPotatOs" "${icon_args[@]}" \
+    "SweetPotatOs updates" "${body}"; then
+    echo "sweetpotatos-update-notify: the desktop did not show the notice" >&2
+    exit 0
+  fi
+  install -d "$(dirname "${user_stamp}")"
+  touch "${user_stamp}"
+}
+
+package_summary() {
+  local pkgs="$1" n names
+  n="$(printf '%s\n' "${pkgs}" | sed '/^$/d' | wc -l | tr -d ' ')"
+  names="$(printf '%s\n' "${pkgs}" | sed '/^$/d' | paste -sd ', ' -)"
+  if [[ "${n}" -le 4 && -n "${names}" ]]; then
+    printf 'Updated: %s\n' "${names}"
+  else
+    printf '%s\n' "SweetPotatOs packages were updated."
+  fi
+}
+
+# vercmp prints 1 when the first version is newer.
+version_newer() {
+  local cmp
+  cmp="$(vercmp "$1" "$2" 2>/dev/null || true)"
+  [[ "${cmp}" == 1 ]]
+}
+
+trim_note() {
+  local s="$1"
+  s="${s#"${s%%[![:space:]]*}"}"
+  s="${s%"${s##*[![:space:]]}"}"
+  printf '%s\n' "${s}"
+}
+
+# Version installed before this transaction. The updater passes it. An older
+# updater does not, so fall back to the pacman log written during the upgrade.
+previous_sweetpotatos_version() {
+  local log line
+  if [[ -v SWEETPOTATOS_UPDATE_FROM ]]; then
+    printf '%s\n' "${SWEETPOTATOS_UPDATE_FROM}"
+    return
+  fi
+  log="${SWEETPOTATOS_PACMAN_LOG:-/var/log/pacman.log}"
+  [[ -f "${log}" ]] || return 0
+  line="$(grep -E '\[ALPM\] upgraded sweetpotatos \(' "${log}" | tail -n 1 || true)"
+  [[ -n "${line}" ]] || return 0
+  printf '%s\n' "${line}" | sed -n 's/.*upgraded sweetpotatos (\([^ ]*\) -> .*/\1/p'
+}
+
+# One notification per release note newer than the version that was installed.
+cmd_applied_versions() {
+  local pkgs="$1"
+  local -a versions=() bodies=() show=()
+  local line ver="" body="" i j tmp floor="" from="" shown="" highest=""
+  while IFS= read -r line || [[ -n "${line}" ]]; do
+    if [[ "${line}" =~ ^# ]]; then
+      continue
+    fi
+    if [[ "${line}" =~ ^@([^[:space:]]+)[[:space:]]*$ ]]; then
+      if [[ -n "${ver}" ]]; then
+        body="$(trim_note "${body}")"
+        if [[ -n "${body}" ]]; then
+          versions+=("${ver}")
+          bodies+=("${body}")
+        fi
+      fi
+      ver="${BASH_REMATCH[1]}"
+      body=""
+    else
+      body+="${line}"$'\n'
+    fi
+  done <"${NEWS}"
+  if [[ -n "${ver}" ]]; then
+    body="$(trim_note "${body}")"
+    if [[ -n "${body}" ]]; then
+      versions+=("${ver}")
+      bodies+=("${body}")
+    fi
+  fi
+
+  from="$(previous_sweetpotatos_version)"
+  if [[ -f "${NEWS_SHOWN}" ]]; then
+    shown="$(tr -d '[:space:]' <"${NEWS_SHOWN}" || true)"
+    # Older releases stored a hash of the single note, not a version.
+    if [[ "${shown}" =~ ^[0-9a-f]{64}$ ]]; then
+      shown=""
+    fi
+  fi
+  floor="${from}"
+  if [[ -n "${shown}" ]]; then
+    if [[ -z "${floor}" ]] || version_newer "${shown}" "${floor}"; then
+      floor="${shown}"
+    fi
+  fi
+
+  if [[ -z "${floor}" ]]; then
+    # No previous version: the newest note only, not the whole history.
+    local newest=-1
+    for i in "${!versions[@]}"; do
+      if [[ "${newest}" -lt 0 ]] || version_newer "${versions[$i]}" "${versions[$newest]}"; then
+        newest="${i}"
+      fi
+    done
+    [[ "${newest}" -ge 0 ]] && show=("${newest}")
+  else
+    for i in "${!versions[@]}"; do
+      if version_newer "${versions[$i]}" "${floor}"; then
+        show+=("${i}")
+      fi
+    done
+    for ((i = 1; i < ${#show[@]}; i++)); do
+      tmp="${show[$i]}"
+      j="${i}"
+      while ((j > 0)) && version_newer "${versions[${show[$((j - 1))]}]}" "${versions[${tmp}]}"; do
+        show[$j]="${show[$((j - 1))]}"
+        j=$((j - 1))
+      done
+      show[$j]="${tmp}"
+    done
+  fi
+
+  rm -f "${PENDING}" "${STAMP}"
+  if ((${#show[@]} == 0)); then
+    if [[ -n "${pkgs}" ]]; then
+      send_notice "SweetPotatOs updated" "$(package_summary "${pkgs}")" 20000 || true
+    fi
+    return 0
+  fi
+
+  install -d "${STATE_DIR}"
+  for i in "${show[@]}"; do
+    send_notice "SweetPotatOs updated" "${bodies[$i]}" 20000 || true
+    if [[ -z "${highest}" ]] || version_newer "${versions[$i]}" "${highest}"; then
+      highest="${versions[$i]}"
+    fi
+  done
+  printf '%s\n' "${highest}" >"${NEWS_SHOWN}"
+  chmod 644 "${NEWS_SHOWN}" || true
+}
+
+cmd_applied() {
+  local pkgs="" news="" body="" news_hash="" shown=""
+  live_iso && exit 0
+  if [[ ! -t 0 ]]; then
+    pkgs="$(cat || true)"
+  fi
+  pkgs="$(printf '%s\n' "${pkgs}" | sed '/^$/d')"
+  if [[ -f "${NEWS}" ]] && grep -q '^@[^[:space:]]' "${NEWS}"; then
+    cmd_applied_versions "${pkgs}"
+    return
+  fi
+  if [[ -f "${NEWS}" ]]; then
+    news="$(sed '/^$/d' "${NEWS}")"
+  fi
+  if [[ -n "${news}" ]]; then
+    news_hash="$(printf '%s' "${news}" | sha256sum | awk '{print $1}')"
+  fi
+  if [[ -f "${NEWS_SHOWN}" ]]; then
+    shown="$(tr -d '[:space:]' <"${NEWS_SHOWN}" || true)"
+  fi
+  rm -f "${PENDING}" "${STAMP}"
+  if [[ -n "${news}" && "${news_hash}" != "${shown}" ]]; then
+    body="${news}"
+    install -d "${STATE_DIR}"
+    printf '%s\n' "${news_hash}" >"${NEWS_SHOWN}"
+    chmod 644 "${NEWS_SHOWN}" || true
+  elif [[ -n "${pkgs}" ]]; then
+    body="$(package_summary "${pkgs}")"
+  else
+    exit 0
+  fi
+  send_notice "SweetPotatOs updated" "${body}" 20000 || true
+}
+
+case "${1:-check}" in
+  check) cmd_check ;;
+  show) cmd_show ;;
+  applied) cmd_applied ;;
+  *)
+    echo "Usage: sweetpotatos-update-notify [check|show|applied]" >&2
+    exit 2
+    ;;
+esac

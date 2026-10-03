@@ -36,6 +36,10 @@ assert "grep -q 'swirl$' '${UPD}'" "upgrades swirl package"
 assert "grep -q 'sweetpotatos-materialize' '${UPD}'" "runs materialize after upgrade"
 assert "grep -q 'pacman -Syu' '${UPD}'" "reminds Arch lane is separate"
 assert "grep -q 'swaymsg reload' '${UPD}'" "reloads Swirl after materialize"
+assert "grep -q -- '--quiet apply' '${UPD}'" \
+  "reapplies the saved theme before reload"
+assert "grep -q -- '--quiet apply' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
+  "materialize reapplies the saved theme"
 assert "grep -q 'Open Mod+?' '${UPD}'" "tells users Mod+? is enough after update"
 assert "! grep -q 'spo-upgrade' '${UPD}'" "no spo-upgrade"
 assert "grep -q 'swaylock-effects' '${UPD}'" "upgrades swaylock-effects package"
@@ -82,6 +86,41 @@ assert "[[ \$(tr -d '[:space:]' < '${tmp}/channel') == stable ]]" "channel file 
 printf '%s\n' '[sweetpotatos]' 'SigLevel = Optional TrustAll' \
   'Server = file:///tmp/SweetPotatOs/repo' >"${tmp}/sweetpotatos.conf"
 assert "! run_apply --testing >/dev/null 2>&1" "refuses to rewrite a file:// Server"
+assert "grep -q -- '--check' '${UPD}'" "supports --check"
+assert "grep -q -- '--print-format' '${UPD}'" "check lists packages pacman would install"
+assert "grep -q 'OnCalendar=Mon' '${ROOT}/packaging/sweetpotatos/sweetpotatos-update-check.timer'" \
+  "weekly timer is Monday morning"
+assert "grep -q 'Persistent=true' '${ROOT}/packaging/sweetpotatos/sweetpotatos-update-check.timer'" \
+  "missed weekly check runs at next boot"
+assert "grep -q 'notify-send' '${ROOT}/packaging/sweetpotatos/sweetpotatos-update-notify'" \
+  "notice uses the desktop notification daemon"
+assert "grep -q '/run/archiso' '${ROOT}/packaging/sweetpotatos/sweetpotatos-update-notify'" \
+  "live ISO does not notify"
+assert "grep -q 'sweetpotatos-update-check.timer' '${ROOT}/packaging/sweetpotatos/sweetpotatos.install'" \
+  "package enables the weekly timer"
+assert "grep -q 'mkinitcpio -P' '${ROOT}/packaging/sweetpotatos/sweetpotatos.install'" \
+  "upgrade rebuilds the boot image so the splash matches shutdown"
+assert "grep -q \"'tumbler'\" '${ROOT}/packaging/sweetpotatos/PKGBUILD'" \
+  "sweetpotatos pulls in picture previews"
+assert "grep -q '^tumbler$' '${ROOT}/profile/packages.x86_64'" \
+  "ISO installs tumbler for Thunar previews"
+assert "grep -q 'A notice once a week' '${ROOT}/profile/airootfs/etc/skel/.config/swirl/cheatsheet.txt'" \
+  "cheatsheet mentions the weekly notice"
+assert "grep -q 'sweetpotatos-update-notify applied' '${UPD}'" \
+  "update shows what changed after packages are installed"
+assert "grep -q 'pacman -S --print --print-format' '${UPD}'" \
+  "package preview prints names and does not install them"
+assert "grep -q 'runuser' '${ROOT}/packaging/sweetpotatos/sweetpotatos-update-notify'" \
+  "root delivers the note with runuser"
+assert "grep -q 'After an update, a note says what changed' \
+  '${ROOT}/profile/airootfs/etc/skel/.config/swirl/cheatsheet.txt'" \
+  "cheatsheet mentions the after-update note"
+assert "[[ -f '${ROOT}/packaging/sweetpotatos/update-news' ]]" \
+  "package ships the what-changed note"
+assert "[[ \$(grep -c '^@' '${ROOT}/packaging/sweetpotatos/update-news') -ge 2 ]]" \
+  "what-changed notes are kept per version"
+assert "grep -q 'SWEETPOTATOS_UPDATE_FROM' '${UPD}'" \
+  "update tells the note which version was installed"
 
 echo
 echo "update/channel: ${PASS} passed, ${FAIL} failed"

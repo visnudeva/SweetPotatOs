@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Geany stays on the original dark Sweet potato editor.
+# The desktop color cycle does not restyle it.
+set -euo pipefail
+
+real_config="${XDG_CONFIG_HOME:-${HOME}/.config}"
+runtime="${XDG_RUNTIME_DIR:-/tmp}/sweetpotato-geany"
+mkdir -p "${runtime}/gtk-3.0" "${real_config}/geany"
+ln -sfn "${real_config}/geany" "${runtime}/geany"
+
+# No gtk.css here, so the desktop theme overrides are not loaded.
+cat > "${runtime}/gtk-3.0/settings.ini" << 'EOF'
+[Settings]
+gtk-theme-name=Adwaita-dark
+gtk-application-prefer-dark-theme=1
+gtk-icon-theme-name=Papirus-Dark
+EOF
+
+export XDG_CONFIG_HOME="${runtime}"
+export GTK_THEME=Adwaita:dark
+exec /usr/bin/geany "$@"

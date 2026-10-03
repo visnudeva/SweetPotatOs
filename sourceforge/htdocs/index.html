@@ -5,297 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Arch-based Linux for old potato PCs</title>
   <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Swirl desktop, and Calamares installer.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <style>
-    :root {
-      --red: #a73b50;
-      --orange: #f79b29;
-      --charcoal: #1d1f21;
-      --surface: #252729;
-      --surface-raised: #2a2c2e;
-      --border: #3a3a3a;
-      --text: #f5e6e8;
-      --text-muted: #aaaaaa;
-      --text-dim: #888888;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: "Segoe UI", system-ui, sans-serif;
-      color: var(--text);
-      background: var(--charcoal);
-      line-height: 1.55;
-    }
-    a { color: var(--orange); }
-    a:hover { color: #ffae4a; }
-    header {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 2.5rem 1.25rem 1rem;
-      text-align: center;
-    }
-    header img.logo {
-      width: 140px;
-      height: auto;
-      margin-bottom: 0.75rem;
-    }
-    h1 {
-      margin: 0.2rem 0;
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-    .tagline {
-      margin: 0.55rem 0 0;
-      font-size: clamp(1rem, 2.4vw, 1.2rem);
-      font-weight: 500;
-      font-style: italic;
-      color: var(--text-muted);
-      letter-spacing: 0.01em;
-    }
-    .tag {
-      display: inline-block;
-      margin-top: 0.75rem;
-      padding: 0.25rem 0.7rem;
-      border-radius: 999px;
-      background: var(--surface);
-      color: var(--orange);
-      border: 1px solid var(--border);
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-    .lead {
-      max-width: 42rem;
-      margin: 1rem auto 0;
-      font-size: 1.08rem;
-      color: var(--text-muted);
-    }
-    .notice {
-      margin: 1.75rem 0 1.25rem;
-      padding: 1rem 1.15rem;
-      border-radius: 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--orange);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-      color: var(--text-muted);
-    }
-    .notice strong { color: var(--text); }
-    .notice p {
-      margin: 0 0 0.75rem;
-    }
-    .notice p:last-child {
-      margin-bottom: 0;
-    }
-    .hero {
-      max-width: 960px;
-      margin: 1.5rem auto;
-      padding: 0 1.25rem;
-    }
-    .hero-frame {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--charcoal);
-      box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.45),
-        0 0 0 1px rgba(167, 59, 80, 0.45);
-    }
-    .hero-frame::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      border-radius: inherit;
-      box-shadow: inset 0 0 0 1px rgba(247, 155, 41, 0.18);
-    }
-    .hero video {
-      display: block;
-      width: 100%;
-      height: auto;
-      vertical-align: middle;
-      background: var(--charcoal);
-    }
-    .hero-caption {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1rem;
-      margin: 0.7rem 0.15rem 0;
-      color: var(--text-dim);
-      font-size: 0.92rem;
-    }
-    .hero-caption strong {
-      color: var(--text);
-      font-weight: 700;
-    }
-    .hero-caption span {
-      color: var(--red);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-    .actions {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.65rem;
-      margin: 1.5rem 0 0.5rem;
-    }
-    .actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: center;
-    }
-    .btn {
-      display: inline-block;
-      padding: 0.85rem 1.35rem;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 700;
-      border: 2px solid transparent;
-    }
-    .btn-primary {
-      background: var(--red);
-      color: #fff;
-    }
-    .btn-primary:hover { filter: brightness(1.05); }
-    .btn-secondary {
-      background: transparent;
-      color: var(--text);
-      border-color: var(--border);
-    }
-    .btn-secondary:hover {
-      border-color: var(--orange);
-      color: var(--orange);
-    }
-    .btn-donate {
-      background: var(--orange);
-      color: #fff;
-    }
-    .btn-donate:hover {
-      filter: brightness(1.06);
-      color: #fff;
-    }
-    main {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0.5rem 1.25rem 3rem;
-    }
-    h2 {
-      color: var(--text);
-      border-bottom: 2px solid var(--orange);
-      padding-bottom: 0.35rem;
-      display: inline-block;
-    }
-    main p { color: var(--text-muted); }
-    main strong { color: var(--text); }
-    ul { padding-left: 1.2rem; color: var(--text-muted); }
-    ul strong { color: var(--text); }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 0.75rem 0 1.5rem;
-      background: var(--surface);
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-    }
-    th, td {
-      text-align: left;
-      padding: 0.65rem 0.85rem;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-muted);
-    }
-    td strong { color: var(--text); }
-    th { background: var(--surface-raised); color: var(--text); }
-    tr:last-child td { border-bottom: none; }
-    code {
-      background: var(--surface-raised);
-      color: var(--orange);
-      padding: 0.1rem 0.35rem;
-      border-radius: 4px;
-      font-size: 0.92em;
-      border: 1px solid var(--border);
-    }
-    pre {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1rem 1.15rem;
-      overflow-x: auto;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-    }
-    pre code {
-      background: transparent;
-      border: none;
-      padding: 0;
-      color: var(--text);
-    }
-    .contact {
-      margin: 2rem 0 0.5rem;
-      padding: 1.25rem 1.35rem;
-      border-radius: 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-    }
-    .contact > p {
-      margin: 0 0 1rem;
-      max-width: 36rem;
-    }
-    .contact-form {
-      display: grid;
-      gap: 0.85rem;
-      max-width: 32rem;
-    }
-    .contact-form label {
-      display: grid;
-      gap: 0.35rem;
-      color: var(--text);
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-    .contact-form input,
-    .contact-form textarea {
-      width: 100%;
-      padding: 0.7rem 0.85rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface-raised);
-      color: var(--text);
-      font: inherit;
-    }
-    .contact-form input:focus,
-    .contact-form textarea:focus {
-      outline: none;
-      border-color: var(--orange);
-    }
-    .contact-form textarea {
-      min-height: 8rem;
-      resize: vertical;
-    }
-    .contact-form .btn {
-      justify-self: start;
-      cursor: pointer;
-      border: 2px solid transparent;
-      font: inherit;
-    }
-    .contact-form .hp {
-      display: none !important;
-    }
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      color: var(--text-dim);
-      font-size: 0.92rem;
-      border-top: 1px solid var(--border);
-    }
-  </style>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <header>
+  <nav class="topnav" aria-label="Site">
+    <a class="brand" href="index.html">
+      <img src="SweetPotatOs.png" alt="">
+      <span>SweetPotatOs</span>
+    </a>
+    <div class="topnav-links">
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
+      <a href="showroom.html">Showroom</a>
+      <a href="changelog.html">Changelog</a>
+      <a href="keybinds.html">Keybinds</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+      <a class="donate" href="https://ko-fi.com/visnu_deva" target="_blank" rel="noopener noreferrer">Donate</a>
+    </div>
+  </nav>
+
+  <header class="page">
     <img class="logo" src="SweetPotatOs.png" alt="SweetPotatOs logo">
     <h1>SweetPotatOs</h1>
     <p class="tagline">A unique minimalist distro made with love</p>
@@ -303,42 +33,14 @@
     <p class="lead">
       A live graphical ISO with the SweetPotato <strong>Swirl</strong> desktop and a Calamares installer,
       built to revive slow old potato PCs and make them sweet again.
+      The screencast, screenshots, and wallpapers are in the <a href="showroom.html">showroom</a>.
     </p>
-    <div class="actions">
-      <div class="actions-row">
-        <a class="btn btn-primary" href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download ISO</a>
-        <a class="btn btn-primary" href="changelog.html">Changelog</a>
-        <a class="btn btn-primary" href="#contact">Contact</a>
-        <a class="btn btn-donate" href="https://ko-fi.com/visnu_deva" target="_blank" rel="noopener noreferrer">Donate</a>
-      </div>
-      <div class="actions-row">
-        <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotatOs">GitHub</a>
-        <a class="btn btn-secondary" href="https://github.com/visnudeva/swirl">Swirl</a>
-        <a class="btn btn-secondary" href="https://github.com/visnudeva/spore">Spore</a>
-        <a class="btn btn-secondary" href="https://github.com/visnudeva/tuber">Tuber</a>
-        <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotato">SweetPotato theme</a>
-      </div>
-    </div>
+    <p class="lead">
+      64-bit. The installer needs 1 GB of RAM and 8 GB of disk.<br>
+      The ISO size and the <code>.sha256</code> file are on the
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.10_Third_Harvest/">Files page</a>.
+    </p>
   </header>
-
-  <div class="hero">
-    <div class="hero-frame">
-      <video
-        controls
-        playsinline
-        preload="metadata"
-        poster="First_Harvest-poster.jpg"
-        width="1794"
-        height="1004"
-        aria-label="SweetPotatOs Swirl desktop screencast">
-        <source src="First_Harvest.mp4" type="video/mp4">
-      </video>
-    </div>
-    <p class="hero-caption">
-      <strong>Swirl on SweetPotatOs</strong>
-      <span>75s screencast</span>
-    </p>
-  </div>
 
   <main>
     <aside class="notice" aria-label="Who this distro is for">
@@ -421,43 +123,6 @@
       <tr><td>System monitor</td><td>btop</td></tr>
     </table>
 
-    <h2>Useful binds</h2>
-    <p><code>Mod</code> is usually the Super/Windows key.</p>
-    <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+?</code></td><td>Keybind cheatsheet (toggle)</td></tr>
-    </table>
-    <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+Space</code></td><td>App launcher</td></tr>
-      <tr><td><code>Mod+Return</code></td><td>Terminal (foot)</td></tr>
-      <tr><td><code>Mod+n</code></td><td>Wi‑Fi / NetworkManager</td></tr>
-      <tr><td><code>Mod+w</code></td><td>Web browser (Brave Origin)</td></tr>
-      <tr><td><code>Mod+f</code></td><td>Files (Thunar)</td></tr>
-      <tr><td><code>Mod+e</code></td><td>Editor (Geany)</td></tr>
-      <tr><td><code>Mod+r</code></td><td>Music / radio (Spore)</td></tr>
-      <tr><td><code>Mod+t</code></td><td>Torrents (tuber)</td></tr>
-      <tr><td><code>Mod+m</code></td><td>Expand focused column ↔ 50/50</td></tr>
-      <tr><td><code>Mod+a</code> / <code>Mod+Shift+space</code></td><td>Floating toggle</td></tr>
-      <tr><td><code>Mod+Shift+w</code></td><td>Wallpaper (waypaper)</td></tr>
-      <tr><td><code>Mod+Shift+d</code></td><td>Displays (nwg-displays)</td></tr>
-      <tr><td><code>Mod+Shift+r</code></td><td>Resize mode</td></tr>
-      <tr><td><code>Mod+l</code></td><td>Lock screen</td></tr>
-      <tr><td><code>Mod+c</code></td><td>Caffeine (idle lock off)</td></tr>
-      <tr><td><code>Mod+o</code> / <code>Mod+Escape</code></td><td>Power off</td></tr>
-      <tr><td><code>Mod+i</code></td><td>Installer (live ISO)</td></tr>
-      <tr><td><code>Mod+q</code></td><td>Close focused window</td></tr>
-      <tr><td><code>Mod+Tab</code></td><td>Workspace overview (Super+drag windows between desktops)</td></tr>
-      <tr><td><code>Mod+Shift+Tab</code></td><td>Overview of windows on the current desktop</td></tr>
-      <tr><td>Click (in overview)</td><td>Zoom back in on that window / desktop</td></tr>
-      <tr><td><code>Mod+Up</code> / <code>Mod+Down</code></td><td>Workspace above / below (also exits overview)</td></tr>
-      <tr><td><code>Mod+Ctrl+Up</code> / <code>Mod+Ctrl+Down</code></td><td>Move window to workspace above / below</td></tr>
-      <tr><td><code>Mod+Shift+1</code>–<code>0</code></td><td>Move window to workspace 1–10</td></tr>
-      <tr><td><code>Mod+Shift+c</code></td><td>Reload Swirl config</td></tr>
-      <tr><td><code>Print</code></td><td>Screenshot</td></tr>
-      <tr><td><code>Mod+Print</code></td><td>Screen record toggle</td></tr>
-    </table>
-
     <h2>Staying updated</h2>
     <p>
       From <strong>Third Harvest</strong> onward, desktop and SweetPotatOs package fixes ship as a
@@ -472,7 +137,7 @@
       remain for fresh installs and marketing.
     </p>
 
-    <h2>Custom Swirl config (overrides)</h2>
+    <h2 id="overrides">Custom Swirl config (overrides)</h2>
     <p>
       Do <strong>not</strong> edit the main <code>~/.config/swirl/config</code> for personal
       binds — updates replace that file. Put your changes in the override file instead:
@@ -503,54 +168,15 @@ bindsym $mod+w exec firefox
 for_window [app_id="mpv"] floating enable</code></pre>
     <p>
       Tip: the cheatsheet (<code>Mod+?</code>) also points at this file.
+      The full bind list is on the <a href="keybinds.html">keybinds</a> page.
     </p>
 
     <h2>Write ISO to USB</h2>
     <pre><code>lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
 sudo dd if=Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
     <p>Prefer verifying the download with the <code>.sha256</code> file next to the ISO on the Files page.</p>
-
-    <h2 id="contact">Contact</h2>
-    <div class="contact">
-      <p>
-        Questions, feedback, or “it runs on my potato”? Send a message —
-        it goes straight to the maintainer’s inbox. No account needed.
-      </p>
-      <p>
-        Your email is only used to reply to you — never shared, sold, or used for mailing lists.
-      </p>
-      <form class="contact-form"
-            action="https://formsubmit.co/visnudeva@protonmail.com"
-            method="POST"
-            onsubmit="this.querySelector('[name=_replyto]').value = this.querySelector('[name=email]').value;">
-        <input type="hidden" name="_subject" value="SweetPotatOs website contact">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_next" value="https://sweetpotatos.sourceforge.io/#contact">
-        <input type="hidden" name="_replyto" value="">
-        <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <label>
-          Name
-          <input type="text" name="name" required autocomplete="name">
-        </label>
-        <label>
-          Email
-          <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
-        </label>
-        <label>
-          Message
-          <textarea name="message" required></textarea>
-        </label>
-        <button class="btn btn-primary" type="submit">Send message</button>
-      </form>
-    </div>
   </main>
 
-  <footer>
-    Source: <a href="https://github.com/visnudeva/SweetPotatOs">github.com/visnudeva/SweetPotatOs</a>
-    · Compositor: <a href="https://github.com/visnudeva/swirl">Swirl</a>
-    · <a href="changelog.html">Changelog</a>
-    · <a href="#contact">Contact</a>
-    · Downloads: <a href="https://sourceforge.net/projects/sweetpotatos/files/">SourceForge Files</a>
-  </footer>
+  <footer>sweetpotatos 2026</footer>
 </body>
 </html>

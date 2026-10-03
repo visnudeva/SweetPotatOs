@@ -13,9 +13,50 @@ _ensure_pacman_include() {
   printf '\n# SweetPotatOs package channel (GitHub Releases; ISOs stay on SourceForge)\nInclude = /etc/pacman.d/sweetpotatos.conf\n' >>"${conf}"
 }
 
+# ISO images already have these files, unowned by any package. Copying after
+# the transaction avoids "exists in filesystem".
+_install_logos() {
+  local src=/usr/share/sweetpotatos/branding
+  [[ -d "${src}" ]] || return 0
+  install -Dm644 "${src}/hicolor-256.png" \
+    /usr/share/icons/hicolor/256x256/apps/sweetpotatos.png
+  install -Dm644 "${src}/pixmap.png" \
+    /usr/share/pixmaps/sweetpotatos.png
+  install -Dm644 "${src}/pixmap-icon.png" \
+    /usr/share/pixmaps/sweetpotatos-icon.png
+  if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+    gtk-update-icon-cache -qf /usr/share/icons/hicolor >/dev/null 2>&1 || true
+  fi
+}
+
+# Boot shows the logo packed into the initramfs. Shutdown reads the theme
+# from disk, so a logo update showed up there first.
+_refresh_boot_splash() {
+  if [[ -x /usr/local/bin/sweetpotatos-plymouth ]]; then
+    /usr/local/bin/sweetpotatos-plymouth || true
+  fi
+  # Live ISO build and the live session keep the archiso preset.
+  [[ -f /etc/mkinitcpio.conf.d/archiso.conf ]] && return 0
+  compgen -G '/etc/mkinitcpio.d/*.preset' >/dev/null || return 0
+  command -v mkinitcpio >/dev/null 2>&1 || return 0
+  mkinitcpio -P
+}
+
 post_upgrade() {
   _ensure_pacman_include
+  _install_logos
   if command -v sweetpotatos-branding >/dev/null 2>&1; then
     sweetpotatos-branding || true
   fi
+  systemctl daemon-reload || true
+  systemctl enable sweetpotatos-update-check.timer >/dev/null 2>&1 || true
+  # $2 is the previous version. A fresh install has none; Calamares builds
+  # the initramfs after the packages are unpacked.
+  if [[ -n "${2:-}" ]]; then
+    _refresh_boot_splash
+  fi
+}
+
+pre_remove() {
+  systemctl disable --now sweetpotatos-update-check.timer >/dev/null 2>&1 || true
 }

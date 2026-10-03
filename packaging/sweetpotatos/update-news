@@ -1,1 +1,20 @@
-What changed: Cyberpunk is a new light theme, yellow and blue. Press Mod+Shift+t.
+# One block per sweetpotatos release, newest first.
+# @pkgver-pkgrel
+# note text
+# The updater shows one notification for every block newer than the
+# version that was installed. Keep older blocks.
+
+@2026.10.3-85
+What changed: Mod+g turns rounded corners and the gaps between windows off and on. Press it again to bring them back.
+
+@2026.10.3-84
+What changed: Cyberpunk is a dark theme with a light bar. Blue and yellow stay the two colors. Mod+Ctrl+t switches to the dark set, then Mod+Shift+t.
+
+@2026.10.3-83
+What changed: An update shows a note for every change since the version you had, not only the latest one.
+
+@2026.10.3-82
+What changed: Cyberpunk tray icons are light on the dark bar, and yellow is used with blue the way the other themes use their second color.
+
+@2026.10.3-81
+What changed: 23 new wallpapers are in the picker. Press Mod+Shift+w. The wallpaper you are using stays.

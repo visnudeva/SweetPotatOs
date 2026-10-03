@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Cycle SweetPotato color presets and write them into the desktop configs.
-# Dark (charcoal): sweet potato, ube, lime, monochrome.
-# Light (off-white): dragon fruit, sweet potato, blueberry, cyberpunk, monochrome.
+# Dark (charcoal): sweet potato, ube, lime, cyberpunk, monochrome.
+# Light (off-white): dragon fruit, sweet potato, blueberry, monochrome.
+# Cyberpunk is the dark theme with a light bar.
 # Mod+Shift+t next on the current surface. Mod+Ctrl+t switches surface.
 set -euo pipefail
 
@@ -10,8 +11,8 @@ STATE_DIR="${ROOT}/sweetpotatos"
 STATE_FILE="${STATE_DIR}/theme"
 ACTIVE_FILE="${STATE_DIR}/active.sh"
 
-DARK_IDS=(sweet-potato ube lime monochrome)
-LIGHT_IDS=(dragon-fruit sweet-potato-light blueberry cyberpunk monochrome-light)
+DARK_IDS=(sweet-potato ube lime cyberpunk monochrome)
+LIGHT_IDS=(dragon-fruit sweet-potato-light blueberry monochrome-light)
 
 QUIET=0
 ARGS=()
@@ -119,25 +120,20 @@ load_palette() {
       ADWAITA=slate; SHADE="rgba(0,0,0,0.16)"
       ;;
     cyberpunk)
-      # Light paper, neon yellow #ffef00 and blue #51bad9.
-      # Those two are too bright to read as text on the paper, so titles,
-      # terminal body colors, and thin edges use darker ink of the same hues.
-      # The bar is a dark strip: that is where the neon yellow actually shows.
-      NAME="Cyberpunk"; MODE=light
-      SURFACE=f3f7f8; RAISED=e4eef2; DEEP=f3f7f8; VIEW=f3f7f8
-      HOVER=d7e4ea; SLIDER=c3d4dd; BORDER=c5d3db; INACTIVE=b4c6d0
-      TEXT=12171a; MUTED=3d5968; DIM=5a7380; INACTIVE_FG=2c414c; STRONG=12171a
+      # Dark charcoal, blue #51bad9 and neon yellow #ffef00, same split as
+      # the other themes. The bar is the light strip. Neon yellow disappears
+      # on that strip, so the discs use a darker yellow and blue.
+      NAME="Cyberpunk"; MODE=dark
+      SURFACE=1d1f21; RAISED=222426; DEEP=181a1b; VIEW=181a1b
+      HOVER=2c3032; SLIDER=3a3f42; BORDER=2e3234; INACTIVE=3a3a3a
+      TEXT=f3f7f8; MUTED=8aa4b0; DIM=888888; INACTIVE_FG=aaaaaa; STRONG=ffffff
       ACCENT=51bad9; HIGHLIGHT=ffef00; ON_ACCENT=12171a; ON_HIGHLIGHT=12171a
       ACCENT_DIM=2f87a6; SUCCESS=51bad9; SUCCESS_FG=12171a
-      ADWAITA=yellow; SHADE="rgba(0,0,0,0.16)"
-      BAR_BG=12171a
-      BAR_FG=f3f7f8
-      BAR_ACCENT=ffef00
-      BAR_HIGHLIGHT=51bad9
-      INK_ACCENT=1f6e86
-      INK_HIGHLIGHT=6f6800
-      EDGE=1f6e86
-      MAKO_BORDER=51bad9
+      ADWAITA=yellow; SHADE="rgba(0,0,0,0.35)"
+      BAR_BG=f3f7f8
+      BAR_FG=12171a
+      BAR_ACCENT=1f6e86
+      BAR_HIGHLIGHT=a68400
       ;;
     *)
       echo "Unknown theme: ${id}" >&2
@@ -177,6 +173,12 @@ load_palette() {
     TUI_HEADER="${SUCCESS}"
     TUI_WARN="${HIGHLIGHT}"
   fi
+  # Cyberpunk's bar is light on a dark desktop. Papirus-Dark panel
+  # glyphs are #dfdfdf and vanish on it; Papirus-Light draws them #444444,
+  # next to the dark status icons. App icons stay Papirus-Dark.
+  if [[ "${ID}" == cyberpunk ]]; then
+    TRAY_ICONS=Papirus-Light
+  fi
 }
 
 canon_id() {
@@ -199,6 +201,10 @@ read_state() {
   fi
   ID="$(canon_id "${ID}")"
   LAST_LIGHT="$(canon_id "${LAST_LIGHT}")"
+  # Cyberpunk moved from the light set to the dark set.
+  if [[ "${LAST_LIGHT}" == cyberpunk ]]; then
+    LAST_LIGHT=dragon-fruit
+  fi
 }
 
 write_state() {
@@ -399,60 +405,6 @@ selection-foreground=1d1f21
 selection-background=f79b29
 
 urls=f79b29
-EOF
-    elif [[ "${ID}" == cyberpunk ]]; then
-      cat > "${payload}" << 'EOF'
-[colors-dark]
-alpha=1.0
-foreground=12171a
-background=f3f7f8
-regular0=12171a
-regular1=b4234a
-regular2=1f6e86
-regular3=6f6800
-regular4=3d5968
-regular5=1f6e86
-regular6=1f6e86
-regular7=12171a
-bright0=5a7380
-bright1=51bad9
-bright2=51bad9
-bright3=ffef00
-bright4=51bad9
-bright5=7fd4ea
-bright6=ffef00
-bright7=ffffff
-
-selection-foreground=12171a
-selection-background=ffef00
-
-urls=1f6e86
-
-[colors-light]
-alpha=1.0
-foreground=12171a
-background=f3f7f8
-regular0=12171a
-regular1=b4234a
-regular2=1f6e86
-regular3=6f6800
-regular4=3d5968
-regular5=1f6e86
-regular6=1f6e86
-regular7=12171a
-bright0=5a7380
-bright1=51bad9
-bright2=51bad9
-bright3=ffef00
-bright4=51bad9
-bright5=7fd4ea
-bright6=ffef00
-bright7=ffffff
-
-selection-foreground=12171a
-selection-background=ffef00
-
-urls=1f6e86
 EOF
     else
       cat > "${payload}" << EOF
@@ -771,11 +723,11 @@ themes = [
     ("Sweet potato", "1d1f21", "f5e6e8", "a73b50", "f79b29"),
     ("Ube", "1d1f21", "f4f0f8", "9346c8", "c9a0f5"),
     ("Lime", "1d1f21", "f2f6f1", "2bd45a", "d2ff4a"),
+    ("Cyberpunk", "1d1f21", "f3f7f8", "51bad9", "ffef00"),
     ("Monochrome", "1d1f21", "f2f2f2", "f2f2f2", "9aa0a6"),
     ("Dragon fruit", "f4f1ec", "241e20", "c2256a", "3a3336"),
     ("Sweet potato", "f4f1ec", "241e20", "a73b50", "f79b29"),
     ("Blueberry", "f4f1ec", "1c1b19", "2a3f86", "738bbf"),
-    ("Cyberpunk", "f3f7f8", "12171a", "51bad9", "ffef00"),
     ("Monochrome", "f4f1ec", "1d1f21", "1d1f21", "6e7378"),
 ]
 def rgb(h):

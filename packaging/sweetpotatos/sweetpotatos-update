@@ -29,18 +29,21 @@ CANDIDATES=(
 
 usage() {
   cat <<EOF
-Usage: sweetpotatos-update [--testing|--stable]
+Usage: sweetpotatos-update [--testing|--stable|--check]
   (no flag)   update from the channel this machine is already tracking
   --testing   track pacman-repo-testing until --stable
   --stable    track the live pacman-repo release
+  --check     print SweetPotatOs packages that would install or upgrade
 EOF
 }
 
 requested=""
+check_only=0
 case "${1:-}" in
   "") ;;
   --testing) requested=testing ;;
   --stable) requested=stable ;;
+  --check) check_only=1 ;;
   -h|--help)
     usage
     exit 0
@@ -102,8 +105,29 @@ apply_channel() {
 }
 
 channel="${requested:-$(infer_channel)}"
-apply_channel "${channel}"
-if [[ "${SWEETPOTATOS_UPDATE_APPLY_ONLY:-}" == 1 ]]; then
+if [[ "${check_only}" == 1 ]]; then
+  apply_channel "${channel}" >/dev/null
+else
+  apply_channel "${channel}"
+fi
+# APPLY_ONLY stops before installing. --check still queries pacman so tests
+# can supply a fake pacman without becoming root.
+if [[ "${SWEETPOTATOS_UPDATE_APPLY_ONLY:-}" == 1 && "${check_only}" != 1 ]]; then
+  exit 0
+fi
+
+if [[ "${check_only}" == 1 ]]; then
+  pacman -Sy --noconfirm >/dev/null
+  to_touch=()
+  for pkg in "${CANDIDATES[@]}"; do
+    if pacman -Si "${REPO_NAME}/${pkg}" >/dev/null 2>&1; then
+      to_touch+=("${REPO_NAME}/${pkg}")
+    fi
+  done
+  if ((${#to_touch[@]} == 0)); then
+    exit 0
+  fi
+  pacman -S --print --print-format '%n' --needed --noconfirm "${to_touch[@]}" 2>/dev/null || true
   exit 0
 fi
 
@@ -144,9 +168,15 @@ for t in "${to_touch[@]}"; do
   fi
 done
 
+changed="$(pacman -S --print --print-format '%n' --needed --noconfirm "${to_touch[@]}" 2>/dev/null || true)"
+changed="$(printf '%s\n' "${changed}" | sed '/^$/d')"
+# Captured before the transaction so the note can list every change since this version.
+previous_sweetpotatos="$(pacman -Q sweetpotatos 2>/dev/null | awk '{print $2}' || true)"
+
 echo "[*] Installing/upgrading: ${to_touch[*]}"
 pacman -S --needed --noconfirm "${to_touch[@]}"
 
+reloaded=0
 if command -v sweetpotatos-materialize >/dev/null 2>&1; then
   # Materialize as the real desktop user (never root's HOME).
   target_user="${SUDO_USER:-}"
@@ -173,6 +203,16 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
       chown "${target_user}:${target_user}" "${dst_cheat}" 2>/dev/null || true
     fi
 
+    # Materialize writes the default Sweet potato colors. Put the saved
+    # choice back before Swirl reloads, so the desktop does not snap back.
+    theme_script="${target_home}/.config/swirl/scripts/theme.sh"
+    if [[ -f "${theme_script}" ]]; then
+      echo "[*] Restoring the selected theme…"
+      sudo -u "${target_user}" HOME="${target_home}" \
+        XDG_CONFIG_HOME="${target_home}/.config" \
+        "${theme_script}" --quiet apply || true
+    fi
+
     # Reload Swirl so shipped config changes apply — users should not need Mod+Shift+c.
     if [[ -n "${target_uid}" ]]; then
       shopt -s nullglob
@@ -180,12 +220,25 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
       shopt -u nullglob
       if ((${#socks[@]} > 0)) && command -v swaymsg >/dev/null 2>&1; then
         echo "[*] Reloading Swirl session…"
-        sudo -u "${target_user}" SWAYSOCK="${socks[0]}" swaymsg reload >/dev/null 2>&1 || true
+        if sudo -u "${target_user}" SWAYSOCK="${socks[0]}" swaymsg reload >/dev/null 2>&1; then
+          reloaded=1
+        fi
       fi
     fi
   else
     echo "[!] Skipping materialize — no non-root user to target (ran as root?)." >&2
   fi
+fi
+
+if command -v sweetpotatos-update-notify >/dev/null 2>&1; then
+  # Reload restarts mako; give it a moment before the what-changed note.
+  if [[ "${reloaded}" == 1 && "${SWEETPOTATOS_NOTIFY_NO_SLEEP:-}" != 1 ]]; then
+    sleep 2
+  fi
+  # The notify script on disk is the one just installed. Pass the version
+  # from before the transaction so it can show every note in between.
+  printf '%s\n' "${changed}" | SWEETPOTATOS_UPDATE_FROM="${previous_sweetpotatos}" \
+    sweetpotatos-update-notify applied || true
 fi
 
 waiting="$(pacman -Qu 2>/dev/null | wc -l | tr -d ' ')"

@@ -1,4 +1,5 @@
-/* SweetPotato GTK4 overrides — charcoal chrome, potato accents */
+/* SPO-THEME-START */
+/* Sweet potato — dark */
 @define-color window_bg_color #1d1f21;
 @define-color window_fg_color #f5e6e8;
 @define-color view_bg_color #151617;
@@ -25,6 +26,7 @@
 @define-color sidebar_fg_color #f5e6e8;
 @define-color secondary_sidebar_bg_color #1d1f21;
 @define-color secondary_sidebar_fg_color #f5e6e8;
+/* SPO-THEME-END */
 
 window {
   background-color: @window_bg_color;

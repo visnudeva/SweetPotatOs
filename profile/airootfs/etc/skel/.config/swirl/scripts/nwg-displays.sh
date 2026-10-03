@@ -57,6 +57,10 @@ exec_nwg() {
 
 exec_nwg "$@"
 
+# Live names are "N:●". Keep saved rules numeric so the next login
+# still places workspace 1 (then workspace-dots.sh adds the disc).
+"${HOME}/.config/swirl/scripts/workspace-dots.sh" --normalize-file || true
+
 if [[ -s "${HOME}/.config/sway/outputs" ]]; then
   swaymsg source "${HOME}/.config/sway/outputs" 2>/dev/null || true
   "${HOME}/.config/swirl/scripts/sync-kanshi-from-outputs.sh" 2>/dev/null || true

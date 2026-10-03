@@ -9,8 +9,10 @@ show-failed-attempts
 # Live ISO: liveuser has an empty password — allow Enter to unlock.
 # (Installed systems keep ignore-empty-password via skel.)
 
-# Plain charcoal background (no image)
+# Plain surface (no image). theme.sh rewrites SPO-THEME colors.
+# SPO-THEME-START
 color=1d1f21
+# SPO-THEME-END
 scaling=solid_color
 
 # Larger ring so clock + date (date scales with radius) stay readable
@@ -19,7 +21,8 @@ indicator-thickness=8
 font=Noto Sans Bold
 font-size=42
 
-# Inside — potato orange; clock/status text in SPO pink
+# Inside uses the highlight; ring and clock text use the accent.
+# SPO-LOCK-START
 inside-color=f79b29ff
 inside-clear-color=f79b29ff
 inside-ver-color=f79b29ff
@@ -36,6 +39,7 @@ key-hl-color=f79b29ff
 bs-hl-color=a73b50ff
 caps-lock-key-hl-color=f79b29ff
 caps-lock-bs-hl-color=a73b50ff
+# SPO-LOCK-END
 
 line-color=00000000
 line-clear-color=00000000
@@ -45,6 +49,7 @@ line-caps-lock-color=00000000
 
 separator-color=00000000
 
+# SPO-TEXT-START
 text-color=a73b50ff
 text-clear-color=a73b50ff
 text-ver-color=a73b50ff
@@ -54,6 +59,7 @@ text-caps-lock-color=a73b50ff
 layout-bg-color=1d1f21cc
 layout-border-color=a73b50ff
 layout-text-color=ffffffff
+# SPO-TEXT-END
 
 # swaylock-effects: always show indicator + clock while locked
 indicator

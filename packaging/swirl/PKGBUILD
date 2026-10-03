@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=3
+pkgrel=9
 pkgdesc='Scrolling tiling Wayland compositor (Scroll/Sway fork; uses stock swaybar/swaymsg/swaynag)'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -60,11 +60,13 @@ provides=('wayland-compositor')
 source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         '99-swirl-systemd-user.conf'
         'swirl-portals.conf'
-        'overview-click-zoom.patch')
+        'overview-click-zoom.patch'
+        'swaynag-no-reflow.patch')
 sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
             '7f240d2e4a711dd3d4bb390bf90495edea0d15fd9bbf5f10a828338107d9ad1c'
-            'c294f28c3f9865ce1db88ae507cf4b53c8063f993becbe45588a724b83209858')
+            'c294f28c3f9865ce1db88ae507cf4b53c8063f993becbe45588a724b83209858'
+            '4f99693d64e67d6faaf66f62f9856d503d48e1ea1ececb0fcae6079d07e1e32c')
 
 pkgver() {
   cd "${srcdir}/swirl"
@@ -81,6 +83,8 @@ prepare() {
   # Plain left-click in overview focuses the target and zooms back in
   # (Super+drag still moves windows between desktops while zoomed out).
   git apply "${srcdir}/overview-click-zoom.patch"
+  # Power-off / exit confirmation stays above the status bar and does not reflow windows.
+  git apply "${srcdir}/swaynag-no-reflow.patch"
 }
 
 build() {

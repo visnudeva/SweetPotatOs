@@ -1,0 +1,83 @@
+diff --git a/internal/ui/desktop.go b/internal/ui/desktop.go
+new file mode 100644
+index 0000000..2ee9155
+--- /dev/null
++++ b/internal/ui/desktop.go
+@@ -0,0 +1,77 @@
++package ui
++
++import (
++	"bufio"
++	"os"
++	"path/filepath"
++	"strings"
++
++	"github.com/charmbracelet/lipgloss"
++)
++
++// applyDesktopColors reads the SweetPotato theme file when it exists.
++// Without that file, tuber keeps the built-in Sweet potato colors.
++func init() {
++	vals := readDesktopColors()
++	if len(vals) == 0 {
++		return
++	}
++	paint := func(key string, dst *lipgloss.Color) {
++		if v, ok := vals[key]; ok {
++			*dst = lipgloss.Color(v)
++		}
++	}
++	paint("title", &colTitle)
++	paint("text", &colText)
++	paint("muted", &colMuted)
++	paint("header", &colHeader)
++	paint("ok", &colOk)
++	paint("warn", &colWarn)
++	paint("err", &colErr)
++	paint("sel_fg", &colSelFg)
++	paint("sel_bg", &colSelBg)
++
++	titleStyle = lipgloss.NewStyle().Bold(true).Foreground(colTitle)
++	dimStyle = lipgloss.NewStyle().Foreground(colMuted)
++	selStyle = lipgloss.NewStyle().Foreground(colSelFg).Background(colSelBg).Bold(true)
++	okStyle = lipgloss.NewStyle().Foreground(colOk)
++	warnStyle = lipgloss.NewStyle().Foreground(colWarn)
++	errStyle = lipgloss.NewStyle().Foreground(colErr)
++	headerStyle = lipgloss.NewStyle().Foreground(colHeader).Bold(true)
++	textStyle = lipgloss.NewStyle().Foreground(colText)
++}
++
++func readDesktopColors() map[string]string {
++	dir := os.Getenv("XDG_CONFIG_HOME")
++	if dir == "" {
++		home, err := os.UserHomeDir()
++		if err != nil {
++			return nil
++		}
++		dir = filepath.Join(home, ".config")
++	}
++	f, err := os.Open(filepath.Join(dir, "sweetpotatos", "tui-colors"))
++	if err != nil {
++		return nil
++	}
++	defer f.Close()
++
++	vals := map[string]string{}
++	sc := bufio.NewScanner(f)
++	for sc.Scan() {
++		line := strings.TrimSpace(sc.Text())
++		if line == "" || strings.HasPrefix(line, "#") {
++			continue
++		}
++		key, val, ok := strings.Cut(line, "=")
++		if !ok {
++			continue
++		}
++		key = strings.TrimSpace(key)
++		val = strings.TrimSpace(val)
++		if len(val) == 7 && val[0] == '#' {
++			vals[key] = val
++		}
++	}
++	return vals
++}
