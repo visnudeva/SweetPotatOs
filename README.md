@@ -34,7 +34,7 @@ https://github.com/user-attachments/assets/90c3c5c3-d2c9-47f6-a2e2-149a9a77ccb8
 <br>
     </td>
     <td>
-  <img src="assets/SweetPotatOs.png" alt="SweetPotato" width="220">
+  <img src="assets/SweetPotatOs.png" alt="SweetPotato" width="350">
 </td>
   </tr>
 </table>
