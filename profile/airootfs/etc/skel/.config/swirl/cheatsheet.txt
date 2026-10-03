@@ -2,8 +2,8 @@
   Mod = Super / Windows key
 
   Apps
-  Mod+Space          App launcher
-  Mod+Return         Terminal (foot)
+  Mod+Space          App launcher (Esc closes it)
+  Mod+Return         Terminal (foot, fish)
   Mod+w              Web browser
   Mod+f              Files
   Mod+e              Editor
@@ -13,7 +13,7 @@
   Mod+i              Installer (live ISO)
 
   Window / layout
-  Mod+q / Esc        Close window
+  Mod+q / Esc        Close window (Esc closes a menu first)
   Mod+m              Expand column ↔ 50/50
   Mod+Shift+f        Fullscreen
   Mod+a              Floating toggle

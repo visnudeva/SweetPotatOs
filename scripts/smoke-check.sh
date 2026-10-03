@@ -56,7 +56,10 @@ check_file "${ISO}/etc/systemd/system/multi-user.target.wants/power-profiles-dae
 check_grep '\[colors-dark\]' "${ISO}/etc/skel/.config/foot/foot.ini" "foot uses [colors-dark]"
 check_grep 'alpha=1\.0' "${ISO}/etc/skel/.config/foot/foot.ini" "foot opaque alpha=1.0"
 check_grep 'set \$term foot' "${ISO}/etc/skel/.config/swirl/config" "skel Mod+Return → foot"
-check_grep 'bindsym Escape kill' "${ISO}/etc/skel/.config/swirl/config" "skel Escape closes the window"
+check_grep 'shell=/usr/bin/fish' "${ISO}/etc/skel/.config/foot/foot.ini" "foot opens fish"
+check_grep 'bindsym Escape exec ~/.config/swirl/scripts/escape.sh' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel Escape closes a menu, then a window"
+check_grep 'pkill -x wmenu' "${ISO}/etc/skel/.config/swirl/scripts/escape.sh" "Escape dismisses wmenu"
 check_grep 'Shift\+ampersand move container to workspace number 1' \
   "${ISO}/etc/skel/.config/swirl/config" "French Mod+Shift+1 moves the window"
 check_grep 'swayimg.overlay = false' "${ISO}/etc/skel/.config/swayimg/init.lua" "swayimg tiles instead of floating"

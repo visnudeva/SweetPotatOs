@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-94
+What changed: The terminal opens in fish. Escape closes the app menu again, and still closes a window when no menu is open.
+
 @2026.10.3-93
 What changed: Mod+Shift+number moves the focused window to that workspace again, and you go with it. This works on a French keyboard too.
 

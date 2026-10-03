@@ -122,7 +122,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | Editor | Geany |
 | Calculator | galculator |
 | Terminal | foot |
-| Shell | fish (`chsh -s /usr/bin/fish`; login stays bash until then) |
+| Shell | fish (the terminal starts fish; login stays bash) |
 | Video | mpv + yt-dlp |
 | Image edit | GIMP |
 | Music / radio | Spore |
@@ -147,7 +147,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+e` | IDE (geany) |
 | `Mod+r` | Music / radio (Spore) |
 | `Mod+t` | Torrents (tuber) |
-| `Mod+Return` | Terminal (foot) |
+| `Mod+Return` | Terminal (foot, fish) |
 | `Mod+m` | Expand focused column to 100% / restore 50/50 |
 | `Mod+a` / `Mod+Shift+space` | Floating toggle |
 | `Mod+?` | Keybind cheatsheet (toggle) |
@@ -156,7 +156,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |
 | `Mod+Print` | Screen record toggle (region + audio → `~/Videos`) |
-| `Mod+q` / `Esc` | Kill focused window |
+| `Mod+q` / `Esc` | Close window (Esc closes a menu first) |
 | `Mod+number` | Change workspaces |
 | `Mod+Tab` | Workspace overview (Super+drag windows between desktops) |
 | `Mod+Shift+Tab` | Overview of windows on the current desktop |

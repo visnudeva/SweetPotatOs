@@ -102,7 +102,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Installed user must be able to `sudo`: airootfs ships `/etc/sudoers.d/10-wheel`; `sweetpotatos-fix-sudo` (from `shellprocess@fix-ly` and again from `cleanup-live`) adds `${USER}` to `wheel`, writes `/etc/sudoers.d/10-installed-user` with an explicit user rule, and uncomments `%wheel` in `/etc/sudoers`. Do not rely only on Calamares `10-installer`.
 - After install, `shellprocess@cleanup-live` must remove Install SweetPotatOs / calamares `.desktop` leftovers from the app launcher.
 - Default terminal is **foot**; `Mod+Return` / applauncher / networkmanager-dmenu use foot. Do not ship kitty config. Foot must stay opaque (`alpha=1.0`) under **`[colors-dark]`** (foot ≥1.26; do not use deprecated `[colors]`).
-- Interactive shell: **fish** is installed (`packages.x86_64` and a `sweetpotatos` dependency, so `sweetpotatos-update` pulls it). Login stays bash until `chsh -s /usr/bin/fish`. Desktop scripts stay `#!/usr/bin/env bash`.
+- Interactive shell: **fish** is installed (`packages.x86_64` and a `sweetpotatos` dependency, so `sweetpotatos-update` pulls it). Foot starts fish (`shell=/usr/bin/fish`). Login stays bash. Desktop scripts stay `#!/usr/bin/env bash`.
 - Status bar (`status.sh`) polls every **3s**.
 - Ly: `default_input = password` (saved user → type password immediately).
 - Session start: `rfkill unblock bluetooth`; login tip via `tips.sh` → Mod+? cheatsheet (every session).
