@@ -167,7 +167,7 @@ Bump together: `profile/profiledef.sh`, `build.sh` `SWEETPOTATOS_ISO_NAME` defau
 
 - `sweetpotatos-fix-sudo` (fix-ly + cleanup-live): add user to `wheel`, write `/etc/sudoers.d/10-installed-user` + `10-wheel`. Do not rely only on Calamares `10-installer`.
 - `cleanup-live`: remove Install SweetPotatOs / calamares `.desktop` leftovers.
-- Live Calamares keyboard: `sweetpotatos-sway-xkb-watch` (busctl poll locale1 → swaymsg). Not `dbus-monitor --system` as liveuser. Installed: `fix-sway-keyboard` (`config-us` / `config-fr`).
+- Live Calamares keyboard: `sweetpotatos-sway-xkb-watch` (busctl poll locale1 → swaymsg). Not `dbus-monitor --system` as liveuser. Installed: `fix-sway-keyboard` sets `xkb_layout` and keeps the number-row binds.
 - Shellprocess GS vars must be `${gs[keyboardLayout]}` / `${gs[keyboardVariant]}` (bare `gs[...]` aborts install). Prefix failing tweaks with `-`.
 
 ### Packages / apps

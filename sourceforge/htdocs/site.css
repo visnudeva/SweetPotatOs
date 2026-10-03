@@ -213,14 +213,183 @@ main .hero {
   font-size: 0.88rem;
   text-align: center;
 }
-.wall-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.85rem;
-  margin: 0.75rem 0 1rem;
+.coverflow {
+  position: relative;
+  margin: 0.4rem 0 1.5rem;
 }
-.wall-grid figure { margin: 0; }
-.wall-grid a { display: block; }
+.coverflow-stage {
+  position: relative;
+  height: 220px;
+  perspective: 1200px;
+  overflow: hidden;
+  outline: none;
+}
+.coverflow-stage:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--orange);
+  border-radius: 12px;
+}
+@media (min-width: 720px) {
+  .coverflow-stage { height: 300px; }
+}
+.coverflow .wall-grid {
+  position: relative;
+  height: 100%;
+  margin: 0;
+}
+.coverflow .wall-grid figure {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: min(28rem, 68%);
+  margin: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
+}
+.coverflow .wall-grid a {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
+}
+.coverflow .wall-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.coverflow .wall-grid figcaption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.coverflow-nav {
+  position: absolute;
+  top: 92px;
+  z-index: 30;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(29, 31, 33, 0.9);
+  color: var(--orange);
+  font-size: 1.55rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.coverflow-prev { left: 0.15rem; }
+.coverflow-next { right: 0.15rem; }
+.coverflow-nav:hover {
+  color: #ffae4a;
+  border-color: var(--orange);
+}
+@media (min-width: 720px) {
+  .coverflow-nav { top: 128px; }
+}
+.coverflow-meta {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin: 0.15rem 0 0;
+  text-align: center;
+}
+.coverflow-caption {
+  color: var(--text);
+  font-weight: 700;
+}
+.coverflow-count {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .coverflow .wall-grid figure { transition: none; }
+}
+.wall-view {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(13, 14, 16, 0);
+  transition: background 0.45s ease;
+}
+.wall-view[hidden] { display: none; }
+.wall-view.is-open { background: rgba(13, 14, 16, 0.94); }
+.wall-view img {
+  position: fixed;
+  margin: 0;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
+  transition:
+    left 0.55s cubic-bezier(0.22, 0.8, 0.2, 1),
+    top 0.55s cubic-bezier(0.22, 0.8, 0.2, 1),
+    width 0.55s cubic-bezier(0.22, 0.8, 0.2, 1),
+    height 0.55s cubic-bezier(0.22, 0.8, 0.2, 1),
+    border-radius 0.55s ease;
+}
+.wall-view.is-open img { border-radius: 16px; }
+.wall-view-close {
+  position: fixed;
+  top: 0.8rem;
+  right: 0.8rem;
+  z-index: 2;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(29, 31, 33, 0.9);
+  color: var(--orange);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.35s ease 0.12s, transform 0.35s ease 0.12s, color 0.15s ease, border-color 0.15s ease;
+}
+.wall-view-close:hover {
+  color: #ffae4a;
+  border-color: var(--orange);
+}
+.wall-view-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 1.15rem;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease 0.16s, transform 0.4s ease 0.16s;
+}
+.wall-view.is-open .wall-view-close,
+.wall-view.is-open .wall-view-bar {
+  opacity: 1;
+  transform: none;
+}
+.wall-view-caption {
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+}
+.wall-view-save {
+  color: var(--orange);
+  font-weight: 700;
+  text-decoration: none;
+}
+.wall-view-save:hover { color: #ffae4a; }
+@media (prefers-reduced-motion: reduce) {
+  .wall-view,
+  .wall-view img,
+  .wall-view-close,
+  .wall-view-bar { transition: none; }
+}
 .theme-columns {
   display: grid;
   grid-template-columns: 1fr;

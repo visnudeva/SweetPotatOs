@@ -147,8 +147,7 @@ sync_common_into() {
     "${dest}/Pictures/Screenshots" \
     "${dest}/Pictures/Wallpapers"
 
-  cp -f "${SP}/swirl/config" "${dest}/.config/swirl/config-fr"
-  cp -f "${SP}/swirl/config-us" "${dest}/.config/swirl/config-us"
+  rm -f "${dest}/.config/swirl/config-fr" "${dest}/.config/swirl/config-us"
   cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
   cp -f "${SP}/swirl/scripts/autotile_lib.lua" "${dest}/.config/swirl/scripts/autotile_lib.lua"
@@ -239,11 +238,7 @@ fi
 # Live (Swirl/Arch). Skipped on GNOME so Bluefin ISO builds do not clobber Adwaita.
 if [[ "${SYNC_LIVE}" -eq 1 ]]; then
   sync_common_into "${HOME_DIR}"
-  if grep -q 'xkb_layout "us"' "${HOME_DIR}/.config/swirl/config" 2>/dev/null; then
-    cp -f "${SP}/swirl/config-us" "${HOME_DIR}/.config/swirl/config"
-  else
-    cp -f "${SP}/swirl/config" "${HOME_DIR}/.config/swirl/config"
-  fi
+  cp -f "${SP}/swirl/config" "${HOME_DIR}/.config/swirl/config"
   rm -rf "${HOME_DIR}/.config/sway"
   sed "s|%HOME%|${HOME_DIR}|g" "${SP}/environment.d/90-sweetpotato-csd.conf" \
     > "${HOME_DIR}/.config/environment.d/90-sweetpotato-csd.conf"
@@ -256,10 +251,6 @@ sync_common_into "${ISO}/etc/skel"
 cp -f "${SP}/swirl/config" "${ISO}/etc/skel/.config/swirl/config"
 inject_iso_display "${ISO}/etc/skel/.config/swirl/config"
 inject_calamares_float "${ISO}/etc/skel/.config/swirl/config"
-inject_iso_display "${ISO}/etc/skel/.config/swirl/config-us"
-inject_calamares_float "${ISO}/etc/skel/.config/swirl/config-us"
-inject_iso_display "${ISO}/etc/skel/.config/swirl/config-fr"
-inject_calamares_float "${ISO}/etc/skel/.config/swirl/config-fr"
 cat > "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
 # Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (swirl wrapper).
@@ -279,13 +270,9 @@ EOF
 
 # Liveuser (US default + calamares)
 sync_common_into "${ISO}/home/liveuser"
-cp -f "${SP}/swirl/config-us" "${ISO}/home/liveuser/.config/swirl/config"
+cp -f "${SP}/swirl/config" "${ISO}/home/liveuser/.config/swirl/config"
 inject_iso_display "${ISO}/home/liveuser/.config/swirl/config"
 inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config"
-inject_iso_display "${ISO}/home/liveuser/.config/swirl/config-us"
-inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config-us"
-inject_iso_display "${ISO}/home/liveuser/.config/swirl/config-fr"
-inject_live_calamares "${ISO}/home/liveuser/.config/swirl/config-fr"
 cat > "${ISO}/home/liveuser/.config/environment.d/90-sweetpotato-csd.conf" << 'EOF'
 # Some distros disable GTK CSD via LD_PRELOAD=libgtk-nocsd.so in /etc/environment.
 # Clear it so GTK apps keep close buttons. Prefer ~/.local/bin (swirl wrapper).

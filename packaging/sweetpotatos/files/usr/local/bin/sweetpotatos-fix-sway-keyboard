@@ -1,6 +1,6 @@
 #!/bin/bash
-# After Calamares creates the user, select the matching Swirl bind layout
-# (config-us / config-fr) from the keyboard page choice.
+# After Calamares creates the user, set the Swirl typing layout from the
+# keyboard page. Workspace binds stay on the number row.
 set -euo pipefail
 
 TARGET_USER="${1:-}"
@@ -27,12 +27,6 @@ SWIRL_DIR="${HOME_DIR}/.config/swirl"
 primary="${LAYOUT%%,*}"
 primary="${primary:-us}"
 
-pick=""
-case "${primary}" in
-  fr) pick="config-fr" ;;
-  us) pick="config-us" ;;
-esac
-
 sed_escape() {
   # Escape sed replacement specials for delimiter | : \ & |
   local s=$1
@@ -42,23 +36,19 @@ sed_escape() {
   printf '%s' "$s"
 }
 
-if [[ -n "${pick}" && -f "${SWIRL_DIR}/${pick}" ]]; then
-  cp -f "${SWIRL_DIR}/${pick}" "${SWIRL_DIR}/config"
-else
-  # Unknown layout: keep config, only rewrite xkb_* lines.
-  if [[ -n "${LAYOUT}" && -f "${SWIRL_DIR}/config" ]]; then
-    esc="$(sed_escape "${LAYOUT}")"
-    sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc}\"|" "${SWIRL_DIR}/config" || true
-  fi
-  if [[ -n "${VARIANT}" && -f "${SWIRL_DIR}/config" ]]; then
-    escv="$(sed_escape "${VARIANT}")"
-    if grep -q '^[[:space:]]*xkb_variant' "${SWIRL_DIR}/config"; then
-      sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${escv}\"|" "${SWIRL_DIR}/config" || true
-    else
-      sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${SWIRL_DIR}/config" || true
-    fi
+rm -f "${SWIRL_DIR}/config-fr" "${SWIRL_DIR}/config-us"
+if [[ -n "${LAYOUT}" && -f "${SWIRL_DIR}/config" ]]; then
+  esc="$(sed_escape "${LAYOUT}")"
+  sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc}\"|" "${SWIRL_DIR}/config" || true
+fi
+if [[ -n "${VARIANT}" && -f "${SWIRL_DIR}/config" ]]; then
+  escv="$(sed_escape "${VARIANT}")"
+  if grep -q '^[[:space:]]*xkb_variant' "${SWIRL_DIR}/config"; then
+    sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${escv}\"|" "${SWIRL_DIR}/config" || true
+  else
+    sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${SWIRL_DIR}/config" || true
   fi
 fi
 
 chown -R "${TARGET_USER}:${TARGET_USER}" "${SWIRL_DIR}" 2>/dev/null || true
-echo "sweetpotatos-fix-sway-keyboard: ${TARGET_USER} → layout ${LAYOUT:-us} (${pick:-patched})"
+echo "sweetpotatos-fix-sway-keyboard: ${TARGET_USER} → layout ${LAYOUT:-${primary}}"

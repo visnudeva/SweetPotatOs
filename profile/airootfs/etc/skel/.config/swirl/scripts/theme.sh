@@ -315,7 +315,7 @@ client.selected          #${INK_HIGHLIGHT} #${SURFACE} #${STRONG} #${HIGHLIGHT} 
 client.selected_focused  #${EDGE} #${SURFACE} #${STRONG} #${ACCENT} #${EDGE}
 EOF
   local cfg
-  for cfg in "${ROOT}/swirl/config" "${ROOT}/swirl/config-us" "${ROOT}/swirl/config-fr"; do
+  for cfg in "${ROOT}/swirl/config"; do
     [[ -f "${cfg}" ]] || continue
     changed_note="$(replace_block "${cfg}" "# SPO-CLIENT-START" "# SPO-CLIENT-END" < "${payload}")"
     note_change <<< "${changed_note}"
@@ -343,7 +343,7 @@ EOF
         urgent_workspace      #${BAR_BG} #${BAR_BG} #${BAR_FG}
         binding_mode          #${HIGHLIGHT} #${HIGHLIGHT} #${ON_HIGHLIGHT}
 EOF
-  for cfg in "${ROOT}/swirl/config" "${ROOT}/swirl/config-us" "${ROOT}/swirl/config-fr"; do
+  for cfg in "${ROOT}/swirl/config"; do
     [[ -f "${cfg}" ]] || continue
     changed_note="$(replace_block "${cfg}" "# SPO-BAR-START" "# SPO-BAR-END" < "${payload}")"
     note_change <<< "${changed_note}"
