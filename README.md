@@ -1,9 +1,6 @@
 
 
-<p align="center">
-  <video src="assets/Fourth_Harvest.mp4" controls playsinline poster="assets/screencast-poster.jpg" width="920"
-         style="border-radius: 12px; max-width: 100%; height: auto;"></video>
-</p>
+https://github.com/user-attachments/assets/90c3c5c3-d2c9-47f6-a2e2-149a9a77ccb8
 
 # SweetPotatOs
 
