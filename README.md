@@ -1,14 +1,34 @@
 
 
-https://github.com/user-attachments/assets/c4e14323-38b3-44b9-8084-5d25a45755ee
-
+<p align="center">
+  <video src="assets/Fourth_Harvest.mp4" controls playsinline poster="assets/screencast-poster.jpg" width="920"
+         style="border-radius: 12px; max-width: 100%; height: auto;"></video>
+</p>
 
 # SweetPotatOs
 
-<p align="center">
-  <img src="assets/Screenshot.png" alt="SweetPotatOs desktop" width="920"
-       style="border-radius: 12px; max-width: 100%; height: auto;">
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/shot-overview.png" alt="Desktop overview" width="440"><br>
+      <sub>Desktop overview</sub>
+    </td>
+    <td align="center">
+      <img src="assets/shot-keybinds.png" alt="Keybinds" width="440"><br>
+      <sub>Keybinds</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/shot-files.png" alt="Files and terminal" width="440"><br>
+      <sub>Files and terminal</sub>
+    </td>
+    <td align="center">
+      <img src="assets/shot-waypaper.png" alt="Wallpaper picker" width="440"><br>
+      <sub>Wallpaper picker</sub>
+    </td>
+  </tr>
+</table>
 
 <table>
   <tr>
@@ -178,7 +198,7 @@ sudo dd if=out/Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 
 ```
 SweetPotatOs/
-├── assets/           # README / branding art (Screenshot.png, SweetPotatOs.png, SPLogo.png)
+├── assets/           # README art (screencast, screenshots, SweetPotatOs.png, SPLogo.png)
 ├── build.sh          # --build-packages / --build-swirl / --build-calamares | mkarchiso
 ├── packaging/swirl/  # PKGBUILD for the swirl compositor
 ├── sync-theme.sh     # pull SweetPotato → airootfs + $HOME
