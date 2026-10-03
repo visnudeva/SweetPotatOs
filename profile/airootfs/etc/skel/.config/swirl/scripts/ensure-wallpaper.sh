@@ -7,7 +7,7 @@ set -euo pipefail
 CONF="${HOME}/.config/swirl/wallpaper.conf"
 DIR="${HOME}/.local/share/backgrounds"
 FALLBACKS=(
-  "${DIR}/NewSpoNeonBG.png"
+  "${DIR}/SPONeonKanji2.png"
 )
 
 expand_path() {
