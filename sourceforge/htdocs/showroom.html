@@ -7,6 +7,7 @@
   <meta name="description" content="SweetPotatOs screencast, desktop screenshots, and wallpapers.">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
 </head>
 <body>
   <nav class="topnav" aria-label="Site">
@@ -14,7 +15,11 @@
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <div class="topnav-links">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden">Menu</span>
+    </button>
+    <div class="topnav-links" id="site-nav">
       <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
       <a href="showroom.html" aria-current="page">Showroom</a>
       <a href="changelog.html">Changelog</a>

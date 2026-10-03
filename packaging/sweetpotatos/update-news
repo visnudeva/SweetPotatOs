@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-93
+What changed: Mod+Shift+number moves the focused window to that workspace again, and you go with it. This works on a French keyboard too.
+
 @2026.10.3-92
 What changed: swayimg tiles with the other windows, and its corners are rounded. Escape closes a window, the same as Mod+q. Fish is installed. The login shell stays bash until you run chsh -s /usr/bin/fish.
 

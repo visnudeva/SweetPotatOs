@@ -7,6 +7,7 @@
   <meta name="description" content="Release notes for SweetPotatOs Harvest ISOs from First Harvest onward.">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
 </head>
 <body>
   <nav class="topnav" aria-label="Site">
@@ -14,7 +15,11 @@
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <div class="topnav-links">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+      <span class="visually-hidden">Menu</span>
+    </button>
+    <div class="topnav-links" id="site-nav">
       <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
       <a href="showroom.html">Showroom</a>
       <a href="changelog.html" aria-current="page">Changelog</a>
@@ -89,6 +94,7 @@
         <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
       </summary>
       <ul>
+        <li><code>Mod+Shift+number</code> moves the focused window to that workspace again, and you go with it. A French keyboard is included. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
         <li><strong>swayimg</strong> tiles with the other windows, and its corners are rounded. Close it and open the picture again after updating. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
         <li><code>Esc</code> closes the focused window, the same as <code>Mod+q</code>. In resize mode, <code>Esc</code> still leaves that mode.</li>
         <li><strong>Fish</strong> is installed for an interactive shell. The login shell stays bash until <code>chsh -s /usr/bin/fish</code>. Desktop scripts stay bash. Installed systems pick Fish up with <code>sudo sweetpotatos-update</code>.</li>
