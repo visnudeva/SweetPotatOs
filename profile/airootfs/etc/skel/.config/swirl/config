@@ -77,7 +77,7 @@ bindgesture swipe:4:down workspace prev_on_output
 
 # Autotile: pair columns (odd last = full, even = 50/50).
 # Opens an 8px gap around tiled windows only when more than one is open.
-# Mod+g turns that gap and the rounded corners off together.
+# Mod+Ctrl+g turns that gap and the rounded corners off together.
 lua ~/.config/swirl/scripts/autotile.lua
 
 seat * xcursor_theme capitaine-cursors 24
@@ -102,11 +102,11 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+n exec networkmanager_dmenu
 
     # Wallpaper selector
-    bindsym $mod+Shift+w exec waypaper
+    bindsym $mod+Ctrl+w exec waypaper
 
-    # Display layout
-    bindsym $mod+Shift+d exec ~/.config/swirl/scripts/nwg-displays.sh
-    bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh
+    # Display layout (letter d). Shift saves after wlr-randr.
+    bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/nwg-displays.sh
+    bindsym $mod+Ctrl+Shift+d exec ~/.config/swirl/scripts/save-display-layout.sh
 
     # SweetPotato themer: presets, plus accent and highlight.
     bindsym $mod+Ctrl+t exec /usr/local/bin/sweetpotatos-hues
@@ -133,7 +133,7 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+c exec ~/.config/swirl/scripts/caffeine.sh
 
     # Rounded corners and the gap between tiled windows
-    bindsym $mod+g exec ~/.config/swirl/scripts/frame.sh toggle
+    bindsym $mod+Ctrl+g exec ~/.config/swirl/scripts/frame.sh toggle
 
     # Floating keybind cheatsheet (toggle)
     bindsym $mod+question exec ~/.config/swirl/scripts/cheatsheet.sh
@@ -295,7 +295,7 @@ default_floating_border pixel 2
 hide_edge_borders smart
 # Server-drawn borders only. Shadows stay off. GTK title bars are left square.
 default_decoration border_radius 8
-# Mod+g saves off in ~/.config/sweetpotatos/frame. Put that back after reload.
+# Mod+Ctrl+g saves off in ~/.config/sweetpotatos/frame. Put that back after reload.
 exec_always ~/.config/swirl/scripts/frame.sh apply
 # Brave paints its own rounded frame. A server border matches the other windows.
 for_window [app_id="brave-origin"] border pixel 2
@@ -367,7 +367,7 @@ for_window [app_id="io.calamares.calamares"] floating enable
 for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, border pixel 2, resize set width 50 ppt height 90 ppt, move position center
 for_window [app_id="sweetpotato-themes"] floating enable
 
-# Saved monitor layout (nwg-displays / Mod+Ctrl+d)
+# Saved monitor layout (nwg-displays / Mod+Ctrl+Shift+d)
 include ~/.config/sway/outputs
 include ~/.config/sway/workspaces
 include /etc/sway/config.d/*

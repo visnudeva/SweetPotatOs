@@ -151,7 +151,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+m` | Expand focused column to 100% / restore 50/50 |
 | `Mod+a` / `Mod+Shift+space` | Floating toggle |
 | `Mod+?` | Keybind cheatsheet (toggle) |
-| `Mod+Shift+w` | Wallpaper selector (waypaper) |
+| `Mod+Ctrl+w` | Wallpaper selector (waypaper) |
 | `Mod+Shift+r` | Resize mode (arrow keys; Enter/Esc to exit) |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |

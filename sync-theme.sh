@@ -87,8 +87,8 @@ exec --no-startup-id ~/.config/swirl/scripts/start-kanshi.sh\
 exec --no-startup-id sh -c '\''sleep 0.5; [ -s "$HOME/.config/sway/outputs" ] && swaymsg source "$HOME/.config/sway/outputs" 2>/dev/null || true'\''' "${f}"
   fi
   if ! grep -q 'save-display-layout.sh' "${f}"; then
-    sed -i '/bindsym \$mod+Shift+d exec ~\/.config\/swirl\/scripts\/nwg-displays.sh/a\
-    bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh' "${f}"
+    sed -i '/bindsym \$mod+Ctrl+d exec ~\/.config\/swirl\/scripts\/nwg-displays.sh/a\
+    bindsym $mod+Ctrl+Shift+d exec ~/.config/swirl/scripts/save-display-layout.sh' "${f}"
   fi
   if ! grep -q 'sway/workspaces' "${f}"; then
     sed -i '/^include \/etc\/sway\/config.d\/\*/i\
@@ -98,13 +98,13 @@ include ~/.config/sway/workspaces\
 ' "${f}"
   fi
   if ! grep -q 'nwg-displays.sh' "${f}"; then
-    sed -i '/bindsym \$mod+Shift+w exec/a\
+    sed -i '/bindsym \$mod+Ctrl+w exec/a\
 \
-    # Display layout\
-    bindsym $mod+Shift+d exec ~/.config/swirl/scripts/nwg-displays.sh\
-    bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh' "${f}"
-    sed -i 's|bindsym \$mod+Shift+w exec ~/.config/swirl/scripts/wallpaper.sh|bindsym $mod+Shift+w exec waypaper|' "${f}"
+    # Display layout (letter d). Shift saves after wlr-randr.\
+    bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/nwg-displays.sh\
+    bindsym $mod+Ctrl+Shift+d exec ~/.config/swirl/scripts/save-display-layout.sh' "${f}"
   fi
+  sed -i 's|bindsym \$mod+Ctrl+w exec ~/.config/swirl/scripts/wallpaper.sh|bindsym $mod+Ctrl+w exec waypaper|' "${f}"
 }
 
 inject_live_calamares() {

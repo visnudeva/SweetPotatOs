@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-106
+What changed: Look keybinds are Mod+Ctrl plus the letter. w wallpaper, t themer, g corners and gaps, d Displays. Mod+Ctrl+Shift+d saves the display layout.
+
 @2026.10.3-105
 What changed: Mod+Ctrl+t opens SweetPotato themer. The next-theme and dark/light keybinds are gone. LocalSend’s tray icon is the LocalSend mark instead of the red face.
 

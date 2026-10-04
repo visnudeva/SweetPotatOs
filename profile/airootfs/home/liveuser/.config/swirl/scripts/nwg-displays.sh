@@ -38,7 +38,7 @@ find_swaysock() {
 
 if ! find_swaysock; then
   if command -v notify-send >/dev/null 2>&1; then
-    notify-send -u critical -t 8000 "Displays" "Could not find Swirl IPC. Try Mod+Shift+d or run: nwg-displays"
+    notify-send -u critical -t 8000 "Displays" "Could not find Swirl IPC. Try Mod+Ctrl+d or run: nwg-displays"
   fi
   exit 1
 fi

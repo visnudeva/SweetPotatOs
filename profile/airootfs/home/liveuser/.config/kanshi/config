@@ -2,7 +2,7 @@
 # Do not add "output * mode preferred" here — it resets custom resolutions on boot.
 #
 # Configure layout with:
-#   Mod+Shift+d  nwg-displays (GUI — click Apply & Save)
-#   Mod+Ctrl+d   save current layout after wlr-randr / terminal changes
+#   Mod+Ctrl+d         nwg-displays (GUI — click Apply & Save)
+#   Mod+Ctrl+Shift+d   save current layout after wlr-randr / terminal changes
 #
 # Regenerate this file: ~/.config/swirl/scripts/sync-kanshi-from-outputs.sh

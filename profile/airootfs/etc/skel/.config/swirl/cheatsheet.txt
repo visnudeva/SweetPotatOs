@@ -37,11 +37,11 @@
   Mod+Shift+1…0      Move window to workspace 1–10
 
   Displays / look
-  Mod+Shift+w        Wallpaper
+  Mod+Ctrl+w         Wallpaper
   Mod+Ctrl+t         SweetPotato themer
-  Mod+g              Corners and gaps
-  Mod+Shift+d        Displays (nwg-displays)
-  Mod+Ctrl+d         Save display layout
+  Mod+Ctrl+g         Corners and gaps
+  Mod+Ctrl+d         Displays (nwg-displays)
+  Mod+Ctrl+Shift+d   Save display layout
 
   System
   Mod+l              Lock

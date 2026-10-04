@@ -90,7 +90,7 @@ end
 
 -- Gap only on the focused workspace, and only while it has more than one
 -- tiled window. Unfocused workspaces update when they are focused.
--- Mod+g writes ~/.config/sweetpotatos/frame ("off" hides the gap).
+-- Mod+Ctrl+g writes ~/.config/sweetpotatos/frame ("off" hides the gap).
 local applied_gap = {}
 local applied_enabled = nil
 
