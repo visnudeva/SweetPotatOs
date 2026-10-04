@@ -240,7 +240,6 @@ seat * xcursor_theme capitaine-cursors 24
 
     # Toggle the current focus between tiling and floating mode
     bindsym $mod+a floating toggle
-    bindsym $mod+Shift+space floating toggle
 
     # Move focus to the parent container
     bindsym $mod+Shift+a focus parent

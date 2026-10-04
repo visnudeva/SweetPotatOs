@@ -17,7 +17,6 @@
   Mod+m              Expand column ↔ 50/50
   Mod+Shift+f        Fullscreen
   Mod+a              Floating toggle
-  Mod+Shift+space    Floating toggle
   Mod+b / Mod+v      Split horizontal / vertical
   Mod+Shift+a        Focus parent
   Mod+h/j/k          Focus left / down / up

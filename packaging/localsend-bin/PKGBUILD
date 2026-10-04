@@ -4,7 +4,7 @@
 # Upstream: https://github.com/localsend/localsend
 pkgname=localsend-bin
 pkgver=1.18.0
-pkgrel=3
+pkgrel=4
 pkgdesc='An open source cross-platform alternative to AirDrop'
 url=https://github.com/localsend/localsend
 arch=('x86_64' 'aarch64')
@@ -58,13 +58,14 @@ package() {
   install -Dm755 "${startdir}/localsend" "${pkgdir}/usr/bin/${pkgname%-*}"
   install -Dm755 tray-icon.so "${pkgdir}/usr/lib/localsend/tray-icon.so"
 
-  # Swaybar looks these up by name. White on Papirus-Dark (dark bar),
-  # black on Papirus-Light (light bar).
+  # Swaybar looks these up by name. Papirus-Dark's panel dirs are
+  # symlinks into Papirus, owned by papirus-icon-theme, so a file
+  # installed on the Dark path collides with that package. The white
+  # mark goes in Papirus (the Dark bar follows the link). The black
+  # mark goes in Papirus-Light, which has its own panel dirs.
   local img="${srcdir}/opt/localsend_app/data/flutter_assets/assets/img"
   local size
   for size in 16 22 24; do
-    install -Dm644 "${img}/logo-32-white.png" \
-      "${pkgdir}/usr/share/icons/Papirus-Dark/${size}x${size}/panel/localsend-tray.png"
     install -Dm644 "${img}/logo-32-white.png" \
       "${pkgdir}/usr/share/icons/Papirus/${size}x${size}/panel/localsend-tray.png"
     install -Dm644 "${img}/logo-32-black.png" \

@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-108
+What changed: Floating toggle is Mod+a. LocalSend’s tray icons no longer conflict with Papirus.
+
 @2026.10.3-107
 What changed: Apply in Displays saves the layout. There is no separate save keybind.
 
