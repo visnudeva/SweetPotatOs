@@ -466,6 +466,172 @@ main .hero {
   .wall-view-close,
   .wall-view-bar { transition: none; }
 }
+.themer {
+  --panel-bg: #1d1f21;
+  --panel-fg: #f5e6e8;
+  --live-accent: #a73b50;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin: 0.85rem 0 0.35rem;
+}
+@media (min-width: 860px) {
+  .themer {
+    grid-template-columns: minmax(0, 22.5rem) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+.themer-window,
+.themer-preview {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.themer-window {
+  background: var(--panel-bg);
+  color: var(--panel-fg);
+  border: 2px solid var(--live-accent);
+  padding: 0.95rem 1rem 1rem;
+}
+.themer-window p,
+.themer-window label,
+.themer-title {
+  color: var(--panel-fg);
+}
+.themer-title {
+  margin: 0 0 0.65rem;
+  font-weight: 700;
+}
+.themer-modes {
+  display: flex;
+  gap: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+.themer-modes label,
+.themer-preset label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.92rem;
+}
+.themer-preset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.16rem 0;
+}
+.themer-preset label { flex: 1; min-width: 0; }
+.themer-dots { display: flex; gap: 0.35rem; }
+.themer-dot {
+  display: inline-block;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--panel-fg);
+  flex: none;
+}
+.themer-slider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.6rem;
+  row-gap: 0.28rem;
+  margin-top: 0.75rem;
+}
+.themer-slider > span {
+  grid-column: 1 / -1;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+.themer-slider input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  margin: 0.45rem 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff2a2a, #ffe14a, #3dff6a, #3de4ff, #4a6bff, #d84aff, #ff2a2a);
+  align-self: center;
+}
+.themer-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--panel-bg);
+  border: 2px solid var(--panel-fg);
+  cursor: pointer;
+}
+.themer-slider input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--panel-bg);
+  border: 2px solid var(--panel-fg);
+  cursor: pointer;
+}
+.themer-slider input[type="range"]::-moz-range-track {
+  height: 4px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff2a2a, #ffe14a, #3dff6a, #3de4ff, #4a6bff, #d84aff, #ff2a2a);
+}
+.themer-reset {
+  margin-top: 0.9rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--panel-fg) 28%, transparent);
+  background: color-mix(in srgb, var(--panel-fg) 8%, var(--panel-bg));
+  color: var(--panel-fg);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.themer-reset:hover {
+  border-color: var(--live-accent);
+}
+.themer-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.85rem;
+  padding: 1rem;
+  background: var(--surface);
+}
+.themer-preview-kicker {
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+}
+.themer-stage {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 4.6rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: #1d1f21;
+}
+.themer-stage-title {
+  flex: 1;
+  font-weight: 700;
+}
+.themer-stage-dot {
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  flex: none;
+}
+.themer-swatches { margin-top: 0.15rem; }
+.themer-hex {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.theme-list li.is-current {
+  background: rgba(255, 255, 255, 0.045);
+  border-radius: 8px;
+}
 .theme-columns {
   display: grid;
   grid-template-columns: 1fr;
@@ -548,6 +714,15 @@ main .hero {
     font-size: 0.62rem;
     line-height: 1.15;
   }
+  .themer-swatches {
+    flex-wrap: wrap;
+    gap: 0.45rem 0.55rem;
+  }
+  .themer-swatches .swatch {
+    flex: 1 1 4.4rem;
+    width: auto;
+  }
+  .themer-hex { font-size: 0.62rem; }
 }
 .btn {
   display: inline-block;

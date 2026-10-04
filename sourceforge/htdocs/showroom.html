@@ -81,12 +81,43 @@
     <h2>Themes</h2>
     <p>
       <code>Mod+Ctrl+t</code> opens SweetPotato themer: the dark and light presets, plus sliders for the accent and highlight. Apply commits the choice.
+      The same controls are below. A slider keeps that preset’s lightness and saturation and changes the hue.
     </p>
+    <div class="themer" data-themer>
+      <div class="themer-window">
+        <p class="themer-title">SweetPotato themer</p>
+        <div class="themer-modes" role="radiogroup" aria-label="Dark or light">
+          <label><input type="radio" name="spo-mode" value="dark" checked> Dark</label>
+          <label><input type="radio" name="spo-mode" value="light"> Light</label>
+        </div>
+        <div class="themer-presets" role="radiogroup" aria-label="Color theme"></div>
+        <label class="themer-slider">
+          <span>Accent</span>
+          <input type="range" min="0" max="360" step="0.01" value="0" data-accent aria-label="Accent hue">
+          <i class="themer-dot" data-accent-dot></i>
+        </label>
+        <label class="themer-slider">
+          <span>Highlight</span>
+          <input type="range" min="0" max="360" step="0.01" value="0" data-highlight aria-label="Highlight hue">
+          <i class="themer-dot" data-highlight-dot></i>
+        </label>
+        <button type="button" class="themer-reset" data-reset>Reset</button>
+      </div>
+      <div class="themer-preview">
+        <p class="themer-preview-kicker">Your colors</p>
+        <div class="themer-stage" data-stage>
+          <span class="themer-stage-title" data-stage-title>Sweet potato</span>
+          <i class="themer-stage-dot" data-stage-accent></i>
+          <i class="themer-stage-dot" data-stage-highlight></i>
+        </div>
+        <div class="swatches themer-swatches" data-preview-swatches></div>
+      </div>
+    </div>
     <div class="theme-columns">
     <div>
     <p class="theme-set">Dark</p>
     <ul class="theme-list">
-      <li>
+      <li data-theme="sweet-potato">
         <span class="theme-name">Sweet potato</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
@@ -95,7 +126,7 @@
           <span class="swatch"><i class="swatch-chip" style="background:#f79b29"></i><span>Second</span></span>
         </span>
       </li>
-      <li>
+      <li data-theme="ube">
         <span class="theme-name">Ube</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
@@ -104,7 +135,7 @@
           <span class="swatch"><i class="swatch-chip" style="background:#c9a0f5"></i><span>Second</span></span>
         </span>
       </li>
-      <li>
+      <li data-theme="lime">
         <span class="theme-name">Lime</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
@@ -113,7 +144,7 @@
           <span class="swatch"><i class="swatch-chip" style="background:#d2ff4a"></i><span>Second</span></span>
         </span>
       </li>
-      <li>
+      <li data-theme="cyberpunk">
         <span class="theme-name">Cyberpunk</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
@@ -122,7 +153,7 @@
           <span class="swatch"><i class="swatch-chip" style="background:#ffef00"></i><span>Second</span></span>
         </span>
       </li>
-      <li>
+      <li data-theme="monochrome">
         <span class="theme-name">Monochrome</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
@@ -136,7 +167,7 @@
     <div>
     <p class="theme-set">Light</p>
     <ul class="theme-list">
-      <li>
+      <li data-theme="dragon-fruit">
         <span class="theme-name">Dragon fruit</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
@@ -145,7 +176,7 @@
           <span class="swatch"><i class="swatch-chip" style="background:#3a3336"></i><span>Second</span></span>
         </span>
       </li>
-      <li>
+      <li data-theme="sweet-potato-light">
         <span class="theme-name">Sweet potato</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
@@ -154,7 +185,7 @@
           <span class="swatch"><i class="swatch-chip" style="background:#f79b29"></i><span>Second</span></span>
         </span>
       </li>
-      <li>
+      <li data-theme="blueberry">
         <span class="theme-name">Blueberry</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
@@ -163,7 +194,7 @@
           <span class="swatch"><i class="swatch-chip" style="background:#738bbf"></i><span>Second</span></span>
         </span>
       </li>
-      <li>
+      <li data-theme="monochrome-light">
         <span class="theme-name">Monochrome</span>
         <span class="swatches">
           <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
@@ -338,6 +369,221 @@
     </div>
   </div>
   <script>
+    (function () {
+      var root = document.querySelector("[data-themer]");
+      if (!root) return;
+      var presets = [
+        { id: "sweet-potato", name: "Sweet potato", mode: "dark", surface: "1d1f21", text: "f5e6e8", textLabel: "Text", accent: "a73b50", highlight: "f79b29" },
+        { id: "ube", name: "Ube", mode: "dark", surface: "1d1f21", text: "f4f0f8", textLabel: "Text", accent: "9346c8", highlight: "c9a0f5" },
+        { id: "lime", name: "Lime", mode: "dark", surface: "1d1f21", text: "f2f6f1", textLabel: "Text", accent: "2bd45a", highlight: "d2ff4a" },
+        { id: "cyberpunk", name: "Cyberpunk", mode: "dark", surface: "1d1f21", text: "f3f7f8", textLabel: "Bar", accent: "51bad9", highlight: "ffef00" },
+        { id: "monochrome", name: "Monochrome", mode: "dark", surface: "1d1f21", text: "f2f2f2", textLabel: "Text", accent: "f2f2f2", highlight: "9aa0a6" },
+        { id: "dragon-fruit", name: "Dragon fruit", mode: "light", surface: "f4f1ec", text: "241e20", textLabel: "Text", accent: "c2256a", highlight: "3a3336" },
+        { id: "sweet-potato-light", name: "Sweet potato", mode: "light", surface: "f4f1ec", text: "241e20", textLabel: "Text", accent: "a73b50", highlight: "f79b29" },
+        { id: "blueberry", name: "Blueberry", mode: "light", surface: "f4f1ec", text: "1c1b19", textLabel: "Text", accent: "2a3f86", highlight: "738bbf" },
+        { id: "monochrome-light", name: "Monochrome", mode: "light", surface: "f4f1ec", text: "1d1f21", textLabel: "Text", accent: "1d1f21", highlight: "6e7378" }
+      ];
+      var presetBox = root.querySelector(".themer-presets");
+      var accentScale = root.querySelector("[data-accent]");
+      var highlightScale = root.querySelector("[data-highlight]");
+      var accentDot = root.querySelector("[data-accent-dot]");
+      var highlightDot = root.querySelector("[data-highlight-dot]");
+      var stage = root.querySelector("[data-stage]");
+      var stageTitle = root.querySelector("[data-stage-title]");
+      var stageAccent = root.querySelector("[data-stage-accent]");
+      var stageHighlight = root.querySelector("[data-stage-highlight]");
+      var previewSwatches = root.querySelector("[data-preview-swatches]");
+      var chips = {};
+      var currentId = "sweet-potato";
+      var building = false;
+
+      function rgbOf(hex) {
+        return [0, 2, 4].map(function (i) {
+          return parseInt(hex.substr(i, 2), 16) / 255;
+        });
+      }
+
+      function rgbToHls(r, g, b) {
+        var maxc = Math.max(r, g, b);
+        var minc = Math.min(r, g, b);
+        var sumc = maxc + minc;
+        var rangec = maxc - minc;
+        var l = sumc / 2;
+        if (minc === maxc) return [0, l, 0];
+        var s = l <= 0.5 ? rangec / sumc : rangec / (2 - sumc);
+        var rc = (maxc - r) / rangec;
+        var gc = (maxc - g) / rangec;
+        var bc = (maxc - b) / rangec;
+        var h = r === maxc ? bc - gc : g === maxc ? 2 + rc - bc : 4 + gc - rc;
+        h = ((h / 6) % 1 + 1) % 1;
+        return [h, l, s];
+      }
+
+      function hlsToRgb(h, l, s) {
+        if (s === 0) return [l, l, l];
+        var m2 = l <= 0.5 ? l * (1 + s) : l + s - l * s;
+        var m1 = 2 * l - m2;
+        function v(hue) {
+          hue = (hue % 1 + 1) % 1;
+          if (hue < 1 / 6) return m1 + (m2 - m1) * hue * 6;
+          if (hue < 0.5) return m2;
+          if (hue < 2 / 3) return m1 + (m2 - m1) * (2 / 3 - hue) * 6;
+          return m1;
+        }
+        return [v(h + 1 / 3), v(h), v(h - 1 / 3)];
+      }
+
+      function byteHex(channel) {
+        var n = Math.max(0, Math.min(255, Math.round(channel * 255)));
+        return ("0" + n.toString(16)).slice(-2);
+      }
+
+      function hueOf(hex) {
+        var rgb = rgbOf(hex);
+        return rgbToHls(rgb[0], rgb[1], rgb[2])[0] * 360;
+      }
+
+      function shift(hex, hue) {
+        var rgb = rgbOf(hex);
+        var hls = rgbToHls(rgb[0], rgb[1], rgb[2]);
+        return hlsToRgb(((hue % 360) + 360) % 360 / 360, hls[1], hls[2]).map(byteHex).join("");
+      }
+
+      function paint(el, hex) {
+        el.style.background = "#" + hex;
+      }
+
+      function mode() {
+        var picked = root.querySelector('input[name="spo-mode"]:checked');
+        return picked ? picked.value : "dark";
+      }
+
+      function preset() {
+        for (var i = 0; i < presets.length; i++) {
+          if (presets[i].id === currentId) return presets[i];
+        }
+        return presets[0];
+      }
+
+      function swatch(label, hex) {
+        var item = document.createElement("span");
+        item.className = "swatch";
+        var chip = document.createElement("i");
+        chip.className = "swatch-chip";
+        paint(chip, hex);
+        var name = document.createElement("span");
+        name.textContent = label;
+        var code = document.createElement("span");
+        code.className = "themer-hex";
+        code.textContent = "#" + hex;
+        item.appendChild(chip);
+        item.appendChild(name);
+        item.appendChild(code);
+        return item;
+      }
+
+      function render() {
+        var row = preset();
+        var accent = shift(row.accent, Number(accentScale.value));
+        var highlight = shift(row.highlight, Number(highlightScale.value));
+        var panel = row.mode === "light"
+          ? { bg: "f4f1ec", fg: "241e20" }
+          : { bg: "1d1f21", fg: "f5e6e8" };
+        root.style.setProperty("--panel-bg", "#" + panel.bg);
+        root.style.setProperty("--panel-fg", "#" + panel.fg);
+        root.style.setProperty("--live-accent", "#" + accent);
+        document.documentElement.style.setProperty("--live-accent", "#" + accent);
+        paint(accentDot, accent);
+        paint(highlightDot, highlight);
+        var pair = chips[row.id];
+        if (pair) {
+          paint(pair[0], accent);
+          paint(pair[1], highlight);
+        }
+        stage.style.background = "#" + row.surface;
+        stageTitle.textContent = row.name;
+        stageTitle.style.color = "#" + row.text;
+        paint(stageAccent, accent);
+        paint(stageHighlight, highlight);
+        stageAccent.style.borderColor = "#" + row.text;
+        stageHighlight.style.borderColor = "#" + row.text;
+        previewSwatches.textContent = "";
+        previewSwatches.appendChild(swatch("Surface", row.surface));
+        previewSwatches.appendChild(swatch(row.textLabel, row.text));
+        previewSwatches.appendChild(swatch("Accent", accent));
+        previewSwatches.appendChild(swatch("Second", highlight));
+        Array.prototype.forEach.call(document.querySelectorAll(".theme-list [data-theme]"), function (item) {
+          item.classList.toggle("is-current", item.getAttribute("data-theme") === row.id);
+        });
+      }
+
+      function showPresetHues() {
+        var row = preset();
+        accentScale.value = String(hueOf(row.accent));
+        highlightScale.value = String(hueOf(row.highlight));
+        render();
+      }
+
+      function rebuild(selected) {
+        building = true;
+        chips = {};
+        presetBox.textContent = "";
+        var groupName = "spo-preset";
+        var first = null;
+        var chosen = null;
+        presets.forEach(function (row) {
+          if (row.mode !== mode()) return;
+          var line = document.createElement("div");
+          line.className = "themer-preset";
+          var label = document.createElement("label");
+          var radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = groupName;
+          radio.value = row.id;
+          label.appendChild(radio);
+          label.appendChild(document.createTextNode(row.name));
+          var dots = document.createElement("span");
+          dots.className = "themer-dots";
+          var accent = document.createElement("i");
+          var highlight = document.createElement("i");
+          accent.className = "themer-dot";
+          highlight.className = "themer-dot";
+          paint(accent, row.accent);
+          paint(highlight, row.highlight);
+          chips[row.id] = [accent, highlight];
+          dots.appendChild(accent);
+          dots.appendChild(highlight);
+          line.appendChild(label);
+          line.appendChild(dots);
+          presetBox.appendChild(line);
+          if (!first) first = radio;
+          if (row.id === selected) chosen = radio;
+          radio.addEventListener("change", function () {
+            if (building || !radio.checked) return;
+            currentId = row.id;
+            showPresetHues();
+          });
+        });
+        var active = chosen || first;
+        if (active) {
+          active.checked = true;
+          currentId = active.value;
+        }
+        building = false;
+        showPresetHues();
+      }
+
+      Array.prototype.forEach.call(root.querySelectorAll('input[name="spo-mode"]'), function (input) {
+        input.addEventListener("change", function () {
+          if (!input.checked) return;
+          rebuild(mode() === "light" ? "sweet-potato-light" : "sweet-potato");
+        });
+      });
+      accentScale.addEventListener("input", render);
+      highlightScale.addEventListener("input", render);
+      root.querySelector("[data-reset]").addEventListener("click", showPresetHues);
+      rebuild(currentId);
+    }());
     (function () {
       var root = document.querySelector("[data-coverflow]");
       if (!root) return;
