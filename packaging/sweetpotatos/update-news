@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-110
+What changed: A saved display layout missing Hz is corrected in place. The arrangement stays. Nothing to set again.
+
 @2026.10.3-109
 What changed: A saved display layout with an unreadable refresh rate is removed. Open Displays and press Apply to save it again.
 

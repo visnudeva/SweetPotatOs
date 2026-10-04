@@ -213,14 +213,20 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
         "${theme_script}" --quiet apply || true
     fi
 
-    # The old save-layout shortcut wrote "1920x1080@60" with no Hz.
-    # Swirl rejects that on reload. A Displays Apply file ends in Hz and stays.
+    # The old save-layout shortcut wrote "1920x1080@60" with no Hz, and
+    # "position 0,0". Swirl rejects that on reload. Add Hz and split the
+    # position so the saved arrangement stays. A Displays Apply file already
+    # ends in Hz and is left alone.
     outputs_file="${target_home}/.config/sway/outputs"
     if [[ -s "${outputs_file}" ]] && grep -E -q \
       '(^|[[:space:]])mode[[:space:]]+(--[[:alnum:]-]+[[:space:]]+)?[0-9]+x[0-9]+@[0-9]+(\.[0-9]+)?([[:space:]]|$)' \
       "${outputs_file}"; then
-      echo "[*] Removing saved display layout with an unreadable refresh rate…"
-      rm -f "${outputs_file}"
+      echo "[*] Correcting the saved display layout so Swirl can read the refresh rate…"
+      sed -E -i \
+        -e 's/@([0-9]+(\.[0-9]+)?)([[:space:]]|$)/@\1Hz\3/g' \
+        -e 's/position[[:space:]]+([-0-9]+),([-0-9]+)/position \1 \2/g' \
+        "${outputs_file}"
+      chown "${target_user}:${target_user}" "${outputs_file}" 2>/dev/null || true
       sync_kanshi="${target_home}/.config/swirl/scripts/sync-kanshi-from-outputs.sh"
       if [[ -x "${sync_kanshi}" ]]; then
         sudo -u "${target_user}" HOME="${target_home}" \
