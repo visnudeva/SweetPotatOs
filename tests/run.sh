@@ -22,6 +22,8 @@ run "autotile_lib" lua "${ROOT}/tests/test_autotile_lib.lua"
 run "materialize" bash "${ROOT}/tests/test_materialize.sh"
 run "update_channel" bash "${ROOT}/tests/test_update_channel.sh"
 run "update_notify" bash "${ROOT}/tests/test_update_notify.sh"
+run "hues" bash "${ROOT}/tests/test_hues.sh"
+run "caffeine" bash "${ROOT}/tests/test_caffeine.sh"
 run "smoke-check" bash "${ROOT}/scripts/smoke-check.sh"
 
 if [[ "${FAIL}" -eq 0 ]]; then

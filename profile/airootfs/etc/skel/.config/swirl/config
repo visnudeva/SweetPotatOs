@@ -108,9 +108,8 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Shift+d exec ~/.config/swirl/scripts/nwg-displays.sh
     bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/save-display-layout.sh
 
-    # Theme: next preset on this surface, or switch dark / light
-    bindsym $mod+Shift+t exec ~/.config/swirl/scripts/theme.sh next
-    bindsym $mod+Ctrl+t exec ~/.config/swirl/scripts/theme.sh toggle
+    # SweetPotato themer: presets, plus accent and highlight.
+    bindsym $mod+Ctrl+t exec /usr/local/bin/sweetpotatos-hues
 
     # Start your web browser
     bindsym $mod+w exec $web
@@ -366,6 +365,7 @@ exec_always ~/.config/swirl/scripts/workspace-dots.sh
 
 for_window [app_id="io.calamares.calamares"] floating enable
 for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, border pixel 2, resize set width 50 ppt height 90 ppt, move position center
+for_window [app_id="sweetpotato-themes"] floating enable
 
 # Saved monitor layout (nwg-displays / Mod+Ctrl+d)
 include ~/.config/sway/outputs

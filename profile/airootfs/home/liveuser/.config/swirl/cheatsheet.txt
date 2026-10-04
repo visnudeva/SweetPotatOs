@@ -4,9 +4,9 @@
   Apps
   Mod+Space          App launcher (Esc closes it)
   Mod+Return         Terminal (foot, fish)
-  Mod+w              Web browser
-  Mod+f              Files
-  Mod+e              Editor
+  Mod+w              Web browser (Brave Origin)
+  Mod+f              Files (Thunar)
+  Mod+e              Editor (Geany)
   Mod+r              Music / radio (Spore)
   Mod+t              Torrents (tuber)
   Mod+n              Network (Wi‑Fi)
@@ -38,8 +38,7 @@
 
   Displays / look
   Mod+Shift+w        Wallpaper
-  Mod+Shift+t        Next theme (this surface)
-  Mod+Ctrl+t         Switch dark / light
+  Mod+Ctrl+t         SweetPotato themer
   Mod+g              Corners and gaps
   Mod+Shift+d        Displays (nwg-displays)
   Mod+Ctrl+d         Save display layout

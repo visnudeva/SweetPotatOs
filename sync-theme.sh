@@ -150,6 +150,10 @@ sync_common_into() {
 
   rm -f "${dest}/.config/swirl/config-fr" "${dest}/.config/swirl/config-us"
   cp -f "${SP}"/swirl/scripts/*.sh "${dest}/.config/swirl/scripts/"
+  if compgen -G "${SP}/swirl/scripts/*.py" >/dev/null; then
+    cp -f "${SP}"/swirl/scripts/*.py "${dest}/.config/swirl/scripts/"
+    chmod 755 "${dest}/.config/swirl/scripts/"*.py
+  fi
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
   cp -f "${SP}/swirl/scripts/autotile_lib.lua" "${dest}/.config/swirl/scripts/autotile_lib.lua"
   # Drop retired Wi‑Fi tray experiments (nm-applet is the tray icon again)

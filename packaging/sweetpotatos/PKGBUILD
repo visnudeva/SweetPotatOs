@@ -1,12 +1,12 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=94
+pkgrel=105
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
 license=('MIT')
-depends=('bash' 'fish' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'libnotify' 'ttf-nerd-fonts-symbols-mono' 'tumbler')
+depends=('bash' 'fish' 'pacman' 'plymouth' 'systemd' 'findutils' 'coreutils' 'libnotify' 'python' 'python-gobject' 'gtk3' 'ttf-nerd-fonts-symbols-mono' 'tumbler')
 optdepends=(
   'swirl: desktop compositor'
   'yay-bin: AUR helper'
@@ -51,6 +51,7 @@ package() {
     sweetpotatos-fix-ly \
     sweetpotatos-fix-sudo \
     sweetpotatos-fix-sway-keyboard \
+    sweetpotatos-hues \
     geany \
     brave-origin; do
     install -Dm755 "${files}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
@@ -77,6 +78,8 @@ package() {
     "${pkgdir}/etc/pacman.d/sweetpotatos.conf"
   install -Dm644 "${srcdir}/update-news" \
     "${pkgdir}/usr/share/sweetpotatos/update-news"
+  install -Dm644 "${files}/usr/share/applications/sweetpotato-hues.desktop" \
+    "${pkgdir}/usr/share/applications/sweetpotato-hues.desktop"
 
   install -Dm644 "${files}/usr/local/share/sweetpotatos/os-release" \
     "${pkgdir}/usr/local/share/sweetpotatos/os-release"

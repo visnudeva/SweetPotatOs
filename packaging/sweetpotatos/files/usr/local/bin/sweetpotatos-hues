@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Open SweetPotato themer (Mod+Ctrl+t).
+script="${HOME}/.config/swirl/scripts/theme.sh"
+if [[ ! -x "${script}" ]]; then
+  script=/usr/share/sweetpotato/config/swirl/scripts/theme.sh
+fi
+exec "${script}" hue

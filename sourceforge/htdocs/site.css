@@ -148,10 +148,22 @@ header.page {
   padding: 2.5rem 1.25rem 1rem;
   text-align: center;
 }
+header.page .title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.85rem;
+}
+header.page .title-row h1 {
+  margin: 0;
+}
 header.page img.logo {
-  width: 140px;
+  width: 96px;
   height: auto;
-  margin-bottom: 0.75rem;
+  margin: 0;
+}
+@media (min-width: 640px) {
+  header.page img.logo { width: 140px; }
 }
 h1 {
   margin: 0.2rem 0;

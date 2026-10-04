@@ -1,0 +1,5 @@
+#!/bin/sh
+# LocalSend's tray icon is a file path. Swaybar cannot load that and draws
+# a red face. The preload reports the theme icon installed beside Papirus.
+export LD_PRELOAD="/usr/lib/localsend/tray-icon.so${LD_PRELOAD:+:$LD_PRELOAD}"
+exec /opt/localsend/localsend "$@"

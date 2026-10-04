@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=SweetPotato themer
+GenericName=Themes
+Comment=Choose a theme, or recolor the accent and highlight
+Exec=sweetpotatos-hues
+TryExec=sweetpotatos-hues
+Icon=sweetpotatos
+Terminal=false
+StartupNotify=true
+Categories=System;Settings;
+Keywords=theme;themes;colors;sweetpotato;hue;accent;

@@ -4,7 +4,7 @@
 # Upstream: https://github.com/localsend/localsend
 pkgname=localsend-bin
 pkgver=1.18.0
-pkgrel=2
+pkgrel=3
 pkgdesc='An open source cross-platform alternative to AirDrop'
 url=https://github.com/localsend/localsend
 arch=('x86_64' 'aarch64')
@@ -35,6 +35,8 @@ build() {
     "${srcdir}/usr/share/applications/${_pkgdesktop}"
 
   sed -i -E 's/^Icon=.+/Icon=localsend/' "${srcdir}/usr/share/applications/${_pkgdesktop}"
+
+  gcc -shared -fPIC -O2 -o tray-icon.so "${startdir}/tray-icon.c" -ldl
 }
 
 package() {
@@ -53,5 +55,21 @@ package() {
   mv "${pkgdir}/opt/${pkgname%-*}/localsend_app" "${pkgdir}/opt/${pkgname%-*}/localsend"
 
   install -dm755 "${pkgdir}/usr/bin"
-  ln -s "/opt/${pkgname%-*}/${pkgname%-*}" "${pkgdir}/usr/bin/${pkgname%-*}"
+  install -Dm755 "${startdir}/localsend" "${pkgdir}/usr/bin/${pkgname%-*}"
+  install -Dm755 tray-icon.so "${pkgdir}/usr/lib/localsend/tray-icon.so"
+
+  # Swaybar looks these up by name. White on Papirus-Dark (dark bar),
+  # black on Papirus-Light (light bar).
+  local img="${srcdir}/opt/localsend_app/data/flutter_assets/assets/img"
+  local size
+  for size in 16 22 24; do
+    install -Dm644 "${img}/logo-32-white.png" \
+      "${pkgdir}/usr/share/icons/Papirus-Dark/${size}x${size}/panel/localsend-tray.png"
+    install -Dm644 "${img}/logo-32-white.png" \
+      "${pkgdir}/usr/share/icons/Papirus/${size}x${size}/panel/localsend-tray.png"
+    install -Dm644 "${img}/logo-32-black.png" \
+      "${pkgdir}/usr/share/icons/Papirus-Light/${size}x${size}/panel/localsend-tray.png"
+    install -Dm644 "${img}/logo-32-white.png" \
+      "${pkgdir}/usr/share/icons/hicolor/${size}x${size}/apps/localsend-tray.png"
+  done
 }

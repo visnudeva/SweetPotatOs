@@ -3,13 +3,20 @@
 # Dark (charcoal): sweet potato, ube, lime, cyberpunk, monochrome.
 # Light (off-white): dragon fruit, sweet potato, blueberry, monochrome.
 # Cyberpunk is the dark theme with a light bar.
-# Mod+Shift+t next on the current surface. Mod+Ctrl+t switches surface.
+# Mod+Ctrl+t opens the themer. next/toggle stay available for scripts.
+# Those hues are stored beside the theme id and do not recolor the other presets.
 set -euo pipefail
 
 ROOT="${SPO_CONFIG_ROOT:-${HOME}/.config}"
 STATE_DIR="${ROOT}/sweetpotatos"
 STATE_FILE="${STATE_DIR}/theme"
 ACTIVE_FILE="${STATE_DIR}/active.sh"
+HUES_FILE="${STATE_DIR}/hues"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# HSL hue of #a73b50 and #f79b29. Sliders store the same scale.
+ACCENT_HUE_DEFAULT=348.33
+HIGHLIGHT_HUE_DEFAULT=33.20
+HUE_CUSTOM=0
 
 DARK_IDS=(sweet-potato ube lime cyberpunk monochrome)
 LIGHT_IDS=(dragon-fruit sweet-potato-light blueberry monochrome-light)
@@ -25,7 +32,7 @@ done
 set -- "${ARGS[@]+"${ARGS[@]}"}"
 
 usage() {
-  echo "Usage: theme.sh next|prev|toggle|apply|set <id>|preview" >&2
+  echo "Usage: theme.sh next|prev|toggle|apply|set <id>|preview|presets|hue|hue-apply <dark|light> <accent-hue> <highlight-hue>|hue-hex <hex> <hue>" >&2
   exit 2
 }
 
@@ -179,6 +186,91 @@ load_palette() {
   if [[ "${ID}" == cyberpunk ]]; then
     TRAY_ICONS=Papirus-Light
   fi
+}
+
+shift_hex() {
+  python3 - "$1" "$2" << 'PY'
+import colorsys, sys
+hex_color, hue = sys.argv[1], float(sys.argv[2]) % 360
+r, g, b = [int(hex_color[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+_h, light, sat = colorsys.rgb_to_hls(r, g, b)
+r, g, b = colorsys.hls_to_rgb(hue / 360.0, light, sat)
+print("".join(f"{max(0, min(255, round(c * 255))):02x}" for c in (r, g, b)))
+PY
+}
+
+hue_of() {
+  python3 - "$1" << 'PY'
+import colorsys, sys
+h = sys.argv[1]
+r, g, b = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+H, _l, _s = colorsys.rgb_to_hls(r, g, b)
+print(f"{H * 360:.2f}")
+PY
+}
+
+read_hues() {
+  ACCENT_HUE="${ACCENT_HUE_DEFAULT}"
+  HIGHLIGHT_HUE="${HIGHLIGHT_HUE_DEFAULT}"
+  HUE_ID="${HUE_ID:-sweet-potato}"
+  [[ -f "${HUES_FILE}" ]] || return 0
+  local key val
+  while IFS='=' read -r key val; do
+    case "${key}" in
+      id) HUE_ID="${val}" ;;
+      accent_hue) ACCENT_HUE="${val}" ;;
+      highlight_hue) HIGHLIGHT_HUE="${val}" ;;
+    esac
+  done < "${HUES_FILE}"
+}
+
+write_hues() {
+  mkdir -p "${STATE_DIR}"
+  printf 'id=%s\naccent_hue=%s\nhighlight_hue=%s\n' \
+    "${HUE_ID}" "${ACCENT_HUE}" "${HIGHLIGHT_HUE}" > "${HUES_FILE}"
+}
+
+hues_match() {
+  python3 - "$1" "$2" "$3" "$4" << 'PY'
+import sys
+def near(a, b):
+    d = abs(float(a) - float(b)) % 360
+    return min(d, 360 - d) < 0.75
+accent, highlight, accent_base, highlight_base = sys.argv[1:]
+sys.exit(0 if near(accent, accent_base) and near(highlight, highlight_base) else 1)
+PY
+}
+
+# Recolor the open preset's accent and highlight. Other presets keep the
+# colors load_palette chose. A hue that still matches the preset is a no-op.
+apply_saved_hues() {
+  HUE_CUSTOM=0
+  read_hues
+  [[ "${HUE_ID}" == "${ID}" ]] || return 0
+  if hues_match "${ACCENT_HUE}" "${HIGHLIGHT_HUE}" \
+      "$(hue_of "${ACCENT}")" "$(hue_of "${HIGHLIGHT}")"; then
+    return 0
+  fi
+  ACCENT="$(shift_hex "${ACCENT}" "${ACCENT_HUE}")"
+  ACCENT_DIM="$(shift_hex "${ACCENT_DIM}" "${ACCENT_HUE}")"
+  HIGHLIGHT="$(shift_hex "${HIGHLIGHT}" "${HIGHLIGHT_HUE}")"
+  SUCCESS="$(shift_hex "${SUCCESS}" "${HIGHLIGHT_HUE}")"
+  BAR_ACCENT="${ACCENT}"
+  BAR_HIGHLIGHT="${HIGHLIGHT}"
+  INK_ACCENT="${ACCENT}"
+  INK_HIGHLIGHT="${HIGHLIGHT}"
+  EDGE="${ACCENT}"
+  MAKO_BORDER="${HIGHLIGHT}"
+  if [[ "${MODE}" == light ]]; then
+    TUI_TITLE="${INK_ACCENT}"
+    TUI_HEADER="${INK_ACCENT}"
+    TUI_WARN="${INK_ACCENT}"
+  else
+    TUI_TITLE="${HIGHLIGHT}"
+    TUI_HEADER="${SUCCESS}"
+    TUI_WARN="${HIGHLIGHT}"
+  fi
+  HUE_CUSTOM=1
 }
 
 canon_id() {
@@ -352,7 +444,7 @@ EOF
 
   if [[ -f "${ROOT}/foot/foot.ini" ]]; then
     payload="$(mktemp)"
-    if [[ "${ID}" == sweet-potato ]]; then
+    if [[ "${ID}" == sweet-potato && "${HUE_CUSTOM}" -eq 0 ]]; then
       cat > "${payload}" << 'EOF'
 [colors-dark]
 alpha=1.0
@@ -697,6 +789,7 @@ remember_side() {
 
 apply_current() {
   load_palette "${ID}"
+  apply_saved_hues
   remember_side
   write_state
   write_configs
@@ -800,6 +893,37 @@ case "${cmd}" in
     [[ -n "${2:-}" ]] || usage
     read_state
     ID="$(canon_id "$2")"
+    apply_current
+    reload_desktop
+    [[ "${QUIET}" -eq 1 ]] || echo "${NAME}"
+    ;;
+  presets)
+    for id in "${DARK_IDS[@]}" "${LIGHT_IDS[@]}"; do
+      load_palette "${id}"
+      printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+        "${ID}" "${NAME}" "${MODE}" "${SURFACE}" "${ACCENT}" "${HIGHLIGHT}"
+    done
+    ;;
+  hue)
+    exec python3 "${SCRIPT_DIR}/hue.py"
+    ;;
+  hue-hex)
+    [[ -n "${2:-}" && -n "${3:-}" ]] || usage
+    shift_hex "$2" "$3"
+    ;;
+  hue-apply)
+    [[ -n "${2:-}" && -n "${3:-}" && -n "${4:-}" ]] || usage
+    python3 -c 'import sys; [float(x) for x in sys.argv[1:]]' "$3" "$4" >/dev/null
+    read_state
+    case "$2" in
+      dark) HUE_ID=sweet-potato ;;
+      light) HUE_ID=sweet-potato-light ;;
+      *) HUE_ID="$(canon_id "$2")" ;;
+    esac
+    ACCENT_HUE="$3"
+    HIGHLIGHT_HUE="$4"
+    write_hues
+    ID="${HUE_ID}"
     apply_current
     reload_desktop
     [[ "${QUIET}" -eq 1 ]] || echo "${NAME}"

@@ -4,6 +4,39 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-105
+What changed: Mod+Ctrl+t opens SweetPotato themer. The next-theme and dark/light keybinds are gone. LocalSend’s tray icon is the LocalSend mark instead of the red face.
+
+@2026.10.3-104
+What changed: With caffeine on, closing the lid still sleeps, and opening it wakes the laptop. The notice says caffeine on or caffeine off.
+
+@2026.10.3-103
+What changed: SweetPotato themer updates its own background when you Apply a light theme from a dark one, or the other way around.
+
+@2026.10.3-102
+What changed: SweetPotato themer drops the extra Accent and highlight heading. The round color chips have a thin border so they stay visible on the window background.
+
+@2026.10.3-101
+What changed: SweetPotato themer is back in the app menu. The window fits its contents, and the color chips are round.
+
+@2026.10.3-100
+What changed: Themes opens floating. Dark shows the dark presets and Light shows the light ones. The sliders start on the colors of the preset you pick.
+
+@2026.10.3-99
+What changed: Themes lists the presets (Sweet potato, Ube, Lime, Cyberpunk, Monochrome, and the light set). Pick one, then Apply. Sweet potato still has the pink and orange sliders.
+
+@2026.10.3-98
+What changed: Sweet potato colors uses dark text on the light theme, so the sliders stay readable.
+
+@2026.10.3-97
+What changed: Sweet potato colors waits until you press Apply. Moving the sliders no longer recolors the desktop while you are still choosing.
+
+@2026.10.3-96
+What changed: Sweet potato colors opens again. Mod+Ctrl+Shift+t and the Sweet potato colors app both open the pink and orange sliders.
+
+@2026.10.3-95
+What changed: Mod+Ctrl+Shift+t opens sliders for the Sweet potato pink and orange. Dark and light keep their own surfaces. The other themes stay as they are.
+
 @2026.10.3-94
 What changed: The terminal opens in fish. Escape closes the app menu again, and still closes a window when no menu is open.
 

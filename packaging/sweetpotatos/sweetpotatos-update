@@ -216,12 +216,22 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
     # Reload Swirl so shipped config changes apply — users should not need Mod+Shift+c.
     if [[ -n "${target_uid}" ]]; then
       shopt -s nullglob
-      socks=(/run/user/"${target_uid}"/sway-ipc.*.sock)
+      socks=(/run/user/"${target_uid}"/sway-ipc.*.sock /run/user/"${target_uid}"/swirl-ipc.*.sock)
       shopt -u nullglob
       if ((${#socks[@]} > 0)) && command -v swaymsg >/dev/null 2>&1; then
         echo "[*] Reloading Swirl session…"
         if sudo -u "${target_user}" SWAYSOCK="${socks[0]}" swaymsg reload >/dev/null 2>&1; then
           reloaded=1
+        fi
+        # Reload starts the normal idle timeouts. If caffeine was on, put
+        # the timeout-free watcher back and drop any old idle inhibitor.
+        caffeine_state="/run/user/${target_uid}/sweetpotato-caffeine.state"
+        caffeine_script="${target_home}/.config/swirl/scripts/caffeine.sh"
+        if [[ -f "${caffeine_state}" && "$(cat "${caffeine_state}")" == on && -f "${caffeine_script}" ]]; then
+          echo "[*] Caffeine was on — restoring it without an idle lock…"
+          sudo -u "${target_user}" HOME="${target_home}" \
+            XDG_RUNTIME_DIR="/run/user/${target_uid}" \
+            "${caffeine_script}" on || true
         fi
       fi
     fi
