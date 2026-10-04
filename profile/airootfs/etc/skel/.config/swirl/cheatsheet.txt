@@ -41,7 +41,6 @@
   Mod+Ctrl+t         SweetPotato themer
   Mod+Ctrl+g         Corners and gaps
   Mod+Ctrl+d         Displays (nwg-displays)
-  Mod+Ctrl+Shift+d   Save display layout
 
   System
   Mod+l              Lock

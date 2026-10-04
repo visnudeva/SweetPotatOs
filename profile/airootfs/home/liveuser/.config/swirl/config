@@ -108,9 +108,8 @@ seat * xcursor_theme capitaine-cursors 24
     # Wallpaper selector
     bindsym $mod+Ctrl+w exec waypaper
 
-    # Display layout (letter d). Shift saves after wlr-randr.
+    # Displays. Apply in that window saves the layout.
     bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/nwg-displays.sh
-    bindsym $mod+Ctrl+Shift+d exec ~/.config/swirl/scripts/save-display-layout.sh
 
     # SweetPotato themer: presets, plus accent and highlight.
     bindsym $mod+Ctrl+t exec /usr/local/bin/sweetpotatos-hues
@@ -371,7 +370,7 @@ for_window [app_id="io.calamares.calamares"] floating enable
 for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, border pixel 2, resize set width 50 ppt height 90 ppt, move position center
 for_window [app_id="sweetpotato-themes"] floating enable
 
-# Saved monitor layout (nwg-displays / Mod+Ctrl+Shift+d)
+# Saved monitor layout (nwg-displays Apply)
 include ~/.config/sway/outputs
 include ~/.config/sway/workspaces
 # Autostart installer on the live ISO session
