@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-111
+What changed: Caffeine only keeps the screen on while the lid is open. Closing the lid sleeps the same way it does with caffeine off.
+
 @2026.10.3-110
 What changed: A saved display layout missing Hz is corrected in place. The arrangement stays. Nothing to set again.
 

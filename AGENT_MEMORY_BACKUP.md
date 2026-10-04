@@ -159,7 +159,7 @@ Bump together: `profile/profiledef.sh`, `build.sh` `SWEETPOTATOS_ISO_NAME` defau
 ### Lid / caffeine / services
 
 - Lid close → suspend: `lid-sleep.conf`. Never bring back `do-not-suspend.conf` (`HandleLidSwitch=ignore`).
-- Caffeine stops idle lock and display-off by running swayidle with no timeouts. Do **not** take a `systemd-inhibit` lock (a lock held across lid sleep can prevent wake). Live ISO: caffeine **on by default**.
+- Caffeine only keeps the screen on while the lid is open (swayidle with no idle timeouts, same before-sleep lock). Do **not** take a `systemd-inhibit` lock and do **not** force outputs on after wake. Live ISO: caffeine **on by default**.
 - Enable `bluetooth.service` + `power-profiles-daemon`. Do not enable sshd / ModemManager / VM guests by default.
 - Ly: `default_input = password`; `waylandsessions` = Swirl only. Never ship `/etc/ly/save.txt` as `0` (root). Post-install `sweetpotatos-fix-ly` sets `${USER}`, drops `liveuser`.
 

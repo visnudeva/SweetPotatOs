@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# SweetPotato caffeine — stop idle lock and display-off.
-# Idle is the swayidle timeouts only. Do not take a systemd-inhibit lock:
-# a lock held across lid sleep leaves some machines unable to wake.
+# SweetPotato caffeine — keep the screen on while the lid is open.
+# Idle lock and display-off are the swayidle timeouts. Caffeine drops
+# those timeouts only. Lid close, wake, and power off stay on the
+# normal path. Do not take a systemd-inhibit lock.
 # Usage: caffeine.sh [on|off|toggle]  (default: toggle)
 set -euo pipefail
 
@@ -9,7 +10,7 @@ TAG="sweetpotato-caffeine"
 RUNTIME="${XDG_RUNTIME_DIR:-/tmp}"
 PIDFILE="${RUNTIME}/sweetpotato-caffeine.pid"
 STATEFILE="${RUNTIME}/sweetpotato-caffeine.state"
-LOCKCFG="${HOME}/.config/swaylock/config"
+LOCKCMD="swaylock -f -C ${HOME}/.config/swaylock/config"
 
 notify() {
   local icon="$1" title="$2"
@@ -46,23 +47,21 @@ drop_held_lock() {
   done < <(pgrep -f 'systemd-inhibit --what=idle --who=SweetPotato' || true)
 }
 
+# Same watcher the session starts with.
 start_swayidle() {
   pkill -x swayidle 2>/dev/null || true
-  # Match timeouts from swirl/config
   swayidle -w \
-    timeout 300 "swaylock -f -C ${LOCKCFG}" \
+    timeout 300 "${LOCKCMD}" \
     timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep "swaylock -f -C ${LOCKCFG}" \
-    after-resume 'swaymsg "output * enable"; swaymsg "output * power on"' &
+    before-sleep "${LOCKCMD}" &
   disown || true
 }
 
-# No idle timeouts. Lid suspend still locks, and the display comes back after wake.
-start_sleep_watch() {
+# Screen stays on. Lid close still uses the normal before-sleep lock.
+start_awake() {
   pkill -x swayidle 2>/dev/null || true
   swayidle -w \
-    before-sleep "swaylock -f -C ${LOCKCFG}" \
-    after-resume 'swaymsg "output * enable"; swaymsg "output * power on"' &
+    before-sleep "${LOCKCMD}" &
   disown || true
 }
 
@@ -72,7 +71,7 @@ enable_caffeine() {
     was_on=1
   fi
   drop_held_lock
-  start_sleep_watch
+  start_awake
   echo "on" > "${STATEFILE}"
   if [[ "${was_on}" -eq 0 ]]; then
     notify "preferences-desktop-screensaver" "caffeine on"

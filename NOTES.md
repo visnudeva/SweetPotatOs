@@ -56,8 +56,8 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Caffeine vs suspend
 
-- **Mod+c** / `caffeine.sh`: disables **idle** lock/display-off by running swayidle with no timeouts. Do **not** take a `systemd-inhibit` lock. A lock held across lid sleep leaves some laptops unable to wake.
-- Lid-close suspend must keep working while caffeine is on. The timeout-free swayidle still locks before sleep and turns the display back on after wake.
+- **Mod+c** / `caffeine.sh`: keeps the screen on while the lid is open by running swayidle with no idle timeouts. The before-sleep lock stays, matching the normal watcher. Do **not** add `after-resume` output power, and do **not** take a `systemd-inhibit` lock. A lock held across lid sleep leaves some laptops unable to wake.
+- Lid close, wake, and power off stay the same with caffeine on or off. Logind still suspends on lid close.
 - **Mod+o** / **Mod+Escape** run `poweroff.sh`, which kills the caffeine lock before `systemctl poweroff --ignore-inhibitors`. Do not inhibit `sleep`, `shutdown`, or `handle-lid-switch`.
 - Live ISO: caffeine **on by default** so install is not interrupted by idle lock; lid still suspends via logind.
 

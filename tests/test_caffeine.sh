@@ -18,4 +18,6 @@ fi
 grep -q 'caffeine on' "${SCRIPT}" || fail "missing caffeine on notice"
 grep -q 'caffeine off' "${SCRIPT}" || fail "missing caffeine off notice"
 grep -q 'Idle lock disabled' "${SCRIPT}" && fail "old caffeine notice is still there"
+grep -q 'after-resume' "${SCRIPT}" && fail "caffeine still changes wake behavior"
+grep -q 'output \* enable' "${SCRIPT}" && fail "caffeine still forces outputs on after wake"
 echo "caffeine checks passed"
