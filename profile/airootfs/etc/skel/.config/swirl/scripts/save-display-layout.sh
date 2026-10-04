@@ -41,7 +41,7 @@ tmp="$(mktemp)"
 swaymsg -t get_outputs | jq -r '
   .[] | select(.active) |
   (if .current_mode.refresh then (.current_mode.refresh / 1000 | round) else 60 end) as $hz |
-  "output \(.name) mode \(.current_mode.width)x\(.current_mode.height)@\($hz) position \(.rect.x),\(.rect.y) scale \(.scale)"
+  "output \(.name) mode \(.current_mode.width)x\(.current_mode.height)@\($hz)Hz position \(.rect.x) \(.rect.y) scale \(.scale)"
 ' >"${tmp}"
 
 if [[ ! -s "${tmp}" ]]; then

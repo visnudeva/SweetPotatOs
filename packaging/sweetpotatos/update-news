@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-109
+What changed: A saved display layout with an unreadable refresh rate is removed. Open Displays and press Apply to save it again.
+
 @2026.10.3-108
 What changed: Floating toggle is Mod+a. LocalSend’s tray icons no longer conflict with Papirus.
 
