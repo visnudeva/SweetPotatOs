@@ -2,6 +2,8 @@
 --
 -- Pairing: odd count → last column full width; even → all 50/50.
 -- Move between workspaces does not unmap — retile both sides on ipc_view move.
+-- A column dragged in overview has no view of its own, so the compositor
+-- also expands a workspace that is left with one column.
 -- Closing the last window anywhere → workspace number 1.
 --
 -- set_size uses OPERATION_RESIZE which blocks maximize_if_single, so we set
@@ -202,6 +204,27 @@ local function on_view_float(view, _)
 	end
 end
 
+local function retile_every_workspace()
+	for _, output in ipairs(scroll.root_get_outputs() or {}) do
+		for _, ws in ipairs(scroll.output_get_workspaces(output) or {}) do
+			retile(ws, nil)
+			sync_gaps(ws, nil)
+		end
+	end
+end
+
+local function remember_open_views()
+	for _, output in ipairs(scroll.root_get_outputs() or {}) do
+		for _, ws in ipairs(scroll.output_get_workspaces(output) or {}) do
+			for _, column in ipairs(scroll.workspace_get_tiling(ws) or {}) do
+				for _, v in ipairs(scroll.container_get_views(column) or {}) do
+					remember(v, ws)
+				end
+			end
+		end
+	end
+end
+
 local function on_ipc_view(view, change, _)
 	-- Deferred ping after config load (runtime gaps are rejected mid-parse).
 	if change == "mark" then
@@ -220,7 +243,11 @@ local function on_ipc_view(view, change, _)
 	end
 	local new_ws = scroll.container_get_workspace(container)
 	local old_ws = view_workspace[view]
-	if old_ws and old_ws ~= new_ws then
+	-- After a config reload the map is empty, so the source workspace would
+	-- stay at the old half width. Retile every workspace in that case.
+	if not old_ws then
+		retile_every_workspace()
+	elseif old_ws ~= new_ws then
 		retile(old_ws, nil)
 		sync_gaps(old_ws, nil)
 	end
@@ -241,6 +268,7 @@ scroll.add_callback("view_float", on_view_float, nil)
 scroll.add_callback("ipc_view", on_ipc_view, nil)
 scroll.add_callback("workspace_focus", on_workspace_focus, nil)
 
+remember_open_views()
 sync_gaps(scroll.focused_workspace(), nil)
 -- Config parse rejects "gaps … current". Retry once the compositor is reading commands.
 scroll.exec_process("sleep 0.3; swaymsg 'mark --add __spo_gaps' >/dev/null 2>&1; swaymsg 'unmark __spo_gaps' >/dev/null 2>&1")

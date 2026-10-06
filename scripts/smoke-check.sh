@@ -123,6 +123,14 @@ check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel Displ
 check_nogrep 'save-display-layout\.sh' "${ISO}/etc/skel/.config/swirl/config" "no separate save-display keybind"
 check_grep 'sway/workspaces' "${ISO}/etc/skel/.config/swirl/config" "skel includes sway workspaces"
 check_grep '^sweetpotatos$' "${ROOT}/profile/packages.x86_64" "sweetpotatos package listed"
+check_grep '^LD_PRELOAD=$' \
+  "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" \
+  "skel leaves GTK preload empty"
+check_grep 'remember_open_views' \
+  "${ISO}/etc/skel/.config/swirl/scripts/autotile.lua" \
+  "autotile remembers windows already open"
+check_grep 'lone-column-maximize.patch' \
+  "${ROOT}/packaging/swirl/PKGBUILD" "swirl expands a lone column"
 check_grep '^fish$' "${ROOT}/profile/packages.x86_64" "fish shell listed for the ISO"
 check_file "${ISO}/etc/skel/.config/swirl/config.d/user"
 check_grep 'include ~/.config/swirl/config.d/user' \

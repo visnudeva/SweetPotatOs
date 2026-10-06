@@ -1,0 +1,128 @@
+--- a/include/sway/tree/layout.h
++++ b/include/sway/tree/layout.h
+@@ -294,6 +294,11 @@
+ // Maximize if single option
+ void layout_maximize_if_single(struct sway_workspace *workspace);
+ 
++// One tiled column fills the workspace. set_size marks the column
++// NONE_FORCED, which makes maximize_if_single a no-op, and an overview
++// drag of the column itself does not emit a view move.
++void layout_expand_lone_column(struct sway_workspace *workspace);
++
+ void layout_toggle_size_container(struct sway_container *container,
+ 		double width_fraction, double height_fraction);
+ 
+--- a/sway/tree/layout.c
++++ b/sway/tree/layout.c
+@@ -4374,6 +4374,39 @@
+ 	}
+ }
+ 
++void layout_expand_lone_column(struct sway_workspace *workspace) {
++	struct sway_container *column;
++	int i;
++
++	if (!workspace || !workspace->tiling || workspace->tiling->length != 1) {
++		return;
++	}
++	column = workspace->tiling->items[0];
++	if (!column) {
++		return;
++	}
++	/* Direct fractions. OPERATION_FOCUS will not resize a column that
++	 * set_size left in TOGGLE_STATE_NONE_FORCED, and a later unfocus
++	 * would pop a saved half width. */
++	column->width_fraction = 1.0;
++	column->height_fraction = 1.0;
++	column->toggle_size.state = TOGGLE_STATE_NONE_FORCED;
++	if (column->pending.children) {
++		for (i = 0; i < column->pending.children->length; ++i) {
++			struct sway_container *child = column->pending.children->items[i];
++			if (!child) {
++				continue;
++			}
++			child->width_fraction = 1.0;
++			child->height_fraction = 1.0;
++			child->toggle_size.state = TOGGLE_STATE_NONE_FORCED;
++		}
++	}
++	arrange_workspace(workspace);
++	node_set_dirty(&column->node);
++	node_set_dirty(&workspace->node);
++}
++
+ void layout_toggle_size_change_focus(struct sway_node *last_focus,
+ 		struct sway_container *new_container, struct sway_workspace *new_workspace) {
+ 	if (new_workspace == NULL) {
+--- a/sway/input/seatop_move_tiling.c
++++ b/sway/input/seatop_move_tiling.c
+@@ -9,6 +9,8 @@
+ #include "sway/tree/arrange.h"
+ #include "sway/tree/node.h"
+ #include "sway/tree/view.h"
++#include "sway/tree/container.h"
++#include "sway/tree/layout.h"
+ #include "sway/tree/workspace.h"
+ #include "sway/desktop/animation.h"
+ 
+@@ -237,6 +239,13 @@
+ 	transaction_commit_dirty();
+ }
+ 
++static void emit_window_move(struct sway_container *container, void *data) {
++	(void)data;
++	if (container->view) {
++		ipc_event_window(container, "move");
++	}
++}
++
+ static void finalize_move(struct sway_seat *seat) {
+ 	struct seatop_move_tiling_event *e = seat->seatop_data;
+ 
+@@ -247,6 +256,7 @@
+ 
+ 	struct sway_container *con = e->con;
+ 	struct sway_node *target_node = e->target_node;
++	struct sway_workspace *old_workspace = con->pending.workspace;
+ 	struct sway_workspace *workspace = target_node->type == N_WORKSPACE ?
+ 		target_node->sway_workspace : target_node->sway_container->pending.workspace;
+ 	enum wlr_edges edge = e->target_edge;
+@@ -257,10 +267,17 @@
+ 	} else {
+ 		layout_drag_container_to_container(con, target_node->sway_container, workspace, edge);
+ 	}
+-	ipc_event_window(con, "move");
++	/* A grabbed column has no view, so ipc_event_window(con) never reaches
++	 * autotile. Tell every view inside it, then expand whatever was left. */
++	if (con->view) {
++		ipc_event_window(con, "move");
++	} else {
++		container_for_each_child(con, emit_window_move, NULL);
++	}
+ 	seat_set_focus(seat, &con->node);
+ 	arrange_workspace(workspace);
+ 	animation_set_type(ANIMATION_WINDOW_MOVE);
++	layout_expand_lone_column(old_workspace);
+ 	transaction_commit_dirty();
+ 	seatop_begin_default(seat);
+ }
+--- a/sway/commands/move.c
++++ b/sway/commands/move.c
+@@ -15,6 +15,7 @@
+ #include "sway/tree/arrange.h"
+ #include "sway/tree/container.h"
+ #include "sway/tree/root.h"
++#include "sway/tree/layout.h"
+ #include "sway/tree/workspace.h"
+ #include "stringop.h"
+ #include "list.h"
+@@ -128,6 +129,9 @@
+ 	if (container->view) {
+ 		ipc_event_window(container, "move");
+ 	}
++	if (!container_is_floating(container)) {
++		layout_expand_lone_column(old_workspace);
++	}
+ 	workspace_detect_urgent(old_workspace);
+ 	workspace_detect_urgent(workspace);
+ 	workspace_focus_fullscreen(workspace);

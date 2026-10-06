@@ -212,7 +212,6 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
         XDG_CONFIG_HOME="${target_home}/.config" \
         "${theme_script}" --quiet apply || true
     fi
-
     # The old save-layout shortcut wrote "1920x1080@60" with no Hz, and
     # "position 0,0". Swirl rejects that on reload. Add Hz and split the
     # position so the saved arrangement stays. A Displays Apply file already
@@ -260,6 +259,13 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
   else
     echo "[!] Skipping materialize — no non-root user to target (ran as root?)." >&2
   fi
+fi
+
+# The live color reload did not work. Drop the helper if a testing update
+# installed it. Log out once afterward so the session stops preloading it.
+if pacman -Q spo-gtk-live >/dev/null 2>&1; then
+  echo "[*] Removing the GTK color-reload helper…"
+  pacman -Rns --noconfirm spo-gtk-live || pacman -Rdd --noconfirm spo-gtk-live || true
 fi
 
 if command -v sweetpotatos-update-notify >/dev/null 2>&1; then
