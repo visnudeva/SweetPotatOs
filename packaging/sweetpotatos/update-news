@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-119
+What changed: On the dark Sweet potato and Ube themes, fastfetch shows the kanji 芋 in that theme's colors. Other themes keep the potato logo.
+
 @2026.10.3-118
 What changed: Spore shows playing and the name in green, so the current station or file stands out.
 

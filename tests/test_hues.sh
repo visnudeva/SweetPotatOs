@@ -97,5 +97,31 @@ assert_eq "2bd45a" "$(field "${TMP}/sweetpotatos/active.sh" SPO_ACCENT)" "lime s
 assert_eq "a73b50" "$(field "${TMP}/sweetpotatos/active.sh" SPO_ACCENT)" "reset pink is the original"
 assert_eq "f79b29" "$(field "${TMP}/sweetpotatos/active.sh" SPO_HIGHLIGHT)" "reset orange is the original"
 
+mkdir -p "${TMP}/fastfetch"
+printf '%s\n' '{
+  "logo": { "type": "chafa", "source": "'"${TMP}"'/fastfetch/SPLogo.png", "width": 28, "height": 14 },
+  "display": { "color": { "keys": "#a73b50", "title": "#f79b29" } }
+}' > "${TMP}/fastfetch/config.jsonc"
+printf 'potato\n' > "${TMP}/fastfetch/SPLogo.png"
+
+logo_source() {
+  sed -n 's/.*"source"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${TMP}/fastfetch/config.jsonc"
+}
+
+"${THEME}" --quiet set sweet-potato
+assert_eq "${TMP}/fastfetch/KanjiLogo.png" "$(logo_source)" "sweet potato uses the kanji logo"
+[[ -s "${TMP}/fastfetch/KanjiLogo.png" ]]
+echo "[PASS] sweet potato kanji logo was drawn"
+PASS=$((PASS + 1))
+
+"${THEME}" --quiet set lime
+assert_eq "${TMP}/fastfetch/SPLogo.png" "$(logo_source)" "lime puts the potato logo back"
+
+"${THEME}" --quiet set ube
+assert_eq "${TMP}/fastfetch/KanjiLogo.png" "$(logo_source)" "ube uses the kanji logo"
+
+"${THEME}" --quiet set sweet-potato-light
+assert_eq "${TMP}/fastfetch/SPLogo.png" "$(logo_source)" "light sweet potato keeps the potato logo"
+
 echo "${PASS} passed, ${FAIL} failed"
 [[ "${FAIL}" -eq 0 ]]

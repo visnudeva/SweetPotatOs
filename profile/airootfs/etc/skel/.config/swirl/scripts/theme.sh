@@ -632,15 +632,110 @@ EOF
   fi
 
   if [[ -f "${ROOT}/fastfetch/config.jsonc" ]]; then
-    changed_note="$(python3 - "${ROOT}/fastfetch/config.jsonc" "${INK_ACCENT}" "${INK_HIGHLIGHT}" << 'PY'
-import pathlib, re, sys
-path, accent, highlight = sys.argv[1:]
+    # Dark Sweet potato and Ube swap the potato mark for 芋 in that
+    # theme's colors. Every other preset puts the potato mark back.
+    local kanji=0
+    if [[ "${ID}" == "sweet-potato" || "${ID}" == "ube" ]]; then
+      kanji=1
+    fi
+    changed_note="$(python3 - "${ROOT}/fastfetch/config.jsonc" "${INK_ACCENT}" "${INK_HIGHLIGHT}" \
+      "${ACCENT}" "${HIGHLIGHT}" "${kanji}" "${SCRIPT_DIR}/SweetPotatoImo.otf" << 'PY'
+import os, pathlib, re, sys, tempfile
+
+path, key_color, title_color, accent, highlight, kanji, font_path = sys.argv[1:]
 file = pathlib.Path(path)
 text = file.read_text()
-new = re.sub(r'("keys":\s*")#[0-9A-Fa-f]+', rf'\1#{accent}', text, count=1)
-new = re.sub(r'("title":\s*")#[0-9A-Fa-f]+', rf'\1#{highlight}', new, count=1)
-if new != text:
-    file.write_text(new)
+new = re.sub(r'("keys":\s*")#[0-9A-Fa-f]+', rf'\1#{key_color}', text, count=1)
+new = re.sub(r'("title":\s*")#[0-9A-Fa-f]+', rf'\1#{title_color}', new, count=1)
+logo_dir = file.parent
+kanji_png = logo_dir / "KanjiLogo.png"
+source_match = re.search(r'"source"\s*:\s*"([^"]*)"', new)
+current_source = source_match.group(1) if source_match else ""
+
+def set_source(body, source):
+    return re.sub(r'("source"\s*:\s*")[^"]*"', rf'\1{source}"', body, count=1)
+
+def potato_source():
+    beside = logo_dir / "SPLogo.png"
+    if beside.is_file():
+        return str(beside)
+    system = pathlib.Path("/usr/local/share/sweetpotatos/SPLogo.png")
+    if system.is_file():
+        return str(system)
+    if current_source and not current_source.endswith("KanjiLogo.png"):
+        return current_source
+    return str(beside)
+
+def render_kanji(dest, accent_hex, highlight_hex, font_file):
+    font_file = pathlib.Path(font_file)
+    if not font_file.is_file():
+        raise FileNotFoundError(font_file)
+    conf = tempfile.NamedTemporaryFile("w", suffix=".conf", delete=False)
+    conf.write(
+        '<?xml version="1.0"?>\n'
+        '<!DOCTYPE fontconfig SYSTEM "fonts.dtd">\n'
+        "<fontconfig>\n"
+        f"  <dir>{font_file.parent}</dir>\n"
+        '  <include ignore_missing="yes">/etc/fonts/fonts.conf</include>\n'
+        "</fontconfig>\n"
+    )
+    conf.close()
+    os.environ["FONTCONFIG_FILE"] = conf.name
+    try:
+        import gi
+        gi.require_version("Pango", "1.0")
+        gi.require_version("PangoCairo", "1.0")
+        from gi.repository import Pango, PangoCairo
+        import cairo
+
+        def rgb(h):
+            return tuple(int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+
+        size = 512
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, size, size)
+        ctx = cairo.Context(surface)
+        layout = PangoCairo.create_layout(ctx)
+        layout.set_font_description(Pango.FontDescription("SweetPotato Imo Bold 400"))
+        layout.set_text("芋", -1)
+        PangoCairo.update_layout(ctx, layout)
+        ink = layout.get_pixel_extents()[0]
+        if ink.width < 8 or ink.height < 8:
+            raise RuntimeError("kanji glyph did not draw")
+        pad = 28
+        scale = min((size - 2 * pad) / ink.width, (size - 2 * pad) / ink.height)
+        ctx.translate(size / 2, size / 2)
+        ctx.scale(scale, scale)
+        ctx.translate(-(ink.x + ink.width / 2), -(ink.y + ink.height / 2))
+        ctx.push_group()
+        ctx.set_source_rgba(1, 1, 1, 1)
+        PangoCairo.show_layout(ctx, layout)
+        mask = ctx.pop_group()
+        paint = cairo.LinearGradient(ink.x, ink.y, ink.x, ink.y + ink.height)
+        hr, hg, hb = rgb(highlight_hex)
+        ar, ag, ab = rgb(accent_hex)
+        paint.add_color_stop_rgb(0, hr, hg, hb)
+        paint.add_color_stop_rgb(1, ar, ag, ab)
+        ctx.set_source(paint)
+        ctx.mask(mask)
+        surface.write_to_png(str(dest))
+    finally:
+        os.unlink(conf.name)
+    return True
+
+wrote_logo = False
+if kanji == "1":
+    try:
+        wrote_logo = render_kanji(kanji_png, accent, highlight, font_path)
+        new = set_source(new, str(kanji_png))
+    except Exception:
+        if current_source.endswith("KanjiLogo.png"):
+            new = set_source(new, potato_source())
+elif current_source.endswith("KanjiLogo.png"):
+    new = set_source(new, potato_source())
+
+if new != text or wrote_logo:
+    if new != text:
+        file.write_text(new)
     print("changed")
 PY
 )"
