@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-118
+What changed: Spore shows playing and the name in green, so the current station or file stands out.
+
 @2026.10.3-117
 What changed: In overview, the window left on a desktop fills the screen.
 
