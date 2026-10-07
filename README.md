@@ -1,6 +1,6 @@
 
 
-https://github.com/user-attachments/assets/90c3c5c3-d2c9-47f6-a2e2-149a9a77ccb8
+https://github.com/user-attachments/assets/7527f1f2-84ed-4d44-995c-b81093758b62
 
 # SweetPotatOs
 
@@ -155,7 +155,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+Shift+r` | Resize mode (arrow keys; Enter/Esc to exit) |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |
-| `Mod+Print` | Screen record toggle (region + audio → `~/Videos`) |
+| `Mod+Print` | Screen record toggle (region and speaker audio → `~/Videos`) |
 | `Mod+q` / `Esc` | Close window (Esc closes a menu first) |
 | `Mod+number` | Change workspaces |
 | `Mod+Tab` | Workspace overview (Super+drag windows between desktops) |
