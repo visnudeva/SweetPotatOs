@@ -82,6 +82,7 @@
     <p>
       <code>Mod+Ctrl+t</code> opens SweetPotato themer: the dark and light presets, plus sliders for the accent and highlight. Apply commits the choice.
       The same controls are below. A slider keeps that preset’s lightness and saturation and changes the hue.
+      On the desktop, windows that are already open refresh their accents. The surface stays until those windows are closed and opened again.
     </p>
     <div class="themer" data-themer>
       <div class="themer-window">
@@ -112,99 +113,6 @@
         </div>
         <div class="swatches themer-swatches" data-preview-swatches></div>
       </div>
-    </div>
-    <div class="theme-columns">
-    <div>
-    <p class="theme-set">Dark</p>
-    <ul class="theme-list">
-      <li data-theme="sweet-potato">
-        <span class="theme-name">Sweet potato</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f5e6e8"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#a73b50"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f79b29"></i><span>Second</span></span>
-        </span>
-      </li>
-      <li data-theme="ube">
-        <span class="theme-name">Ube</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f4f0f8"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#9346c8"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#c9a0f5"></i><span>Second</span></span>
-        </span>
-      </li>
-      <li data-theme="lime">
-        <span class="theme-name">Lime</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f2f6f1"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#2bd45a"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#d2ff4a"></i><span>Second</span></span>
-        </span>
-      </li>
-      <li data-theme="cyberpunk">
-        <span class="theme-name">Cyberpunk</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f3f7f8"></i><span>Bar</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#51bad9"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#ffef00"></i><span>Second</span></span>
-        </span>
-      </li>
-      <li data-theme="monochrome">
-        <span class="theme-name">Monochrome</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f2f2f2"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f2f2f2"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#9aa0a6"></i><span>Second</span></span>
-        </span>
-      </li>
-    </ul>
-    </div>
-    <div>
-    <p class="theme-set">Light</p>
-    <ul class="theme-list">
-      <li data-theme="dragon-fruit">
-        <span class="theme-name">Dragon fruit</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#241e20"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#c2256a"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#3a3336"></i><span>Second</span></span>
-        </span>
-      </li>
-      <li data-theme="sweet-potato-light">
-        <span class="theme-name">Sweet potato</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#241e20"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#a73b50"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#f79b29"></i><span>Second</span></span>
-        </span>
-      </li>
-      <li data-theme="blueberry">
-        <span class="theme-name">Blueberry</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#1c1b19"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#2a3f86"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#738bbf"></i><span>Second</span></span>
-        </span>
-      </li>
-      <li data-theme="monochrome-light">
-        <span class="theme-name">Monochrome</span>
-        <span class="swatches">
-          <span class="swatch"><i class="swatch-chip" style="background:#f4f1ec"></i><span>Surface</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Text</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#1d1f21"></i><span>Accent</span></span>
-          <span class="swatch"><i class="swatch-chip" style="background:#6e7378"></i><span>Second</span></span>
-        </span>
-      </li>
-    </ul>
-    </div>
     </div>
 
     <h2>Wallpapers</h2>
@@ -512,9 +420,6 @@
         previewSwatches.appendChild(swatch(row.textLabel, row.text));
         previewSwatches.appendChild(swatch("Accent", accent));
         previewSwatches.appendChild(swatch("Second", highlight));
-        Array.prototype.forEach.call(document.querySelectorAll(".theme-list [data-theme]"), function (item) {
-          item.classList.toggle("is-current", item.getAttribute("data-theme") === row.id);
-        });
       }
 
       function showPresetHues() {

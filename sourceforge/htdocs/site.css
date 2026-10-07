@@ -628,42 +628,6 @@ main .hero {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.01em;
 }
-.theme-list li.is-current {
-  background: rgba(255, 255, 255, 0.045);
-  border-radius: 8px;
-}
-.theme-columns {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.25rem 1.75rem;
-  margin-top: 0.35rem;
-}
-@media (min-width: 860px) {
-  .theme-columns { grid-template-columns: 1fr 1fr; }
-}
-.theme-set {
-  margin: 0.85rem 0 0.35rem;
-  color: var(--text);
-  font-weight: 700;
-}
-.theme-list {
-  list-style: none;
-  margin: 0 0 0.5rem;
-  padding: 0;
-}
-.theme-list li {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.7rem 0;
-  border-bottom: 1px solid var(--border);
-}
-.theme-name {
-  flex: 0 0 7.2rem;
-  color: var(--text);
-  font-weight: 700;
-  font-size: 0.92rem;
-}
 .swatches {
   display: flex;
   flex-wrap: wrap;
@@ -686,34 +650,6 @@ main .hero {
   text-align: center;
 }
 @media (max-width: 860px) {
-  .theme-columns { gap: 0; }
-  .theme-set { margin: 0.65rem 0 0.15rem; }
-  .theme-list { margin-bottom: 0.15rem; }
-  .theme-list li {
-    align-items: center;
-    flex-direction: row;
-    gap: 0.55rem;
-    padding: 0.4rem 0;
-  }
-  .theme-name {
-    flex: 0 1 5.6rem;
-    min-width: 0;
-    font-size: 0.84rem;
-    line-height: 1.2;
-  }
-  .swatches {
-    flex: 1 1 auto;
-    flex-wrap: nowrap;
-    gap: 0.3rem;
-    min-width: 0;
-  }
-  .swatch { width: auto; flex: 1 1 0; min-width: 0; }
-  .swatch-chip { height: 1.25rem; }
-  .swatch span {
-    margin-top: 0.12rem;
-    font-size: 0.62rem;
-    line-height: 1.15;
-  }
   .themer-swatches {
     flex-wrap: wrap;
     gap: 0.45rem 0.55rem;
