@@ -4,6 +4,15 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-122
+What changed: Escape no longer closes a window. Mod+q does. Menus still close on Escape, and resize mode still leaves on Escape.
+
+@2026.10.3-121
+What changed: Spore opens a dropped radio station again. The line says reconnecting until the sound returns. Close Spore and open it again after updating.
+
+@2026.10.3-120
+What changed: Screen record (Mod+Print) includes the sound playing through the speakers. Close a recording and start it again after updating.
+
 @2026.10.3-119
 What changed: On the dark Sweet potato and Ube themes, fastfetch shows the kanji 芋 in that theme's colors. Other themes keep the potato logo.
 
