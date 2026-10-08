@@ -57,9 +57,15 @@ check_grep '\[colors-dark\]' "${ISO}/etc/skel/.config/foot/foot.ini" "foot uses 
 check_grep 'alpha=1\.0' "${ISO}/etc/skel/.config/foot/foot.ini" "foot opaque alpha=1.0"
 check_grep 'set \$term foot' "${ISO}/etc/skel/.config/swirl/config" "skel Mod+Return → foot"
 check_grep 'shell=/usr/bin/fish' "${ISO}/etc/skel/.config/foot/foot.ini" "foot opens fish"
-check_grep 'bindsym Escape exec ~/.config/swirl/scripts/escape.sh' \
-  "${ISO}/etc/skel/.config/swirl/config" "skel Escape closes a menu, then a window"
-check_grep 'pkill -x wmenu' "${ISO}/etc/skel/.config/swirl/scripts/escape.sh" "Escape dismisses wmenu"
+check_grep 'bindsym \$mod\+q kill' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel Mod+q closes a window"
+check_nogrep 'bindsym Escape exec' \
+  "${ISO}/etc/skel/.config/swirl/config" "Escape does not close a window"
+check_nogrep 'escape\.sh' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel does not call escape.sh"
+[[ ! -e "${ISO}/etc/skel/.config/swirl/scripts/escape.sh" ]] && ok "no Escape window-close script" || bad "escape.sh still present"
+check_grep 'bindsym Escape mode "default"' \
+  "${ISO}/etc/skel/.config/swirl/config" "resize mode still leaves on Escape"
 check_grep 'Shift\+ampersand move container to workspace number 1' \
   "${ISO}/etc/skel/.config/swirl/config" "French Mod+Shift+1 moves the window"
 check_grep 'swayimg.overlay = false' "${ISO}/etc/skel/.config/swayimg/init.lua" "swayimg tiles instead of floating"

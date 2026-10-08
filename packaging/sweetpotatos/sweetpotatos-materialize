@@ -152,10 +152,12 @@ apply_install_keyboard() {
 apply_install_keyboard
 
 mv -f "${MANIFEST}.new" "${MANIFEST}"
-# Drop retired Wi‑Fi tray experiments and the Mod+P pin helper.
+# Drop retired Wi‑Fi tray experiments, the Mod+P pin helper, and the
+# Escape window-close script.
 rm -f "${DEST}/swirl/scripts/network-applet.py" \
       "${DEST}/swirl/scripts/network-tray.sh" \
-      "${DEST}/swirl/scripts/pin-window.sh"
+      "${DEST}/swirl/scripts/pin-window.sh" \
+      "${DEST}/swirl/scripts/escape.sh"
 echo "[+] Materialized shipped config into ${DEST}"
 echo "    Overlay: ${OVERLAY}"
 

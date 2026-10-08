@@ -90,11 +90,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Start a terminal
     bindsym $mod+Return exec $term
 
-    # Kill focused window. Escape does the same, after closing an
-    # open menu. The compositor owns Escape, so the menu never sees
-    # the key and would keep the keyboard. Resize mode still owns Escape.
+    # Kill focused window. Escape stays with the focused app and with
+    # menus (wmenu closes itself). Resize mode still uses Escape to leave.
     bindsym $mod+q kill
-    bindsym Escape exec ~/.config/swirl/scripts/escape.sh
 
     # App launcher
     bindsym $mod+space exec $menu
