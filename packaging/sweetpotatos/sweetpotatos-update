@@ -195,12 +195,18 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
       XDG_STATE_HOME="${target_home}/.local/state" \
       sweetpotatos-materialize || true
 
-    # Guaranteed refresh of the help sheet script (no overlay / stale copy).
+    # Guaranteed refresh of the help sheet and its login tip (no overlay / stale copy).
     src_cheat="/usr/share/sweetpotato/config/swirl/scripts/cheatsheet.sh"
     dst_cheat="${target_home}/.config/swirl/scripts/cheatsheet.sh"
     if [[ -f "${src_cheat}" ]]; then
       install -Dm755 "${src_cheat}" "${dst_cheat}"
       chown "${target_user}:${target_user}" "${dst_cheat}" 2>/dev/null || true
+    fi
+    src_tips="/usr/share/sweetpotato/config/swirl/scripts/tips.sh"
+    dst_tips="${target_home}/.config/swirl/scripts/tips.sh"
+    if [[ -f "${src_tips}" ]]; then
+      install -Dm755 "${src_tips}" "${dst_tips}"
+      chown "${target_user}:${target_user}" "${dst_tips}" 2>/dev/null || true
     fi
 
     # Materialize writes the default Sweet potato colors. Put the saved

@@ -1,6 +1,9 @@
   SweetPotato — keybinds
   Mod = Super / Windows key
 
+  This page
+  x                    Keybind reminder
+
   Apps
   Mod+Space          App launcher (Esc closes it)
   Mod+Return         Terminal (foot, fish)

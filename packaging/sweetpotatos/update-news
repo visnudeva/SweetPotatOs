@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-124
+What changed: The login notice is the keybind reminder. On the keybind page (Mod+?), press x to turn it off. Press x again to turn it back on. Mod+? still opens the page.
+
 @2026.10.3-122
 What changed: Escape no longer closes a window. Mod+q does. Menus still close on Escape, and resize mode still leaves on Escape.
 

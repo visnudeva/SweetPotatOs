@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Floating terminal cheatsheet (toggle with Mod+?). SPO colors; w → website.
+# x, while this page is focused, turns the keybind reminder on or off.
 # Uses less so the sheet opens at the top (not scrolled to the bottom).
 # Website key is a temporary Swirl bind while this window is focused — less's
 # "shell" action always shows "!done (press RETURN)" and dumps browser stderr.
@@ -58,41 +59,90 @@ PINK="${SPO_PINK}" ORANGE="${SPO_ORANGE}" CREAM="${SPO_CREAM}" MUTED="${SPO_MUTE
 SHEET="${SPO_CHEATSHEET}"
 SITE_URL="${SPO_SITE_URL}"
 APP_ID="${SPO_APP_ID}"
+TIP_FILE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/login-tip"
+TTY_PATH="$(tty 2>/dev/null || true)"
 
 content="$(mktemp)"
 opener="$(mktemp)"
+toggler="$(mktemp)"
+fifo="$(mktemp -u)"
+mkfifo "${fifo}"
+exec 3<>"${fifo}"
 watch_pid=""
+tip_pid=""
+
+tip_state() {
+  local s=on
+  if [[ -f "${TIP_FILE}" ]]; then
+    s="$(tr -d "[:space:]" < "${TIP_FILE}" || true)"
+  fi
+  if [[ "${s}" == off ]]; then
+    printf "%s" off
+  else
+    printf "%s" on
+  fi
+}
 
 cleanup() {
   if [[ -n "${watch_pid}" ]]; then
     kill "${watch_pid}" >/dev/null 2>&1 || true
   fi
+  if [[ -n "${tip_pid}" ]]; then
+    kill "${tip_pid}" >/dev/null 2>&1 || true
+  fi
   swaymsg unbindsym w >/dev/null 2>&1 || true
   swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
-  rm -f "${content}" "${opener}"
+  swaymsg unbindsym x >/dev/null 2>&1 || true
+  swaymsg unbindsym Shift+x >/dev/null 2>&1 || true
+  rm -f "${content}" "${opener}" "${toggler}" "${fifo}"
 }
 trap cleanup EXIT
 
-{
-  while IFS= read -r line || [[ -n "${line}" ]]; do
-    case "${line}" in
-      "  SweetPotato"*)
-        printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
-      "  Mod = "*)
-        printf "%s%s%s\n" "${MUTED}" "${line}" "${RESET}" ;;
-      "  Apps"|"  Window / layout"|"  Workspaces / overview"|"  Displays / look"|\
-      "  System"|"  Screenshots / media keys"|"  Gestures"|"  Resize mode"*|\
-      "  Customize"|"  Desktop / package updates"|"  Project")
-        printf "%s%s%s\n" "${ORANGE}" "${line}" "${RESET}" ;;
-      "  w  "*|"  sudo sweetpotatos-update"*)
-        printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
-      "")
-        printf "\n" ;;
-      *)
-        printf "%s%s%s\n" "${CREAM}" "${line}" "${RESET}" ;;
-    esac
-  done < "${SHEET}"
-} >"${content}"
+render_content() {
+  local state line
+  state="$(tip_state)"
+  {
+    while IFS= read -r line || [[ -n "${line}" ]]; do
+      case "${line}" in
+        "  SweetPotato"*)
+          printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
+        "  Mod = "*)
+          printf "%s%s%s\n" "${MUTED}" "${line}" "${RESET}" ;;
+        "  Apps"|"  Window / layout"|"  Workspaces / overview"|"  Displays / look"|\
+        "  System"|"  Screenshots / media keys"|"  Gestures"|"  Resize mode"*|\
+        "  Customize"|"  Desktop / package updates"|"  Project"|"  This page")
+          printf "%s%s%s\n" "${ORANGE}" "${line}" "${RESET}" ;;
+        *"Keybind reminder"*)
+          if [[ "${state}" == off ]]; then
+            printf "%s  x%s %sKeybind reminder       off%s\n" "${PINK}" "${RESET}" "${CREAM}" "${RESET}"
+            printf "%s                       Press x to show it at login again%s\n" "${MUTED}" "${RESET}"
+          else
+            printf "%s  x%s %sKeybind reminder       on%s\n" "${PINK}" "${RESET}" "${CREAM}" "${RESET}"
+            printf "%s                       Press x to hide the keybind reminder%s\n" "${MUTED}" "${RESET}"
+          fi
+          ;;
+        "  w  "*|"  sudo sweetpotatos-update"*)
+          printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
+        "")
+          printf "\n" ;;
+        *)
+          printf "%s%s%s\n" "${CREAM}" "${line}" "${RESET}" ;;
+      esac
+    done < "${SHEET}"
+  } >"${content}"
+}
+
+# Rewrites the sheet when x toggles the keybind reminder, then asks less to re-read it.
+(
+  while IFS= read -r cmd <&3; do
+    [[ "${cmd}" == toggle ]] || continue
+    render_content || true
+    if [[ -n "${TTY_PATH}" && -w "${TTY_PATH}" ]]; then
+      printf ":e\n" > "${TTY_PATH}" || true
+    fi
+  done
+) &
+tip_pid=$!
 
 # Opener: only acts when the cheatsheet is focused (bind is otherwise inactive).
 cat >"${opener}" <<EOF
@@ -117,6 +167,45 @@ print(walk(json.load(sys.stdin)) or \"\")
 setsid xdg-open "\${SITE_URL}" </dev/null >/dev/null 2>&1 &
 EOF
 chmod 755 "${opener}"
+
+cat >"${toggler}" <<EOF
+#!/bin/bash
+set -euo pipefail
+APP_ID=$(printf "%q" "${APP_ID}")
+TIP_FILE=$(printf "%q" "${TIP_FILE}")
+FIFO=$(printf "%q" "${fifo}")
+focused="\$(swaymsg -t get_tree 2>/dev/null | python3 -c "
+import json, sys
+def walk(n):
+    if n.get(\"focused\"):
+        return n.get(\"app_id\") or \"\"
+    for key in (\"nodes\", \"floating_nodes\"):
+        for c in n.get(key) or []:
+            r = walk(c)
+            if r is not None:
+                return r
+    return None
+print(walk(json.load(sys.stdin)) or \"\")
+" 2>/dev/null || true)"
+[[ "\${focused}" == "\${APP_ID}" ]] || exit 0
+state="\$(tr -d "[:space:]" < "\${TIP_FILE}" 2>/dev/null || true)"
+mkdir -p "\$(dirname "\${TIP_FILE}")"
+if [[ "\${state}" == off ]]; then
+  printf "on\n" > "\${TIP_FILE}"
+  notify-send -t 4000 -a "SweetPotato" -i "help-about" \
+    -h "string:x-canonical-private-synchronous:sweetpotato-tips" \
+    "Keybind reminder on" "It will show again the next time you log in." \
+    >/dev/null 2>&1 || true
+else
+  printf "off\n" > "\${TIP_FILE}"
+  notify-send -t 4000 -a "SweetPotato" -i "help-about" \
+    -h "string:x-canonical-private-synchronous:sweetpotato-tips" \
+    "Keybind reminder off" "It will not show at login. Press x here to turn it back on." \
+    >/dev/null 2>&1 || true
+fi
+printf "toggle\n" > "\${FIFO}"
+EOF
+chmod 755 "${toggler}"
 
 cheat_focused() {
   local focused
@@ -144,12 +233,16 @@ print(walk(json.load(sys.stdin)) or \"\")
       if ((local_bound == 0)); then
         swaymsg "bindsym --no-warn w exec ${opener}" >/dev/null 2>&1 || true
         swaymsg "bindsym --no-warn Shift+w exec ${opener}" >/dev/null 2>&1 || true
+        swaymsg "bindsym --no-warn x exec ${toggler}" >/dev/null 2>&1 || true
+        swaymsg "bindsym --no-warn Shift+x exec ${toggler}" >/dev/null 2>&1 || true
         local_bound=1
       fi
     else
       if ((local_bound == 1)); then
         swaymsg unbindsym w >/dev/null 2>&1 || true
         swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
+        swaymsg unbindsym x >/dev/null 2>&1 || true
+        swaymsg unbindsym Shift+x >/dev/null 2>&1 || true
         local_bound=0
       fi
     fi
@@ -158,7 +251,14 @@ print(walk(json.load(sys.stdin)) or \"\")
 ) &
 watch_pid=$!
 
-status="${PINK}w${RESET} ${CREAM}website${RESET}  ${PINK}q${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
+status="${PINK}w${RESET} ${CREAM}website${RESET}  ${PINK}x${RESET} ${CREAM}keybind reminder${RESET}  ${PINK}q${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
+
+render_content
+
+if [[ "${SPO_RENDER_ONLY:-}" == 1 ]]; then
+  cat "${content}"
+  exit 0
+fi
 
 if command -v less >/dev/null 2>&1; then
   less -R -Ps"${status}" -Pm"${status}" -PM"${status}" +1g "${content}"
@@ -169,6 +269,19 @@ else
   while IFS= read -rsn1 k; do
     case "${k}" in
       q|Q) exit 0 ;;
+      x|X)
+        state="$(tip_state)"
+        mkdir -p "$(dirname "${TIP_FILE}")"
+        if [[ "${state}" == off ]]; then
+          printf "on\n" > "${TIP_FILE}"
+        else
+          printf "off\n" > "${TIP_FILE}"
+        fi
+        render_content
+        printf "\033[2J\033[H"
+        cat "${content}"
+        printf "\n%s\n" "${status}"
+        ;;
       w|W)
         if command -v xdg-open >/dev/null 2>&1; then
           setsid xdg-open "${SITE_URL}" </dev/null >/dev/null 2>&1 || true

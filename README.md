@@ -171,7 +171,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+o` / `Mod+Escape` | Power off |
 | `Mod+Shift+c` | Reload config |
 
-`Mod` is usually the Super/Windows key. A login tip points at `Mod+?` for the cheatsheet (every session).
+`Mod` is usually the Super/Windows key. A keybind reminder points at `Mod+?` for the cheatsheet. On that page, `x` turns the reminder off (and on again). `Mod+?` still opens the page.
 
 ### Gestures
 
