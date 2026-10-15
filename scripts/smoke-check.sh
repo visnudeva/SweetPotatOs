@@ -132,6 +132,11 @@ check_nogrep 'save-display-layout\.sh' "${ISO}/etc/skel/.config/swirl/config" "n
 check_grep 'sway/workspaces' "${ISO}/etc/skel/.config/swirl/config" "skel includes sway workspaces"
 check_grep '^sweetpotatos$' "${ROOT}/profile/packages.x86_64" "sweetpotatos package listed"
 check_grep '^swirl$' "${ROOT}/profile/packages.x86_64" "swirl package listed"
+check_grep 'set \$term foot' "${ROOT}/packaging/swirl/session/config" "default session opens foot"
+check_grep 'applauncher.sh' "${ROOT}/packaging/swirl/session/config" "default session opens the app menu"
+check_grep 'swirlmenu' "${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/applauncher.sh" "app menu uses swirlmenu"
+check_grep 'scroller_indicator no' "${ROOT}/packaging/swirl/session/config" "default session hides scroll marks"
+check_grep 'SPONeonKanjiDefault.png' "${ROOT}/packaging/swirl/session/config" "default session wallpaper"
 check_nogrep '^sway$' "${ROOT}/profile/packages.x86_64" "ISO does not install the sway package"
 check_grep '^LD_PRELOAD=$' \
   "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" \

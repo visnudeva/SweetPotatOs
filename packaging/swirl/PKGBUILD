@@ -1,8 +1,8 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=12
-pkgdesc='Scrolling tiling Wayland compositor with its bar, IPC client, nag, and menu'
+pkgrel=13
+pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
 license=('MIT')
@@ -35,6 +35,17 @@ depends=(
   libdisplay-info
   libcap
   pango
+  foot
+  wmenu
+  swaybg
+  swayidle
+  swaylock-effects
+  j4-dmenu-desktop
+  jq
+  noto-fonts
+  ttf-nerd-fonts-symbols-mono
+  xorg-xwayland
+  polkit-gnome
 )
 makedepends=(
   git
@@ -50,11 +61,6 @@ makedepends=(
 conflicts=('sway')
 replaces=('sway')
 optdepends=(
-  'wmenu: text menu used by swirlmenu'
-  'swaybg: wallpaper'
-  'swayidle: idle management'
-  'swaylock: screen locker'
-  'xorg-xwayland: X11 support'
   'xdg-desktop-portal-wlr: screen sharing'
   'xdg-desktop-portal-gtk: file picking'
 )
@@ -121,4 +127,23 @@ package() {
   ln -s swirlbar "${pkgdir}/usr/bin/swaybar"
   ln -s swirlmsg "${pkgdir}/usr/bin/swaymsg"
   ln -s swirlnag "${pkgdir}/usr/bin/swaynag"
+
+  # Plain Arch has no ~/.config/swirl. This session is what starts then.
+  # A home config is preferred, so SweetPotatOs keeps its own.
+  local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
+  local scripts="${root}/profile/airootfs/etc/skel/.config/swirl/scripts"
+  local share="${pkgdir}/usr/share/swirl"
+  install -Dm644 "${startdir}/session/config" "${pkgdir}/etc/swirl/config"
+  install -Dm755 "${scripts}/applauncher.sh" "${share}/scripts/applauncher.sh"
+  install -Dm755 "${scripts}/status.sh" "${share}/scripts/status.sh"
+  install -Dm755 "${scripts}/workspace-dots.sh" "${share}/scripts/workspace-dots.sh"
+  install -Dm755 "${scripts}/autotile.lua" "${share}/scripts/autotile.lua"
+  install -Dm644 "${scripts}/autotile_lib.lua" "${share}/scripts/autotile_lib.lua"
+  install -Dm755 "${scripts}/confirm.sh" "${share}/scripts/confirm.sh"
+  install -Dm755 "${scripts}/poweroff.sh" "${share}/scripts/poweroff.sh"
+  install -Dm644 "${root}/profile/airootfs/etc/skel/.config/swaylock/config" \
+    "${share}/swaylock.conf"
+  install -Dm644 \
+    "${root}/profile/airootfs/etc/skel/.local/share/backgrounds/SPONeonKanjiDefault.png" \
+    "${share}/backgrounds/SPONeonKanjiDefault.png"
 }

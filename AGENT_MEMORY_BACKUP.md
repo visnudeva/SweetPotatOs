@@ -47,7 +47,7 @@ Repos (siblings):
 
 **Left uncommitted on purpose** (not in the stable package): `.cheatsheet-snapshots/` (a 2026-09-26 pre-polish copy; its README says revert by copying back into SweetPotato swirl then `./sync-theme.sh --iso-only`), `.publish-repo-stage/`, `.publish-repo-stage-tuber/`, and SweetPotato `swirl/cheatsheet-snapshots/` plus `__pycache__`. Do not commit those.
 
-**Testing channel (2026-10-15).** `pacman-repo-testing` has `swirl-1.13.0.r8567.gcd070469-12` and `sweetpotatos-2026.10.3-127`. Swirl builds its own bar, `swirlmsg`, `swirlnag`, and `swirlmenu`, and the package conflicts with Arch `sway`. The bar hides scroll arrows, the eye, and `T0/0 (0)`. The power-off bar is one line, about the height of the status bar. Stable `pacman-repo` was left as it was. Try it with `sudo sweetpotatos-update --testing`, then log out and back in. The power-off bar and the menus follow the theme.
+**Testing channel (2026-10-15).** `pacman-repo-testing` has `swirl-1.13.0.r8567.gcd070469-13` and `sweetpotatos-2026.10.3-127`. Swirl builds its own bar, `swirlmsg`, `swirlnag`, and `swirlmenu`, and the package conflicts with Arch `sway`. It also depends on foot, wmenu, swaybg, swayidle, and swaylock-effects, and ships `/etc/swirl/config` so a machine with no home config gets a session. `~/.config/swirl/config` still wins, so a SweetPotatOs login is unchanged. Stable `pacman-repo` was left as it was.
 
 **Resume from here.** Theme edits start in SweetPotato, then `./sync-theme.sh` (`--iso-only` on this Hyprland host). Package bumps go to testing with `./scripts/publish-repo.sh testing` until the user says to push to stable. A new ISO is `sudo ./build.sh` only when they ask for a point release. Tests: `./tests/run.sh`. Smoke: `./scripts/smoke-check.sh`.
 
