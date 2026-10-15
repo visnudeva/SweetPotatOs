@@ -19,7 +19,7 @@ Repos (siblings):
 /home/visnudeva/code/GITHUB/SweetPotato     # theme source of truth. origin only
 ```
 
-**What installed systems are running.** Stable pacman channel tag `pacman-repo` (latest asset refresh 2026-10-14). Pacman resolves the newest of each name. That set is:
+**What installed systems are running.** Stable pacman channel tag `pacman-repo` (Brave Origin added 2026-10-15). Pacman resolves the newest of each name. That set is:
 
 | Package | Version on stable |
 |---------|-------------------|
@@ -28,6 +28,7 @@ Repos (siblings):
 | spore | 0.1.0.r16.g05bfc91-1 |
 | tuber | 0.1.0.r31.g6995309-2 |
 | localsend-bin | 1.18.0-4 |
+| brave-origin-bin | 1.95.101-1 |
 | calamares | 3.4.2-2 |
 | shelly-bin | 3.0.6-1 |
 | swaylock-effects | 1.7.0.0-1 |
@@ -36,7 +37,7 @@ Repos (siblings):
 | python-screeninfo | 0.8.1-2 |
 | python-imageio-ffmpeg | 0.6.0-2 |
 
-`brave-origin-bin-1.95.101-1` is in `profile/packages.x86_64`, in `packaging/brave-origin-bin`, in `repo/`, and on the **testing** release. It is **not** an asset on stable `pacman-repo`. Do not upload it to stable unless the user explicitly says to push to stable.
+`sweetpotatos-update` installs `brave-origin-bin` when it is missing. The same package is in `profile/packages.x86_64`, `packaging/brave-origin-bin`, `repo/`, and the testing release.
 
 **What 2026.10.3-124 actually changed** (from `packaging/sweetpotatos/update-news`, newest first): keybind reminder on login, toggled with `x` on the Mod+? page (124). Before that on the same channel: Escape no longer closes a window (122), Spore reconnects a dropped station (121), screen record captures speaker audio (120), kanji fastfetch logo on Sweet potato and Ube (119), green Spore now-playing line (118), overview leaves a filled desktop (117), caffeine does not block lid sleep (111), display-layout fixes, Mod+Ctrl letter keybinds, SweetPotato themer, fish in foot.
 
