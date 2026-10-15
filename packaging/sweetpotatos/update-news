@@ -8,10 +8,10 @@
 What changed: The bar no longer shows the scroll arrows, the eye, or T0/0 (0). The power-off bar is one line, about the height of the status bar. Log out and back in after updating.
 
 @2026.10.3-126
-What changed: The testing update removes the sway package before installing Swirl. If an update stopped because swirl and sway are in conflict, run it again.
+What changed: The update removes the sway package before installing Swirl. If an update stopped because swirl and sway are in conflict, run it again.
 
 @2026.10.3-125
-What changed: Swirl ships its own bar, swaymsg, and power-off bar. The power-off and exit bars use the theme colors. The app menu, Wi-Fi menu, and wallpaper list use swirlmenu. Log out and back in after updating. This build is on the testing channel.
+What changed: Swirl ships its own bar, swaymsg, and power-off bar. The power-off and exit bars use the theme colors. The app menu, Wi-Fi menu, and wallpaper list use swirlmenu. Log out and back in after updating.
 
 @2026.10.3-124
 What changed: The login notice is the keybind reminder. On the keybind page (Mod+?), press x to turn it off. Press x again to turn it back on. Mod+? still opens the page.
