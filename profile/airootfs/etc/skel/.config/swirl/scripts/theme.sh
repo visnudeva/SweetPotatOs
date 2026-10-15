@@ -770,7 +770,7 @@ PY
   mkdir -p "${ROOT}/swirlnag"
   nag_payload="$(mktemp)"
   cat > "${nag_payload}" << EOF
-font=pango:Noto Sans 11
+font=pango:Noto Sans 10
 background=${SURFACE}
 text=${TEXT}
 border=${ACCENT}
@@ -778,6 +778,11 @@ border-bottom=${ACCENT}
 button-background=${ACCENT}
 button-text=${ON_ACCENT}
 details-background=${SURFACE}
+message-padding=4
+button-padding=2
+button-border-size=1
+border-bottom-size=1
+button-gap=12
 
 [warning]
 background=${SURFACE}
@@ -787,6 +792,11 @@ border-bottom=${ACCENT}
 button-background=${ACCENT}
 button-text=${ON_ACCENT}
 details-background=${SURFACE}
+message-padding=4
+button-padding=2
+button-border-size=1
+border-bottom-size=1
+button-gap=12
 EOF
   if [[ ! -f "${ROOT}/swirlnag/config" ]] || ! cmp -s "${nag_payload}" "${ROOT}/swirlnag/config"; then
     mv -f "${nag_payload}" "${ROOT}/swirlnag/config"

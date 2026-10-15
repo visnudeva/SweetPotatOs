@@ -137,10 +137,11 @@ while true; do
     else
         line="${meters}"
     fi
-    # Extra space under the glyphs. swaybar centers the line, which lifts
+    # Extra space under the glyphs. The bar centers the line, which lifts
     # descenders (the p in a window title, the p in Sep) off the bottom
-    # edge that shows under the app menu.
-    echo "<span rise=\"8192\">${line}</span>"
+    # edge that shows under the app menu. 12288 is 12 points; 8192 was
+    # enough for swaybar and still left a sliver under swirlbar.
+    echo "<span rise=\"12288\">${line}</span>"
 
     sleep 3
 done

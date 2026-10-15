@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=11
+pkgrel=12
 pkgdesc='Scrolling tiling Wayland compositor with its bar, IPC client, nag, and menu'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -65,12 +65,14 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'swirl-portals.conf'
         'overview-click-zoom.patch'
         'swaynag-no-reflow.patch'
+        'swaynag-single-row.patch'
         'lone-column-maximize.patch')
 sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
             '7f240d2e4a711dd3d4bb390bf90495edea0d15fd9bbf5f10a828338107d9ad1c'
             'c294f28c3f9865ce1db88ae507cf4b53c8063f993becbe45588a724b83209858'
             'd47e24936b9e7e485f4c74f039e77a9681cdedaca80e9aa51ae0e2a2a6e2a442'
+            'b54a64aad06cc9439c255dc6d50a2a83be648f157be0c6346be5cb32b6a4651c'
             'SKIP')
 
 pkgver() {
@@ -90,6 +92,8 @@ prepare() {
   git apply "${srcdir}/overview-click-zoom.patch"
   # Power-off / exit confirmation stays above the status bar and does not reflow windows.
   git apply "${srcdir}/swaynag-no-reflow.patch"
+  # The confirmation button sits on the message row, so the bar stays one line tall.
+  git apply "${srcdir}/swaynag-single-row.patch"
   # A column left alone after an overview drag stays full width.
   git apply "${srcdir}/lone-column-maximize.patch"
 }

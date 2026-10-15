@@ -1,0 +1,46 @@
+diff --git a/swaynag/render.c b/swaynag/render.c
+index 02ba8ef..42f1846 100644
+--- a/swaynag/render.c
++++ b/swaynag/render.c
+@@ -200,20 +200,6 @@ static uint32_t render_detailed(cairo_t *cairo, struct swaynag *swaynag,
+ 	return ideal_height;
+ }
+ 
+-static uint32_t get_buttons_width(cairo_t *cairo, struct swaynag *swaynag) {
+-	int width = swaynag->type->button_gap;
+-	for (int i = 0; i < swaynag->buttons->length; i++) {
+-		struct swaynag_button *button = swaynag->buttons->items[i];
+-		int text_width, text_height;
+-		get_text_size(cairo, swaynag->type->font_description, &text_width, &text_height, NULL,
+-			1, true, "%s", button->text);
+-		int border = swaynag->type->button_border_thickness;
+-		int padding = swaynag->type->button_padding;
+-		width += 2 * (border + padding) + text_width + swaynag->type->button_gap;
+-	}
+-	return width;
+-}
+-
+ static uint32_t render_button(cairo_t *cairo, struct swaynag *swaynag,
+ 		int button_index, int *x, int y) {
+ 	struct swaynag_button *button = swaynag->buttons->items[button_index];
+@@ -266,15 +252,14 @@ static uint32_t render_to_cairo(cairo_t *cairo, struct swaynag *swaynag) {
+ 	uint32_t h = render_message(cairo, swaynag);
+ 	max_height = h > max_height ? h : max_height;
+ 
+-	uint32_t buttons_width = get_buttons_width(cairo, swaynag);
+-	int x = swaynag->width - 0.5 * (swaynag->width - buttons_width);
+-	uint32_t max_buttons_height = 0;
++	int x = swaynag->width - swaynag->type->bar_border_thickness;
+ 	for (int i = 0; i < swaynag->buttons->length; i++) {
+-		h = render_button(cairo, swaynag, i, &x, max_height);
+-		max_buttons_height = h > max_buttons_height ? h : max_buttons_height;
++		h = render_button(cairo, swaynag, i, &x, 0);
++		if (h > max_height) {
++			max_height = h;
++		}
+ 		x -= swaynag->type->button_gap;
+ 	}
+-	max_height += max_buttons_height;
+ 
+ 	if (swaynag->details.visible) {
+ 		h = render_detailed(cairo, swaynag, max_height);

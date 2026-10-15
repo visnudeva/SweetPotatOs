@@ -328,6 +328,10 @@ bar {
     # Width 0 keeps swaybar's own padding, so the discs sit close together.
     strip_workspace_numbers yes
     workspace_min_width 0
+    # Scroll's bar draws insert arrows, an eye, and "T0/0 (0)" unless these
+    # are off. The meters on the right are the status script.
+    scroller_indicator no
+    trails_indicator no
 
     colors {
         # SPO-BAR-START

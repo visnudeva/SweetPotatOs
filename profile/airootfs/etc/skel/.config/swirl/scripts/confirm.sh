@@ -13,7 +13,7 @@ fi
 : "${SPO_ACCENT:=a73b50}"
 : "${SPO_ON_ACCENT:=ffffff}"
 exec flock -n "$lock" swaynag \
-  --font "pango:Noto Sans 11" \
+  --font "pango:Noto Sans 10" \
   --background "${SPO_SURFACE}" \
   --text "${SPO_TEXT}" \
   --border "${SPO_ACCENT}" \
@@ -21,4 +21,9 @@ exec flock -n "$lock" swaynag \
   --button-background "${SPO_ACCENT}" \
   --button-text "${SPO_ON_ACCENT}" \
   --details-background "${SPO_SURFACE}" \
+  --message-padding 4 \
+  --button-padding 2 \
+  --button-border-size 1 \
+  --border-bottom-size 1 \
+  --button-gap 12 \
   "$@"

@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-127
+What changed: The bar no longer shows the scroll arrows, the eye, or T0/0 (0). The power-off bar is one line, about the height of the status bar. Log out and back in after updating.
+
 @2026.10.3-126
 What changed: The testing update removes the sway package before installing Swirl. If an update stopped because swirl and sway are in conflict, run it again.
 
