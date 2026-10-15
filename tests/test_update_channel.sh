@@ -44,6 +44,7 @@ assert "grep -q 'Open Mod+?' '${UPD}'" "tells users Mod+? is enough after update
 assert "! grep -q 'spo-upgrade' '${UPD}'" "no spo-upgrade"
 assert "grep -q 'swaylock-effects' '${UPD}'" "upgrades swaylock-effects package"
 assert "grep -q 'Removing swaylock' '${UPD}'" "removes stock swaylock before effects"
+assert "grep -q 'Removing sway (replaced by swirl)' '${UPD}'" "removes sway before the unified swirl package"
 assert "grep -q '^swaylock-effects$' '${ROOT}/profile/packages.x86_64'" "ISO lists swaylock-effects"
 assert "grep -q '^clock$' '${ROOT}/profile/airootfs/etc/skel/.config/swaylock/config'" \
   "skel swaylock config enables clock"

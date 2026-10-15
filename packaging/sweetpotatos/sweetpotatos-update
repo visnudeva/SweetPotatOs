@@ -166,6 +166,14 @@ for t in "${to_touch[@]}"; do
       pacman -Rdd --noconfirm swaylock || true
     fi
   fi
+  if [[ "${t}" == "${REPO_NAME}/swirl" ]]; then
+    # pacman -S will not drop a conflicting package. Swirl owns the bar,
+    # swaymsg, and swaynag names, so the Arch sway package has to go first.
+    if pacman -Q sway >/dev/null 2>&1; then
+      echo "[*] Removing sway (replaced by swirl)"
+      pacman -Rdd --noconfirm sway
+    fi
+  fi
 done
 
 changed="$(pacman -S --print --print-format '%n' --needed --noconfirm "${to_touch[@]}" 2>/dev/null || true)"
