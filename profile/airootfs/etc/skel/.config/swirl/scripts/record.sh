@@ -34,15 +34,29 @@ stop_recording() {
   notify "media-playback-stop" "Screen record" "Saved to ~/Videos"
 }
 
+# What is playing through the current speakers. `-a` alone records the
+# microphone, so a screencast of the desktop comes out silent.
+speaker_monitor() {
+  local sink
+  command -v pactl >/dev/null 2>&1 || return 1
+  sink="$(pactl get-default-sink 2>/dev/null || true)"
+  [[ -n "${sink}" ]] || return 1
+  printf '%s' "${sink}.monitor"
+}
+
 start_recording() {
-  local geom outfile
+  local geom outfile monitor
   mkdir -p "${OUTDIR}"
   geom="$(slurp)" || {
     notify "dialog-error" "Screen record" "Cancelled"
     exit 0
   }
   outfile="${OUTDIR}/rec_$(date +%Y%m%d_%H%M%S).mp4"
-  wf-recorder -g "${geom}" -a -f "${outfile}" &
+  if monitor="$(speaker_monitor)"; then
+    wf-recorder -g "${geom}" --audio="${monitor}" -f "${outfile}" &
+  else
+    wf-recorder -g "${geom}" --audio -f "${outfile}" &
+  fi
   echo $! > "${PIDFILE}"
   notify "media-record" "Screen record" "Recording… press Mod+Print to stop"
 }

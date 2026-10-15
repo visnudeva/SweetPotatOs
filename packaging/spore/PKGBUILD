@@ -1,6 +1,6 @@
 # Maintainer: visnudeva
 pkgname=spore
-pkgver=0.1.0.r9.g6dac691
+pkgver=0.1.0.r16.g05bfc91
 pkgrel=1
 pkgdesc='TUI web radio and local music player with FFT visualizers'
 arch=('x86_64')
@@ -12,7 +12,7 @@ optdepends=(
   'pipewire-pulse: PulseAudio/PipeWire audio output'
   'alsa-lib: ALSA audio output'
 )
-source=("git+https://github.com/visnudeva/spore.git#commit=6dac6915445db82a3c533078dda715c1eca50018"
+source=("git+https://github.com/visnudeva/spore.git#commit=05bfc91e272eaae5278598cd2089fde22d7a98e4"
         follow-theme.patch
         align-hint.patch)
 sha256sums=('SKIP'
@@ -27,12 +27,11 @@ prepare() {
 
 pkgver() {
   cd spore
-  local ver
-  if ver=$(git describe --long --tags 2>/dev/null); then
-    printf '%s' "${ver}" | sed 's/^v//;s/-/./g'
-  else
-    printf '0.1.0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
-  fi
+  # Published packages already reached r9. This clone's history is shorter
+  # than that, so commit count alone would sort as a downgrade.
+  local n
+  n="$(git rev-list --count HEAD)"
+  printf '0.1.0.r%s.g%s' "$((n + 6))" "$(git rev-parse --short=7 HEAD)"
 }
 
 build() {

@@ -2,8 +2,51 @@
 
 **Purpose:** Full durable memory for Cursor agents and humans after reinstalling the build machine (e.g. leave Bluefin/GNOME → Arch-based host). Prefer this + `NOTES.md` + `.cursor/rules/project-notes.mdc` over chat history.
 
-**Snapshot date:** 2026-09-13 (Bluefin host, Third Harvest era)  
-**Maintainer / SF / GitHub user:** `visnudeva`
+**Snapshot date:** 2026-10-15 (Ryoku host, Fourth Harvest tree, stable channel `sweetpotatos-2026.10.3-124`)  
+**Maintainer / SF / GitHub user:** `visnudeva`  
+**Off-disk copy of this snapshot:** `/run/media/visnudeva/1T/Backup/SweetPotatOs/2026-10-15/` (read `WHERE-WE-ARE.md` there first)
+
+---
+
+## Current state (2026-10-15) — read this before the older sections
+
+The build machine is **Ryoku**: Arch on btrfs, Hyprland desktop. Do **not** install SweetPotatOs packages here and do **not** add `[sweetpotatos]` to this host’s pacman. Develop in the sibling clones, publish from them, then confirm the host pacman files are still clean.
+
+Repos (siblings):
+
+```text
+/home/visnudeva/code/GITHUB/SweetPotatOs    # ISO + packages. origin + sourceforge
+/home/visnudeva/code/GITHUB/SweetPotato     # theme source of truth. origin only
+```
+
+**What installed systems are running.** Stable pacman channel tag `pacman-repo` (latest asset refresh 2026-10-14). Pacman resolves the newest of each name. That set is:
+
+| Package | Version on stable |
+|---------|-------------------|
+| sweetpotatos | 2026.10.3-124 |
+| swirl | 1.13.0.r8567.gcd070469-10 |
+| spore | 0.1.0.r16.g05bfc91-1 |
+| tuber | 0.1.0.r31.g6995309-2 |
+| localsend-bin | 1.18.0-4 |
+| calamares | 3.4.2-2 |
+| shelly-bin | 3.0.6-1 |
+| swaylock-effects | 1.7.0.0-1 |
+| waypaper | 2.8-1 |
+| yay-bin | 13.0.1-1 |
+| python-screeninfo | 0.8.1-2 |
+| python-imageio-ffmpeg | 0.6.0-2 |
+
+`brave-origin-bin-1.95.101-1` is in `profile/packages.x86_64`, in `packaging/brave-origin-bin`, in `repo/`, and on the **testing** release. It is **not** an asset on stable `pacman-repo`. Do not upload it to stable unless the user explicitly says to push to stable.
+
+**What 2026.10.3-124 actually changed** (from `packaging/sweetpotatos/update-news`, newest first): keybind reminder on login, toggled with `x` on the Mod+? page (124). Before that on the same channel: Escape no longer closes a window (122), Spore reconnects a dropped station (121), screen record captures speaker audio (120), kanji fastfetch logo on Sweet potato and Ube (119), green Spore now-playing line (118), overview leaves a filled desktop (117), caffeine does not block lid sleep (111), display-layout fixes, Mod+Ctrl letter keybinds, SweetPotato themer, fish in foot.
+
+**Git vs that channel, fixed on this date.** The stable package was built with the speaker-monitor `record.sh` and Spore was published as r16, but those two sources were still uncommitted. They are now committed so GitHub (`origin` and `sourceforge`) and the ISO trees (`etc/skel` and `home/liveuser`) match the files inside `sweetpotatos-2026.10.3-124` and `spore-0.1.0.r16.g05bfc91-1`. SweetPotato `swirl/scripts/record.sh` is the theme source of that same script.
+
+**ISO branding in the tree vs what is published.** `profile/profiledef.sh`, `build.sh`, and `sourceforge/upload.sh` say **Fourth Harvest** (`2026.10_Fourth_Harvest`, label `SPOTATO_FOURTH202610`, file `Sweetpotatos_2026.10_Fourth_Harvest.iso`). SourceForge `htdocs/` still links the download to **Third Harvest**. `out/` on this machine is empty — no Fourth Harvest ISO has been built here. Do not retitle the website until that ISO is actually uploaded.
+
+**Left uncommitted on purpose** (not in the stable package): `.cheatsheet-snapshots/` (a 2026-09-26 pre-polish copy; its README says revert by copying back into SweetPotato swirl then `./sync-theme.sh --iso-only`), `.publish-repo-stage/`, `.publish-repo-stage-tuber/`, and SweetPotato `swirl/cheatsheet-snapshots/` plus `__pycache__`. Do not commit those.
+
+**Resume from here.** Theme edits start in SweetPotato, then `./sync-theme.sh` (`--iso-only` on this Hyprland host). Package bumps go to testing with `./scripts/publish-repo.sh testing` until the user says to push to stable. A new ISO is `sudo ./build.sh` only when they ask for a point release. Tests: `./tests/run.sh`. Smoke: `./scripts/smoke-check.sh`.
 
 ---
 
@@ -102,13 +145,13 @@ That is enough to restore project rules; old Bluefin chat threads are optional.
 3. **Packages into `./repo`:** `sudo ./build.sh --build-packages`  
    Builds: calamares (AUR), swirl, sweetpotatos, yay-bin, shelly-bin, localsend-bin, spore, brave-origin-bin, python-screeninfo, python-imageio-ffmpeg, waypaper.
 4. **ISO:** `sudo ./build.sh`  
-   Output: `out/Sweetpotatos_*.iso` (current default rename: `Sweetpotatos_2026.10_Third_Harvest.iso`).  
+   Output: `out/Sweetpotatos_*.iso` (current default rename: `Sweetpotatos_2026.10_Fourth_Harvest.iso`).  
    Work dir: `work/` (cleared each ISO build).
 5. **Smoke:** `./scripts/smoke-check.sh`
 6. **Publish**
    - Git SweetPotato → GitHub.
    - Git SweetPotatOs → GitHub **and** `sourceforge`.
-   - ISO only: `SF_USER=visnudeva SF_RELEASE=2026.10_Third_Harvest ./sourceforge/upload.sh`  
+   - ISO only: `SF_USER=visnudeva SF_RELEASE=2026.10_Fourth_Harvest ./sourceforge/upload.sh`  
      (rsync ISO + `.sha256` + `htdocs/`). Then SF Files → set default download on the `.iso`.
    - **Point-release ISOs only** — do **not** reintroduce in-place `spo-upgrade` / overlay pacman channel. Theme on other distros: SweetPotato `install.sh`.
 
@@ -126,11 +169,12 @@ Run via `sudo ./build.sh` from a **normal user** (uses `SUDO_USER` for makepkg),
 
 | Item | Value |
 |------|--------|
-| Marketing | Third Harvest |
-| `iso_version` / folder | `2026.10_Third_Harvest` |
-| ISO file | `Sweetpotatos_2026.10_Third_Harvest.iso` |
-| Label | `SPOTATO_THIRD202610` |
-| Prior | First `2026.08_…`, Second `2026.09_…` |
+| Marketing in the tree | Fourth Harvest |
+| `iso_version` / folder | `2026.10_Fourth_Harvest` |
+| ISO file | `Sweetpotatos_2026.10_Fourth_Harvest.iso` |
+| Label | `SPOTATO_FOURTH202610` |
+| Last ISO the website still links | Third Harvest (`2026.10_Third_Harvest`) — htdocs not switched |
+| Prior | First `2026.08_…`, Second `2026.09_…`, Third `2026.10_Third_Harvest` |
 
 Bump together: `profile/profiledef.sh`, `build.sh` `SWEETPOTATOS_ISO_NAME` default, `sourceforge/upload.sh` defaults, changelog/htdocs.
 
@@ -153,7 +197,7 @@ Bump together: `profile/profiledef.sh`, `build.sh` `SWEETPOTATOS_ISO_NAME` defau
 - User config: `~/.config/swirl/` **only** — never ship `~/.config/sway/` in skel (Swirl prefers sway path first). Keep `include /etc/sway/config.d/*`.
 - Display layouts: nwg-displays + `~/.config/sway/outputs` created at runtime; launcher Exec = `sweetpotatos-displays` on PATH. Do not ship `~/.config/sway/` in skel.
 - Default terminal = **foot** (opaque `alpha=1.0` under `[colors-dark]`). Do not ship kitty / switch Mod+Return without SweetPotato + sync.
-- Default wallpaper = **SpoNeon.png**; no UsefulBinds/BindsBG. `ensure-wallpaper.sh` must not clobber a saved `wallpaper.conf`.
+- Default wallpaper = **SPONeonKanjiDefault.png**; no UsefulBinds/BindsBG. `ensure-wallpaper.sh` must not clobber a saved `wallpaper.conf`. `sweetpotatos-materialize` refreshes shipped wallpapers and does not switch the active waypaper selection.
 - Fastfetch primary logo = colored **`SPLogo.png`** via `logo.type: chafa`. Not sixel/`auto`/monochrome `.asc` as primary.
 
 ### Lid / caffeine / services
@@ -180,7 +224,8 @@ Bump together: `profile/profiledef.sh`, `build.sh` `SWEETPOTATOS_ISO_NAME` defau
 ### Publish policy
 
 - Push SweetPotatOs to **both** `origin` and `sourceforge` when asked to publish git.
-- ISO upload separate from git.
+- ISO upload separate from git (`sourceforge/upload.sh`). SourceForge Files stays ISO + project web only.
+- Installed systems update from the GitHub pacman channel (`sweetpotatos-update`), not from an overlay. Testing tag `pacman-repo-testing` until the user explicitly says to push to stable (`pacman-repo`).
 - Point releases only — no `spo-upgrade` overlay channel.
 
 ---
@@ -242,8 +287,9 @@ Copy-paste after opening the repo on the new system:
 You are continuing SweetPotatOs work after a host reinstall.
 Read AGENT_MEMORY_BACKUP.md, NOTES.md, and .cursor/rules/project-notes.mdc.
 Repos are siblings: SweetPotatOs + SweetPotato. Theme SoT is SweetPotato; sync with ./sync-theme.sh.
-We build point-release ISOs only (no spo-upgrade). Current release branding is Third Harvest (2026.10).
-Do not regress: swirl-only ~/.config/swirl, foot terminal, chafa SPLogo.png, lid-sleep.conf, Ly/sudo post-install hooks, Brave Origin Mod+w.
+We build point-release ISOs only (no spo-upgrade). Installed systems track the GitHub pacman channel. Stable is sweetpotatos 2026.10.3-124 on tag pacman-repo. The ISO tree is branded Fourth Harvest; the website still links Third Harvest until a Fourth ISO is uploaded.
+Do not regress: swirl-only ~/.config/swirl, foot terminal, chafa SPLogo.png, SPONeonKanjiDefault wallpaper, lid-sleep.conf, Ly/sudo post-install hooks, Brave Origin Mod+w.
+Do not install SweetPotatOs packages on the Ryoku host.
 ```
 
 ---
