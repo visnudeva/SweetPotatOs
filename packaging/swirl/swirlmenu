@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Theme-colored text menu. wmenu draws it. Callers pass the prompt and any
+# extra wmenu flags; colors come from the active Sweet potato palette.
+set -euo pipefail
+
+ACTIVE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/active.sh"
+if [[ -f "${ACTIVE}" ]]; then
+  # shellcheck disable=SC1090
+  source "${ACTIVE}"
+fi
+: "${SPO_SURFACE:=1d1f21}"
+: "${SPO_TEXT:=f5e6e8}"
+: "${SPO_ACCENT:=a73b50}"
+: "${SPO_ON_ACCENT:=ffffff}"
+: "${SPO_HIGHLIGHT:=f79b29}"
+: "${SPO_ON_HIGHLIGHT:=1d1f21}"
+
+exec wmenu -i -f "Noto Sans 11" \
+  -N "${SPO_SURFACE}ff" -n "${SPO_TEXT}ff" \
+  -M "${SPO_ACCENT}ff" -m "${SPO_ON_ACCENT}ff" \
+  -S "${SPO_HIGHLIGHT}ff" -s "${SPO_ON_HIGHLIGHT}ff" \
+  "$@"

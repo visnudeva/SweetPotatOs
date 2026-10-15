@@ -1,8 +1,8 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=10
-pkgdesc='Scrolling tiling Wayland compositor (Scroll/Sway fork; uses stock swaybar/swaymsg/swaynag)'
+pkgrel=11
+pkgdesc='Scrolling tiling Wayland compositor with its bar, IPC client, nag, and menu'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
 license=('MIT')
@@ -34,6 +34,7 @@ depends=(
   vulkan-icd-loader
   libdisplay-info
   libcap
+  pango
 )
 makedepends=(
   git
@@ -46,8 +47,10 @@ makedepends=(
   xorg-xwayland
   hwdata
 )
+conflicts=('sway')
+replaces=('sway')
 optdepends=(
-  'sway: provides swaybar, swaymsg, and swaynag'
+  'wmenu: text menu used by swirlmenu'
   'swaybg: wallpaper'
   'swayidle: idle management'
   'swaylock: screen locker'
@@ -67,7 +70,7 @@ sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
             '7f240d2e4a711dd3d4bb390bf90495edea0d15fd9bbf5f10a828338107d9ad1c'
             'c294f28c3f9865ce1db88ae507cf4b53c8063f993becbe45588a724b83209858'
-            '4f99693d64e67d6faaf66f62f9856d503d48e1ea1ececb0fcae6079d07e1e32c'
+            'd47e24936b9e7e485f4c74f039e77a9681cdedaca80e9aa51ae0e2a2a6e2a442'
             'SKIP')
 
 pkgver() {
@@ -96,9 +99,9 @@ build() {
     -D sd-bus-provider=libsystemd \
     -D werror=false \
     -D b_ndebug=true \
-    -D scrollbar=false \
-    -D scrollnag=false \
-    -D swaymsg=false \
+    -D scrollbar=true \
+    -D scrollnag=true \
+    -D swaymsg=true \
     -D default-wallpaper=false
   meson compile -C build
 }
@@ -109,4 +112,9 @@ package() {
   install -Dm644 swirl/README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
   install -Dm644 99-swirl-systemd-user.conf "$pkgdir/etc/sway/config.d/99-swirl-systemd-user.conf"
   install -Dm644 swirl-portals.conf "$pkgdir/usr/share/xdg-desktop-portal/swirl-portals.conf"
+  install -Dm755 "${startdir}/swirlmenu" "${pkgdir}/usr/bin/swirlmenu"
+  # Scripts, Displays, and the bar block still call the sway names.
+  ln -s swirlbar "${pkgdir}/usr/bin/swaybar"
+  ln -s swirlmsg "${pkgdir}/usr/bin/swaymsg"
+  ln -s swirlnag "${pkgdir}/usr/bin/swaynag"
 }

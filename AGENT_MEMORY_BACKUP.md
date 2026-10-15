@@ -47,6 +47,8 @@ Repos (siblings):
 
 **Left uncommitted on purpose** (not in the stable package): `.cheatsheet-snapshots/` (a 2026-09-26 pre-polish copy; its README says revert by copying back into SweetPotato swirl then `./sync-theme.sh --iso-only`), `.publish-repo-stage/`, `.publish-repo-stage-tuber/`, and SweetPotato `swirl/cheatsheet-snapshots/` plus `__pycache__`. Do not commit those.
 
+**Testing channel (2026-10-15).** `pacman-repo-testing` has `swirl-1.13.0.r8567.gcd070469-11` and `sweetpotatos-2026.10.3-125`. Swirl builds its own bar, `swirlmsg`, `swirlnag`, and `swirlmenu`, and the package conflicts with Arch `sway`. Stable `pacman-repo` was left as it was. Try it with `sudo sweetpotatos-update --testing`, then log out and back in. The power-off bar and the menus follow the theme.
+
 **Resume from here.** Theme edits start in SweetPotato, then `./sync-theme.sh` (`--iso-only` on this Hyprland host). Package bumps go to testing with `./scripts/publish-repo.sh testing` until the user says to push to stable. A new ISO is `sudo ./build.sh` only when they ask for a point release. Tests: `./tests/run.sh`. Smoke: `./scripts/smoke-check.sh`.
 
 ---
@@ -194,7 +196,7 @@ Bump together: `profile/profiledef.sh`, `build.sh` `SWEETPOTATOS_ISO_NAME` defau
 ### Theme / compositor
 
 - Theme SoT = **SweetPotato**; ISO gets it only via `./sync-theme.sh` (not hand-copy one tree).
-- Compositor = **Swirl**. Keep Arch `sway` for swaybar/swaymsg/swaynag only.
+- Compositor = **Swirl**. The swirl package ships swirlbar, swirlmsg, swirlnag, and swirlmenu (`swaybar` / `swaymsg` / `swaynag` are symlinks). Do not install the Arch `sway` package. `swayidle`, `swaybg`, `swaylock-effects`, and `swayimg` stay separate.
 - User config: `~/.config/swirl/` **only** — never ship `~/.config/sway/` in skel (Swirl prefers sway path first). Keep `include /etc/sway/config.d/*`.
 - Display layouts: nwg-displays + `~/.config/sway/outputs` created at runtime; launcher Exec = `sweetpotatos-displays` on PATH. Do not ship `~/.config/sway/` in skel.
 - Default terminal = **foot** (opaque `alpha=1.0` under `[colors-dark]`). Do not ship kitty / switch Mod+Return without SweetPotato + sync.

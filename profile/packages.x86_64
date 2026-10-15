@@ -100,9 +100,8 @@ sweetpotatos
 qt6-base
 qt5-base
 accountsservice
-# SweetPotato desktop: swirl compositor; sway package kept only for swaybar/swaymsg/swaynag (session removed)
+# SweetPotato desktop: swirl ships the compositor, bar, swaymsg, swaynag, and swirlmenu.
 swirl
-sway
 swaybg
 swayidle
 swaylock-effects

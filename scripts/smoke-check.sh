@@ -131,6 +131,8 @@ check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel Displ
 check_nogrep 'save-display-layout\.sh' "${ISO}/etc/skel/.config/swirl/config" "no separate save-display keybind"
 check_grep 'sway/workspaces' "${ISO}/etc/skel/.config/swirl/config" "skel includes sway workspaces"
 check_grep '^sweetpotatos$' "${ROOT}/profile/packages.x86_64" "sweetpotatos package listed"
+check_grep '^swirl$' "${ROOT}/profile/packages.x86_64" "swirl package listed"
+check_nogrep '^sway$' "${ROOT}/profile/packages.x86_64" "ISO does not install the sway package"
 check_grep '^LD_PRELOAD=$' \
   "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" \
   "skel leaves GTK preload empty"

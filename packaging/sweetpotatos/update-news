@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-125
+What changed: Swirl ships its own bar, swaymsg, and power-off bar. The power-off and exit bars use the theme colors. The app menu, Wi-Fi menu, and wallpaper list use swirlmenu. Log out and back in after updating. This build is on the testing channel.
+
 @2026.10.3-124
 What changed: The login notice is the keybind reminder. On the keybind page (Mod+?), press x to turn it off. Press x again to turn it back on. Mod+? still opens the page.
 

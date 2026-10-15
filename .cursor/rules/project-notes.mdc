@@ -10,7 +10,7 @@ Before non-trivial changes, read `NOTES.md` at the repo root. After a host reins
 ## Hard rules from prior work
 
 - Theme source of truth is the sibling **SweetPotato** repo. Sync into this ISO with `./sync-theme.sh` (not by hand-copying one tree only). On a GNOME/Bluefin host, `sync-theme.sh` must **not** copy Papirus/glycin into `$HOME` (that blanks half the GNOME icons). It skips live home automatically; never pass `--live` on this host.
-- Desktop compositor is **Swirl**; `sway` package stays for swaybar/swaymsg/swaynag. User config is `~/.config/swirl/` only — do **not** also ship `~/.config/sway/` (Swirl checks sway first). Keep `include /etc/sway/config.d/*`.
+- Desktop compositor is **Swirl**. The swirl package ships swirlbar, swirlmsg, swirlnag, and swirlmenu, with `swaybar` / `swaymsg` / `swaynag` symlinks. Do **not** install the Arch `sway` package (it conflicts). User config is `~/.config/swirl/` only — do **not** also ship `~/.config/sway/` (Swirl checks sway first). Keep `include /etc/sway/config.d/*`. `swayidle`, `swaybg`, `swaylock-effects`, and `swayimg` stay separate.
 - Fastfetch primary logo is colored `SPLogo.png` via `logo.type: chafa` (potato-colored ASCII). Do not switch primary to sixel/`auto` or monochrome `SPLogo.asc`.
 - Lid close suspends via logind `lid-sleep.conf`. Never reintroduce `do-not-suspend.conf` that sets `HandleLidSwitch=ignore`. Caffeine must not block lid suspend.
 - Ly always lists root first; never ship `/etc/ly/save.txt` as `0`. Post-install `sweetpotatos-fix-ly` (Calamares `shellprocess@fix-ly`) must set the saved user to `${USER}` and remove `liveuser`.

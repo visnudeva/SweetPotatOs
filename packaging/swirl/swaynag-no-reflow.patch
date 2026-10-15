@@ -31,7 +31,7 @@ index e51eb3e9..f5a91275 100644
  
 +static bool layer_namespace_is(struct sway_layer_surface *surface, const char *ns) {
 +	const char *name = surface->layer_surface->namespace;
-+	return name && strcmp(name, ns) == 0;
++	return name && (strcmp(ns, "swaynag") ? strcmp(name, ns) == 0 : (strcmp(name, "swaynag") == 0 || strcmp(name, "swirlnag") == 0));
 +}
 +
  static void arrange_surface(struct sway_output *output, const struct wlr_box *full_area,
@@ -179,7 +179,7 @@ index 419587ee..e5ea0fe3 100644
  
 +static bool animate_layer_is_swaynag(struct sway_layer_surface *surface) {
 +	const char *ns = surface->layer_surface->namespace;
-+	return ns && strcmp(ns, "swaynag") == 0;
++	return ns && (strcmp(ns, "swaynag") == 0 || strcmp(ns, "swirlnag") == 0);
 +}
 +
  static void animate_layer(struct wlr_scene_tree *tree, double t,

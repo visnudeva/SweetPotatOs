@@ -750,11 +750,7 @@ path, surface, text, accent, on_accent, highlight, on_highlight = sys.argv[1:]
 file = pathlib.Path(path)
 src = file.read_text().splitlines(keepends=True)
 out = []
-cmd = (
-    'dmenu_command = wmenu -i -f "Noto Sans 11" '
-    f'-N {surface}ff -n {text}ff -M {accent}ff -m {on_accent}ff '
-    f'-S {highlight}ff -s {on_highlight}ff\n'
-)
+cmd = 'dmenu_command = swirlmenu\n'
 for line in src:
     if line.startswith("dmenu_command ="):
         line = cmd
@@ -769,6 +765,34 @@ if new != old:
 PY
 )"
     note_change <<< "${changed_note}"
+  fi
+
+  mkdir -p "${ROOT}/swirlnag"
+  nag_payload="$(mktemp)"
+  cat > "${nag_payload}" << EOF
+font=pango:Noto Sans 11
+background=${SURFACE}
+text=${TEXT}
+border=${ACCENT}
+border-bottom=${ACCENT}
+button-background=${ACCENT}
+button-text=${ON_ACCENT}
+details-background=${SURFACE}
+
+[warning]
+background=${SURFACE}
+text=${TEXT}
+border=${ACCENT}
+border-bottom=${ACCENT}
+button-background=${ACCENT}
+button-text=${ON_ACCENT}
+details-background=${SURFACE}
+EOF
+  if [[ ! -f "${ROOT}/swirlnag/config" ]] || ! cmp -s "${nag_payload}" "${ROOT}/swirlnag/config"; then
+    mv -f "${nag_payload}" "${ROOT}/swirlnag/config"
+    note_change <<< "changed"
+  else
+    rm -f "${nag_payload}"
   fi
 
   if [[ -f "${ROOT}/gtk-3.0/gtk.css" ]]; then
