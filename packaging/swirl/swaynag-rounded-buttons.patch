@@ -1,0 +1,78 @@
+--- a/swaynag/render.c	2026-10-15 22:43:29.589742881 +0400
++++ b/swaynag/render.c	2026-10-15 22:43:29.576883022 +0400
+@@ -200,6 +200,29 @@
+ 	return ideal_height;
+ }
+ 
++/* Capsule buttons: the ends are semicircles so the power-off bar matches
++ * the rounded frames. side keeps the label out of those caps. */
++static void fill_round_rect(cairo_t *cairo, double x, double y,
++		double width, double height, double radius) {
++	double limit = width < height ? width / 2.0 : height / 2.0;
++	if (radius > limit) {
++		radius = limit;
++	}
++	if (radius < 0.5) {
++		cairo_rectangle(cairo, x, y, width, height);
++		cairo_fill(cairo);
++		return;
++	}
++	double quarter = 1.5707963267948966;
++	cairo_new_path(cairo);
++	cairo_arc(cairo, x + width - radius, y + radius, radius, -quarter, 0);
++	cairo_arc(cairo, x + width - radius, y + height - radius, radius, 0, quarter);
++	cairo_arc(cairo, x + radius, y + height - radius, radius, quarter, quarter * 2);
++	cairo_arc(cairo, x + radius, y + radius, radius, quarter * 2, quarter * 3);
++	cairo_close_path(cairo);
++	cairo_fill(cairo);
++}
++
+ static uint32_t render_button(cairo_t *cairo, struct swaynag *swaynag,
+ 		int button_index, int *x, int y) {
+ 	struct swaynag_button *button = swaynag->buttons->items[button_index];
+@@ -210,6 +233,11 @@
+ 
+ 	int border = swaynag->type->button_border_thickness;
+ 	int padding = swaynag->type->button_padding;
++	int body_h = text_height + padding * 2;
++	int side = body_h / 2;
++	if (side < padding) {
++		side = padding;
++	}
+ 
+ 	uint32_t ideal_height = text_height + padding * 2 + border * 2;
+ 	uint32_t ideal_surface_height = ideal_height;
+@@ -217,23 +245,23 @@
+ 		return ideal_surface_height;
+ 	}
+ 
+-	button->x = *x - border - text_width - padding * 2 + 1;
++	button->x = *x - border - text_width - side * 2 + 1;
+ 	button->y = y + (int)(ideal_height - text_height) / 2 - padding + 1;
+-	button->width = text_width + padding * 2;
+-	button->height = text_height + padding * 2;
++	button->width = text_width + side * 2;
++	button->height = body_h;
+ 
+ 	cairo_set_source_u32(cairo, swaynag->type->border);
+-	cairo_rectangle(cairo, button->x - border, button->y - border,
+-			button->width + border * 2, button->height + border * 2);
+-	cairo_fill(cairo);
++	fill_round_rect(cairo, button->x - border, button->y - border,
++			button->width + border * 2, button->height + border * 2,
++			(button->height + border * 2) / 2.0);
+ 
+ 	cairo_set_source_u32(cairo, swaynag->type->button_background);
+-	cairo_rectangle(cairo, button->x, button->y,
+-			button->width, button->height);
+-	cairo_fill(cairo);
++	fill_round_rect(cairo, button->x, button->y,
++			button->width, button->height, button->height / 2.0);
+ 
+ 	cairo_set_source_u32(cairo, swaynag->type->button_text);
+-	cairo_move_to(cairo, button->x + padding, button->y + padding);
++	cairo_move_to(cairo, button->x + (button->width - text_width) / 2,
++			button->y + padding);
+ 	render_text(cairo, swaynag->type->font_description, 1, true,
+ 			"%s", button->text);
+ 

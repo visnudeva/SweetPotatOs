@@ -1,0 +1,270 @@
+diff --git a/include/swaynag/swaynag.h b/include/swaynag/swaynag.h
+index fb9e9c21..dccf630b 100644
+--- a/include/swaynag/swaynag.h
++++ b/include/swaynag/swaynag.h
+@@ -1,7 +1,9 @@
+ #ifndef _SWAYNAG_SWAYNAG_H
+ #define _SWAYNAG_SWAYNAG_H
++#include <stdbool.h>
+ #include <stdint.h>
+ #include <strings.h>
++#include <xkbcommon/xkbcommon.h>
+ #include "list.h"
+ #include "pool-buffer.h"
+ #include "cursor-shape-v1-client-protocol.h"
+@@ -28,11 +30,20 @@ struct swaynag_pointer {
+ 	int y;
+ };
+ 
++struct swaynag_keyboard {
++	struct wl_keyboard *keyboard;
++	struct xkb_keymap *keymap;
++	struct xkb_state *state;
++	bool key_down;
++};
++
+ struct swaynag_seat {
+ 	struct wl_seat *wl_seat;
+ 	uint32_t wl_name;
++	uint32_t wl_version;
+ 	struct swaynag *swaynag;
+ 	struct swaynag_pointer pointer;
++	struct swaynag_keyboard keyboard;
+ 	struct wl_list link;
+ };
+ 
+@@ -77,8 +88,10 @@ struct swaynag_details {
+ 
+ struct swaynag {
+ 	bool run_display;
++	bool confirmed;
+ 
+ 	struct wl_display *display;
++	struct xkb_context *xkb_context;
+ 	struct wl_compositor *compositor;
+ 	struct wl_seat *seat;
+ 	struct wl_shm *shm;
+diff --git a/swaynag/meson.build b/swaynag/meson.build
+index 5c23fc38..d1b8b75c 100644
+--- a/swaynag/meson.build
++++ b/swaynag/meson.build
+@@ -15,6 +15,7 @@ executable(
+ 		rt,
+ 		wayland_client,
+ 		wayland_cursor,
++		xkbcommon,
+ 	],
+ 	link_with: [lib_sway_common, lib_sway_client],
+ 	install: true
+diff --git a/swaynag/swaynag.c b/swaynag/swaynag.c
+index fd499b0e..aa8a0607 100644
+--- a/swaynag/swaynag.c
++++ b/swaynag/swaynag.c
+@@ -1,10 +1,12 @@
+ #include <stdlib.h>
+ #include <assert.h>
++#include <sys/mman.h>
+ #include <sys/stat.h>
+ #include <sys/wait.h>
+ #include <unistd.h>
+ #include <wayland-client.h>
+ #include <wayland-cursor.h>
++#include <xkbcommon/xkbcommon.h>
+ #include "log.h"
+ #include "list.h"
+ #include "swaynag/render.h"
+@@ -91,6 +93,127 @@ static void swaynag_button_execute(struct swaynag *swaynag,
+ 	}
+ }
+ 
++static void swaynag_activate_dismiss(struct swaynag *swaynag) {
++	for (int i = 0; i < swaynag->buttons->length; ++i) {
++		struct swaynag_button *button = swaynag->buttons->items[i];
++		if (button->type == SWAYNAG_ACTION_DISMISS) {
++			swaynag_button_execute(swaynag, button);
++			return;
++		}
++	}
++	swaynag->run_display = false;
++}
++
++static void swaynag_activate_confirm(struct swaynag *swaynag) {
++	if (swaynag->confirmed) {
++		return;
++	}
++	for (int i = 0; i < swaynag->buttons->length; ++i) {
++		struct swaynag_button *button = swaynag->buttons->items[i];
++		if (button->type == SWAYNAG_ACTION_COMMAND && button->action) {
++			swaynag->confirmed = true;
++			swaynag_button_execute(swaynag, button);
++			return;
++		}
++	}
++}
++
++static void swaynag_keyboard_finish(struct swaynag_keyboard *keyboard) {
++	if (keyboard->state) {
++		xkb_state_unref(keyboard->state);
++		keyboard->state = NULL;
++	}
++	if (keyboard->keymap) {
++		xkb_keymap_unref(keyboard->keymap);
++		keyboard->keymap = NULL;
++	}
++	if (keyboard->keyboard) {
++		wl_keyboard_destroy(keyboard->keyboard);
++		keyboard->keyboard = NULL;
++	}
++	keyboard->key_down = false;
++}
++
++static void keyboard_keymap(void *data, struct wl_keyboard *wl_keyboard,
++		uint32_t format, int32_t fd, uint32_t size) {
++	struct swaynag_seat *seat = data;
++	if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1 || !seat->swaynag->xkb_context) {
++		close(fd);
++		return;
++	}
++
++	char *map_shm = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
++	if (map_shm == MAP_FAILED) {
++		close(fd);
++		return;
++	}
++
++	struct xkb_keymap *keymap = xkb_keymap_new_from_string(
++			seat->swaynag->xkb_context, map_shm,
++			XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS);
++	munmap(map_shm, size);
++	close(fd);
++	if (!keymap) {
++		return;
++	}
++
++	struct xkb_state *state = xkb_state_new(keymap);
++	if (!state) {
++		xkb_keymap_unref(keymap);
++		return;
++	}
++
++	if (seat->keyboard.state) {
++		xkb_state_unref(seat->keyboard.state);
++	}
++	if (seat->keyboard.keymap) {
++		xkb_keymap_unref(seat->keyboard.keymap);
++	}
++	seat->keyboard.keymap = keymap;
++	seat->keyboard.state = state;
++}
++
++static void keyboard_key(void *data, struct wl_keyboard *wl_keyboard,
++		uint32_t serial, uint32_t time, uint32_t key, uint32_t key_state) {
++	struct swaynag_seat *seat = data;
++	if (key_state != WL_KEYBOARD_KEY_STATE_PRESSED) {
++		seat->keyboard.key_down = false;
++		return;
++	}
++	if (seat->keyboard.key_down || !seat->keyboard.state) {
++		return;
++	}
++	seat->keyboard.key_down = true;
++
++	xkb_keysym_t sym = xkb_state_key_get_one_sym(
++			seat->keyboard.state, key + 8);
++	if (sym == XKB_KEY_Escape) {
++		swaynag_activate_dismiss(seat->swaynag);
++	} else if (sym == XKB_KEY_Return || sym == XKB_KEY_KP_Enter) {
++		swaynag_activate_confirm(seat->swaynag);
++	}
++}
++
++static void keyboard_modifiers(void *data, struct wl_keyboard *wl_keyboard,
++		uint32_t serial, uint32_t mods_depressed, uint32_t mods_latched,
++		uint32_t mods_locked, uint32_t group) {
++	struct swaynag_seat *seat = data;
++	if (!seat->keyboard.state) {
++		return;
++	}
++	xkb_state_update_mask(seat->keyboard.state, mods_depressed, mods_latched,
++			mods_locked, 0, 0, group);
++}
++
++static const struct wl_keyboard_listener keyboard_listener = {
++	.keymap = keyboard_keymap,
++	.enter = nop,
++	.leave = nop,
++	.key = keyboard_key,
++	.modifiers = keyboard_modifiers,
++	.repeat_info = nop,
++};
++
+ static void layer_surface_configure(void *data,
+ 		struct zwlr_layer_surface_v1 *surface,
+ 		uint32_t serial, uint32_t width, uint32_t height) {
+@@ -303,6 +426,7 @@ static void seat_handle_capabilities(void *data, struct wl_seat *wl_seat,
+ 		enum wl_seat_capability caps) {
+ 	struct swaynag_seat *seat = data;
+ 	bool cap_pointer = caps & WL_SEAT_CAPABILITY_POINTER;
++	bool cap_keyboard = caps & WL_SEAT_CAPABILITY_KEYBOARD;
+ 	if (cap_pointer && !seat->pointer.pointer) {
+ 		seat->pointer.pointer = wl_seat_get_pointer(wl_seat);
+ 		wl_pointer_add_listener(seat->pointer.pointer,
+@@ -311,6 +435,13 @@ static void seat_handle_capabilities(void *data, struct wl_seat *wl_seat,
+ 		wl_pointer_destroy(seat->pointer.pointer);
+ 		seat->pointer.pointer = NULL;
+ 	}
++	if (cap_keyboard && !seat->keyboard.keyboard && seat->wl_version >= 2) {
++		seat->keyboard.keyboard = wl_seat_get_keyboard(wl_seat);
++		wl_keyboard_add_listener(seat->keyboard.keyboard,
++				&keyboard_listener, seat);
++	} else if (!cap_keyboard && seat->keyboard.keyboard) {
++		swaynag_keyboard_finish(&seat->keyboard);
++	}
+ }
+ 
+ static const struct wl_seat_listener seat_listener = {
+@@ -369,8 +500,9 @@ static void handle_global(void *data, struct wl_registry *registry,
+ 
+ 		seat->swaynag = swaynag;
+ 		seat->wl_name = name;
+-		seat->wl_seat =
+-			wl_registry_bind(registry, name, &wl_seat_interface, 1);
++		seat->wl_version = version > 7 ? 7 : version;
++		seat->wl_seat = wl_registry_bind(registry, name, &wl_seat_interface,
++				seat->wl_version);
+ 
+ 		wl_seat_add_listener(seat->wl_seat, &seat_listener, seat);
+ 
+@@ -410,6 +542,7 @@ void swaynag_seat_destroy(struct swaynag_seat *seat) {
+ 	if (seat->pointer.pointer) {
+ 		wl_pointer_destroy(seat->pointer.pointer);
+ 	}
++	swaynag_keyboard_finish(&seat->keyboard);
+ 	wl_seat_destroy(seat->wl_seat);
+ 	wl_list_remove(&seat->link);
+ 	free(seat);
+@@ -454,6 +587,7 @@ void swaynag_setup(struct swaynag *swaynag) {
+ 				"If your compositor is running, check or set the "
+ 				"WAYLAND_DISPLAY environment variable.");
+ 	}
++	swaynag->xkb_context = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+ 
+ 	struct wl_registry *registry = wl_display_get_registry(swaynag->display);
+ 	wl_registry_add_listener(registry, &registry_listener, swaynag);
+@@ -506,6 +640,8 @@ void swaynag_setup(struct swaynag *swaynag) {
+ 			&layer_surface_listener, swaynag);
+ 	zwlr_layer_surface_v1_set_anchor(swaynag->layer_surface,
+ 			swaynag->type->anchors);
++	zwlr_layer_surface_v1_set_keyboard_interactivity(swaynag->layer_surface,
++			ZWLR_LAYER_SURFACE_V1_KEYBOARD_INTERACTIVITY_EXCLUSIVE);
+ 
+ 	wl_registry_destroy(registry);
+ }
+@@ -576,4 +712,7 @@ void swaynag_destroy(struct swaynag *swaynag) {
+ 	if (swaynag->display) {
+ 		wl_display_disconnect(swaynag->display);
+ 	}
++	if (swaynag->xkb_context) {
++		xkb_context_unref(swaynag->xkb_context);
++	}
+ }

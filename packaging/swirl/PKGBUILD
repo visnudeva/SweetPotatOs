@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=13
+pkgrel=15
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -72,6 +72,8 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'overview-click-zoom.patch'
         'swaynag-no-reflow.patch'
         'swaynag-single-row.patch'
+        'swaynag-rounded-buttons.patch'
+        'swaynag-keyboard.patch'
         'lone-column-maximize.patch')
 sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
@@ -79,6 +81,8 @@ sha256sums=('SKIP'
             'c294f28c3f9865ce1db88ae507cf4b53c8063f993becbe45588a724b83209858'
             'd47e24936b9e7e485f4c74f039e77a9681cdedaca80e9aa51ae0e2a2a6e2a442'
             'b54a64aad06cc9439c255dc6d50a2a83be648f157be0c6346be5cb32b6a4651c'
+            '506631954df92c66ea45c65e14401fe2084d6d7a412e9674cc5a102a48819397'
+            '4779ffa0a186901cfcc688782554194a9dce4e2abf0185651bbff139348f1bec'
             'SKIP')
 
 pkgver() {
@@ -100,6 +104,10 @@ prepare() {
   git apply "${srcdir}/swaynag-no-reflow.patch"
   # The confirmation button sits on the message row, so the bar stays one line tall.
   git apply "${srcdir}/swaynag-single-row.patch"
+  # Power-off and exit buttons are capsules, matching the rounded frames.
+  git apply "${srcdir}/swaynag-rounded-buttons.patch"
+  # Enter confirms the bar. Escape dismisses it.
+  git apply "${srcdir}/swaynag-keyboard.patch"
   # A column left alone after an overview drag stays full width.
   git apply "${srcdir}/lone-column-maximize.patch"
 }

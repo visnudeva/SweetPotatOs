@@ -4,6 +4,12 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-129
+What changed: On the power-off and exit bars, Enter confirms and Escape dismisses. Open the bar again after updating.
+
+@2026.10.3-128
+What changed: The power-off and exit buttons are round. Open the bar again after updating.
+
 @2026.10.3-127
 What changed: The bar no longer shows the scroll arrows, the eye, or T0/0 (0). The power-off bar is one line, about the height of the status bar. Log out and back in after updating.
 
