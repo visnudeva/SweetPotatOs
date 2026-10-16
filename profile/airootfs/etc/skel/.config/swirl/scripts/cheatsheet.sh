@@ -143,7 +143,8 @@ render_content() {
     if [[ -n "${TTY_PATH}" && -w "${TTY_PATH}" ]]; then
       # ESC clears a pending less prompt; :e <file> reloads the sheet (bare :e
       # waits for a filename and is what left garbage on the page).
-      printf '\033:e %s\n' "${content}" > "${TTY_PATH}" || true
+      # Must use double quotes: this block is inside bash -c (single-quoted).
+      printf "\033:e %s\n" "${content}" > "${TTY_PATH}" || true
     fi
   done
 ) &

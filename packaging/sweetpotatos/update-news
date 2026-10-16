@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-134
+What changed: Mod+? opens the keybind page again. The last update broke that shortcut; this one puts it back. Press Mod+? after updating.
+
 @2026.10.3-133
 What changed: On the keybind page (Mod+?), pressing x to toggle the login reminder no longer types into the page. Open the page again after updating.
 
