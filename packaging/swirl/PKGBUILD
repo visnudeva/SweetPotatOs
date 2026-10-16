@@ -153,6 +153,7 @@ package() {
   install -Dm644 "${scripts}/autotile_lib.lua" "${share}/scripts/autotile_lib.lua"
   install -Dm755 "${scripts}/confirm.sh" "${share}/scripts/confirm.sh"
   install -Dm755 "${scripts}/poweroff.sh" "${share}/scripts/poweroff.sh"
+  install -Dm755 "${scripts}/suspend.sh" "${share}/scripts/suspend.sh"
   install -Dm755 "${scripts}/power-menu.sh" "${share}/scripts/power-menu.sh"
   install -Dm644 "${root}/profile/airootfs/etc/skel/.config/swaylock/config" \
     "${share}/swaylock.conf"
