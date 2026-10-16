@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-136
+What changed: Smart Brightness is on by default. Fullscreen video (mpv, browsers on YouTube/Netflix, and similar) goes to max backlight, then your level comes back when you leave. Toggle with Mod+Ctrl+b. Log out and back in after updating (or run ~/.config/swirl/scripts/smart-brightness.sh daemon once).
+
 @2026.10.3-135
 What changed: Pressing x on the keybind page (Mod+?) toggles the login reminder without printing junk on the page. Open Mod+? again after updating.
 

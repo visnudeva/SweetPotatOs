@@ -25,6 +25,7 @@ run "update_notify" bash "${ROOT}/tests/test_update_notify.sh"
 run "hues" bash "${ROOT}/tests/test_hues.sh"
 run "caffeine" bash "${ROOT}/tests/test_caffeine.sh"
 run "login_tip" bash "${ROOT}/tests/test_login_tip.sh"
+run "smart_brightness" bash "${ROOT}/tests/test_smart_brightness.sh"
 run "smoke-check" bash "${ROOT}/scripts/smoke-check.sh"
 
 if [[ "${FAIL}" -eq 0 ]]; then

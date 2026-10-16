@@ -143,6 +143,11 @@ check_grep 'power-menu\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel opens t
 check_grep 'power-menu\.sh' "${ROOT}/packaging/swirl/session/config" "default session opens the power menu"
 check_grep 'Power menu' "${ISO}/etc/skel/.config/swirl/cheatsheet.txt" "cheatsheet lists the power menu"
 [[ -x "${ISO}/etc/skel/.config/swirl/scripts/power-menu.sh" ]] && ok "power-menu.sh is executable" || bad "power-menu.sh missing"
+check_grep 'smart-brightness\.sh daemon' "${ISO}/etc/skel/.config/swirl/config" "skel starts Smart Brightness"
+check_grep 'smart-brightness\.sh toggle' "${ISO}/etc/skel/.config/swirl/config" "skel toggles Smart Brightness"
+check_grep 'Smart Brightness' "${ISO}/etc/skel/.config/swirl/cheatsheet.txt" "cheatsheet lists Smart Brightness"
+[[ -x "${ISO}/etc/skel/.config/swirl/scripts/smart-brightness.sh" ]] && ok "smart-brightness.sh is executable" || bad "smart-brightness.sh missing"
+[[ -f "${ISO}/etc/skel/.config/swirl/scripts/smart-brightness-lib.py" ]] && ok "smart-brightness-lib.py present" || bad "smart-brightness-lib.py missing"
 check_grep 'swaynag-power-menu.patch' "${ROOT}/packaging/swirl/PKGBUILD" "swirl builds the power-menu swirlnag patch"
 check_nogrep '^sway$' "${ROOT}/profile/packages.x86_64" "ISO does not install the sway package"
 check_grep '^LD_PRELOAD=$' \

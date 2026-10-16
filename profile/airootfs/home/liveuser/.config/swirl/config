@@ -279,6 +279,8 @@ bindsym $mod+Shift+r mode "resize"
 
     bindsym --locked XF86MonBrightnessDown exec ~/.config/swirl/scripts/brightness.sh down
     bindsym --locked XF86MonBrightnessUp exec ~/.config/swirl/scripts/brightness.sh up
+    # Smart Brightness: max backlight for fullscreen video (toggle)
+    bindsym $mod+Ctrl+b exec ~/.config/swirl/scripts/smart-brightness.sh toggle
 
     bindsym --locked Print exec ~/.config/swirl/scripts/screenshot.sh full
     bindsym $mod+Shift+Print exec ~/.config/swirl/scripts/screenshot.sh region
@@ -365,6 +367,8 @@ exec nm-applet --indicator
 exec blueman-applet
 exec sh -c 'rfkill unblock bluetooth 2>/dev/null || true'
 exec ~/.config/swirl/scripts/tips.sh
+# Smart Brightness — max backlight for fullscreen video, restore on exit
+exec --no-startup-id ~/.config/swirl/scripts/smart-brightness.sh daemon
 exec_always ~/.config/swirl/scripts/workspace-dots.sh
 
 for_window [app_id="io.calamares.calamares"] floating enable
