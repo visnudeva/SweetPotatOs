@@ -1,6 +1,7 @@
 #!/bin/bash
-# One confirmation bar at a time. A second Mod+Escape, Mod+O, or exit
-# shortcut does nothing until this one is answered or dismissed.
+# One confirmation / power-menu bar at a time. A second Mod+Escape, Mod+O,
+# or exit shortcut does nothing until this one is answered or dismissed.
+# Escape or a click outside the bar dismisses it (no X button).
 # Colors follow the active theme. The warning type's yellow is the fallback.
 lock="${XDG_RUNTIME_DIR:-/tmp}/sweetpotatos-confirm.lock"
 ACTIVE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/active.sh"

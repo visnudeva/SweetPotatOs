@@ -126,6 +126,8 @@ check_nogrep 'network-applet\.py' "${ISO}/etc/skel/.config/swirl/config" "no cus
 check_grep 'SPONeonKanjiDefault.png' "${ISO}/etc/skel/.config/waypaper/config.ini" "default wallpaper SPONeonKanjiDefault"
 [[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/UsefulBinds.png" ]] && ok "no UsefulBinds wallpaper" || bad "UsefulBinds still present"
 [[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/BindsBG.png" ]] && ok "no BindsBG wallpaper" || bad "BindsBG still present"
+[[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/NewSPODarkBG.png" ]] && ok "no NewSPODarkBG wallpaper" || bad "NewSPODarkBG still present"
+[[ ! -e "${ISO}/etc/skel/Pictures/Wallpapers/NewSPOLightNoTextBG.png" ]] && ok "no NewSPOLightNoTextBG wallpaper" || bad "NewSPOLightNoTextBG still present"
 check_grep 'start-kanshi\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel starts kanshi from saved outputs"
 check_grep 'nwg-displays\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel Displays keybind"
 check_nogrep 'save-display-layout\.sh' "${ISO}/etc/skel/.config/swirl/config" "no separate save-display keybind"
@@ -137,6 +139,11 @@ check_grep 'applauncher.sh' "${ROOT}/packaging/swirl/session/config" "default se
 check_grep 'swirlmenu' "${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/applauncher.sh" "app menu uses swirlmenu"
 check_grep 'scroller_indicator no' "${ROOT}/packaging/swirl/session/config" "default session hides scroll marks"
 check_grep 'SPONeonKanjiDefault.png' "${ROOT}/packaging/swirl/session/config" "default session wallpaper"
+check_grep 'power-menu\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel opens the power menu"
+check_grep 'power-menu\.sh' "${ROOT}/packaging/swirl/session/config" "default session opens the power menu"
+check_grep 'Power menu' "${ISO}/etc/skel/.config/swirl/cheatsheet.txt" "cheatsheet lists the power menu"
+[[ -x "${ISO}/etc/skel/.config/swirl/scripts/power-menu.sh" ]] && ok "power-menu.sh is executable" || bad "power-menu.sh missing"
+check_grep 'swaynag-power-menu.patch' "${ROOT}/packaging/swirl/PKGBUILD" "swirl builds the power-menu swirlnag patch"
 check_nogrep '^sway$' "${ROOT}/profile/packages.x86_64" "ISO does not install the sway package"
 check_grep '^LD_PRELOAD=$' \
   "${ISO}/etc/skel/.config/environment.d/90-sweetpotato-csd.conf" \

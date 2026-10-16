@@ -1,0 +1,199 @@
+diff --git a/include/swaynag/swaynag.h b/include/swaynag/swaynag.h
+@@ -52,6 +52,8 @@
+ 	struct wl_output *wl_output;
+ 	uint32_t wl_name;
+ 	uint32_t scale;
++	int32_t width;
++	int32_t height;
+ 	struct swaynag *swaynag;
+ 	struct wl_list link;
+ };
+@@ -105,6 +107,7 @@
+ 
+ 	uint32_t width;
+ 	uint32_t height;
++	uint32_t bar_height;
+ 	int32_t scale;
+ 	struct pool_buffer buffers[2];
+ 	struct pool_buffer *current_buffer;
+diff --git a/swaynag/main.c b/swaynag/main.c
+@@ -23,11 +23,7 @@
+ 	wl_list_init(&swaynag.outputs);
+ 	wl_list_init(&swaynag.seats);
+ 
+-	struct swaynag_button *button_close = calloc(1, sizeof(struct swaynag_button));
+-	button_close->text = strdup("X");
+-	button_close->type = SWAYNAG_ACTION_DISMISS;
+-	list_add(swaynag.buttons, button_close);
+-
++	/* No default dismiss button — Escape and click-away close the bar. */
+ 	swaynag.details.details_text = strdup("Toggle details");
+ 
+ 	char *config_path = NULL;
+diff --git a/swaynag/config.c b/swaynag/config.c
+@@ -261,8 +261,21 @@
+ 			break;
+ 		case 's': // Dismiss Button Text
+ 			if (swaynag) {
+-				struct swaynag_button *button_close = swaynag->buttons->items[0];
+-				free(button_close->text);
++				struct swaynag_button *button_close = NULL;
++				for (int i = 0; i < swaynag->buttons->length; ++i) {
++					struct swaynag_button *b = swaynag->buttons->items[i];
++					if (b->type == SWAYNAG_ACTION_DISMISS) {
++						button_close = b;
++						break;
++					}
++				}
++				if (!button_close) {
++					button_close = calloc(1, sizeof(struct swaynag_button));
++					button_close->type = SWAYNAG_ACTION_DISMISS;
++					list_insert(swaynag->buttons, 0, button_close);
++				} else {
++					free(button_close->text);
++				}
+ 				button_close->text = strdup(optarg);
+ 			}
+ 			break;
+diff --git a/swaynag/swaynag.c b/swaynag/swaynag.c
+@@ -108,14 +108,20 @@
+ 	if (swaynag->confirmed) {
+ 		return;
+ 	}
++	struct swaynag_button *only = NULL;
++	int commands = 0;
+ 	for (int i = 0; i < swaynag->buttons->length; ++i) {
+ 		struct swaynag_button *button = swaynag->buttons->items[i];
+ 		if (button->type == SWAYNAG_ACTION_COMMAND && button->action) {
+-			swaynag->confirmed = true;
+-			swaynag_button_execute(swaynag, button);
+-			return;
++			only = button;
++			commands++;
+ 		}
+ 	}
++	/* Power menu has several actions — Enter only confirms a single choice. */
++	if (commands == 1) {
++		swaynag->confirmed = true;
++		swaynag_button_execute(swaynag, only);
++	}
+ }
+ 
+ static void swaynag_keyboard_finish(struct swaynag_keyboard *keyboard) {
+@@ -384,6 +390,10 @@
+ 			return;
+ 		}
+ 	}
++
++	/* Click outside the action buttons (including the empty area under the
++	 * bar when the surface is fullscreen) dismisses like Escape. */
++	swaynag_activate_dismiss(swaynag);
+ }
+ 
+ static void wl_pointer_axis(void *data, struct wl_pointer *wl_pointer,
+@@ -449,6 +459,20 @@
+ 	.name = nop,
+ };
+ 
++static void output_mode(void *data, struct wl_output *output, uint32_t flags,
++		int32_t width, int32_t height, int32_t refresh) {
++	struct swaynag_output *swaynag_output = data;
++	if (!(flags & WL_OUTPUT_MODE_CURRENT) && swaynag_output->width != 0) {
++		return;
++	}
++	swaynag_output->width = width;
++	swaynag_output->height = height;
++	if (swaynag_output->swaynag->output == swaynag_output
++			|| !swaynag_output->swaynag->output) {
++		render_frame(swaynag_output->swaynag);
++	}
++}
++
+ static void output_scale(void *data, struct wl_output *output,
+ 		int32_t factor) {
+ 	struct swaynag_output *swaynag_output = data;
+@@ -477,7 +501,7 @@
+ 
+ static const struct wl_output_listener output_listener = {
+ 	.geometry = nop,
+-	.mode = nop,
++	.mode = output_mode,
+ 	.done = nop,
+ 	.scale = output_scale,
+ 	.name = output_name,
+diff --git a/swaynag/render.c b/swaynag/render.c
+@@ -1,4 +1,5 @@
+ #include <stdint.h>
++#include <wayland-client.h>
+ #include "cairo_util.h"
+ #include "log.h"
+ #include "pango.h"
+@@ -273,9 +274,16 @@
+ static uint32_t render_to_cairo(cairo_t *cairo, struct swaynag *swaynag) {
+ 	uint32_t max_height = 0;
+ 
++	/* Paint only the top bar strip. The rest of a fullscreen surface stays
++	 * clear so clicks under the bar still reach this client and dismiss it. */
++	uint32_t strip = swaynag->bar_height ? swaynag->bar_height : swaynag->height;
++	if (strip == 0) {
++		strip = SWAYNAG_MAX_HEIGHT;
++	}
+ 	cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
+ 	cairo_set_source_u32(cairo, swaynag->type->background);
+-	cairo_paint(cairo);
++	cairo_rectangle(cairo, 0, 0, swaynag->width, strip);
++	cairo_fill(cairo);
+ 
+ 	uint32_t h = render_message(cairo, swaynag);
+ 	max_height = h > max_height ? h : max_height;
+@@ -300,11 +308,19 @@
+ 	max_height += border;
+ 	cairo_set_source_u32(cairo, swaynag->type->border_bottom);
+ 	cairo_rectangle(cairo, 0,
+-			swaynag->height - border,
++			max_height - border,
+ 			swaynag->width,
+ 			border);
+ 	cairo_fill(cairo);
+ 
++	/* Clear any leftover strip paint below the real bar height. */
++	if (swaynag->height > max_height) {
++		cairo_set_operator(cairo, CAIRO_OPERATOR_CLEAR);
++		cairo_rectangle(cairo, 0, max_height,
++				swaynag->width, swaynag->height - max_height);
++		cairo_fill(cairo);
++	}
++
+ 	return max_height;
+ }
+ 
+@@ -322,8 +338,27 @@
+ 	cairo_paint(cairo);
+ 	cairo_restore(cairo);
+ 	uint32_t height = render_to_cairo(cairo, swaynag);
+-	if (height != swaynag->height) {
+-		zwlr_layer_surface_v1_set_size(swaynag->layer_surface, swaynag->width, height);
++	uint32_t surface_height = height;
++	int32_t output_height = 0;
++	if (swaynag->output && swaynag->output->height > 0) {
++		output_height = swaynag->output->height / (swaynag->scale > 0 ? swaynag->scale : 1);
++	} else {
++		struct swaynag_output *out;
++		wl_list_for_each(out, &swaynag->outputs, link) {
++			if (out->height > output_height) {
++				output_height = out->height / (out->scale > 0 ? out->scale : 1);
++			}
++		}
++	}
++	if (output_height > (int32_t)height) {
++		surface_height = output_height;
++	}
++	if (height != swaynag->bar_height || surface_height != swaynag->height) {
++		swaynag->bar_height = height;
++		zwlr_layer_surface_v1_set_size(swaynag->layer_surface, swaynag->width,
++				surface_height);
++		/* Keep the reserved strip equal to the visible bar so windows do not
++		 * reflow; the transparent area below only catches dismiss clicks. */
+ 		zwlr_layer_surface_v1_set_exclusive_zone(swaynag->layer_surface,
+ 				height);
+ 		wl_surface_commit(swaynag->surface);

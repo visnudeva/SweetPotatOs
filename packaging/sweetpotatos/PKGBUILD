@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=130
+pkgrel=132
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -137,6 +137,8 @@ package() {
     mkdir -p "${pkgdir}/usr/share/sweetpotato/backgrounds"
     cp -f "${walls}/"*.png "${pkgdir}/usr/share/sweetpotato/backgrounds/" 2>/dev/null || true
     rm -f "${pkgdir}/usr/share/sweetpotato/backgrounds/UsefulBinds.png" \
-          "${pkgdir}/usr/share/sweetpotato/backgrounds/BindsBG.png"
+          "${pkgdir}/usr/share/sweetpotato/backgrounds/BindsBG.png" \
+          "${pkgdir}/usr/share/sweetpotato/backgrounds/NewSPODarkBG.png" \
+          "${pkgdir}/usr/share/sweetpotato/backgrounds/NewSPOLightNoTextBG.png"
   fi
 }

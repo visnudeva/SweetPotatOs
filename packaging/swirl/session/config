@@ -71,8 +71,8 @@ bindsym $mod+space exec $menu
 bindsym $mod+l exec $lockcmd
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec /usr/share/swirl/scripts/confirm.sh -t warning -m 'You pressed the exit shortcut. Do you really want to exit Swirl? This will end your Wayland session.' -B 'Yes, exit Swirl' 'swaymsg exit'
-bindsym $mod+o exec /usr/share/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' /usr/share/swirl/scripts/poweroff.sh
-bindsym $mod+Escape exec /usr/share/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' /usr/share/swirl/scripts/poweroff.sh
+bindsym $mod+o exec /usr/share/swirl/scripts/power-menu.sh
+bindsym $mod+Escape exec /usr/share/swirl/scripts/power-menu.sh
 
 bindsym $mod+$left focus left
 bindsym $mod+$down focus down

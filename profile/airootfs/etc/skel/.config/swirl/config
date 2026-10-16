@@ -146,9 +146,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Exit Swirl (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'You pressed the exit shortcut. Do you really want to exit Swirl? This will end your Wayland session.' -B 'Yes, exit Swirl' 'swaymsg exit'
 
-    # Power off (drops the caffeine idle lock first)
-    bindsym $mod+o exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' ~/.config/swirl/scripts/poweroff.sh
-    bindsym $mod+Escape exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'Power off this machine?' -B 'Yes, power off' ~/.config/swirl/scripts/poweroff.sh
+    # Power menu (lock / sleep / logout / reboot / power off)
+    bindsym $mod+o exec ~/.config/swirl/scripts/power-menu.sh
+    bindsym $mod+Escape exec ~/.config/swirl/scripts/power-menu.sh
 #
 # Moving around:
 #

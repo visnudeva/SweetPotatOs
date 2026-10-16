@@ -1,6 +1,16 @@
 #!/bin/bash
 # Drop caffeine before cutting power. An idle lock left running can stop
 # the machine with the power light still on, and it will not wake.
+# Usage: poweroff.sh [poweroff|reboot]
+action="${1:-poweroff}"
+case "${action}" in
+  poweroff|reboot) ;;
+  *)
+    echo "usage: $0 [poweroff|reboot]" >&2
+    exit 1
+    ;;
+esac
+
 runtime="${XDG_RUNTIME_DIR:-/tmp}"
 pidfile="${runtime}/sweetpotato-caffeine.pid"
 
@@ -23,4 +33,4 @@ for _ in 1 2 3 4 5 6 7 8 9 10; do
   fi
   sleep 0.1
 done
-exec systemctl poweroff --ignore-inhibitors
+exec systemctl "${action}" --ignore-inhibitors

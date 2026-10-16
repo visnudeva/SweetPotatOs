@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-132
+What changed: Mod+o / Mod+Esc opens a power menu with lock, sleep, logout, reboot, and power off. The buttons are icons. Escape or a click outside the bar dismisses it. Log out and back in after updating (or Mod+Shift+c after materialize).
+
 @2026.10.3-129
 What changed: On the power-off and exit bars, Enter confirms and Escape dismisses. Open the bar again after updating.
 

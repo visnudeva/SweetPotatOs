@@ -169,11 +169,15 @@ sync_common_into() {
   if [[ "${dest}" == "${ISO}"/* ]] || [[ ! -f "${dest}/.config/swirl/config.d/user" ]]; then
     cp -f "${SP}/swirl/config.d/user" "${dest}/.config/swirl/config.d/user"
   fi
-  # Drop retired bind-wallpaper assets if present from older syncs.
+  # Drop retired wallpaper assets if present from older syncs.
   rm -f "${dest}/.local/share/backgrounds/UsefulBinds.png" \
         "${dest}/.local/share/backgrounds/BindsBG.png" \
+        "${dest}/.local/share/backgrounds/NewSPODarkBG.png" \
+        "${dest}/.local/share/backgrounds/NewSPOLightNoTextBG.png" \
         "${dest}/Pictures/Wallpapers/UsefulBinds.png" \
-        "${dest}/Pictures/Wallpapers/BindsBG.png"
+        "${dest}/Pictures/Wallpapers/BindsBG.png" \
+        "${dest}/Pictures/Wallpapers/NewSPODarkBG.png" \
+        "${dest}/Pictures/Wallpapers/NewSPOLightNoTextBG.png"
   if [[ -f "${SP}/kanshi/config" ]]; then
     cp -f "${SP}/kanshi/config" "${dest}/.config/kanshi/config"
   fi

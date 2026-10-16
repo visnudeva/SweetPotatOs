@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=15
+pkgrel=16
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -74,6 +74,7 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'swaynag-single-row.patch'
         'swaynag-rounded-buttons.patch'
         'swaynag-keyboard.patch'
+        'swaynag-power-menu.patch'
         'lone-column-maximize.patch')
 sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
@@ -83,6 +84,7 @@ sha256sums=('SKIP'
             'b54a64aad06cc9439c255dc6d50a2a83be648f157be0c6346be5cb32b6a4651c'
             '506631954df92c66ea45c65e14401fe2084d6d7a412e9674cc5a102a48819397'
             '4779ffa0a186901cfcc688782554194a9dce4e2abf0185651bbff139348f1bec'
+            '23757096cd2b572907aa3dc324975002c60eed3eed75b47631cf5017f72b9a24'
             'SKIP')
 
 pkgver() {
@@ -108,6 +110,8 @@ prepare() {
   git apply "${srcdir}/swaynag-rounded-buttons.patch"
   # Enter confirms the bar. Escape dismisses it.
   git apply "${srcdir}/swaynag-keyboard.patch"
+  # Power menu: no X button, click outside dismisses, fullscreen click-away.
+  git apply "${srcdir}/swaynag-power-menu.patch"
   # A column left alone after an overview drag stays full width.
   git apply "${srcdir}/lone-column-maximize.patch"
 }
@@ -149,6 +153,7 @@ package() {
   install -Dm644 "${scripts}/autotile_lib.lua" "${share}/scripts/autotile_lib.lua"
   install -Dm755 "${scripts}/confirm.sh" "${share}/scripts/confirm.sh"
   install -Dm755 "${scripts}/poweroff.sh" "${share}/scripts/poweroff.sh"
+  install -Dm755 "${scripts}/power-menu.sh" "${share}/scripts/power-menu.sh"
   install -Dm644 "${root}/profile/airootfs/etc/skel/.config/swaylock/config" \
     "${share}/swaylock.conf"
   install -Dm644 \

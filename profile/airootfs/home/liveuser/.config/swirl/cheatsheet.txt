@@ -49,7 +49,7 @@
   Mod+c              Caffeine (idle lock off)
   Mod+Shift+c        Reload config
   Mod+Shift+e        Exit Swirl
-  Mod+o / Mod+Esc    Power off
+  Mod+o / Mod+Esc    Power menu
   Mod+Shift+r        Resize mode
   Mod+?              This cheatsheet (toggle)
 
