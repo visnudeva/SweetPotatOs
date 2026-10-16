@@ -49,10 +49,13 @@ export SPO_SITE_URL="${SITE_URL}"
 export SPO_APP_ID="${APP_ID}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
+# Swallow w/x in foot so they never type into less if the compositor bind
+# is late or the key still reaches the terminal. Swirl still runs the binds.
 exec "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
   -o colors-dark.background="${SPO_SURFACE}" \
   -o colors-dark.foreground="${SPO_TEXT}" \
   -o colors-dark.alpha=1.0 \
+  -o "key-bindings.noop=x X w W" \
   bash -c '
 set -euo pipefail
 PINK="${SPO_PINK}" ORANGE="${SPO_ORANGE}" CREAM="${SPO_CREAM}" MUTED="${SPO_MUTED}" RESET="${SPO_RESET}"
@@ -138,7 +141,9 @@ render_content() {
     [[ "${cmd}" == toggle ]] || continue
     render_content || true
     if [[ -n "${TTY_PATH}" && -w "${TTY_PATH}" ]]; then
-      printf ":e\n" > "${TTY_PATH}" || true
+      # ESC clears a pending less prompt; :e <file> reloads the sheet (bare :e
+      # waits for a filename and is what left garbage on the page).
+      printf '\033:e %s\n' "${content}" > "${TTY_PATH}" || true
     fi
   done
 ) &
