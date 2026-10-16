@@ -53,12 +53,14 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - ISO: `profile/airootfs/etc/systemd/logind.conf.d/lid-sleep.conf` (old `do-not-suspend.conf` removed).
 - SweetPotato `install.sh` installs `systemd/logind.conf.d/lid-sleep.conf` as `/etc/systemd/logind.conf.d/50-sweetpotato-lid-sleep.conf`.
 - **Gotcha:** a leftover `/etc/systemd/logind.conf.d/do-not-suspend.conf` (`HandleLidSwitch=ignore`) sorts **after** `50-…` and wins. Remove it and restart `systemd-logind` on upgraded machines.
+- Power menu sleep uses `suspend.sh` (clears leftover caffeine inhibitors, then `systemctl suspend`).
+- `swayidle` / caffeine use `after-resume 'swaymsg "output * power on"'` so lid wake is less likely to leave a black panel. Do **not** use `output * enable`. Do **not** take a `systemd-inhibit` lock across sleep. AC plug/unplug has no SPO handler — if that powers the machine off, suspect firmware/hardware.
 
 ## Caffeine vs suspend
 
-- **Mod+c** / `caffeine.sh`: keeps the screen on while the lid is open by running swayidle with no idle timeouts. The before-sleep lock stays, matching the normal watcher. Do **not** add `after-resume` output power, and do **not** take a `systemd-inhibit` lock. A lock held across lid sleep leaves some laptops unable to wake.
+- **Mod+c** / `caffeine.sh`: keeps the screen on while the lid is open by running swayidle with no idle timeouts. The before-sleep lock and after-resume panel power-on stay, matching the normal watcher. Do **not** take a `systemd-inhibit` lock. A lock held across lid sleep leaves some laptops unable to wake.
 - Lid close, wake, and power off stay the same with caffeine on or off. Logind still suspends on lid close.
-- **Mod+o** / **Mod+Escape** run `poweroff.sh`, which kills the caffeine lock before `systemctl poweroff --ignore-inhibitors`. Do not inhibit `sleep`, `shutdown`, or `handle-lid-switch`.
+- **Mod+o** / **Mod+Escape**: sleep via `suspend.sh`; power off / reboot via `poweroff.sh` (drops leftover inhibitors, then `systemctl … --ignore-inhibitors`). Do not inhibit `sleep`, `shutdown`, or `handle-lid-switch`.
 - Live ISO: caffeine **on by default** so install is not interrupted by idle lock; lid still suspends via logind.
 
 ## Packages / AUR

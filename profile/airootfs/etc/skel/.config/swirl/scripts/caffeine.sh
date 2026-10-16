@@ -48,12 +48,14 @@ drop_held_lock() {
 }
 
 # Same watcher the session starts with.
+# after-resume turns the panel back on after lid sleep (black screen on wake).
 start_swayidle() {
   pkill -x swayidle 2>/dev/null || true
   swayidle -w \
     timeout 300 "${LOCKCMD}" \
     timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep "${LOCKCMD}" &
+    before-sleep "${LOCKCMD}" \
+    after-resume 'swaymsg "output * power on"' &
   disown || true
 }
 
@@ -61,7 +63,8 @@ start_swayidle() {
 start_awake() {
   pkill -x swayidle 2>/dev/null || true
   swayidle -w \
-    before-sleep "${LOCKCMD}" &
+    before-sleep "${LOCKCMD}" \
+    after-resume 'swaymsg "output * power on"' &
   disown || true
 }
 

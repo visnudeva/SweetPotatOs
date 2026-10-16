@@ -38,6 +38,7 @@ exec --no-startup-id sh -c 'sleep 0.5; [ -s "$HOME/.config/sway/outputs" ] && sw
 # Live ISO: caffeine on by default so install does not sleep/lock
 exec ~/.config/swirl/scripts/caffeine.sh on
 #
+          after-resume 'swaymsg "output * power on"'
 
 # Calamares (Wayland) updates systemd-localed; push that into Swirl live
 exec_always --no-startup-id /usr/local/bin/sweetpotatos-sway-xkb-watch

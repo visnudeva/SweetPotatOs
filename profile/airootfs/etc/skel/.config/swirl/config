@@ -38,7 +38,8 @@ exec --no-startup-id sh -c 'sleep 0.5; [ -s "$HOME/.config/sway/outputs" ] && sw
 exec swayidle -w \
           timeout 300 '$lockcmd' \
           timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-          before-sleep '$lockcmd'
+          before-sleep '$lockcmd' \
+          after-resume 'swaymsg "output * power on"'
 
 ### Input configuration
 #

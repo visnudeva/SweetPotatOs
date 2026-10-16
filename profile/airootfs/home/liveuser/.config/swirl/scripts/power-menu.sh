@@ -15,5 +15,5 @@ exec "${ROOT}/confirm.sh" -t warning -m 'Power menu' \
   -Z "$(ico 0xF011)" "${ROOT}/poweroff.sh" \
   -Z "$(ico 0xF021)" "${ROOT}/poweroff.sh reboot" \
   -Z "$(ico 0xF08B)" "swaymsg exit" \
-  -Z "$(ico 0xF186)" "systemctl suspend" \
+  -Z "$(ico 0xF186)" "${ROOT}/suspend.sh" \
   -Z "$(ico 0xF023)" "${LOCK_CMD}"

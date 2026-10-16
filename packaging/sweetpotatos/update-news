@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-137
+What changed: Sleep and lid wake are safer. The power menu sleeps through a clean suspend path, and the screen turns back on after resume so lid close is less likely to leave a black panel. Log out and back in after updating (or Mod+Shift+c, then run caffeine off/on if you use it so swayidle reloads).
+
 @2026.10.3-136
 What changed: Smart Brightness is on by default. Fullscreen video (mpv, browsers on YouTube/Netflix, and similar) goes to max backlight, then your level comes back when you leave. Toggle with Mod+Ctrl+b. Log out and back in after updating (or run ~/.config/swirl/scripts/smart-brightness.sh daemon once).
 
