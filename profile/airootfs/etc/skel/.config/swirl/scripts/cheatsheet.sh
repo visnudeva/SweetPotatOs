@@ -145,7 +145,7 @@ render_content() {
 }
 
 # On x: rewrite the sheet and restart less. Do not type into less (that left
-# garbage like eWQ on the page when :e was injected).
+# garbage like eWQ on the page when a reload command was injected).
 (
   while IFS= read -r cmd <&3; do
     [[ "${cmd}" == toggle ]] || continue
