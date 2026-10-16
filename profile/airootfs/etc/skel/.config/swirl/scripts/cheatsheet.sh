@@ -68,6 +68,9 @@ TTY_PATH="$(tty 2>/dev/null || true)"
 content="$(mktemp)"
 opener="$(mktemp)"
 toggler="$(mktemp)"
+restart_flag="$(mktemp)"
+less_pid_file="$(mktemp)"
+rm -f "${restart_flag}"
 fifo="$(mktemp -u)"
 mkfifo "${fifo}"
 exec 3<>"${fifo}"
@@ -93,11 +96,17 @@ cleanup() {
   if [[ -n "${tip_pid}" ]]; then
     kill "${tip_pid}" >/dev/null 2>&1 || true
   fi
+  if [[ -f "${less_pid_file}" ]]; then
+    lp="$(cat "${less_pid_file}" 2>/dev/null || true)"
+    if [[ -n "${lp}" ]]; then
+      kill "${lp}" >/dev/null 2>&1 || true
+    fi
+  fi
   swaymsg unbindsym w >/dev/null 2>&1 || true
   swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
   swaymsg unbindsym x >/dev/null 2>&1 || true
   swaymsg unbindsym Shift+x >/dev/null 2>&1 || true
-  rm -f "${content}" "${opener}" "${toggler}" "${fifo}"
+  rm -f "${content}" "${opener}" "${toggler}" "${fifo}" "${restart_flag}" "${less_pid_file}"
 }
 trap cleanup EXIT
 
@@ -135,16 +144,18 @@ render_content() {
   } >"${content}"
 }
 
-# Rewrites the sheet when x toggles the keybind reminder, then asks less to re-read it.
+# On x: rewrite the sheet and restart less. Do not type into less (that left
+# garbage like eWQ on the page when :e was injected).
 (
   while IFS= read -r cmd <&3; do
     [[ "${cmd}" == toggle ]] || continue
     render_content || true
-    if [[ -n "${TTY_PATH}" && -w "${TTY_PATH}" ]]; then
-      # ESC clears a pending less prompt; :e <file> reloads the sheet (bare :e
-      # waits for a filename and is what left garbage on the page).
-      # Must use double quotes: this block is inside bash -c (single-quoted).
-      printf "\033:e %s\n" "${content}" > "${TTY_PATH}" || true
+    : > "${restart_flag}"
+    if [[ -f "${less_pid_file}" ]]; then
+      lp="$(cat "${less_pid_file}" 2>/dev/null || true)"
+      if [[ -n "${lp}" ]]; then
+        kill "${lp}" >/dev/null 2>&1 || true
+      fi
     fi
   done
 ) &
@@ -267,7 +278,18 @@ if [[ "${SPO_RENDER_ONLY:-}" == 1 ]]; then
 fi
 
 if command -v less >/dev/null 2>&1; then
-  less -R -Ps"${status}" -Pm"${status}" -PM"${status}" +1g "${content}"
+  while true; do
+    rm -f "${restart_flag}"
+    render_content || true
+    less -R -Ps"${status}" -Pm"${status}" -PM"${status}" +1g "${content}" &
+    echo $! > "${less_pid_file}"
+    wait "$(cat "${less_pid_file}")" || true
+    rm -f "${less_pid_file}"
+    if [[ -f "${restart_flag}" ]]; then
+      continue
+    fi
+    break
+  done
 else
   printf "\033[2J\033[H"
   cat "${content}"
