@@ -1,0 +1,67 @@
+#!/bin/bash
+# Calamares post-unpack helper: if a Turing+ NVIDIA GPU is present and the
+# network is up, install nvidia-open + nvidia-utils into the target system.
+# Soft-skip (exit 0) when there is no suitable GPU or no internet — Mesa/nouveau
+# remains. Never bake nvidia packages into the ISO base image.
+set -euo pipefail
+
+log() { echo "sweetpotatos-install-nvidia: $*" >&2; }
+
+# Returns 0 when at least one NVIDIA display GPU with PCI id >= 0x1e00 (Turing+)
+# is present. Older cards are left on nouveau / manual legacy drivers.
+has_nvidia_turing_plus() {
+  local dir vendor class device id
+  local saw_older=0
+
+  for dir in /sys/bus/pci/devices/*; do
+    [[ -r "${dir}/vendor" && -r "${dir}/class" && -r "${dir}/device" ]] || continue
+    vendor="$(<"${dir}/vendor")"
+    class="$(<"${dir}/class")"
+    device="$(<"${dir}/device")"
+    [[ "${vendor}" == "0x10de" ]] || continue
+    case "${class}" in
+      0x030000|0x030200|0x038000) ;;
+      *) continue ;;
+    esac
+    id="${device#0x}"
+    if (( 16#${id} >= 0x1e00 )); then
+      return 0
+    fi
+    saw_older=1
+  done
+
+  if (( saw_older )); then
+    log "NVIDIA GPU found, but older than Turing — leaving Mesa/nouveau"
+  fi
+  return 1
+}
+
+online() {
+  if command -v wget >/dev/null 2>&1; then
+    wget -q --spider --timeout=10 --tries=1 https://archlinux.org && return 0
+    wget -q --spider --timeout=10 --tries=1 https://geo.mirror.pkgbuild.com && return 0
+  fi
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSIL --connect-timeout 5 --max-time 10 https://archlinux.org >/dev/null && return 0
+  fi
+  return 1
+}
+
+if ! has_nvidia_turing_plus; then
+  log "no Turing+ NVIDIA GPU — skipping"
+  exit 0
+fi
+
+if ! online; then
+  log "NVIDIA GPU needs nvidia-open, but there is no internet — skipping (use Mesa/nouveau)"
+  exit 0
+fi
+
+if pacman -Q nvidia-open >/dev/null 2>&1; then
+  log "nvidia-open already installed — skipping"
+  exit 0
+fi
+
+log "installing nvidia-open + nvidia-utils"
+pacman -Sy --noconfirm --needed nvidia-open nvidia-utils
+log "done"

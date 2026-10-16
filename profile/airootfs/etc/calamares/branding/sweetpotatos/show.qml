@@ -27,7 +27,7 @@ Presentation {
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.WordWrap
             color: "#f5e6e8"
-            text: "Installing SweetPotatOs…"
+            text: "Installing SweetPotatOs…\n\nNVIDIA (Turing+): stay online to download nvidia-open automatically."
         }
     }
 }

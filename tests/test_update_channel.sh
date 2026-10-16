@@ -122,6 +122,18 @@ assert "[[ \$(grep -c '^@' '${ROOT}/packaging/sweetpotatos/update-news') -ge 2 ]
   "what-changed notes are kept per version"
 assert "grep -q 'SWEETPOTATOS_UPDATE_FROM' '${UPD}'" \
   "update tells the note which version was installed"
+assert "[[ -x '${ROOT}/packaging/sweetpotatos/files/usr/local/bin/sweetpotatos-install-nvidia' ]]" \
+  "ships sweetpotatos-install-nvidia"
+assert "grep -q 'sweetpotatos-install-nvidia' '${ROOT}/packaging/sweetpotatos/PKGBUILD'" \
+  "PKGBUILD installs the NVIDIA helper"
+assert "grep -q 'shellprocess@install-nvidia' '${ROOT}/profile/airootfs/etc/calamares/settings.conf'" \
+  "Calamares runs NVIDIA install after networkcfg"
+assert "grep -q '^  - notesqml$' '${ROOT}/profile/airootfs/etc/calamares/settings.conf'" \
+  "Calamares shows the Notes page"
+assert "grep -q 'nvidia-open' '${ROOT}/profile/airootfs/etc/calamares/branding/sweetpotatos/notesqml.qml'" \
+  "Notes page mentions nvidia-open"
+assert "! grep -qE '^nvidia-open$|^nvidia-utils$' '${ROOT}/profile/packages.x86_64'" \
+  "ISO base does not bake in nvidia packages"
 
 echo
 echo "update/channel: ${PASS} passed, ${FAIL} failed"
