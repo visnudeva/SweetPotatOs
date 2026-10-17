@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=19
+pkgrel=22
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -76,6 +76,8 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'swaynag-keyboard.patch'
         'swaynag-power-menu.patch'
         'lone-column-maximize.patch'
+        'overview-fit-strips.patch'
+        'overview-coverflow-stripes.patch'
         'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
         'wmenu-selection-radius.patch')
 sha256sums=('SKIP'
@@ -88,6 +90,8 @@ sha256sums=('SKIP'
             '4779ffa0a186901cfcc688782554194a9dce4e2abf0185651bbff139348f1bec'
             '97189ea05e4e97c1e132c972bece049f4073dfd1e72dc4751ec2e75f5c7a73ab'
             'SKIP'
+            '0f434fbd20c4953b319744793a85121b84b72caf0ca4eaa505377ec0be120c78'
+            'af6f2ad0959b63a1eb274c5e2b12b55197170b87a888e2932d410a2b77606006'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46')
 
@@ -118,6 +122,10 @@ prepare() {
   git apply "${srcdir}/swaynag-power-menu.patch"
   # A column left alone after an overview drag stays full width.
   git apply "${srcdir}/lone-column-maximize.patch"
+  # Multi-desktop overview fits every column stripe into each workspace.
+  git apply "${srcdir}/overview-fit-strips.patch"
+  # Stack those desktops as horizontal coverflow stripes (focused taller).
+  git apply "${srcdir}/overview-coverflow-stripes.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"

@@ -1,7 +1,8 @@
 -- Swirl / scroll: niri-like column auto-tile
 --
--- Pairing: odd count → last column full width; even → all 50/50.
--- Move between workspaces does not unmap — retile both sides on ipc_view move.
+-- One column full width; two or more all half (first shrinks for the
+-- second). Mod+m toggles a focused column between 100% and 50%. Move
+-- between workspaces does not unmap — retile both sides on ipc_view move.
 -- A column dragged in overview has no view of its own, so the compositor
 -- also expands a workspace that is left with one column.
 -- Closing the last window anywhere → workspace number 1.

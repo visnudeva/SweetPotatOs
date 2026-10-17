@@ -158,8 +158,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+Print` | Screen record toggle (region and speaker audio → `~/Videos`) |
 | `Mod+q` | Close window |
 | `Mod+number` | Change workspaces |
-| `Mod+Tab` | Workspace overview (Super+drag windows between desktops) |
-| `Mod+Shift+Tab` | Overview of windows on the current desktop |
+| `Mod+Tab` | Overview: stacked desktops + every window stripe (Super+drag between desktops) |
 | Click (in overview) | Zoom back in on that window / desktop |
 | `Mod+Up` / `Mod+Down` | Workspace above / below (also exits overview) |
 | `Mod+Ctrl+Up` / `Mod+Ctrl+Down` | Move window to workspace above / below |

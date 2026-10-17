@@ -1,0 +1,26 @@
+diff --git a/sway/tree/layout.c b/sway/tree/layout.c
+--- a/sway/tree/layout.c
++++ b/sway/tree/layout.c
+@@ -474,10 +474,22 @@
+ 	for (int i = 0; i < root->outputs->length; i++) {
+ 		struct sway_output *output = root->outputs->items[i];
+ 		if (layout_overview_workspaces_enabled()) {
++			/* Fit every column stripe into each workspace thumbnail, not
++			 * only the focused viewport — same bird's-eye as scale_workspace
++			 * overview, for every desktop at once. */
++			for (int j = 0; j < output->workspaces->length; ++j) {
++				struct sway_workspace *ws = output->workspaces->items[j];
++				if (layout_overview_mode(ws) == OVERVIEW_DISABLED) {
++					layout_overview_set(ws, OVERVIEW_ALL);
++				}
++			}
+ 			overview_workspaces_recompute_scale(output);
+ 		} else {
+ 			for (int j = 0; j < output->current.workspaces->length; ++j) {
+ 				struct sway_workspace *child = output->current.workspaces->items[j];
++				if (layout_overview_mode(child) != OVERVIEW_DISABLED) {
++					layout_overview_set(child, OVERVIEW_DISABLED);
++				}
+ 				workspace_name_decoration(child, false);
+ 				wlr_scene_node_reparent(&child->jump.text_tree->node, root->staging);
+ 				wlr_scene_node_reparent(&child->jump.name_tree->node, root->staging);

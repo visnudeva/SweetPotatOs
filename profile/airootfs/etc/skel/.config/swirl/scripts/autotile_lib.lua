@@ -1,15 +1,17 @@
--- Pure helpers for Swirl pair-column autotile (no compositor API).
+-- Pure helpers for Swirl column autotile (no compositor API).
 -- Used by autotile.lua and unit tests.
 
 local lib = {}
 
 -- Width fraction for each column index (1-based) given column count n.
--- Odd n → last column full (1.0); all others 0.5. Even n → all 0.5.
+-- One column → full (1.0). Two or more → every column half (0.5), so the
+-- first shrinks when the second opens. Mod+m toggles a focused column
+-- between those sizes without changing this default.
 function lib.column_width(n, index)
 	if n < 1 or index < 1 or index > n then
 		return nil
 	end
-	if (n % 2 == 1) and index == n then
+	if n == 1 then
 		return 1.0
 	end
 	return 0.5

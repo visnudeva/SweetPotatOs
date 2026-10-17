@@ -56,8 +56,8 @@ end
 widths_eq(lib.column_widths(0), {}, "0 columns → empty")
 widths_eq(lib.column_widths(1), { 1.0 }, "1 column → full")
 widths_eq(lib.column_widths(2), { 0.5, 0.5 }, "2 columns → 50/50")
-widths_eq(lib.column_widths(3), { 0.5, 0.5, 1.0 }, "3 columns → 50/50 + full")
-widths_eq(lib.column_widths(4), { 0.5, 0.5, 0.5, 0.5 }, "4 columns → all 50/50")
+widths_eq(lib.column_widths(3), { 0.5, 0.5, 0.5 }, "3 columns → all half")
+widths_eq(lib.column_widths(4), { 0.5, 0.5, 0.5, 0.5 }, "4 columns → all half")
 
 local filtered = lib.columns_except({ "a", "b", "c" }, "b")
 check(#filtered == 2 and filtered[1] == "a" and filtered[2] == "c", "columns_except drops id")

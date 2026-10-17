@@ -136,7 +136,6 @@ bindsym $mod+Shift+agrave move container to workspace number 10; workspace numbe
 bindsym $mod+Ctrl+Up move container to workspace prev_on_output
 bindsym $mod+Ctrl+Down move container to workspace next_on_output
 bindsym --no-repeat $mod+Tab scale_workspaces toggle
-bindsym --no-repeat $mod+Shift+Tab scale_workspace overview
 
 bindsym $mod+Shift+f fullscreen
 bindsym $mod+a floating toggle

@@ -4,6 +4,21 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-145
+What changed: Mod+Shift+Tab is gone. Overview is only Mod+Tab (stacked desktops, all windows). Log out and back in after updating.
+
+@2026.10.3-144
+What changed: Overview stacks desktops as horizontal stripes (coverflow-style). Inactive desktops share one size; the focused one is bigger. Mod+Tab still shows every window on each desktop. Log out and back in after updating.
+
+@2026.10.3-143
+What changed: Mod+Tab and Mod+Shift+Tab both open one overview: every desktop, and every window stripe on each desktop (not only what was in focus). Plain click zooms back in. Log out and back in after updating.
+
+@2026.10.3-142
+What changed: The first window alone is full width. When a second opens, both go to 50/50, and every window after that also opens at half. Mod+m still toggles the focused column between 100% and 50%. Log out and back in after updating (or Mod+Shift+c so autotile reloads).
+
+@2026.10.3-141
+What changed: New windows open full for the first column, then half for every column after that. Mod+m still toggles the focused column between 100% and 50%. Log out and back in after updating (or Mod+Shift+c so autotile reloads).
+
 @2026.10.3-140
 What changed: Mod+m now toggles only the focused column between 100% and 50%. With three windows you can shrink the full one to half (all three at 50%), or expand the first to 100% beside two half columns. Try Mod+m on the third window after updating.
 

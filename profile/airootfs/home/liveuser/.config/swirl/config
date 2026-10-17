@@ -57,8 +57,8 @@ input type:keyboard {
 }
 
 ### Swirl layout (niri-like)
-# Columns on an infinite horizontal strip. Autotile pairs columns:
-# odd last = full width, even = 50/50 (see scripts/autotile.lua).
+# Columns on an infinite horizontal strip. Autotile: one column full;
+# two or more all half (see scripts/autotile.lua). Mod+m toggles 100% ↔ 50%.
 default_orientation horizontal
 workspace_layout horizontal
 layout_default_width 1.0
@@ -77,7 +77,7 @@ gesture_scroll_sensitivity 1.0
 bindgesture swipe:4:up workspace next_on_output
 bindgesture swipe:4:down workspace prev_on_output
 
-# Autotile: pair columns (odd last = full, even = 50/50).
+# Autotile: one column full; two or more all half.
 # Opens an 8px gap around tiled windows only when more than one is open.
 # Mod+Ctrl+g turns that gap and the rounded corners off together.
 lua ~/.config/swirl/scripts/autotile.lua
@@ -224,11 +224,10 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Ctrl+Up move container to workspace prev_on_output
     bindsym $mod+Ctrl+Down move container to workspace next_on_output
 
-    # Workspace overview: zoom out to all desktops (Super+drag windows between them).
-    # Plain click zooms back in (swirl overview-click-zoom). Mod+number / Up/Down also exit overview.
+    # Overview: stacked desktop stripes (coverflow), each showing every window.
+    # Super+drag moves windows between desktops. Plain click zooms back in.
+    # Mod+number / Up/Down also exit.
     bindsym --no-repeat $mod+Tab scale_workspaces toggle
-    # Current-desktop bird's eye (columns on this strip only)
-    bindsym --no-repeat $mod+Shift+Tab scale_workspace overview
 #
 # Layout stuff:
 #
