@@ -1,0 +1,164 @@
+diff -ruN a/docs/wmenu.1.scd b/docs/wmenu.1.scd
+--- a/docs/wmenu.1.scd	2025-04-29 23:23:10.000000000 +0400
++++ b/docs/wmenu.1.scd	2026-10-17 09:27:00.688146552 +0400
+@@ -11,6 +11,7 @@
+   [-l _lines_] \
+   [-o _output_] \
+   [-p _prompt_] \
++  [-r _radius_] \
+   [-N _color_] [-n _color_] \
+   [-M _color_] [-m _color_] \
+   [-S _color_] [-s _color_]
+@@ -55,6 +56,9 @@
+ *-p* _prompt_
+ 	defines the prompt to be displayed to the left of the input field.
+ 
++*-r* _radius_
++	defines the corner radius of the prompt and selection highlights in pixels.
++
+ *-N* _RRGGBB[AA]_
+ 	defines the normal background color.
+ 
+diff -ruN a/menu.c b/menu.c
+--- a/menu.c	2025-04-29 23:23:10.000000000 +0400
++++ b/menu.c	2026-10-17 09:27:00.687959715 +0400
+@@ -33,6 +33,7 @@
+ 	menu->promptfg = 0xeeeeeeff;
+ 	menu->selectionbg = 0x005577ff;
+ 	menu->selectionfg = 0xeeeeeeff;
++	menu->selection_radius = 0;
+ 	menu->callback = callback;
+ 	menu->test_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1);
+ 	menu->test_cairo = cairo_create(menu->test_surface);
+@@ -86,10 +87,10 @@
+ void menu_getopts(struct menu *menu, int argc, char *argv[]) {
+ 	const char *usage =
+ 		"Usage: wmenu [-biPv] [-f font] [-l lines] [-o output] [-p prompt]\n"
+-		"\t[-N color] [-n color] [-M color] [-m color] [-S color] [-s color]\n";
++		"\t[-r radius] [-N color] [-n color] [-M color] [-m color] [-S color] [-s color]\n";
+ 
+ 	int opt;
+-	while ((opt = getopt(argc, argv, "bhiPvf:l:o:p:N:n:M:m:S:s:")) != -1) {
++	while ((opt = getopt(argc, argv, "bhiPvf:l:o:p:r:N:n:M:m:S:s:")) != -1) {
+ 		switch (opt) {
+ 		case 'b':
+ 			menu->bottom = true;
+@@ -115,6 +116,12 @@
+ 		case 'p':
+ 			menu->prompt = optarg;
+ 			break;
++		case 'r':
++			menu->selection_radius = atoi(optarg);
++			if (menu->selection_radius < 0) {
++				menu->selection_radius = 0;
++			}
++			break;
+ 		case 'N':
+ 			if (!parse_color(optarg, &menu->normalbg)) {
+ 				fprintf(stderr, "Invalid background color: %s", optarg);
+diff -ruN a/menu.h b/menu.h
+--- a/menu.h	2025-04-29 23:23:10.000000000 +0400
++++ b/menu.h	2026-10-17 09:27:00.687305006 +0400
+@@ -49,6 +49,8 @@
+ 	uint32_t promptbg, promptfg;
+ 	// Selection colors
+ 	uint32_t selectionbg, selectionfg;
++	// Selection/prompt highlight corner radius (matches Swirl window frames)
++	int selection_radius;
+ 
+ 	struct wl_context *context;
+ 
+diff -ruN a/render.c b/render.c
+--- a/render.c	2025-04-29 23:23:10.000000000 +0400
++++ b/render.c	2026-10-17 09:27:00.688070652 +0400
+@@ -50,10 +50,32 @@
+ 		(color >> (0*8) & 0xFF) / 255.0);
+ }
+ 
++/* Match Swirl window frames when selection_radius is set. */
++static void fill_round_rect(cairo_t *cairo, double x, double y,
++		double width, double height, double radius) {
++	double limit = width < height ? width / 2.0 : height / 2.0;
++	if (radius > limit) {
++		radius = limit;
++	}
++	if (radius < 0.5) {
++		cairo_rectangle(cairo, x, y, width, height);
++		cairo_fill(cairo);
++		return;
++	}
++	double quarter = 1.5707963267948966;
++	cairo_new_path(cairo);
++	cairo_arc(cairo, x + width - radius, y + radius, radius, -quarter, 0);
++	cairo_arc(cairo, x + width - radius, y + height - radius, radius, 0, quarter);
++	cairo_arc(cairo, x + radius, y + height - radius, radius, quarter, quarter * 2);
++	cairo_arc(cairo, x + radius, y + radius, radius, quarter * 2, quarter * 3);
++	cairo_close_path(cairo);
++	cairo_fill(cairo);
++}
++
+ // Renders text to cairo.
+ static int render_text(struct menu *menu, cairo_t *cairo, const char *str,
+ 		int x, int y, int width, uint32_t bg_color, uint32_t fg_color,
+-		int left_padding, int right_padding) {
++		int left_padding, int right_padding, int radius) {
+ 
+ 	int text_width, text_height;
+ 	get_text_size(cairo, menu->font, &text_width, &text_height, NULL, 1, str);
+@@ -64,8 +86,12 @@
+ 	}
+ 	if (bg_color) {
+ 		cairo_set_source_u32(cairo, bg_color);
+-		cairo_rectangle(cairo, x, y, width, menu->line_height);
+-		cairo_fill(cairo);
++		if (radius > 0) {
++			fill_round_rect(cairo, x, y, width, menu->line_height, radius);
++		} else {
++			cairo_rectangle(cairo, x, y, width, menu->line_height);
++			cairo_fill(cairo);
++		}
+ 	}
+ 	cairo_move_to(cairo, x + left_padding, y + text_y);
+ 	cairo_set_source_u32(cairo, fg_color);
+@@ -80,7 +106,8 @@
+ 		return;
+ 	}
+ 	render_text(menu, cairo, menu->prompt, 0, 0, 0,
+-		menu->promptbg, menu->promptfg, menu->padding, menu->padding/2);
++		menu->promptbg, menu->promptfg, menu->padding, menu->padding/2,
++		menu->selection_radius);
+ }
+ 
+ // Renders the input text.
+@@ -96,7 +123,7 @@
+ 	}
+ 
+ 	render_text(menu, cairo, menu->passwd ? censort : menu->input,
+-		menu->promptw, 0, 0, 0, menu->normalfg, menu->padding, menu->padding);
++		menu->promptw, 0, 0, 0, menu->normalfg, menu->padding, menu->padding, 0);
+ 
+ 	if (censort) {
+ 		free(censort);
+@@ -120,18 +147,20 @@
+ static int render_horizontal_item(struct menu *menu, cairo_t *cairo, struct item *item, int x) {
+ 	uint32_t bg_color = menu->sel == item ? menu->selectionbg : menu->normalbg;
+ 	uint32_t fg_color = menu->sel == item ? menu->selectionfg : menu->normalfg;
++	int radius = menu->sel == item ? menu->selection_radius : 0;
+ 
+ 	return render_text(menu, cairo, item->text, x, 0, 0,
+-		bg_color, fg_color, menu->padding, menu->padding);
++		bg_color, fg_color, menu->padding, menu->padding, radius);
+ }
+ 
+ // Renders a single menu item vertically.
+ static int render_vertical_item(struct menu *menu, cairo_t *cairo, struct item *item, int x, int y) {
+ 	uint32_t bg_color = menu->sel == item ? menu->selectionbg : menu->normalbg;
+ 	uint32_t fg_color = menu->sel == item ? menu->selectionfg : menu->normalfg;
++	int radius = menu->sel == item ? menu->selection_radius : 0;
+ 
+ 	render_text(menu, cairo, item->text, x, y, menu->width - x,
+-		bg_color, fg_color, menu->padding, 0);
++		bg_color, fg_color, menu->padding, 0, radius);
+ 	return menu->line_height;
+ }
+ 

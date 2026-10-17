@@ -4,6 +4,15 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-140
+What changed: Mod+m now toggles only the focused column between 100% and 50%. With three windows you can shrink the full one to half (all three at 50%), or expand the first to 100% beside two half columns. Try Mod+m on the third window after updating.
+
+@2026.10.3-139
+What changed: The app menu label says Menu, and that label is rounded like the selection. Open the app menu again after updating (Mod+d).
+
+@2026.10.3-138
+What changed: The app menu selection has the same rounding as the windows. Open the app menu again after updating (Mod+d).
+
 @2026.10.3-137
 What changed: Sleep and lid wake are safer. The power menu sleeps through a clean suspend path, and the screen turns back on after resume so lid close is less likely to leave a black panel. Log out and back in after updating (or Mod+Shift+c, then run caffeine off/on if you use it so swayidle reloads).
 

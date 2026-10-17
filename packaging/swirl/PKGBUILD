@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=17
+pkgrel=19
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -75,7 +75,9 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'swaynag-rounded-buttons.patch'
         'swaynag-keyboard.patch'
         'swaynag-power-menu.patch'
-        'lone-column-maximize.patch')
+        'lone-column-maximize.patch'
+        'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
+        'wmenu-selection-radius.patch')
 sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
             '7f240d2e4a711dd3d4bb390bf90495edea0d15fd9bbf5f10a828338107d9ad1c'
@@ -85,7 +87,9 @@ sha256sums=('SKIP'
             '506631954df92c66ea45c65e14401fe2084d6d7a412e9674cc5a102a48819397'
             '4779ffa0a186901cfcc688782554194a9dce4e2abf0185651bbff139348f1bec'
             '97189ea05e4e97c1e132c972bece049f4073dfd1e72dc4751ec2e75f5c7a73ab'
-            'SKIP')
+            'SKIP'
+            'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
+            '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46')
 
 pkgver() {
   cd "${srcdir}/swirl"
@@ -114,6 +118,10 @@ prepare() {
   git apply "${srcdir}/swaynag-power-menu.patch"
   # A column left alone after an overview drag stays full width.
   git apply "${srcdir}/lone-column-maximize.patch"
+
+  # App / Wi-Fi / wallpaper menu selection corners match window frames.
+  cd "${srcdir}/wmenu"
+  patch -p1 < "${srcdir}/wmenu-selection-radius.patch"
 }
 
 build() {
@@ -126,6 +134,8 @@ build() {
     -D swaymsg=true \
     -D default-wallpaper=false
   meson compile -C build
+  arch-meson "${srcdir}/wmenu" "${srcdir}/wmenu-build"
+  meson compile -C "${srcdir}/wmenu-build"
 }
 
 package() {
@@ -135,6 +145,8 @@ package() {
   install -Dm644 99-swirl-systemd-user.conf "$pkgdir/etc/sway/config.d/99-swirl-systemd-user.conf"
   install -Dm644 swirl-portals.conf "$pkgdir/usr/share/xdg-desktop-portal/swirl-portals.conf"
   install -Dm755 "${startdir}/swirlmenu" "${pkgdir}/usr/bin/swirlmenu"
+  # Patched wmenu used by swirlmenu (-r matches frame radius). Keep Arch wmenu too.
+  install -Dm755 "${srcdir}/wmenu-build/wmenu" "${pkgdir}/usr/lib/swirl/wmenu"
   # Scripts, Displays, and the bar block still call the sway names.
   ln -s swirlbar "${pkgdir}/usr/bin/swaybar"
   ln -s swirlmsg "${pkgdir}/usr/bin/swaymsg"

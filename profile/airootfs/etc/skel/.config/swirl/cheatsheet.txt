@@ -17,7 +17,7 @@
 
   Window / layout
   Mod+q              Close window
-  Mod+m              Expand column ↔ 50/50
+  Mod+m              Toggle column 100% ↔ 50%
   Mod+Shift+f        Fullscreen
   Mod+a              Floating toggle
   Mod+b / Mod+v      Split horizontal / vertical

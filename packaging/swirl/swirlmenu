@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Theme-colored text menu. wmenu draws it. Callers pass the prompt and any
-# extra wmenu flags; colors come from the active Sweet potato palette.
+# Theme-colored text menu. A patched wmenu (shipped with swirl) draws it with
+# selection corners matching the window frame radius. Callers pass the prompt
+# and any extra wmenu flags; colors come from the active Sweet potato palette.
 set -euo pipefail
 
 ACTIVE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/active.sh"
@@ -15,8 +16,23 @@ fi
 : "${SPO_HIGHLIGHT:=f79b29}"
 : "${SPO_ON_HIGHLIGHT:=1d1f21}"
 
-exec wmenu -i -f "Noto Sans 11" \
-  -N "${SPO_SURFACE}ff" -n "${SPO_TEXT}ff" \
-  -M "${SPO_ACCENT}ff" -m "${SPO_ON_ACCENT}ff" \
-  -S "${SPO_HIGHLIGHT}ff" -s "${SPO_ON_HIGHLIGHT}ff" \
-  "$@"
+# Same radius as default_decoration / frame.sh (8 on, 0 off).
+RADIUS=8
+FRAME="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/frame"
+if [[ -f "${FRAME}" && "$(<"${FRAME}")" == "off" ]]; then
+  RADIUS=0
+fi
+
+args=(-i -f "Noto Sans 11"
+  -N "${SPO_SURFACE}ff" -n "${SPO_TEXT}ff"
+  -M "${SPO_ACCENT}ff" -m "${SPO_ON_ACCENT}ff"
+  -S "${SPO_HIGHLIGHT}ff" -s "${SPO_ON_HIGHLIGHT}ff")
+
+WMENU=/usr/lib/swirl/wmenu
+if [[ -x "${WMENU}" ]]; then
+  args+=(-r "${RADIUS}")
+else
+  WMENU=wmenu
+fi
+
+exec "${WMENU}" "${args[@]}" "$@"

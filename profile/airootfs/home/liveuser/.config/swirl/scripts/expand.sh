@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-# Toggle focused Swirl column: 50/50 pair ↔ full-width (100%).
-# Uses set_size (strip layout), not compositor fullscreen (Mod+Shift+f).
+# Toggle focused Swirl column between full width (100%) and half (50%).
+# Only the focused column changes — others keep whatever size they have, so
+# with three columns you can shrink the last from 100% → 50% (all half), or
+# expand the first to 100% beside two half columns. Strip layout only; use
+# Mod+Shift+f for compositor fullscreen.
 set -euo pipefail
 
 python3 - <<'PY'
@@ -79,7 +82,6 @@ def first_view_id(column):
             leaves.append(n)
     if leaves:
         return leaves[-1]["id"]
-    # last resort: any non-column descendant leaf
     for n in iter_nodes(column):
         if n.get("id") != column.get("id") and not (n.get("nodes") or []):
             return n["id"]
@@ -88,18 +90,6 @@ def first_view_id(column):
 
 def set_width(con_id, fraction):
     sway_cmd(f"[con_id={con_id}] set_size h {fraction}")
-
-
-def apply_pair_layout(columns):
-    n = len(columns)
-    if n == 0:
-        return
-    for i, col in enumerate(columns, start=1):
-        vid = first_view_id(col)
-        if (n % 2 == 1) and i == n:
-            set_width(vid, 1.0)
-        else:
-            set_width(vid, 0.5)
 
 
 def width_frac(column, output):
@@ -138,10 +128,12 @@ if focus_col is None:
 
 output = output_of(ws, tree)
 frac = width_frac(focus_col, output) if output else 0.0
+vid = first_view_id(focus_col)
 
-# Already ~full → restore pair layout; else expand focused column.
+# Toggle only this column. Do not re-apply the default odd-last-full pair
+# layout — that kept a third window stuck at 100%.
 if frac >= 0.85:
-    apply_pair_layout(columns)
+    set_width(vid, 0.5)
 else:
-    set_width(first_view_id(focus_col), 1.0)
+    set_width(vid, 1.0)
 PY

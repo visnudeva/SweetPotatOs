@@ -4,7 +4,7 @@ set -euo pipefail
 
 # swirlmenu reads the active theme. wmenu is the fallback before that package.
 if command -v swirlmenu >/dev/null 2>&1; then
-  DMENU="swirlmenu -p apps"
+  DMENU="swirlmenu -p Menu"
 else
   ACTIVE="${HOME}/.config/sweetpotatos/active.sh"
   if [[ -f "${ACTIVE}" ]]; then
@@ -17,7 +17,7 @@ else
   : "${SPO_ON_ACCENT:=ffffff}"
   : "${SPO_HIGHLIGHT:=f79b29}"
   : "${SPO_ON_HIGHLIGHT:=1d1f21}"
-  DMENU="wmenu -i -f \"Noto Sans 11\" -p apps -N ${SPO_SURFACE}ff -n ${SPO_TEXT}ff -M ${SPO_ACCENT}ff -m ${SPO_ON_ACCENT}ff -S ${SPO_HIGHLIGHT}ff -s ${SPO_ON_HIGHLIGHT}ff"
+  DMENU="wmenu -i -f \"Noto Sans 11\" -p Menu -N ${SPO_SURFACE}ff -n ${SPO_TEXT}ff -M ${SPO_ACCENT}ff -m ${SPO_ON_ACCENT}ff -S ${SPO_HIGHLIGHT}ff -s ${SPO_ON_HIGHLIGHT}ff"
 fi
 
 mkdir -p "${HOME}/.cache"

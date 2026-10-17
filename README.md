@@ -148,7 +148,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+r` | Music / radio (Spore) |
 | `Mod+t` | Torrents (tuber) |
 | `Mod+Return` | Terminal (foot, fish) |
-| `Mod+m` | Expand focused column to 100% / restore 50/50 |
+| `Mod+m` | Toggle focused column 100% ↔ 50% |
 | `Mod+a` | Floating toggle |
 | `Mod+?` | Keybind cheatsheet (toggle) |
 | `Mod+Ctrl+w` | Wallpaper selector (waypaper) |
