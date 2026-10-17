@@ -71,9 +71,12 @@ a:hover { color: #ffae4a; }
   color: var(--red);
   background: var(--surface);
 }
+.topnav-links a.shop,
 .topnav-links a.donate {
   color: var(--orange);
 }
+.topnav-links a.shop:hover,
+.topnav-links a.shop[aria-current="page"],
 .topnav-links a.donate:hover,
 .topnav-links a.donate[aria-current="page"] {
   color: #ffae4a;
