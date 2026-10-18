@@ -4,6 +4,15 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-150
+What changed: Moving a full-width window onto a desktop that already has windows makes it half again (overview drag included). Landing alone stays full. Closing still keeps survivors. Reload with Mod+Shift+c or log out and back in after updating.
+
+@2026.10.3-149
+What changed: Dragging a window to another desktop in overview keeps its width (a 100% column stays 100%). Reload with Mod+Shift+c or log out and back in after updating.
+
+@2026.10.3-148
+What changed: Closing a window keeps the other columns’ sizes (Mod+m stays). New windows still open at half; a lone window goes full. Reload with Mod+Shift+c or log out and back in after updating.
+
 @2026.10.3-147
 What changed: Overview stripes are equal height and click-to-zoom is one short ease (no double zoom, lighter). Log out and back in after updating.
 

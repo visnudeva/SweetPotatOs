@@ -3,10 +3,8 @@
 
 local lib = {}
 
--- Width fraction for each column index (1-based) given column count n.
--- One column → full (1.0). Two or more → every column half (0.5), so the
--- first shrinks when the second opens. Mod+m toggles a focused column
--- between those sizes without changing this default.
+-- Default width when we intentionally set a column (open / lone / pair).
+-- One column → full. Otherwise half. Mod+m toggles without using this.
 function lib.column_width(n, index)
 	if n < 1 or index < 1 or index > n then
 		return nil
@@ -23,6 +21,32 @@ function lib.column_widths(n)
 		widths[i] = lib.column_width(n, i)
 	end
 	return widths
+end
+
+-- After a column is removed: expand a lone survivor; otherwise keep sizes.
+-- Returns "expand_lone" | "preserve"
+function lib.after_remove_action(n)
+	if n == 1 then
+		return "expand_lone"
+	end
+	return "preserve"
+end
+
+-- After a column is added (map / unfloat / move onto a shared desktop).
+-- Alone → full. Onto a desktop that already has windows → half (and the
+-- classic 1→2 case normalizes both to 50/50).
+-- Returns "expand_lone" | "normalize_pair" | "size_new_half" | "none"
+function lib.after_add_action(n)
+	if n < 1 then
+		return "none"
+	end
+	if n == 1 then
+		return "expand_lone"
+	end
+	if n == 2 then
+		return "normalize_pair"
+	end
+	return "size_new_half"
 end
 
 -- Drop one column id from a list (unmap still sees the dying column).

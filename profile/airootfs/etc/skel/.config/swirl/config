@@ -56,8 +56,9 @@ input type:keyboard {
 }
 
 ### Swirl layout (niri-like)
-# Columns on an infinite horizontal strip. Autotile: one column full;
-# two or more all half (see scripts/autotile.lua). Mod+m toggles 100% ↔ 50%.
+# Columns on an infinite horizontal strip. Autotile: one column full; a
+# second makes 50/50; further windows open at half without resetting
+# Mod+m sizes. Closing keeps survivors (lone → full). See autotile.lua.
 default_orientation horizontal
 workspace_layout horizontal
 layout_default_width 1.0
@@ -81,7 +82,7 @@ gesture_scroll_sensitivity 1.0
 bindgesture swipe:4:up workspace next_on_output
 bindgesture swipe:4:down workspace prev_on_output
 
-# Autotile: one column full; two or more all half.
+# Autotile: see comment under Swirl layout above.
 # Opens an 8px gap around tiled windows only when more than one is open.
 # Mod+Ctrl+g turns that gap and the rounded corners off together.
 lua ~/.config/swirl/scripts/autotile.lua
