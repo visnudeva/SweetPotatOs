@@ -1,5 +1,5 @@
 #!/bin/bash
-# One confirmation / power-menu bar at a time. A second Mod+Escape, Mod+O,
+# One confirmation / power-menu bar at a time. A second Mod+Escape
 # or exit shortcut does nothing until this one is answered or dismissed.
 # Escape or a click outside the bar dismisses it (no X button).
 # Colors follow the active theme. The warning type's yellow is the fallback.

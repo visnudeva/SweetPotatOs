@@ -158,7 +158,6 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Shift+e exec ~/.config/swirl/scripts/confirm.sh -t warning -m 'You pressed the exit shortcut. Do you really want to exit Swirl? This will end your Wayland session.' -B 'Yes, exit Swirl' 'swaymsg exit'
 
     # Power menu (lock / sleep / logout / reboot / power off)
-    bindsym $mod+o exec ~/.config/swirl/scripts/power-menu.sh
     bindsym $mod+Escape exec ~/.config/swirl/scripts/power-menu.sh
 #
 # Moving around:
@@ -330,8 +329,11 @@ client.selected_focused  #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 # ============================================
 bar {
     position top
+    # Process name in btop/htop: swirlbar (swaybar is only a symlink).
+    swaybar_command swirlbar
     status_command ~/.config/swirl/scripts/status.sh
-    tray_padding 1
+    # Pad so Papirus tray icons match Nerd Font status glyphs (~size 10).
+    tray_padding 4
     icon_theme Papirus-Dark
     font pango:Noto Sans 10
     # Status line uses icon spans from Symbols Nerd Font Mono.

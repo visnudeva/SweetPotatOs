@@ -140,8 +140,18 @@ check_grep 'swirlmenu' "${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/
 check_grep 'scroller_indicator no' "${ROOT}/packaging/swirl/session/config" "default session hides scroll marks"
 check_grep 'SPONeonKanjiDefault.png' "${ROOT}/packaging/swirl/session/config" "default session wallpaper"
 check_grep 'power-menu\.sh' "${ISO}/etc/skel/.config/swirl/config" "skel opens the power menu"
+check_grep '\$mod\+Escape exec.*power-menu' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel power menu is Mod+Escape"
+check_nogrep '\$mod\+o exec.*power-menu' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel has no Mod+o power menu"
+check_grep 'swaybar_command swirlbar' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel launches swirlbar by name"
+check_grep 'tray_padding 4' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel tray padding matches status icons"
 check_grep 'power-menu\.sh' "${ROOT}/packaging/swirl/session/config" "default session opens the power menu"
 check_grep 'Power menu' "${ISO}/etc/skel/.config/swirl/cheatsheet.txt" "cheatsheet lists the power menu"
+check_nogrep 'Mod\+o' \
+  "${ISO}/etc/skel/.config/swirl/cheatsheet.txt" "cheatsheet has no Mod+o"
 [[ -x "${ISO}/etc/skel/.config/swirl/scripts/power-menu.sh" ]] && ok "power-menu.sh is executable" || bad "power-menu.sh missing"
 check_grep 'suspend\.sh' "${ISO}/etc/skel/.config/swirl/scripts/power-menu.sh" "power menu sleeps via suspend.sh"
 [[ -x "${ISO}/etc/skel/.config/swirl/scripts/suspend.sh" ]] && ok "suspend.sh is executable" || bad "suspend.sh missing"

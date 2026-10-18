@@ -49,7 +49,7 @@
   Mod+Ctrl+b         Smart Brightness (toggle)
   Mod+Shift+c        Reload config
   Mod+Shift+e        Exit Swirl
-  Mod+o / Mod+Esc    Power menu
+  Mod+Esc            Power menu
   Mod+Shift+r        Resize mode
   Mod+?              This cheatsheet (toggle)
 
