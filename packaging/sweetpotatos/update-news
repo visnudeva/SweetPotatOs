@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-152
+What changed: The boot splash (Plymouth) uses the new white sprouting-potato logo. Reboot once after updating to see it.
+
 @2026.10.3-151
 What changed: Tray icons are smaller (match the Wi‑Fi/Bluetooth status glyphs). Power menu is Mod+Esc only (Mod+o removed). The bar process shows as swirlbar in btop. Log out and back in after updating (or Mod+Shift+c).
 
