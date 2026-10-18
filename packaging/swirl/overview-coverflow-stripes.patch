@@ -1,12 +1,11 @@
 diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 --- a/sway/tree/layout.c
 +++ b/sway/tree/layout.c
-@@ -410,48 +410,78 @@
+@@ -410,48 +410,61 @@
  }
  
  static void overview_workspaces_recompute_scale(struct sway_output *output) {
-+	/* Stack workspaces as full-width horizontal stripes (coverflow-style).
-+	 * Non-focused rows share one height; the focused workspace is taller. */
++	/* Stack workspaces as equal-height horizontal stripes (stable hit targets). */
  	const struct wlr_box *usable_area = &output->usable_area;
  	const double left = usable_area->x;
  	const double top = usable_area->y;
@@ -28,21 +27,8 @@ diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 +		return;
 +	}
 +
-+	struct sway_seat *seat = input_manager_current_seat();
-+	struct sway_workspace *focused = seat ? seat_get_focused_workspace(seat) : NULL;
-+	if (!focused || focused->output != output) {
-+		focused = output_get_active_workspace(output);
-+	}
-+
 +	const double label_h = config->workspace_labels_height;
 +	const double gap = fmax(8.0, label_h * 0.35);
-+	const double focus_weight = 1.75;
-+	double total_weight = 0.0;
-+	for (int i = 0; i < length; ++i) {
-+		struct sway_workspace *ws = output->workspaces->items[i];
-+		total_weight += (ws == focused) ? focus_weight : 1.0;
-+	}
-+
 +	const double reserved = gap * (length + 1) + label_h * length;
 +	double avail_h = usable_area->height - reserved;
 +	if (avail_h < 48.0) {
@@ -50,20 +36,17 @@ diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 +	}
 +	const double avail_w = usable_area->width - 2.0 * gap;
 +
-+	/* Same size for inactive stripes; focused stripe is larger (coverflow). */
-+	double unit = fmin(avail_w / width, avail_h / (height * total_weight));
-+	if (unit > 1.0) {
-+		unit = 1.0;
++	double scale = fmin(avail_w / width, avail_h / (height * (double) length));
++	if (scale > 1.0) {
++		scale = 1.0;
 +	}
-+	if (unit < 0.05) {
-+		unit = 0.05;
++	if (scale < 0.05) {
++		scale = 0.05;
 +	}
 +
 +	double y = top + gap;
 +	for (int i = 0; i < length; ++i) {
 +		struct sway_workspace *child = output->workspaces->items[i];
-+		const double weight = (child == focused) ? focus_weight : 1.0;
-+		const double scale = unit * weight;
 +		const double jump_w = ceil(scale * width);
 +		const double jump_h = ceil(scale * height);
 +		const double x = left + 0.5 * (usable_area->width - jump_w);
@@ -113,27 +96,4 @@ diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 +		y += label_h + jump_h + gap;
  	}
  	output_damage_whole(output);
- }
-diff --git a/sway/input/seat.c b/sway/input/seat.c
---- a/sway/input/seat.c
-+++ b/sway/input/seat.c
-@@ -34,6 +34,7 @@
- #include "sway/tree/root.h"
- #include "sway/tree/view.h"
- #include "sway/tree/workspace.h"
-+#include "sway/tree/layout.h"
- #include "sway/desktop/transaction.h"
- 
- static void seat_device_destroy(struct sway_seat_device *seat_device) {
-@@ -1114,6 +1115,11 @@
- 	ipc_event_scroller("workspace", new_ws);
- 	seat->workspace = new_ws;
- 
-+	/* Reflow coverflow stripes so the newly focused desktop is taller. */
-+	if (layout_overview_workspaces_enabled()) {
-+		layout_overview_workspaces_recompute_scale();
-+	}
-+
- 	// Lua callbacks
- 	lua_execute_workspace_focus_cbs(new_ws);
  }

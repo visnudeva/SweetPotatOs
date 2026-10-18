@@ -4,6 +4,12 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-147
+What changed: Overview stripes are equal height and click-to-zoom is one short ease (no double zoom, lighter). Log out and back in after updating.
+
+@2026.10.3-146
+What changed: Overview enter and stripe reflow are smoother (short ease, no blur). Log out and back in after updating.
+
 @2026.10.3-145
 What changed: Mod+Shift+Tab is gone. Overview is only Mod+Tab (stacked desktops, all windows). Log out and back in after updating.
 

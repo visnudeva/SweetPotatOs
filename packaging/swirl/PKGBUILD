@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=22
+pkgrel=24
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -83,7 +83,7 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
 sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
             '7f240d2e4a711dd3d4bb390bf90495edea0d15fd9bbf5f10a828338107d9ad1c'
-            'c294f28c3f9865ce1db88ae507cf4b53c8063f993becbe45588a724b83209858'
+            'dd812d42406916011d49912a9f9dff5e8dfd9c3f4dd78b55399b3268352e1593'
             'd47e24936b9e7e485f4c74f039e77a9681cdedaca80e9aa51ae0e2a2a6e2a442'
             'b54a64aad06cc9439c255dc6d50a2a83be648f157be0c6346be5cb32b6a4651c'
             '506631954df92c66ea45c65e14401fe2084d6d7a412e9674cc5a102a48819397'
@@ -91,7 +91,7 @@ sha256sums=('SKIP'
             '97189ea05e4e97c1e132c972bece049f4073dfd1e72dc4751ec2e75f5c7a73ab'
             'SKIP'
             '0f434fbd20c4953b319744793a85121b84b72caf0ca4eaa505377ec0be120c78'
-            'af6f2ad0959b63a1eb274c5e2b12b55197170b87a888e2932d410a2b77606006'
+            'cb00ba9da577549479417716819eba2ac1c0a68fbdf244a64c0aa9826299753f'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46')
 
@@ -124,7 +124,7 @@ prepare() {
   git apply "${srcdir}/lone-column-maximize.patch"
   # Multi-desktop overview fits every column stripe into each workspace.
   git apply "${srcdir}/overview-fit-strips.patch"
-  # Stack those desktops as horizontal coverflow stripes (focused taller).
+  # Stack desktops as equal-height horizontal stripes (stable click targets).
   git apply "${srcdir}/overview-coverflow-stripes.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.

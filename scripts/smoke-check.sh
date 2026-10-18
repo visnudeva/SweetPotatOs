@@ -173,6 +173,21 @@ check_grep 'include ~/.config/swirl/config.d/user' \
 check_file "${ISO}/etc/skel/.config/swirl/scripts/autotile_lib.lua"
 check_grep 'autotile_lib' "${ISO}/etc/skel/.config/swirl/scripts/autotile.lua" \
   "autotile loads shared lib"
+check_grep 'scale_workspaces toggle' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel Mod+Tab toggles overview"
+check_nogrep 'Shift\+Tab' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel has no Mod+Shift+Tab"
+check_nogrep 'scale_workspace overview' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel has no scale_workspace overview"
+check_grep 'equal-height horizontal stripes' \
+  "${ROOT}/packaging/swirl/overview-coverflow-stripes.patch" \
+  "overview stripes are equal height"
+[[ ! -e "${ROOT}/packaging/swirl/overview-smooth-jump.patch" ]] \
+  && ok "no retired overview-smooth-jump patch" \
+  || bad "overview-smooth-jump patch still present"
+check_grep 'Exit overview' \
+  "${ROOT}/packaging/swirl/overview-click-zoom.patch" \
+  "click-zoom exits overview before focus"
 
 if [[ "${FAIL}" -ne 0 ]]; then
   echo "== FAILED =="
