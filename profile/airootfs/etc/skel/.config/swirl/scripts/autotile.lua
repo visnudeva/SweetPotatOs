@@ -126,11 +126,8 @@ end
 -- Gap only on the focused workspace, and only while it has more than one
 -- tiled window. Unfocused workspaces update when they are focused.
 -- Mod+Ctrl+g writes ~/.config/sweetpotatos/frame ("off" hides the gap).
--- The status bar follows the same rule: float + rounded chrome when the
--- inner gap is on, flush when there is a single 100% window (or frames off).
 local applied_gap = {}
 local applied_enabled = nil
-local applied_bar = nil
 
 local function frame_enabled()
 	local home = os.getenv("HOME") or ""
@@ -170,25 +167,11 @@ local function command_ok(results)
 	return #results > 0
 end
 
--- Match window INNER_GAP on the sides; a small top inset floats the pill.
-local function sync_bar_chrome(px)
-	local mode = (px > 0) and "chrome" or "flat"
-	if applied_bar == mode then
-		return
-	end
-	local cmd = (mode == "chrome") and "bar gaps 4 8 0 8" or "bar gaps 0"
-	local results = scroll.command(nil, cmd)
-	if command_ok(results) then
-		applied_bar = mode
-	end
-end
-
 local function sync_gaps(workspace, exclude_view)
 	local enabled = frame_enabled()
 	-- frame.sh can zero every workspace without going through this cache.
 	if applied_enabled ~= enabled then
 		applied_gap = {}
-		applied_bar = nil
 		applied_enabled = enabled
 	end
 	if applying_gap or not workspace or scroll.focused_workspace() ~= workspace then
@@ -196,7 +179,6 @@ local function sync_gaps(workspace, exclude_view)
 	end
 	local px = lib.inner_gap_px(workspace_view_count(workspace, exclude_view), enabled)
 	if applied_gap[workspace] == px then
-		sync_bar_chrome(px)
 		return
 	end
 	-- Runtime gap commands are rejected while the config file is still loading.
@@ -207,7 +189,6 @@ local function sync_gaps(workspace, exclude_view)
 	if command_ok(results) then
 		applied_gap[workspace] = px
 	end
-	sync_bar_chrome(px)
 end
 
 local function on_view_map(view, _)
