@@ -139,10 +139,9 @@ while true; do
     fi
     # Extra space under the glyphs. The bar centers the line, which lifts
     # descenders (the p in a window title, the p in Sep) off the bottom
-    # edge that shows under the app menu. 9216 (9pt) is a touch less than
-    # the old 12pt rise so glyphs sit nearer the vertical middle of swirlbar
-    # without dropping descenders under the app menu again.
-    echo "<span rise=\"9216\">${line}</span>"
+    # edge that shows under the app menu. 12288 is 12 points; 8192 was
+    # enough for swaybar and still left a sliver under swirlbar.
+    echo "<span rise=\"12288\">${line}</span>"
 
     sleep 3
 done

@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-155
+What changed: Puts the status bar text spacing back to how it was before the rounded-bar experiment. Log out and back in after updating (or Mod+Shift+c).
+
 @2026.10.3-154
 What changed: Fixes the double status bar from the last testing update. There is one top bar again. The thinner status text stays. Rounded floating bar chrome is rolled back for now. Log out and back in after updating (or Mod+Shift+c).
 
