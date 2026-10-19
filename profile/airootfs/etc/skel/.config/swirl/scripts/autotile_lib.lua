@@ -96,7 +96,7 @@ end
 
 -- Inner gap in px. Scroll insets every side, so two windows have twice this
 -- between them. A single tiled window stays edge to edge.
--- enabled == false (Mod+g) forces 0. nil or true keeps the usual rule.
+-- enabled == false (Mod+Ctrl+g frames off) forces 0. nil or true keeps the usual rule.
 lib.INNER_GAP = 8
 
 function lib.inner_gap_px(view_count, enabled)

@@ -27,9 +27,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Papirus + Arch glycin paths in $HOME blank half the GNOME icons on Bluefin.
-if [[ "${SYNC_LIVE}" -eq 1 && "${LIVE_FLAG}" != "live" && "${XDG_CURRENT_DESKTOP:-}" == *GNOME* ]]; then
-  echo "GNOME session detected — skipping live \$HOME (pass --live to force)."
-  SYNC_LIVE=0
+# A Ryoku/Hyprland home must not get SweetPotato swirl config either.
+if [[ "${SYNC_LIVE}" -eq 1 && "${LIVE_FLAG}" != "live" ]]; then
+  if [[ "${XDG_CURRENT_DESKTOP:-}" == *GNOME* || "${XDG_CURRENT_DESKTOP:-}" == *Hyprland* || -d "${HOME_DIR}/.config/ryoku" ]]; then
+    echo "Non-SPO session detected — skipping live \$HOME (pass --live to force)."
+    SYNC_LIVE=0
+  fi
 fi
 
 if [[ -z "${SP}" || ! -d "${SP}/swirl" ]]; then

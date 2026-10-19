@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-153
+What changed: The status bar is a little thinner (glyphs sit nearer the middle). With rounded corners on (Mod+Ctrl+g) and more than one tiled window, the bar floats with rounded corners and a theme-colored border. One full-width window keeps a flat edge-to-edge bar. Log out and back in after updating (or Mod+Shift+c).
+
 @2026.10.3-152
 What changed: The boot splash (Plymouth) uses the new white sprouting-potato logo. Reboot once after updating to see it.
 

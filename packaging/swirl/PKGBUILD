@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=24
+pkgrel=25
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -78,6 +78,7 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'lone-column-maximize.patch'
         'overview-fit-strips.patch'
         'overview-coverflow-stripes.patch'
+        'swirlbar-rounded-chrome.patch'
         'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
         'wmenu-selection-radius.patch')
 sha256sums=('SKIP'
@@ -92,6 +93,7 @@ sha256sums=('SKIP'
             'SKIP'
             '0f434fbd20c4953b319744793a85121b84b72caf0ca4eaa505377ec0be120c78'
             'cb00ba9da577549479417716819eba2ac1c0a68fbdf244a64c0aa9826299753f'
+            '0effdbf8a0d490a9407b80534a50ea0519e0803518a219592025142b28e607c4'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46')
 
@@ -126,6 +128,8 @@ prepare() {
   git apply "${srcdir}/overview-fit-strips.patch"
   # Stack desktops as equal-height horizontal stripes (stable click targets).
   git apply "${srcdir}/overview-coverflow-stripes.patch"
+  # Rounded + theme-bordered bar when gaps float it (matches window frames).
+  git apply "${srcdir}/swirlbar-rounded-chrome.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"

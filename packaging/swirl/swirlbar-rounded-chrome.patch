@@ -1,0 +1,59 @@
+--- a/swaybar/render.c	2026-10-19 21:18:54.901557643 +0400
++++ b/swaybar/render.c	2026-10-19 21:19:11.896420446 +0400
+@@ -980,11 +980,54 @@
+ 	}
+ 
+ 
+-	cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
+-	cairo_set_source_u32(cairo, background_color);
++	/* Floating chrome: when bar gaps are set (SweetPotatOs frames several
++	 * tiled windows), paint a rounded pill with the theme separator as a
++	 * hairline border. Flat / full-bleed when gaps are zero (one 100% window
++	 * or corners off). */
++	bool chrome = output->bar->config->gaps.top > 0
++		|| output->bar->config->gaps.right > 0
++		|| output->bar->config->gaps.bottom > 0
++		|| output->bar->config->gaps.left > 0;
++	int expect_h = output->height;
++	if (output->bar->config->height > 0) {
++		expect_h = output->bar->config->height;
++	}
++
++	cairo_set_operator(cairo, CAIRO_OPERATOR_CLEAR);
+ 	cairo_paint(cairo);
++	cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
++	if (chrome && expect_h > 0) {
++		ctx.has_transparency = true;
++		/* Inset by 0.5 so the 1px theme stroke is not clipped by the surface. */
++		double x = 0.5;
++		double y = 0.5;
++		double w = output->width - 1.0;
++		double h = expect_h - 1.0;
++		double radius = 8.0;
++		if (radius > h / 2.0) {
++			radius = h / 2.0;
++		}
++		double quarter = 1.5707963267948966;
++		cairo_new_path(cairo);
++		cairo_arc(cairo, x + w - radius, y + radius, radius, -quarter, 0);
++		cairo_arc(cairo, x + w - radius, y + h - radius, radius, 0, quarter);
++		cairo_arc(cairo, x + radius, y + h - radius, radius, quarter, quarter * 2);
++		cairo_arc(cairo, x + radius, y + radius, radius, quarter * 2, quarter * 3);
++		cairo_close_path(cairo);
++		cairo_set_source_u32(cairo, background_color);
++		cairo_fill_preserve(cairo);
++		cairo_set_line_width(cairo, 1.0);
++		cairo_set_source_u32(cairo, output->bar->config->colors.separator);
++		cairo_stroke(cairo);
++	} else {
++		cairo_set_source_u32(cairo, background_color);
++		cairo_paint(cairo);
++	}
+ 
+ 	uint32_t height = render_to_cairo(&ctx);
++	if (chrome) {
++		ctx.has_transparency = true;
++	}
+ 	int config_height = output->bar->config->height;
+ 	if (config_height > 0) {
+ 		height = config_height;
