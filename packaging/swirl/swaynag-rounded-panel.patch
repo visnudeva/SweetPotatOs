@@ -1,0 +1,453 @@
+diff -ruN a/include/swaynag/swaynag.h b/include/swaynag/swaynag.h
+--- a/include/swaynag/swaynag.h	2026-10-21 19:10:53.595406375 +0400
++++ b/include/swaynag/swaynag.h	2026-10-21 20:36:54.308984740 +0400
+@@ -108,6 +108,11 @@
+ 	uint32_t width;
+ 	uint32_t height;
+ 	uint32_t bar_height;
++	/* Floating rounded panel (match swirlbar when frames are on). */
++	int panel_radius;
++	int panel_margin;
++	int panel_border;
++	int panel_height; /* min content height; 0 = natural */
+ 	int32_t scale;
+ 	struct pool_buffer buffers[2];
+ 	struct pool_buffer *current_buffer;
+diff -ruN a/swaynag/config.c b/swaynag/config.c
+--- a/swaynag/config.c	2026-10-21 19:10:53.595406375 +0400
++++ b/swaynag/config.c	2026-10-21 20:36:54.308984740 +0400
+@@ -62,6 +62,10 @@
+ 		TO_THICK_BTN_BORDER,
+ 		TO_GAP_BTN,
+ 		TO_PADDING_BTN,
++		TO_PANEL_RADIUS,
++		TO_PANEL_MARGIN,
++		TO_PANEL_BORDER,
++		TO_PANEL_HEIGHT,
+ 	};
+ 
+ 	static const struct option opts[] = {
+@@ -97,6 +101,10 @@
+ 		{"button-border-size", required_argument, NULL, TO_THICK_BTN_BORDER},
+ 		{"button-gap", required_argument, NULL, TO_GAP_BTN},
+ 		{"button-padding", required_argument, NULL, TO_PADDING_BTN},
++		{"panel-radius", required_argument, NULL, TO_PANEL_RADIUS},
++		{"panel-margin", required_argument, NULL, TO_PANEL_MARGIN},
++		{"panel-border", required_argument, NULL, TO_PANEL_BORDER},
++		{"panel-height", required_argument, NULL, TO_PANEL_HEIGHT},
+ 
+ 		{0, 0, 0, 0}
+ 	};
+@@ -143,7 +151,11 @@
+ 		"  --details-background RRGGBB[AA] Details background color.\n"
+ 		"  --button-border-size size       Thickness for the button border.\n"
+ 		"  --button-gap gap                Size of the gap between buttons\n"
+-		"  --button-padding padding        Padding for the button text.\n";
++		"  --button-padding padding        Padding for the button text.\n"
++		"  --panel-radius px               Rounded floating panel radius.\n"
++		"  --panel-margin px               Inset from the output edges.\n"
++		"  --panel-border px               Accent stroke width (default 2).\n"
++		"  --panel-height px               Minimum panel content height.\n";
+ 
+ 	optind = 1;
+ 	while (1) {
+@@ -367,6 +379,38 @@
+ 				type->button_padding = strtol(optarg, NULL, 0);
+ 			}
+ 			break;
++		case TO_PANEL_RADIUS:
++			if (swaynag) {
++				swaynag->panel_radius = strtol(optarg, NULL, 10);
++				if (swaynag->panel_radius < 0) {
++					swaynag->panel_radius = 0;
++				}
++			}
++			break;
++		case TO_PANEL_MARGIN:
++			if (swaynag) {
++				swaynag->panel_margin = strtol(optarg, NULL, 10);
++				if (swaynag->panel_margin < 0) {
++					swaynag->panel_margin = 0;
++				}
++			}
++			break;
++		case TO_PANEL_BORDER:
++			if (swaynag) {
++				swaynag->panel_border = strtol(optarg, NULL, 10);
++				if (swaynag->panel_border < 0) {
++					swaynag->panel_border = 0;
++				}
++			}
++			break;
++		case TO_PANEL_HEIGHT:
++			if (swaynag) {
++				swaynag->panel_height = strtol(optarg, NULL, 10);
++				if (swaynag->panel_height < 0) {
++					swaynag->panel_height = 0;
++				}
++			}
++			break;
+ 		default: // Help or unknown flag
+ 			fprintf(c == 'h' ? stdout : stderr, "%s", usage);
+ 			return -1;
+diff -ruN a/swaynag/render.c b/swaynag/render.c
+--- a/swaynag/render.c	2026-10-21 19:10:53.595437384 +0400
++++ b/swaynag/render.c	2026-10-21 20:36:54.331755781 +0400
+@@ -1,5 +1,6 @@
+ #include <wayland-client.h>
+ #include <stdint.h>
++#include <string.h>
+ #include "cairo_util.h"
+ #include "log.h"
+ #include "pango.h"
+@@ -33,6 +34,39 @@
+ 	free(buf);
+ }
+ 
++/* Rounded rects: message bubble + capsule buttons. */
++static void round_rect_path(cairo_t *cairo, double x, double y,
++		double width, double height, double radius) {
++	double limit = width < height ? width / 2.0 : height / 2.0;
++	if (radius > limit) {
++		radius = limit;
++	}
++	cairo_new_path(cairo);
++	if (radius < 0.5) {
++		cairo_rectangle(cairo, x, y, width, height);
++		return;
++	}
++	double quarter = 1.5707963267948966;
++	cairo_arc(cairo, x + width - radius, y + radius, radius, -quarter, 0);
++	cairo_arc(cairo, x + width - radius, y + height - radius, radius, 0, quarter);
++	cairo_arc(cairo, x + radius, y + height - radius, radius, quarter, quarter * 2);
++	cairo_arc(cairo, x + radius, y + radius, radius, quarter * 2, quarter * 3);
++	cairo_close_path(cairo);
++}
++
++static void fill_round_rect(cairo_t *cairo, double x, double y,
++		double width, double height, double radius) {
++	round_rect_path(cairo, x, y, width, height, radius);
++	cairo_fill(cairo);
++}
++
++static void stroke_round_rect(cairo_t *cairo, double x, double y,
++		double width, double height, double radius, double line) {
++	round_rect_path(cairo, x, y, width, height, radius);
++	cairo_set_line_width(cairo, line);
++	cairo_stroke(cairo);
++}
++
+ static uint32_t render_message(cairo_t *cairo, struct swaynag *swaynag) {
+ 	int text_width, text_height;
+ 	get_text_size(cairo, swaynag->type->font_description, &text_width, &text_height, NULL,
+@@ -40,6 +74,35 @@
+ 
+ 	int padding = swaynag->type->message_padding;
+ 
++	/* Short labels (Power menu): match swirlmenu Menu bubble (28px, radius 8). */
++	bool use_bubble = swaynag->message
++		&& strlen(swaynag->message) < 32;
++
++	if (use_bubble) {
++		const int bubble_h = 28; /* same as potato bar / swirlmenu -H */
++		const int pad_x = 8;     /* same side pad idea as menu->padding */
++		int radius = swaynag->panel_radius > 0 ? swaynag->panel_radius : 8;
++		int bubble_w = text_width + pad_x * 2;
++		uint32_t ideal_height = (uint32_t)bubble_h;
++		if (swaynag->height < ideal_height) {
++			return ideal_height;
++		}
++
++		int bx = 0;
++		int by = 0;
++		int text_y = (bubble_h - text_height) / 2;
++
++		cairo_set_source_u32(cairo, swaynag->type->button_background);
++		fill_round_rect(cairo, bx, by, bubble_w, bubble_h, radius);
++
++		cairo_set_source_u32(cairo, swaynag->type->button_text);
++		cairo_move_to(cairo, bx + pad_x, by + text_y);
++		render_message_text(cairo, 0, swaynag->type->font_description, 1, false,
++				"%s", swaynag->message);
++
++		return ideal_height;
++	}
++
+ 	int nlines, width;
+ 	if (swaynag->width > 0) {
+ 		width = swaynag->width - 2 * padding;
+@@ -201,29 +264,6 @@
+ 	return ideal_height;
+ }
+ 
+-/* Capsule buttons: the ends are semicircles so the power-off bar matches
+- * the rounded frames. side keeps the label out of those caps. */
+-static void fill_round_rect(cairo_t *cairo, double x, double y,
+-		double width, double height, double radius) {
+-	double limit = width < height ? width / 2.0 : height / 2.0;
+-	if (radius > limit) {
+-		radius = limit;
+-	}
+-	if (radius < 0.5) {
+-		cairo_rectangle(cairo, x, y, width, height);
+-		cairo_fill(cairo);
+-		return;
+-	}
+-	double quarter = 1.5707963267948966;
+-	cairo_new_path(cairo);
+-	cairo_arc(cairo, x + width - radius, y + radius, radius, -quarter, 0);
+-	cairo_arc(cairo, x + width - radius, y + height - radius, radius, 0, quarter);
+-	cairo_arc(cairo, x + radius, y + height - radius, radius, quarter, quarter * 2);
+-	cairo_arc(cairo, x + radius, y + radius, radius, quarter * 2, quarter * 3);
+-	cairo_close_path(cairo);
+-	cairo_fill(cairo);
+-}
+-
+ static uint32_t render_button(cairo_t *cairo, struct swaynag *swaynag,
+ 		int button_index, int *x, int y) {
+ 	struct swaynag_button *button = swaynag->buttons->items[button_index];
+@@ -234,6 +274,42 @@
+ 
+ 	int border = swaynag->type->button_border_thickness;
+ 	int padding = swaynag->type->button_padding;
++
++	/* Power-menu Nerd Font icons: round discs, a bit smaller than the old capsules. */
++	bool round_icon = button->text && strstr(button->text, "Nerd Font") != NULL;
++	if (round_icon) {
++		int d = text_height + 2;
++		if (d < 16) {
++			d = 16;
++		}
++		/* Row matches the 28px Menu/Power label bubble. */
++		uint32_t ideal_height = 28;
++		if (swaynag->height < ideal_height) {
++			return ideal_height;
++		}
++
++		button->width = d;
++		button->height = d;
++		button->x = *x - border - d + 1;
++		button->y = y + ((int)ideal_height - d) / 2;
++
++		cairo_set_source_u32(cairo, swaynag->type->border);
++		fill_round_rect(cairo, button->x - border, button->y - border,
++				d + border * 2, d + border * 2, (d + border * 2) / 2.0);
++
++		cairo_set_source_u32(cairo, swaynag->type->button_background);
++		fill_round_rect(cairo, button->x, button->y, d, d, d / 2.0);
++
++		cairo_set_source_u32(cairo, swaynag->type->button_text);
++		cairo_move_to(cairo, button->x + (d - text_width) / 2,
++				button->y + (d - text_height) / 2);
++		render_text(cairo, swaynag->type->font_description, 1, true,
++				"%s", button->text);
++
++		*x = button->x - border;
++		return ideal_height;
++	}
++
+ 	int body_h = text_height + padding * 2;
+ 	int side = body_h / 2;
+ 	if (side < padding) {
+@@ -273,55 +349,165 @@
+ 
+ static uint32_t render_to_cairo(cairo_t *cairo, struct swaynag *swaynag) {
+ 	uint32_t max_height = 0;
+-
+-	/* Paint only the top bar strip. The rest of a fullscreen surface stays
+-	 * clear so clicks under the bar still reach this client and dismiss it. */
+-	uint32_t strip = swaynag->bar_height ? swaynag->bar_height : swaynag->height;
+-	if (strip == 0) {
+-		strip = SWAYNAG_MAX_HEIGHT;
++	bool float_panel = swaynag->panel_radius > 0;
++	int margin = float_panel ? swaynag->panel_margin : 0;
++	int border_px = 0;
++	if (float_panel) {
++		border_px = swaynag->panel_border > 0 ? swaynag->panel_border : 2;
++	}
++	/* Horizontal inset before label / after last icon (independent of message-padding). */
++	int side = 12;
++	int inset = margin + border_px;
++	uint32_t saved_width = swaynag->width;
++	int content_w = (int)saved_width - inset * 2;
++	if (float_panel && content_w < 64) {
++		float_panel = false;
++		margin = 0;
++		border_px = 0;
++		inset = 0;
++		content_w = (int)saved_width;
+ 	}
++
++	cairo_set_operator(cairo, CAIRO_OPERATOR_CLEAR);
++	cairo_paint(cairo);
+ 	cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
+-	cairo_set_source_u32(cairo, swaynag->type->background);
+-	cairo_rectangle(cairo, 0, 0, swaynag->width, strip);
+-	cairo_fill(cairo);
+ 
+-	uint32_t h = render_message(cairo, swaynag);
+-	max_height = h > max_height ? h : max_height;
++	if (!float_panel) {
++		uint32_t strip = swaynag->bar_height ? swaynag->bar_height : swaynag->height;
++		if (strip == 0) {
++			strip = SWAYNAG_MAX_HEIGHT;
++		}
++		cairo_set_source_u32(cairo, swaynag->type->background);
++		cairo_rectangle(cairo, 0, 0, swaynag->width, strip);
++		cairo_fill(cairo);
++
++		uint32_t h = render_message(cairo, swaynag);
++		max_height = h > max_height ? h : max_height;
+ 
+-	int x = swaynag->width - swaynag->type->bar_border_thickness;
++		int x = (int)swaynag->width - side;
++		for (int i = 0; i < swaynag->buttons->length; i++) {
++			h = render_button(cairo, swaynag, i, &x, 0);
++			if (h > max_height) {
++				max_height = h;
++			}
++			x -= swaynag->type->button_gap;
++		}
++
++		if (swaynag->details.visible) {
++			h = render_detailed(cairo, swaynag, max_height);
++			max_height = h > max_height ? h : max_height;
++		}
++
++		max_height += swaynag->type->message_padding;
++		int border = swaynag->type->bar_border_thickness;
++		if (border < 2) {
++			border = 2;
++		}
++		max_height += border;
++		cairo_set_source_u32(cairo, swaynag->type->border_bottom);
++		cairo_rectangle(cairo, 0, max_height - border, swaynag->width, border);
++		cairo_fill(cairo);
++
++		if (swaynag->height > max_height) {
++			cairo_set_operator(cairo, CAIRO_OPERATOR_CLEAR);
++			cairo_rectangle(cairo, 0, max_height,
++					swaynag->width, swaynag->height - max_height);
++			cairo_fill(cairo);
++		}
++		return max_height;
++	}
++
++	/* Floating rounded panel — keep natural height; center the row inside it. */
++	swaynag->width = (uint32_t)content_w;
++
++	cairo_surface_t *probe = cairo_recording_surface_create(
++			CAIRO_CONTENT_COLOR_ALPHA, NULL);
++	cairo_t *pc = cairo_create(probe);
++	uint32_t row_h = 0;
++	uint32_t h = render_message(pc, swaynag);
++	row_h = h > row_h ? h : row_h;
++	int x = (int)swaynag->width - side;
+ 	for (int i = 0; i < swaynag->buttons->length; i++) {
+-		h = render_button(cairo, swaynag, i, &x, 0);
+-		if (h > max_height) {
+-			max_height = h;
++		h = render_button(pc, swaynag, i, &x, 0);
++		if (h > row_h) {
++			row_h = h;
+ 		}
+ 		x -= swaynag->type->button_gap;
+ 	}
++	cairo_destroy(pc);
++	cairo_surface_destroy(probe);
+ 
+-	if (swaynag->details.visible) {
+-		h = render_detailed(cairo, swaynag, max_height);
+-		max_height = h > max_height ? h : max_height;
+-	}
++	/* Natural size — message bubble and buttons share the same row height. */
++	uint32_t content_h = row_h;
++	int pad_y = 0;
++
++	double panel_w = saved_width - margin * 2;
++	double panel_h = content_h + border_px * 2;
++	double px = margin;
++	double py = margin;
+ 
+-	// Add a little padding to the bottom, and space for the border
+-	max_height += swaynag->type->message_padding;
+-	int border = swaynag->type->bar_border_thickness;
+-	max_height += border;
+-	cairo_set_source_u32(cairo, swaynag->type->border_bottom);
+-	cairo_rectangle(cairo, 0,
+-			max_height - border,
+-			swaynag->width,
+-			border);
+-	cairo_fill(cairo);
++	cairo_set_source_u32(cairo, swaynag->type->background);
++	fill_round_rect(cairo, px, py, panel_w, panel_h, swaynag->panel_radius);
+ 
+-	/* Clear any leftover strip paint below the real bar height. */
+-	if (swaynag->height > max_height) {
+-		cairo_set_operator(cairo, CAIRO_OPERATOR_CLEAR);
+-		cairo_rectangle(cairo, 0, max_height,
+-				swaynag->width, swaynag->height - max_height);
+-		cairo_fill(cairo);
++	double clip_inset = border_px;
++	double clip_r = swaynag->panel_radius > clip_inset
++			? swaynag->panel_radius - clip_inset : 0;
++	cairo_save(cairo);
++	round_rect_path(cairo, px + clip_inset, py + clip_inset,
++			panel_w - clip_inset * 2, panel_h - clip_inset * 2, clip_r);
++	cairo_clip(cairo);
++
++	/*
++	 * Label bubble shares the panel origin + radius (like swirlmenu's Menu
++	 * prompt) so the left corners sit flush against the accent border.
++	 * Buttons stay inset inside the stroke.
++	 */
++	if (swaynag->message && strlen(swaynag->message) < 32) {
++		int text_width, text_height;
++		get_text_size(cairo, swaynag->type->font_description,
++				&text_width, &text_height, NULL, 1, true, "%s",
++				swaynag->message);
++		const int pad_x = 8;
++		int bubble_w = text_width + pad_x * 2;
++		cairo_set_source_u32(cairo, swaynag->type->button_background);
++		fill_round_rect(cairo, px, py, bubble_w, panel_h,
++				swaynag->panel_radius);
++		cairo_set_source_u32(cairo, swaynag->type->button_text);
++		cairo_move_to(cairo, px + pad_x,
++				py + (panel_h - text_height) / 2.0);
++		render_message_text(cairo, 0, swaynag->type->font_description, 1,
++				false, "%s", swaynag->message);
++	} else {
++		cairo_save(cairo);
++		cairo_translate(cairo, inset, inset + pad_y);
++		render_message(cairo, swaynag);
++		cairo_restore(cairo);
+ 	}
+ 
+-	return max_height;
++	cairo_save(cairo);
++	cairo_translate(cairo, inset, inset + pad_y);
++	x = (int)swaynag->width - side;
++	for (int i = 0; i < swaynag->buttons->length; i++) {
++		render_button(cairo, swaynag, i, &x, 0);
++		x -= swaynag->type->button_gap;
++	}
++	for (int i = 0; i < swaynag->buttons->length; i++) {
++		struct swaynag_button *button = swaynag->buttons->items[i];
++		button->x += inset;
++		button->y += inset + pad_y;
++	}
++	cairo_restore(cairo);
++	cairo_restore(cairo);
++
++	double stroke_inset = border_px / 2.0;
++	double stroke_r = swaynag->panel_radius > stroke_inset
++			? swaynag->panel_radius - stroke_inset : 0;
++	cairo_set_source_u32(cairo, swaynag->type->border);
++	stroke_round_rect(cairo, px + stroke_inset, py + stroke_inset,
++			panel_w - border_px, panel_h - border_px, stroke_r, border_px);
++
++	swaynag->width = saved_width;
++	return (uint32_t)(margin + panel_h);
+ }
+ 
+ void render_frame(struct swaynag *swaynag) {

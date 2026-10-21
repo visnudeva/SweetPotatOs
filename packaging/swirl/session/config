@@ -44,8 +44,6 @@ gesture_scroll_sensitivity 1.0
 bindgesture swipe:4:up workspace next_on_output
 bindgesture swipe:4:down workspace prev_on_output
 
-lua /usr/share/swirl/scripts/autotile.lua
-
 default_border pixel 2
 default_floating_border pixel 2
 hide_edge_borders smart
@@ -179,5 +177,8 @@ bar {
         binding_mode          #f79b29 #f79b29 #1d1f21
     }
 }
+
+# After the bar block so mid-parse `bar potato …` cannot invent a duplicate.
+lua /usr/share/swirl/scripts/autotile.lua
 
 exec --no-startup-id sh -c '/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 || /usr/lib/xfce-polkit/xfce-polkit || /usr/lib/xfce4/xfce-polkit || true'

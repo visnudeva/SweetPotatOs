@@ -174,10 +174,26 @@ local function sync_bar_frame(active)
 	end
 	-- Always target bar id "potato" (see config). A bare "bar gaps …"
 	-- with no id can spawn a second bar.
-	local ok = command_ok(scroll.command(nil, lib.bar_gaps_cmd(active)))
-		and command_ok(scroll.command(nil, lib.bar_radius_cmd(active)))
-		and command_ok(scroll.command(nil, lib.bar_border_cmd(active)))
-	if ok then
+	-- One IPC chain so gaps/radius/border stay in lockstep. Do not remember
+	-- success unless every part applied — otherwise an empty desktop can keep
+	-- floating insets after the stroke was cleared.
+	local cmd
+	if active then
+		cmd = table.concat({
+			lib.bar_gaps_cmd(true),
+			lib.bar_radius_cmd(true),
+			lib.bar_border_cmd(true),
+		}, "; ")
+	else
+		-- Gaps first (stop floating), then chrome. Render ignores border
+		-- when radius is 0, so a partial apply cannot leave a sharp stroke.
+		cmd = table.concat({
+			lib.bar_gaps_cmd(false),
+			lib.bar_border_cmd(false),
+			lib.bar_radius_cmd(false),
+		}, "; ")
+	end
+	if command_ok(scroll.command(nil, cmd)) then
 		applied_bar = active
 	end
 end
@@ -206,8 +222,10 @@ local function sync_gaps(workspace, exclude_view)
 	applying_gap = false
 	if command_ok(results) then
 		applied_gap[workspace] = px
-		sync_bar_frame(bar_on)
 	end
+	-- Bar chrome is independent of window gaps: still clear the floating
+	-- frame when landing on an empty desktop even if gaps were rejected.
+	sync_bar_frame(bar_on)
 end
 
 local function on_view_map(view, _)
@@ -317,6 +335,7 @@ scroll.add_callback("ipc_view", on_ipc_view, nil)
 scroll.add_callback("workspace_focus", on_workspace_focus, nil)
 
 remember_open_views()
-sync_gaps(scroll.focused_workspace(), nil)
--- Config parse rejects "gaps … current". Retry once the compositor is reading commands.
+-- Defer sync_gaps: config parse still rejects "gaps … current", and any
+-- `bar potato …` issued too early used to invent a duplicate bar
+-- ("Id potato already defined … bar-1"). The mark below retries after load.
 scroll.exec_process("sleep 0.3; swaymsg 'mark --add __spo_gaps' >/dev/null 2>&1; swaymsg 'unmark __spo_gaps' >/dev/null 2>&1")

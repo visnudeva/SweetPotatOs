@@ -4,6 +4,33 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-172
+What changed: Empty and single-window desktops pull the status bar flush again (no leftover float). Log out and back in after updating.
+
+@2026.10.3-171
+What changed: Status bar config no longer errors with a duplicate potato id after update. Log out and back in after updating.
+
+@2026.10.3-170
+What changed: Empty desktops clear the floating bar frame cleanly (no leftover sharp border). Log out and back in after updating.
+
+@2026.10.3-169
+What changed: Power menu label sits flush in the left corners like the app Menu bubble. Log out and back in after updating.
+
+@2026.10.3-168
+What changed: Power menu label matches the Menu bubble size; action buttons are smaller round discs. Log out and back in after updating.
+
+@2026.10.3-167
+What changed: Power menu label sits in a centered accent bubble; icons are a touch smaller so they clear the border. Log out and back in after updating.
+
+@2026.10.3-166
+What changed: A little more padding after the Menu label. Power menu is compact again with centered icons and side padding. Log out and back in after updating.
+
+@2026.10.3-165
+What changed: App menu matches the 28px status bar height. Power menu has side padding, centered icons, and a 2px edge when corners are off. Log out and back in after updating.
+
+@2026.10.3-164
+What changed: App menu matches the status bar height. With corners on, the power menu floats in the same rounded accent panel. Log out and back in after updating.
+
 @2026.10.3-163
 What changed: App menu at the bottom with a clipped accent border. Idle no longer powers the display off (lid wake fix). Log out and back in after updating.
 

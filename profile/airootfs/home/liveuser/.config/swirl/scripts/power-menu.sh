@@ -5,7 +5,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ico() {
-  printf '<span font="Symbols Nerd Font Mono 12">&#x%X;</span>' "$1"
+  printf '<span font="Symbols Nerd Font Mono 8">&#x%X;</span>' "$1"
 }
 
 LOCK_CMD="${LOCK_CMD:-swaylock -f -C ${HOME}/.config/swaylock/config}"

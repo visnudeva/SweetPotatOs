@@ -30,7 +30,7 @@ https://github.com/user-attachments/assets/e691dc3f-ec47-4dbb-8b17-b43982426968
 <table>
   <tr>
     <td>
-      <strong>SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Swirl desktop and a Calamares installer, built to revive slow old potato PCs and make them sweet again.
+      <strong>SweetPotatOs is an Arch-based Linux distro: a live graphical ISO with the SweetPotato Swirl desktop and a Calamares installer — because reviving slow old potato PCs shouldn't mean sacrificing looks for speed.
 <br>
     </td>
     <td>

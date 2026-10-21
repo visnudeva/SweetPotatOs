@@ -60,17 +60,16 @@ index 3151820..0b9e42c 100644
  	{ "status_command", bar_cmd_status_command },
  	{ "status_edge_padding", bar_cmd_status_edge_padding },
  	{ "status_padding", bar_cmd_status_padding },
-@@ -71,6 +73,12 @@ struct cmd_results *cmd_bar(int argc, char **argv) {
+@@ -71,6 +73,10 @@ struct cmd_results *cmd_bar(int argc, char **argv) {
  			}
  		}
  		if (!config->current_bar) {
-+			/* Runtime: never invent a bar. A wrong id used to spawn a
-+			 * second swirlbar (often on the bottom edge). */
-+			if (!config->reading) {
-+				return cmd_results_new(CMD_FAILURE,
-+						"No bar with id '%s'", argv[0]);
-+			}
- 			id = strdup(argv[0]);
+-			id = strdup(argv[0]);
++			/* Never invent a bar from `bar <id> <cmd>`. Mid-parse lua used
++			 * to create id "potato" before `bar { id potato }`, leaving
++			 * bar-1 with the duplicate-id error. Define bars with `bar { }`. */
++			return cmd_results_new(CMD_FAILURE,
++					"No bar with id '%s'", argv[0]);
  		}
  		++argv; --argc;
 diff --git a/sway/commands/bar/border.c b/sway/commands/bar/border.c
@@ -381,7 +380,7 @@ index 9df7ab6..7864a61 100644
 +
 +	int bar_radius = output->bar->config->border_radius;
 +	int bar_border = output->bar->config->border;
-+	bool framed = bar_radius > 0 || bar_border > 0;
++	bool framed = bar_radius > 0; /* border alone must not draw a sharp frame */
 +	if (framed) {
 +		/* Transparent corners; paint only the rounded capsule. */
 +		ctx.has_transparency = true;

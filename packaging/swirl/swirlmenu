@@ -2,8 +2,8 @@
 # Theme-colored text menu. A patched wmenu (shipped with swirl) draws it with
 # selection corners matching the window frame radius. Callers pass the prompt
 # and any extra wmenu flags; colors come from the active Sweet potato palette.
-# Anchored at the bottom. When swirlbar is floating (gaps > 0), the menu floats
-# above the bottom edge with the same side inset, radius, and accent border.
+# Anchored at the bottom. Row height matches swirlbar. When the bar floats,
+# the menu floats with the same side inset, radius, and accent border.
 set -euo pipefail
 
 ACTIVE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/active.sh"
@@ -25,6 +25,9 @@ if [[ -f "${FRAME}" && "$(<"${FRAME}")" == "off" ]]; then
   RADIUS=0
 fi
 
+# Match the potato bar (config height 28). IPC bar_height is 0 when unset.
+BAR_HEIGHT=28
+
 args=(-i -b -f "Noto Sans 11"
   -N "${SPO_SURFACE}ff" -n "${SPO_TEXT}ff"
   -M "${SPO_ACCENT}ff" -m "${SPO_ON_ACCENT}ff"
@@ -33,17 +36,23 @@ args=(-i -b -f "Noto Sans 11"
 WMENU=/usr/lib/swirl/wmenu
 if [[ -x "${WMENU}" ]]; then
   args+=(-r "${RADIUS}")
-  # Float above the bottom edge: same left/right inset as the potato bar.
-  if (( RADIUS > 0 )) && command -v swaymsg >/dev/null 2>&1 \
-      && command -v jq >/dev/null 2>&1; then
+  if command -v swaymsg >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
     bar_json="$(swaymsg -t get_bar_config potato 2>/dev/null || true)"
     if [[ -n "${bar_json}" ]]; then
-      gap="$(jq -r '.gaps.top // 0' <<<"${bar_json}" 2>/dev/null || echo 0)"
-      if [[ "${gap}" =~ ^[1-9][0-9]*$ ]]; then
-        args+=(-g "0,${gap},${gap},${gap}")
+      bh="$(jq -r '.bar_height // 0' <<<"${bar_json}" 2>/dev/null || echo 0)"
+      if [[ "${bh}" =~ ^[1-9][0-9]*$ ]]; then
+        BAR_HEIGHT="${bh}"
+      fi
+      # Float above the bottom edge: same left/right inset as the potato bar.
+      if (( RADIUS > 0 )); then
+        gap="$(jq -r '.gaps.top // 0' <<<"${bar_json}" 2>/dev/null || echo 0)"
+        if [[ "${gap}" =~ ^[1-9][0-9]*$ ]]; then
+          args+=(-g "0,${gap},${gap},${gap}")
+        fi
       fi
     fi
   fi
+  args+=(-H "${BAR_HEIGHT}")
 else
   WMENU=wmenu
 fi

@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=34
+pkgrel=43
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -75,6 +75,7 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'swaynag-rounded-buttons.patch'
         'swaynag-keyboard.patch'
         'swaynag-power-menu.patch'
+        'swaynag-rounded-panel.patch'
         'lone-column-maximize.patch'
         'overview-fit-strips.patch'
         'overview-coverflow-stripes.patch'
@@ -91,13 +92,14 @@ sha256sums=('SKIP'
             '506631954df92c66ea45c65e14401fe2084d6d7a412e9674cc5a102a48819397'
             '4779ffa0a186901cfcc688782554194a9dce4e2abf0185651bbff139348f1bec'
             '97189ea05e4e97c1e132c972bece049f4073dfd1e72dc4751ec2e75f5c7a73ab'
+            'a00af1731de153ff92d6b8a3c368483790eb053c109b12347aba51c22cace081'
             'SKIP'
             '0f434fbd20c4953b319744793a85121b84b72caf0ca4eaa505377ec0be120c78'
             'cb00ba9da577549479417716819eba2ac1c0a68fbdf244a64c0aa9826299753f'
-            '3fbaeed60524b92b58f9a51fed2e3de57f922c3aeef02f3d960358f91c1d3139'
+            '66d22925cb86f95be38d6f2187f7d867c2b4924568d07366eaca748c001ca6c7'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46'
-            '38d4f0bc8ad62e6c3dd9c986e0f6ed91daee7c8b2caeca833379451718252982')
+            'c0fd32d07027e5e4f290392df0acaaf64c61b9fe1a421f9fee317550b9f9dc92')
 
 pkgver() {
   cd "${srcdir}/swirl"
@@ -124,6 +126,8 @@ prepare() {
   git apply "${srcdir}/swaynag-keyboard.patch"
   # Power menu: no X button, click outside dismisses, fullscreen click-away.
   git apply "${srcdir}/swaynag-power-menu.patch"
+  # Power menu floats with the same rounded accent panel as swirlbar when frames are on.
+  git apply "${srcdir}/swaynag-rounded-panel.patch"
   # A column left alone after an overview drag stays full width.
   git apply "${srcdir}/lone-column-maximize.patch"
   # Multi-desktop overview fits every column stripe into each workspace.

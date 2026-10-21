@@ -781,7 +781,7 @@ details-background=${SURFACE}
 message-padding=4
 button-padding=2
 button-border-size=1
-border-bottom-size=1
+border-bottom-size=2
 button-gap=12
 
 [warning]
@@ -795,7 +795,7 @@ details-background=${SURFACE}
 message-padding=4
 button-padding=2
 button-border-size=1
-border-bottom-size=1
+border-bottom-size=2
 button-gap=12
 EOF
   if [[ ! -f "${ROOT}/swirlnag/config" ]] || ! cmp -s "${nag_payload}" "${ROOT}/swirlnag/config"; then
