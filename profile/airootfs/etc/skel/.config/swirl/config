@@ -34,10 +34,11 @@ exec --no-startup-id ~/.config/swirl/scripts/start-kanshi.sh
 exec --no-startup-id sh -c 'sleep 0.5; [ -s "$HOME/.config/sway/outputs" ] && swaymsg source "$HOME/.config/sway/outputs" 2>/dev/null || true'
 
 ### Idle configuration
-#
+# Lock after idle. Lid suspend is logind. No compositor output power-off —
+# that path left some laptops asleep with the LED on and unable to wake.
+# after-resume still turns the panel back on if firmware left it dark.
 exec swayidle -w \
           timeout 300 '$lockcmd' \
-          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
           before-sleep '$lockcmd' \
           after-resume 'swaymsg "output * power on"'
 
@@ -324,6 +325,8 @@ client.selected_focused  #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 # Status Bar
 # ============================================
 bar {
+    # Named so autotile can set gaps/radius without spawning a second bar.
+    id potato
     position top
     # Process name in btop/htop: swirlbar (swaybar is only a symlink).
     swaybar_command swirlbar

@@ -157,6 +157,7 @@ bindsym $mod+Shift+r mode "resize"
 exec_always /usr/share/swirl/scripts/workspace-dots.sh
 
 bar {
+    id potato
     position top
     status_command /usr/share/swirl/scripts/status.sh
     tray_padding 1

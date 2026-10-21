@@ -98,6 +98,9 @@ end
 -- between them. A single tiled window stays edge to edge.
 -- enabled == false (Mod+Ctrl+g frames off) forces 0. nil or true keeps the usual rule.
 lib.INNER_GAP = 8
+-- Floating swirlbar frame (same radius / weight as window decorations).
+lib.BAR_ID = "potato"
+lib.BAR_BORDER = 2
 
 function lib.inner_gap_px(view_count, enabled)
 	if enabled == false then
@@ -107,6 +110,33 @@ function lib.inner_gap_px(view_count, enabled)
 		return lib.INNER_GAP
 	end
 	return 0
+end
+
+-- Rounded, gapped bar when frames are on and the focused desktop has
+-- more than one tiled window — same gate as the inner gap.
+function lib.bar_frame_active(view_count, enabled)
+	return lib.inner_gap_px(view_count, enabled) > 0
+end
+
+-- top right bottom left. Bottom stays 0 so the window inner gap is the
+-- only space under the bar.
+function lib.bar_gaps_cmd(active)
+	local id = lib.BAR_ID
+	if active then
+		local g = lib.INNER_GAP
+		return string.format("bar %s gaps %d %d 0 %d", id, g, g, g)
+	end
+	return string.format("bar %s gaps 0", id)
+end
+
+function lib.bar_radius_cmd(active)
+	local r = active and lib.INNER_GAP or 0
+	return string.format("bar %s border_radius %d", lib.BAR_ID, r)
+end
+
+function lib.bar_border_cmd(active)
+	local b = active and lib.BAR_BORDER or 0
+	return string.format("bar %s border %d", lib.BAR_ID, b)
 end
 
 return lib

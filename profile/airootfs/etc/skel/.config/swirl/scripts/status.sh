@@ -137,11 +137,9 @@ while true; do
     else
         line="${meters}"
     fi
-    # Extra space under the glyphs. The bar centers the line, which lifts
-    # descenders (the p in a window title, the p in Sep) off the bottom
-    # edge that shows under the app menu. 12288 is 12 points; 8192 was
-    # enough for swaybar and still left a sliver under swirlbar.
-    echo "<span rise=\"12288\">${line}</span>"
+    # No pango rise — swirlbar centers status text on ink extents so the
+    # meters line up with the tray icons. A rise made the line sit high.
+    echo "${line}"
 
     sleep 3
 done

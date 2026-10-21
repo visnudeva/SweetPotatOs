@@ -2,6 +2,8 @@
 # Theme-colored text menu. A patched wmenu (shipped with swirl) draws it with
 # selection corners matching the window frame radius. Callers pass the prompt
 # and any extra wmenu flags; colors come from the active Sweet potato palette.
+# Anchored at the bottom. When swirlbar is floating (gaps > 0), the menu floats
+# above the bottom edge with the same side inset, radius, and accent border.
 set -euo pipefail
 
 ACTIVE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/active.sh"
@@ -23,7 +25,7 @@ if [[ -f "${FRAME}" && "$(<"${FRAME}")" == "off" ]]; then
   RADIUS=0
 fi
 
-args=(-i -f "Noto Sans 11"
+args=(-i -b -f "Noto Sans 11"
   -N "${SPO_SURFACE}ff" -n "${SPO_TEXT}ff"
   -M "${SPO_ACCENT}ff" -m "${SPO_ON_ACCENT}ff"
   -S "${SPO_HIGHLIGHT}ff" -s "${SPO_ON_HIGHLIGHT}ff")
@@ -31,6 +33,17 @@ args=(-i -f "Noto Sans 11"
 WMENU=/usr/lib/swirl/wmenu
 if [[ -x "${WMENU}" ]]; then
   args+=(-r "${RADIUS}")
+  # Float above the bottom edge: same left/right inset as the potato bar.
+  if (( RADIUS > 0 )) && command -v swaymsg >/dev/null 2>&1 \
+      && command -v jq >/dev/null 2>&1; then
+    bar_json="$(swaymsg -t get_bar_config potato 2>/dev/null || true)"
+    if [[ -n "${bar_json}" ]]; then
+      gap="$(jq -r '.gaps.top // 0' <<<"${bar_json}" 2>/dev/null || echo 0)"
+      if [[ "${gap}" =~ ^[1-9][0-9]*$ ]]; then
+        args+=(-g "0,${gap},${gap},${gap}")
+      fi
+    fi
+  fi
 else
   WMENU=wmenu
 fi

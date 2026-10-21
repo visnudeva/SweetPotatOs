@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # SweetPotato caffeine — keep the screen on while the lid is open.
-# Idle lock and display-off are the swayidle timeouts. Caffeine drops
-# those timeouts only. Lid close, wake, and power off stay on the
-# normal path. Do not take a systemd-inhibit lock.
+# Idle lock is the swayidle timeout. Caffeine drops that timeout only.
+# Lid close, wake, and power off stay on the normal path. Do not take a
+# systemd-inhibit lock, and do not power the output off from swayidle.
 # Usage: caffeine.sh [on|off|toggle]  (default: toggle)
 set -euo pipefail
 
@@ -47,13 +47,12 @@ drop_held_lock() {
   done < <(pgrep -f 'systemd-inhibit --what=idle --who=SweetPotato' || true)
 }
 
-# Same watcher the session starts with.
+# Same watcher the session starts with (no output power-off).
 # after-resume turns the panel back on after lid sleep (black screen on wake).
 start_swayidle() {
   pkill -x swayidle 2>/dev/null || true
   swayidle -w \
     timeout 300 "${LOCKCMD}" \
-    timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
     before-sleep "${LOCKCMD}" \
     after-resume 'swaymsg "output * power on"' &
   disown || true

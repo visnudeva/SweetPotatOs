@@ -127,6 +127,7 @@ end
 -- tiled window. Unfocused workspaces update when they are focused.
 -- Mod+Ctrl+g writes ~/.config/sweetpotatos/frame ("off" hides the gap).
 local applied_gap = {}
+local applied_bar = nil
 local applied_enabled = nil
 
 local function frame_enabled()
@@ -167,18 +168,35 @@ local function command_ok(results)
 	return #results > 0
 end
 
+local function sync_bar_frame(active)
+	if applied_bar == active then
+		return
+	end
+	-- Always target bar id "potato" (see config). A bare "bar gaps …"
+	-- with no id can spawn a second bar.
+	local ok = command_ok(scroll.command(nil, lib.bar_gaps_cmd(active)))
+		and command_ok(scroll.command(nil, lib.bar_radius_cmd(active)))
+		and command_ok(scroll.command(nil, lib.bar_border_cmd(active)))
+	if ok then
+		applied_bar = active
+	end
+end
+
 local function sync_gaps(workspace, exclude_view)
 	local enabled = frame_enabled()
 	-- frame.sh can zero every workspace without going through this cache.
 	if applied_enabled ~= enabled then
 		applied_gap = {}
+		applied_bar = nil
 		applied_enabled = enabled
 	end
 	if applying_gap or not workspace or scroll.focused_workspace() ~= workspace then
 		return
 	end
-	local px = lib.inner_gap_px(workspace_view_count(workspace, exclude_view), enabled)
-	if applied_gap[workspace] == px then
+	local count = workspace_view_count(workspace, exclude_view)
+	local px = lib.inner_gap_px(count, enabled)
+	local bar_on = lib.bar_frame_active(count, enabled)
+	if applied_gap[workspace] == px and applied_bar == bar_on then
 		return
 	end
 	-- Runtime gap commands are rejected while the config file is still loading.
@@ -188,6 +206,7 @@ local function sync_gaps(workspace, exclude_view)
 	applying_gap = false
 	if command_ok(results) then
 		applied_gap[workspace] = px
+		sync_bar_frame(bar_on)
 	end
 end
 

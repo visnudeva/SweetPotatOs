@@ -4,6 +4,30 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-163
+What changed: App menu at the bottom with a clipped accent border. Idle no longer powers the display off (lid wake fix). Log out and back in after updating.
+
+@2026.10.3-162
+What changed: The app menu sits under the floating bar again, with the same rounded accent border. Log out and back in after updating.
+
+@2026.10.3-161
+What changed: The app menu floats over the bar in the same rounded strip. The tray side has the same end padding as the workspace dots. Log out and back in after updating.
+
+@2026.10.3-160
+What changed: Floating bar: a little more space before the first workspace dot, and the app menu sits under the bar with matching rounded inset instead of covering it. Log out and back in after updating.
+
+@2026.10.3-159
+What changed: Workspace dots and the status meters sit on the same vertical center as the tray icons. Log out and back in after updating.
+
+@2026.10.3-158
+What changed: The floating bar’s accent border stays visible across the workspace dots on the left. Log out and back in after updating.
+
+@2026.10.3-157
+What changed: Fixes the floating bar so it is actually rounded with the accent border, and clears the scroller_indicator config error. Log out and back in after updating.
+
+@2026.10.3-156
+What changed: When corners and gaps are on and a desktop has more than one window, the top bar floats with the same rounded frame and accent border as the windows. One window (or frames off) keeps the full-width bar. Log out and back in after updating.
+
 @2026.10.3-155
 What changed: Puts the status bar text spacing back to how it was before the rounded-bar experiment. Log out and back in after updating (or Mod+Shift+c).
 

@@ -1,0 +1,212 @@
+diff -ruN a/docs/wmenu.1.scd b/docs/wmenu.1.scd
+--- a/docs/wmenu.1.scd	2026-10-21 16:13:25.702031137 +0400
++++ b/docs/wmenu.1.scd	2026-10-21 16:13:25.704331576 +0400
+@@ -58,6 +58,10 @@
+ 
+ *-r* _radius_
+ 	defines the corner radius of the prompt and selection highlights in pixels.
++	When layer margins are set, the whole menu panel uses this radius too.
++
++*-g* _all_ | _top_,_right_,_bottom_,_left_
++	sets layer-shell margins from the output edge, matching a floating status bar.
+ 
+ *-N* _RRGGBB[AA]_
+ 	defines the normal background color.
+diff -ruN a/menu.c b/menu.c
+--- a/menu.c	2026-10-21 16:13:25.702115588 +0400
++++ b/menu.c	2026-10-21 16:13:25.704417675 +0400
+@@ -34,6 +34,8 @@
+ 	menu->selectionbg = 0x005577ff;
+ 	menu->selectionfg = 0xeeeeeeff;
+ 	menu->selection_radius = 0;
++	menu->margin_top = menu->margin_right = 0;
++	menu->margin_bottom = menu->margin_left = 0;
+ 	menu->callback = callback;
+ 	menu->test_surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 1, 1);
+ 	menu->test_cairo = cairo_create(menu->test_surface);
+@@ -87,10 +89,11 @@
+ void menu_getopts(struct menu *menu, int argc, char *argv[]) {
+ 	const char *usage =
+ 		"Usage: wmenu [-biPv] [-f font] [-l lines] [-o output] [-p prompt]\n"
+-		"\t[-r radius] [-N color] [-n color] [-M color] [-m color] [-S color] [-s color]\n";
++		"\t[-r radius] [-g all|top,right,bottom,left]\n"
++		"\t[-N color] [-n color] [-M color] [-m color] [-S color] [-s color]\n";
+ 
+ 	int opt;
+-	while ((opt = getopt(argc, argv, "bhiPvf:l:o:p:r:N:n:M:m:S:s:")) != -1) {
++	while ((opt = getopt(argc, argv, "bhiPvf:l:o:p:r:g:N:n:M:m:S:s:")) != -1) {
+ 		switch (opt) {
+ 		case 'b':
+ 			menu->bottom = true;
+@@ -122,6 +125,32 @@
+ 				menu->selection_radius = 0;
+ 			}
+ 			break;
++		case 'g': {
++			/* Same shapes as swaybar gaps: one value, or four CSV / space values
++			 * passed as a single argv (top,right,bottom,left). */
++			int vals[4] = {0, 0, 0, 0};
++			int n = 0;
++			char *buf = strdup(optarg);
++			char *save = NULL;
++			for (char *tok = strtok_r(buf, ", ", &save); tok && n < 4;
++					tok = strtok_r(NULL, ", ", &save)) {
++				vals[n++] = atoi(tok);
++			}
++			free(buf);
++			if (n == 1) {
++				menu->margin_top = menu->margin_right =
++					menu->margin_bottom = menu->margin_left = vals[0];
++			} else if (n == 4) {
++				menu->margin_top = vals[0];
++				menu->margin_right = vals[1];
++				menu->margin_bottom = vals[2];
++				menu->margin_left = vals[3];
++			} else {
++				fprintf(stderr, "Invalid -g value: %s\n", optarg);
++				exit(EXIT_FAILURE);
++			}
++			break;
++		}
+ 		case 'N':
+ 			if (!parse_color(optarg, &menu->normalbg)) {
+ 				fprintf(stderr, "Invalid background color: %s", optarg);
+diff -ruN a/menu.h b/menu.h
+--- a/menu.h	2026-10-21 16:13:25.702177504 +0400
++++ b/menu.h	2026-10-21 16:13:25.704485967 +0400
+@@ -51,6 +51,8 @@
+ 	uint32_t selectionbg, selectionfg;
+ 	// Selection/prompt highlight corner radius (matches Swirl window frames)
+ 	int selection_radius;
++	// Layer-shell margins from the output edge (px). Used to clear a floating bar.
++	int margin_top, margin_right, margin_bottom, margin_left;
+ 
+ 	struct wl_context *context;
+ 
+diff -ruN a/render.c b/render.c
+--- a/render.c	2026-10-21 16:13:25.702246617 +0400
++++ b/render.c	2026-10-21 16:13:25.755325305 +0400
+@@ -51,27 +51,38 @@
+ }
+ 
+ /* Match Swirl window frames when selection_radius is set. */
+-static void fill_round_rect(cairo_t *cairo, double x, double y,
++static void round_rect_path(cairo_t *cairo, double x, double y,
+ 		double width, double height, double radius) {
+ 	double limit = width < height ? width / 2.0 : height / 2.0;
+ 	if (radius > limit) {
+ 		radius = limit;
+ 	}
++	cairo_new_path(cairo);
+ 	if (radius < 0.5) {
+ 		cairo_rectangle(cairo, x, y, width, height);
+-		cairo_fill(cairo);
+ 		return;
+ 	}
+ 	double quarter = 1.5707963267948966;
+-	cairo_new_path(cairo);
+ 	cairo_arc(cairo, x + width - radius, y + radius, radius, -quarter, 0);
+ 	cairo_arc(cairo, x + width - radius, y + height - radius, radius, 0, quarter);
+ 	cairo_arc(cairo, x + radius, y + height - radius, radius, quarter, quarter * 2);
+ 	cairo_arc(cairo, x + radius, y + radius, radius, quarter * 2, quarter * 3);
+ 	cairo_close_path(cairo);
++}
++
++static void fill_round_rect(cairo_t *cairo, double x, double y,
++		double width, double height, double radius) {
++	round_rect_path(cairo, x, y, width, height, radius);
+ 	cairo_fill(cairo);
+ }
+ 
++static void stroke_round_rect(cairo_t *cairo, double x, double y,
++		double width, double height, double radius, double line) {
++	round_rect_path(cairo, x, y, width, height, radius);
++	cairo_set_line_width(cairo, line);
++	cairo_stroke(cairo);
++}
++
+ // Renders text to cairo.
+ static int render_text(struct menu *menu, cairo_t *cairo, const char *str,
+ 		int x, int y, int width, uint32_t bg_color, uint32_t fg_color,
+@@ -193,10 +204,32 @@
+ 
+ // Renders the menu to cairo.
+ static void render_to_cairo(struct menu *menu, cairo_t *cairo) {
+-	// Render background
+-	cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
+-	cairo_set_source_u32(cairo, menu->normalbg);
+-	cairo_paint(cairo);
++	// Render background. With margins + radius the panel floats like swirlbar.
++	bool float_panel = menu->selection_radius > 0
++		&& (menu->margin_top || menu->margin_right
++			|| menu->margin_bottom || menu->margin_left);
++	const int border = 2; /* match swirlbar floating frame */
++	if (float_panel) {
++		cairo_set_operator(cairo, CAIRO_OPERATOR_CLEAR);
++		cairo_paint(cairo);
++		cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
++		cairo_set_source_u32(cairo, menu->normalbg);
++		fill_round_rect(cairo, 0, 0, menu->width, menu->height,
++				menu->selection_radius);
++		/* Clip item/prompt fills inside the stroke so they cannot cover it. */
++		double content_inset = border;
++		double content_r = menu->selection_radius > content_inset
++				? menu->selection_radius - content_inset : 0;
++		round_rect_path(cairo, content_inset, content_inset,
++				menu->width - content_inset * 2,
++				menu->height - content_inset * 2,
++				content_r);
++		cairo_clip(cairo);
++	} else {
++		cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
++		cairo_set_source_u32(cairo, menu->normalbg);
++		cairo_paint(cairo);
++	}
+ 
+ 	// Render prompt and input
+ 	render_prompt(menu, cairo);
+@@ -204,13 +237,25 @@
+ 	render_cursor(menu, cairo);
+ 
+ 	// Render selected page
+-	if (!menu->sel) {
+-		return;
++	if (menu->sel) {
++		if (menu->lines > 0) {
++			render_vertical_page(menu, cairo, menu->sel->page);
++		} else {
++			render_horizontal_page(menu, cairo, menu->sel->page);
++		}
+ 	}
+-	if (menu->lines > 0) {
+-		render_vertical_page(menu, cairo, menu->sel->page);
+-	} else {
+-		render_horizontal_page(menu, cairo, menu->sel->page);
++
++	/* Stroke last so selection backgrounds cannot paint over the accent edge. */
++	if (float_panel) {
++		cairo_reset_clip(cairo);
++		double inset = border / 2.0;
++		double stroke_r = menu->selection_radius > inset
++				? menu->selection_radius - inset : 0;
++		cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
++		cairo_set_source_u32(cairo, menu->promptbg);
++		stroke_round_rect(cairo, inset, inset,
++				menu->width - border, menu->height - border,
++				stroke_r, border);
+ 	}
+ }
+ 
+diff -ruN a/wayland.c b/wayland.c
+--- a/wayland.c	2025-04-29 23:23:10.000000000 +0400
++++ b/wayland.c	2026-10-21 16:13:25.704604308 +0400
+@@ -456,6 +456,9 @@
+ 
+ 	zwlr_layer_surface_v1_set_anchor(layer_surface, anchor);
+ 	zwlr_layer_surface_v1_set_size(layer_surface, 0, menu->height);
++	zwlr_layer_surface_v1_set_margin(layer_surface,
++			menu->margin_top, menu->margin_right,
++			menu->margin_bottom, menu->margin_left);
+ 	zwlr_layer_surface_v1_set_exclusive_zone(layer_surface, -1);
+ 	zwlr_layer_surface_v1_set_keyboard_interactivity(layer_surface, true);
+ 	zwlr_layer_surface_v1_add_listener(layer_surface, &layer_surface_listener, context);

@@ -37,7 +37,9 @@ exec --no-startup-id sh -c 'sleep 0.5; [ -s "$HOME/.config/sway/outputs" ] && sw
 #
 # Live ISO: caffeine on by default so install does not sleep/lock
 exec ~/.config/swirl/scripts/caffeine.sh on
-#
+# Lock after idle. Lid suspend is logind. No compositor output power-off —
+# that path left some laptops asleep with the LED on and unable to wake.
+# after-resume still turns the panel back on if firmware left it dark.
           after-resume 'swaymsg "output * power on"'
 
 # Calamares (Wayland) updates systemd-localed; push that into Swirl live
@@ -328,6 +330,8 @@ client.selected_focused  #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 # Status Bar
 # ============================================
 bar {
+    # Named so autotile can set gaps/radius without spawning a second bar.
+    id potato
     position top
     # Process name in btop/htop: swirlbar (swaybar is only a symlink).
     swaybar_command swirlbar

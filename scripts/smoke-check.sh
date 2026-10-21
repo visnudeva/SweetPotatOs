@@ -146,6 +146,8 @@ check_nogrep '\$mod\+o exec.*power-menu' \
   "${ISO}/etc/skel/.config/swirl/config" "skel has no Mod+o power menu"
 check_grep 'swaybar_command swirlbar' \
   "${ISO}/etc/skel/.config/swirl/config" "skel launches swirlbar by name"
+check_grep 'id potato' \
+  "${ISO}/etc/skel/.config/swirl/config" "skel names the bar potato for autotile"
 check_grep 'tray_padding 4' \
   "${ISO}/etc/skel/.config/swirl/config" "skel tray padding matches status icons"
 check_grep 'power-menu\.sh' "${ROOT}/packaging/swirl/session/config" "default session opens the power menu"

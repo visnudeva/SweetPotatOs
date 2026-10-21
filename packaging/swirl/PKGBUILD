@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=26
+pkgrel=34
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -78,8 +78,10 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'lone-column-maximize.patch'
         'overview-fit-strips.patch'
         'overview-coverflow-stripes.patch'
+        'swaybar-rounded-frame.patch'
         'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
-        'wmenu-selection-radius.patch')
+        'wmenu-selection-radius.patch'
+        'wmenu-layer-margins.patch')
 sha256sums=('SKIP'
             '6ffeac6519d077e08cd2f50051fa5a1478ca0ccbd4be4e28be41a8d0ebded806'
             '7f240d2e4a711dd3d4bb390bf90495edea0d15fd9bbf5f10a828338107d9ad1c'
@@ -92,8 +94,10 @@ sha256sums=('SKIP'
             'SKIP'
             '0f434fbd20c4953b319744793a85121b84b72caf0ca4eaa505377ec0be120c78'
             'cb00ba9da577549479417716819eba2ac1c0a68fbdf244a64c0aa9826299753f'
+            '3fbaeed60524b92b58f9a51fed2e3de57f922c3aeef02f3d960358f91c1d3139'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
-            '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46')
+            '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46'
+            '38d4f0bc8ad62e6c3dd9c986e0f6ed91daee7c8b2caeca833379451718252982')
 
 pkgver() {
   cd "${srcdir}/swirl"
@@ -126,10 +130,14 @@ prepare() {
   git apply "${srcdir}/overview-fit-strips.patch"
   # Stack desktops as equal-height horizontal stripes (stable click targets).
   git apply "${srcdir}/overview-coverflow-stripes.patch"
+  # Floating rounded swirlbar with accent border (driven by autotile + frames).
+  git apply "${srcdir}/swaybar-rounded-frame.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"
   patch -p1 < "${srcdir}/wmenu-selection-radius.patch"
+  # Floating swirlbar: menu clears the bar and shares its side inset.
+  patch -p1 < "${srcdir}/wmenu-layer-margins.patch"
 }
 
 build() {
