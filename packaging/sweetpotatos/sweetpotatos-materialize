@@ -157,7 +157,8 @@ mv -f "${MANIFEST}.new" "${MANIFEST}"
 rm -f "${DEST}/swirl/scripts/network-applet.py" \
       "${DEST}/swirl/scripts/network-tray.sh" \
       "${DEST}/swirl/scripts/pin-window.sh" \
-      "${DEST}/swirl/scripts/escape.sh"
+      "${DEST}/swirl/scripts/escape.sh" \
+      "${DEST}/swirl/scripts/swirlbar.sh"
 echo "[+] Materialized shipped config into ${DEST}"
 echo "    Overlay: ${OVERLAY}"
 

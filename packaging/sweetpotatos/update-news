@@ -4,6 +4,12 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-184
+What changed: Status bar is back (the quiet-launch path broke it). Logout teardown spam is muted at the compositor. Log out and back in after updating.
+
+@2026.10.3-183
+What changed: Logging out or powering off no longer flashes red swirlbar errors on the login screen. Log out and back in after updating.
+
 @2026.10.3-182
 What changed: Overview borders stay even on every side (no more hover-direction thin edge). Escape still leaves overview. Log out and back in after updating.
 

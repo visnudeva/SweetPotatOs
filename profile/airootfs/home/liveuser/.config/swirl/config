@@ -333,6 +333,7 @@ bar {
     id potato
     position top
     # Process name in btop/htop: swirlbar (swaybar is only a symlink).
+    # Must be a PATH binary (or absolute path) — execvp does not expand ~.
     swaybar_command swirlbar
     status_command ~/.config/swirl/scripts/status.sh
     # Pad so Papirus tray icons match Nerd Font status glyphs (~size 10).

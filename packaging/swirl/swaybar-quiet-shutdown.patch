@@ -1,0 +1,159 @@
+diff --git a/sway/config/bar.c b/sway/config/bar.c
+--- a/sway/config/bar.c
++++ b/sway/config/bar.c
+@@ -1,3 +1,4 @@
++#include <fcntl.h>
+ #include <signal.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+@@ -225,6 +226,13 @@
+ 			_exit(EXIT_FAILURE);
+ 		}
+ 
++		/* Logout/poweroff: keep the login VT free of swaybar teardown spam. */
++		int devnull = open("/dev/null", O_WRONLY | O_CLOEXEC);
++		if (devnull >= 0) {
++			dup2(devnull, STDERR_FILENO);
++			close(devnull);
++		}
++
+ 		char wayland_socket_str[16];
+ 		snprintf(wayland_socket_str, sizeof(wayland_socket_str),
+ 				"%d", sockets[1]);
+diff --git a/swaybar/bar.c b/swaybar/bar.c
+--- a/swaybar/bar.c
++++ b/swaybar/bar.c
+@@ -470,14 +470,13 @@
+ static void display_in(int fd, short mask, void *data) {
+ 	struct swaybar *bar = data;
+ 	if (mask & (POLLHUP | POLLERR)) {
+-		if (mask & POLLERR) {
+-			sway_log(SWAY_ERROR, "Wayland display poll error");
+-		}
++		/* Compositor exit / logout: quiet — stderr is often the login VT. */
++		sway_log(SWAY_DEBUG, "Wayland display closed");
+ 		bar->running = false;
+ 		return;
+ 	}
+ 	if (wl_display_dispatch(bar->display) == -1) {
+-		sway_log(SWAY_ERROR, "wl_display_dispatch failed");
++		sway_log(SWAY_DEBUG, "wl_display_dispatch failed");
+ 		bar->running = false;
+ 	}
+ }
+@@ -485,9 +484,7 @@
+ static void ipc_in(int fd, short mask, void *data) {
+ 	struct swaybar *bar = data;
+ 	if (mask & (POLLHUP | POLLERR)) {
+-		if (mask & POLLERR) {
+-			sway_log(SWAY_ERROR, "IPC poll error");
+-		}
++		sway_log(SWAY_DEBUG, "IPC closed");
+ 		bar->running = false;
+ 		return;
+ 	}
+diff --git a/swaybar/tray/item.c b/swaybar/tray/item.c
+--- a/swaybar/tray/item.c
++++ b/swaybar/tray/item.c
+@@ -37,7 +37,7 @@
+ 		const char *prop, list_t **dest) {
+ 	int ret = sd_bus_message_enter_container(msg, 'a', "(iiay)");
+ 	if (ret < 0) {
+-		sway_log(SWAY_ERROR, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
++		sway_log(SWAY_DEBUG, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
+ 		return ret;
+ 	}
+ 
+@@ -54,14 +54,14 @@
+ 	while (!sd_bus_message_at_end(msg, 0)) {
+ 		ret = sd_bus_message_enter_container(msg, 'r', "iiay");
+ 		if (ret < 0) {
+-			sway_log(SWAY_ERROR, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
++			sway_log(SWAY_DEBUG, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
+ 			goto error;
+ 		}
+ 
+ 		int width, height;
+ 		ret = sd_bus_message_read(msg, "ii", &width, &height);
+ 		if (ret < 0) {
+-			sway_log(SWAY_ERROR, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
++			sway_log(SWAY_DEBUG, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
+ 			goto error;
+ 		}
+ 
+@@ -69,7 +69,7 @@
+ 		size_t pixel_data_size; // size in bytes, each pixel is 4 bytes
+ 		ret = sd_bus_message_read_array(msg, 'y', &pixels, &pixel_data_size);
+ 		if (ret < 0) {
+-			sway_log(SWAY_ERROR, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
++			sway_log(SWAY_DEBUG, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
+ 			goto error;
+ 		}
+ 
+@@ -131,7 +131,7 @@
+ 
+ 	ret = sd_bus_message_enter_container(msg, 'v', type);
+ 	if (ret < 0) {
+-		sway_log(SWAY_ERROR, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
++		sway_log(SWAY_DEBUG, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
+ 		goto cleanup;
+ 	}
+ 
+@@ -147,7 +147,7 @@
+ 
+ 		ret = sd_bus_message_read(msg, type, dest);
+ 		if (ret < 0) {
+-			sway_log(SWAY_ERROR, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
++			sway_log(SWAY_DEBUG, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
+ 			goto cleanup;
+ 		}
+ 
+@@ -184,7 +184,7 @@
+ 	if (ret >= 0) {
+ 		wl_list_insert(&sni->slots, &data->link);
+ 	} else {
+-		sway_log(SWAY_ERROR, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
++		sway_log(SWAY_DEBUG, "%s %s: %s", sni->watcher_id, prop, strerror(-ret));
+ 		free(data);
+ 	}
+ }
+@@ -241,7 +241,7 @@
+ 		char *status;
+ 		int r = sd_bus_message_read(msg, "s", &status);
+ 		if (r < 0) {
+-			sway_log(SWAY_ERROR, "%s new status error: %s", sni->watcher_id, strerror(-ret));
++			sway_log(SWAY_DEBUG, "%s new status error: %s", sni->watcher_id, strerror(-ret));
+ 			ret = r;
+ 		} else {
+ 			free(sni->status);
+@@ -264,7 +264,7 @@
+ 	if (ret >= 0) {
+ 		wl_list_insert(&sni->slots, &slot->link);
+ 	} else {
+-		sway_log(SWAY_ERROR, "%s failed to subscribe to signal %s: %s",
++		sway_log(SWAY_DEBUG, "%s failed to subscribe to signal %s: %s",
+ 				sni->service, signal, strerror(-ret));
+ 		free(slot);
+ 	}
+diff --git a/swaybar/tray/tray.c b/swaybar/tray/tray.c
+--- a/swaybar/tray/tray.c
++++ b/swaybar/tray/tray.c
+@@ -95,7 +95,7 @@
+ 	int ret;
+ 
+ 	if (mask & (POLLHUP | POLLERR)) {
+-        sway_log(SWAY_ERROR, "D-Bus connection closed unexpectedly");
++		sway_log(SWAY_DEBUG, "D-Bus connection closed");
+ 		bar->running = false;
+ 		return;
+     }
+@@ -104,7 +104,8 @@
+ 		// This space intentionally left blank
+ 	}
+ 	if (ret < 0) {
+-		sway_log(SWAY_ERROR, "Failed to process bus: %s", strerror(-ret));
++		sway_log(SWAY_DEBUG, "Failed to process bus: %s", strerror(-ret));
++		bar->running = false;
+ 	}
+ }
+ 
