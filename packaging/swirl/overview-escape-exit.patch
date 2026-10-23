@@ -1,0 +1,45 @@
+diff --git a/sway/input/keyboard.c b/sway/input/keyboard.c
+--- a/sway/input/keyboard.c
++++ b/sway/input/keyboard.c
+@@ -15,6 +15,8 @@
+ #include "sway/input/cursor.h"
+ #include "sway/ipc-server.h"
+ #include "sway/server.h"
++#include "sway/tree/layout.h"
++#include "sway/desktop/transaction.h"
+ #include "log.h"
+ 
+ #if WLR_HAS_SESSION
+@@ -552,6 +554,32 @@
+ 				keyboard, keyinfo.raw_keysyms, keyinfo.raw_modifiers,
+ 				keyinfo.raw_keysyms_len);
+ 	}
++	/* Escape leaves overview (click already does); do not steal Escape
++	 * from clients or resize mode when overview is off. */
++	if (!handled && !locked && event->state == WL_KEYBOARD_KEY_STATE_PRESSED &&
++			keyinfo.translated_modifiers == 0) {
++		bool want_esc = false;
++		for (size_t i = 0; i < keyinfo.translated_keysyms_len; ++i) {
++			if (keyinfo.translated_keysyms[i] == XKB_KEY_Escape) {
++				want_esc = true;
++				break;
++			}
++		}
++		if (want_esc) {
++			if (layout_overview_workspaces_enabled()) {
++				layout_overview_workspaces(false);
++				handled = true;
++			}
++			struct sway_workspace *ws = seat_get_focused_workspace(seat);
++			if (ws && layout_overview_mode(ws) != OVERVIEW_DISABLED) {
++				layout_overview_set(ws, OVERVIEW_DISABLED);
++				handled = true;
++			}
++			if (handled) {
++				transaction_commit_dirty();
++			}
++		}
++	}
+ 	if (!handled) {
+ 		handled = keyboard_execute_pointer_keysyms(keyboard, event->time_msec,
+ 			keyinfo.translated_keysyms, keyinfo.translated_keysyms_len,

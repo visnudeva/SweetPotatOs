@@ -31,7 +31,7 @@
 
   Workspaces / overview
   Mod+Tab            Overview (desktop stripes, all windows)
-  click              Zoom back in (focus that window/desktop)
+  click / Esc        Leave overview (click focuses that window/desktop)
   Mod+Up/Down        Workspace above / below (exits overview)
   Mod+Ctrl+Up/Down   Move window to workspace above / below
   Mod+1…0            Workspace 1–10 (exits overview)

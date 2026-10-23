@@ -12,6 +12,7 @@ PKGBUILD="${ROOT}/packaging/swirl/PKGBUILD"
 CLICK="${ROOT}/packaging/swirl/overview-click-zoom.patch"
 COVER="${ROOT}/packaging/swirl/overview-coverflow-stripes.patch"
 FIT="${ROOT}/packaging/swirl/overview-fit-strips.patch"
+ESC="${ROOT}/packaging/swirl/overview-escape-exit.patch"
 PASS=0
 FAIL=0
 
@@ -57,6 +58,8 @@ assert "! grep -q 'layout_overview_workspaces_recompute_scale' '${COVER}'" \
 assert "grep -q 'Exit overview first' '${CLICK}' || grep -q 'Exit overview before focus' '${CLICK}'" \
   "click-zoom exits overview before focus"
 assert "grep -q 'OVERVIEW_ALL' '${FIT}'" "fit-strips shows every window stripe"
+assert "grep -q 'XKB_KEY_Escape' '${ESC}'" "escape-exit patch handles Escape"
+assert "grep -q 'round(sx + sw)' '${ROOT}/packaging/swirl/overview-border-clip.patch'" "border-clip uses non-overlapping round scale"
 
 assert "grep -q 'animations' '${SKEL_CFG}'" "skel enables overview animation block"
 assert "grep -q 'overview yes' '${SKEL_CFG}'" "skel sets overview animation curve"

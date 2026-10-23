@@ -4,6 +4,15 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-182
+What changed: Overview borders stay even on every side (no more hover-direction thin edge). Escape still leaves overview. Log out and back in after updating.
+
+@2026.10.3-181
+What changed: Overview borders use the normal 2px stroke again; the uneven thick/thin edges from the 3px workaround are gone. Escape still leaves overview. Log out and back in after updating.
+
+@2026.10.3-180
+What changed: Overview stroke is thicker, and Escape leaves overview (same as a click). Log out and back in after updating.
+
 @2026.10.3-179
 What changed: Overview keeps a full frame on every window (no more missing right/bottom sides). Gap mode still floats the bar and gaps a lone window. Log out and back in after updating.
 
