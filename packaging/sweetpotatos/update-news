@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-178
+What changed: A single window keeps its border in gap mode, and overview previews show all four sides. Log out and back in after updating.
+
 @2026.10.3-177
 What changed: Turning corners on floats the status bar right away (no Swirl reload). Log out and back in after updating.
 

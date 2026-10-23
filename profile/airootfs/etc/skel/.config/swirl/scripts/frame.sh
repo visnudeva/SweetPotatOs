@@ -65,7 +65,13 @@ apply_now() {
   fi
 
   swaymsg "default_decoration border_radius ${radius}" >/dev/null || true
-  swaymsg "hide_edge_borders ${edge_borders}" >/dev/null || true
+  # `hide_edge_borders none` alone used to leave a sticky smart flag from a
+  # previous flush mode; clear it explicitly when gaps are on.
+  if [[ "${edge_borders}" == none ]]; then
+    swaymsg "hide_edge_borders none; smart_borders off" >/dev/null || true
+  else
+    swaymsg "hide_edge_borders smart" >/dev/null || true
+  fi
 
   local ids cmd="" id
   ids="$(view_ids 2>/dev/null || true)"

@@ -1,0 +1,26 @@
+--- a/sway/commands/hide_edge_borders.c
++++ b/sway/commands/hide_edge_borders.c
+@@ -25,6 +25,9 @@
+ 
+ 	if (strcmp(argv[0], "none") == 0) {
+ 		config->hide_edge_borders = E_NONE;
++		/* `smart` / `smart_no_gaps` only set the smart flag; without clearing
++		 * it here, `none` after `smart` still hides lone-window borders. */
++		config->hide_edge_borders_smart = ESMART_OFF;
+ 	} else if (strcmp(argv[0], "vertical") == 0) {
+ 		config->hide_edge_borders = E_VERTICAL;
+ 	} else if (strcmp(argv[0], "horizontal") == 0) {
+--- a/sway/tree/view.c
++++ b/sway/tree/view.c
+@@ -443,7 +443,10 @@
+ 	con->pending.border_top = con->pending.border_bottom = true;
+ 	con->pending.border_left = con->pending.border_right = true;
+ 
+-	if (!container_is_floating_or_child(con) && ws) {
++	/* Inner gaps (Mod+Ctrl+g) should keep a full frame, including a lone
++	 * window and overview previews. Smart / edge hiding only applies when
++	 * windows sit edge-to-edge. */
++	if (!container_is_floating_or_child(con) && ws && ws->gaps_inner <= 0) {
+ 		bool left, right, top, bottom;
+ 		if (config->hide_edge_borders != E_NONE) {
+ 			view_position(con, &left, &right, &top, &bottom);
