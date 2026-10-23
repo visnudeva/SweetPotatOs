@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=45
+pkgrel=49
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -82,6 +82,8 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'swaybar-rounded-frame.patch'
         'swaybar-gaps-margin-refresh.patch'
         'hide-edge-borders-gaps.patch'
+        'overview-border-clip.patch'
+        'overview-border-min-stroke.patch'
         'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
         'wmenu-selection-radius.patch'
         'wmenu-layer-margins.patch')
@@ -100,7 +102,9 @@ sha256sums=('SKIP'
             'cb00ba9da577549479417716819eba2ac1c0a68fbdf244a64c0aa9826299753f'
             '66d22925cb86f95be38d6f2187f7d867c2b4924568d07366eaca748c001ca6c7'
             '50841dd1a6e38920391d3197924bdfbaf07e3e6d6816e6d1188c196d13755898'
-            'e1826a41011952de782c59837e4328b40c6a41c363f766be3fd242d20a5ec685'
+            '689d4d0998195d8d9e5e211b13f89952197d9df7eea7f02806c56b8b05c37772'
+            '72622f8686cdd49c8d2ef16214fee91b23d88b3614a037b96820a2372f59f57b'
+            '99242a9160c2b671e15f2bacab17eab98af237cdec09e0143455ba5440b23a2e'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46'
             'c0fd32d07027e5e4f290392df0acaaf64c61b9fe1a421f9fee317550b9f9dc92')
@@ -144,6 +148,10 @@ prepare() {
   git apply "${srcdir}/swaybar-gaps-margin-refresh.patch"
   # Gap mode keeps full window borders (lone window + overview); none clears smart.
   git apply "${srcdir}/hide-edge-borders-gaps.patch"
+  # Overview: consistent scale rounding so right/bottom borders stay visible.
+  git apply "${srcdir}/overview-border-clip.patch"
+  # Overview: >=2px stroke + square corners so 1px zoom jank cannot drop a side.
+  git apply "${srcdir}/overview-border-min-stroke.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"

@@ -1,0 +1,28 @@
+diff --git a/sway/desktop/transaction.c b/sway/desktop/transaction.c
+--- a/sway/desktop/transaction.c
++++ b/sway/desktop/transaction.c
+@@ -953,6 +953,15 @@
+ 	double border_top = container_titlebar_height() * scale;
+ 	double border_width = con->current.border_thickness > 0 ?
+ 		MAX(1, con->current.border_thickness * scale) : 0.0;
++	/* Overview thumbnails apply jump.scale again at render. A 1px stroke
++	 * then becomes position-dependent jank (sides appear/disappear). Keep
++	 * at least ~2 physical pixels, and drop radius so corner AA cannot
++	 * eat an edge. */
++	bool overview_mini = layout_overview_workspaces_enabled() &&
++		workspace->jump.scale > 0.0 && workspace->jump.scale < 1.0;
++	if (overview_mini && border_width > 0.0) {
++		border_width = fmax(border_width, 2.0 / workspace->jump.scale);
++	}
+ 
+ 	if (title_bar && con->current.border != B_NORMAL) {
+ 		wlr_scene_node_set_enabled(&con->title_bar.tree->node, false);
+@@ -988,7 +997,7 @@
+ 	double border_left = con->current.border_left ? border_width : 0;
+ 	wlr_scene_decoration_set_size(con->decoration.full, width, height);
+ 	wlr_scene_decoration_set_border_width(con->decoration.full, border_width);
+-	wlr_scene_decoration_set_border_radius(con->decoration.full, con->view->using_csd ?
++	wlr_scene_decoration_set_border_radius(con->decoration.full, con->view->using_csd || overview_mini ?
+ 		0.0 : con->pending.decoration.border_radius * scale);
+ 	double shadow_offset[2] = {
+ 		con->pending.decoration.shadow_offset_x,

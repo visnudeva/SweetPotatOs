@@ -1,0 +1,55 @@
+diff --git a/subprojects/wlroots/types/scene/wlr_scene.c b/subprojects/wlroots/types/scene/wlr_scene.c
+index 5619a129..c49ce111 100644
+--- a/subprojects/wlroots/types/scene/wlr_scene.c
++++ b/subprojects/wlroots/types/scene/wlr_scene.c
+@@ -1925,9 +1925,9 @@ static void scene_entry_render(struct render_list_entry *entry, const struct ren
+ 	if (workspace) {
+ 		scale_region(&render_region, scale, false);
+ 		pixman_region32_translate(&render_region, dx, dy);
+-		// Clip against "mini-workspace"
++		/* +1px so decoration AA on the right/bottom is not clipped. */
+ 		pixman_region32_intersect_rect(&render_region, &render_region, dx, dy,
+-			workspace_data.width, workspace_data.height);
++			workspace_data.width + 1, workspace_data.height + 1);
+ 	}
+ 	logical_to_buffer_coords(&render_region, data, true);
+ 	pixman_region32_intersect(&render_region, &render_region, &data->damage);
+@@ -1944,10 +1944,16 @@ static void scene_entry_render(struct render_list_entry *entry, const struct ren
+ 	};
+ 	scene_node_get_size(node, &dst_fbox.width, &dst_fbox.height);
+ 	if (workspace) {
+-		dst_fbox.x = ceil(dst_fbox.x * scale + dx);
+-		dst_fbox.y = ceil(dst_fbox.y * scale + dy);
+-		dst_fbox.width = ceil(dst_fbox.width * scale);
+-		dst_fbox.height = ceil(dst_fbox.height * scale);
++		/* Match wlr_region_scale. Independent ceil(x)+ceil(w) overflowed
++		 * the mini-workspace clip and ate right/bottom borders. */
++		double sx = dst_fbox.x * scale + dx;
++		double sy = dst_fbox.y * scale + dy;
++		double sw = dst_fbox.width * scale;
++		double sh = dst_fbox.height * scale;
++		dst_fbox.x = floor(sx);
++		dst_fbox.y = floor(sy);
++		dst_fbox.width = ceil(sx + sw) - floor(sx);
++		dst_fbox.height = ceil(sy + sh) - floor(sy);
+ 	}
+ 	transform_output_box(&dst_fbox, data);
+ 
+@@ -1958,7 +1964,7 @@ static void scene_entry_render(struct render_list_entry *entry, const struct ren
+ 		scale_region(&opaque, scale, false);
+ 		pixman_region32_translate(&opaque, dx, dy);
+ 		pixman_region32_intersect_rect(&opaque, &opaque, dx, dy,
+-			workspace_data.width, workspace_data.height);
++			workspace_data.width + 1, workspace_data.height + 1);
+ 	}
+ 	logical_to_buffer_coords(&opaque, data, false);
+ 	pixman_region32_subtract(&opaque, &render_region, &opaque);
+@@ -2089,7 +2095,7 @@ static void scene_entry_render(struct render_list_entry *entry, const struct ren
+ 			.object = object,
+ 			.border = scene_decoration->border,
+ 			.border_radius = round(scene_decoration->border_radius * data->scale * scale),
+-			.border_width = MAX(1.0, round(scene_decoration->border_width * data->scale * scale)),
++			.border_width = MAX(1.0, ceil(scene_decoration->border_width * data->scale * scale)),
+ 			.border_top_color = {
+ 				.r = scene_decoration->border_top_color[0],
+ 				.g = scene_decoration->border_top_color[1],

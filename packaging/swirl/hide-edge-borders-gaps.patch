@@ -1,26 +1,31 @@
+diff --git a/sway/commands/hide_edge_borders.c b/sway/commands/hide_edge_borders.c
+index 43bd6dc8..27f0d540 100644
 --- a/sway/commands/hide_edge_borders.c
 +++ b/sway/commands/hide_edge_borders.c
-@@ -25,6 +25,9 @@
+@@ -25,6 +25,8 @@ struct cmd_results *cmd_hide_edge_borders(int argc, char **argv) {
  
  	if (strcmp(argv[0], "none") == 0) {
  		config->hide_edge_borders = E_NONE;
-+		/* `smart` / `smart_no_gaps` only set the smart flag; without clearing
-+		 * it here, `none` after `smart` still hides lone-window borders. */
++		/* Clear sticky smart so `none` after `smart` keeps lone-window borders. */
 +		config->hide_edge_borders_smart = ESMART_OFF;
  	} else if (strcmp(argv[0], "vertical") == 0) {
  		config->hide_edge_borders = E_VERTICAL;
  	} else if (strcmp(argv[0], "horizontal") == 0) {
+diff --git a/sway/tree/view.c b/sway/tree/view.c
+index 3085696e..0188ab54 100644
 --- a/sway/tree/view.c
 +++ b/sway/tree/view.c
-@@ -443,7 +443,10 @@
+@@ -443,7 +443,12 @@ void view_autoconfigure(struct sway_view *view) {
  	con->pending.border_top = con->pending.border_bottom = true;
  	con->pending.border_left = con->pending.border_right = true;
  
 -	if (!container_is_floating_or_child(con) && ws) {
-+	/* Inner gaps (Mod+Ctrl+g) should keep a full frame, including a lone
-+	 * window and overview previews. Smart / edge hiding only applies when
-+	 * windows sit edge-to-edge. */
-+	if (!container_is_floating_or_child(con) && ws && ws->gaps_inner <= 0) {
++	/* Full frame with inner gaps, and always while overview is open
++	 * (smart/edge hiding otherwise drops more sides as tile count grows). */
++	bool overview = layout_overview_workspaces_enabled() ||
++		(ws && layout_overview_mode(ws) != OVERVIEW_DISABLED);
++	if (!container_is_floating_or_child(con) && ws &&
++			ws->gaps_inner <= 0 && !overview) {
  		bool left, right, top, bottom;
  		if (config->hide_edge_borders != E_NONE) {
  			view_position(con, &left, &right, &top, &bottom);

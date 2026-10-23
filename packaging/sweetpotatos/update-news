@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-179
+What changed: Overview keeps a full frame on every window (no more missing right/bottom sides). Gap mode still floats the bar and gaps a lone window. Log out and back in after updating.
+
 @2026.10.3-178
 What changed: A single window keeps its border in gap mode, and overview previews show all four sides. Log out and back in after updating.
 
