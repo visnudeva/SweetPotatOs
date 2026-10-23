@@ -361,8 +361,9 @@ bar {
 }
 
 # Autotile after the bar block so `bar potato …` never invents a second bar
-# during config parse. Opens an 8px gap when more than one tiled window is open.
-# Mod+Ctrl+g turns that gap and the rounded corners off together.
+# during config parse. With frames on, swirlbar always floats; window gaps
+# open only when more than one tiled window is on the focused desktop.
+# Mod+Ctrl+g turns frames, bar chrome, and that gap off together.
 lua ~/.config/swirl/scripts/autotile.lua
 
 # Polkit agent for GUI privilege prompts (gnome or xfce)

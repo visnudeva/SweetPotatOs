@@ -112,10 +112,11 @@ function lib.inner_gap_px(view_count, enabled)
 	return 0
 end
 
--- Rounded, gapped bar when frames are on and the focused desktop has
--- more than one tiled window — same gate as the inner gap.
-function lib.bar_frame_active(view_count, enabled)
-	return lib.inner_gap_px(view_count, enabled) > 0
+-- Floating rounded swirlbar whenever frames are on (Mod+Ctrl+g).
+-- Independent of window count so the bar chrome does not retoggle on
+-- open/close; swirlmenu follows the same bar gaps/border.
+function lib.bar_frame_active(enabled)
+	return enabled ~= false
 end
 
 -- top right bottom left. Bottom stays 0 so the window inner gap is the
