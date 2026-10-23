@@ -291,7 +291,8 @@ bindsym $mod+Shift+r mode "resize"
 # ============================================
 default_border pixel 2
 default_floating_border pixel 2
-hide_edge_borders smart
+# smart_no_gaps: a lone window keeps its border when Mod+Ctrl+g gaps are on.
+hide_edge_borders smart_no_gaps
 # Server-drawn borders only. Shadows stay off. GTK title bars are left square.
 default_decoration border_radius 8
 # Mod+Ctrl+g saves off in ~/.config/sweetpotatos/frame. Put that back after reload.

@@ -8,6 +8,8 @@ ROOT="${SPO_CONFIG_ROOT:-${HOME}/.config}"
 STATE_DIR="${ROOT}/sweetpotatos"
 STATE_FILE="${STATE_DIR}/frame"
 RADIUS_ON=8
+BAR_BORDER=2
+BAR_ID=potato
 TAG="sweetpotato-frame"
 
 notify() {
@@ -49,10 +51,12 @@ walk(json.load(sys.stdin))
 }
 
 apply_now() {
-  local st radius=0
+  local st radius=0 gap=0 bar_border=0
   st="$(state_now)"
   if [[ "${st}" == "on" ]]; then
     radius="${RADIUS_ON}"
+    gap="${RADIUS_ON}"
+    bar_border="${BAR_BORDER}"
   fi
   swaymsg "default_decoration border_radius ${radius}" >/dev/null
   local ids cmd="" id
@@ -64,11 +68,15 @@ apply_now() {
     done <<<"${ids}"
     swaymsg "${cmd}" >/dev/null || true
   fi
-  if [[ "${st}" == "off" ]]; then
-    # Autotile only retouches the focused workspace. Clear the rest here.
-    swaymsg "gaps inner all set 0" >/dev/null || true
+  # Apply gaps and bar chrome here so Mod+Ctrl+g does not depend on the
+  # autotile mark callback (that path can miss after a toggle).
+  swaymsg "gaps inner all set ${gap}" >/dev/null || true
+  if (( radius > 0 )); then
+    swaymsg "bar ${BAR_ID} gaps ${gap} ${gap} 0 ${gap}; bar ${BAR_ID} border_radius ${radius}; bar ${BAR_ID} border ${bar_border}" >/dev/null || true
+  else
+    swaymsg "bar ${BAR_ID} gaps 0; bar ${BAR_ID} border 0; bar ${BAR_ID} border_radius 0" >/dev/null || true
   fi
-  # Ask autotile to re-read the state file and set the focused workspace.
+  # Ask autotile to re-read the state file and refresh its cache.
   swaymsg "mark --add __spo_gaps" >/dev/null 2>&1 || true
   swaymsg "unmark __spo_gaps" >/dev/null 2>&1 || true
 }
