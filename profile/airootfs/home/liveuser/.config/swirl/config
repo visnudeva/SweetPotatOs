@@ -296,11 +296,14 @@ bindsym $mod+Shift+r mode "resize"
 # ============================================
 default_border pixel 2
 default_floating_border pixel 2
-# smart_no_gaps: a lone window keeps its border when Mod+Ctrl+g gaps are on.
-hide_edge_borders smart_no_gaps
+# Default matches frames on (missing ~/.config/sweetpotatos/frame). frame.sh
+# switches to smart when frames are off so a lone flush window loses edge borders.
+hide_edge_borders none
 # Server-drawn borders only. Shadows stay off. GTK title bars are left square.
 default_decoration border_radius 8
-# Mod+Ctrl+g saves off in ~/.config/sweetpotatos/frame. Put that back after reload.
+# Default matches frames on; frame.sh clears these when frames are off.
+gaps inner 8
+# Re-applies / clears gaps, bar chrome, and hide_edge_borders after reload.
 exec_always ~/.config/swirl/scripts/frame.sh apply
 # Brave paints its own rounded frame. A server border matches the other windows.
 for_window [app_id="brave-origin"] border pixel 2
@@ -348,6 +351,11 @@ bar {
     # are off. The meters on the right are the status script.
     scroller_indicator no
     trails_indicator no
+    # Default matches frames on so a theme reload keeps the floating chrome.
+    # frame.sh clears these when ~/.config/sweetpotatos/frame is off.
+    gaps 8 8 0 8
+    border_radius 8
+    border 2
 
     colors {
         # SPO-BAR-START
@@ -366,10 +374,8 @@ bar {
     }
 }
 
-# Autotile after the bar block so `bar potato …` never invents a second bar
-# during config parse. With frames on, swirlbar always floats and tiled
-# windows keep an 8px gap (including a lone window).
-# Mod+Ctrl+g turns frames, bar chrome, and that gap off together.
+# Autotile after the bar block. Window gaps follow Mod+Ctrl+g; bar chrome
+# and hide_edge_borders are applied by frame.sh (not autotile).
 lua ~/.config/swirl/scripts/autotile.lua
 
 # Polkit agent for GUI privilege prompts (gnome or xfce)

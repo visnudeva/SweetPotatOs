@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-176
+What changed: Gap mode keeps the floating bar after login, and a single window keeps its border. Log out and back in after updating.
+
 @2026.10.3-175
 What changed: Turning corners on applies gaps right away again, and a single window keeps its focused border. Log out and back in after updating.
 

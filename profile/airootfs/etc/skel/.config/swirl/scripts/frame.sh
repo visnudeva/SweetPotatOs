@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Toggle Swirl's rounded window corners and the autotile inner gap together.
+# Toggle Swirl's rounded window corners, window gaps, and swirlbar chrome.
 # State: ~/.config/sweetpotatos/frame ("on" or "off"). Missing means on.
+# This script owns bar chrome and hide_edge_borders — autotile only mirrors
+# per-workspace inner gaps and must not fight these IPC calls.
 # Usage: frame.sh [on|off|toggle|apply]
 set -euo pipefail
 
@@ -51,14 +53,20 @@ walk(json.load(sys.stdin))
 }
 
 apply_now() {
-  local st radius=0 gap=0 bar_border=0
+  local st radius=0 gap=0 bar_border=0 edge_borders=smart
   st="$(state_now)"
   if [[ "${st}" == "on" ]]; then
     radius="${RADIUS_ON}"
     gap="${RADIUS_ON}"
     bar_border="${BAR_BORDER}"
+    # smart_no_gaps only looks at outer gaps; inner gaps alone still hide a
+    # lone window's border. none keeps the focused stroke in gap mode.
+    edge_borders=none
   fi
-  swaymsg "default_decoration border_radius ${radius}" >/dev/null
+
+  swaymsg "default_decoration border_radius ${radius}" >/dev/null || true
+  swaymsg "hide_edge_borders ${edge_borders}" >/dev/null || true
+
   local ids cmd="" id
   ids="$(view_ids 2>/dev/null || true)"
   if [[ -n "${ids}" ]]; then
@@ -68,15 +76,15 @@ apply_now() {
     done <<<"${ids}"
     swaymsg "${cmd}" >/dev/null || true
   fi
-  # Apply gaps and bar chrome here so Mod+Ctrl+g does not depend on the
-  # autotile mark callback (that path can miss after a toggle).
+
   swaymsg "gaps inner all set ${gap}" >/dev/null || true
   if (( radius > 0 )); then
     swaymsg "bar ${BAR_ID} gaps ${gap} ${gap} 0 ${gap}; bar ${BAR_ID} border_radius ${radius}; bar ${BAR_ID} border ${bar_border}" >/dev/null || true
   else
     swaymsg "bar ${BAR_ID} gaps 0; bar ${BAR_ID} border 0; bar ${BAR_ID} border_radius 0" >/dev/null || true
   fi
-  # Ask autotile to re-read the state file and refresh its cache.
+
+  # Keep autotile's gap cache in sync with the state file.
   swaymsg "mark --add __spo_gaps" >/dev/null 2>&1 || true
   swaymsg "unmark __spo_gaps" >/dev/null 2>&1 || true
 }
@@ -105,11 +113,11 @@ case "${cmd}" in
     fi
     ;;
   apply)
-    # Reload parses default_decoration 8 before IPC accepts commands.
-    if [[ "$(state_now)" == "on" ]]; then
-      exit 0
-    fi
-    (sleep 0.4; "$0" apply-now) &
+    # Always re-apply after reload/login. Theme apply can reload Swirl a
+    # second or two later and reset the bar block to flush defaults — the
+    # early-exit-when-on path left chrome stuck off. Wait until IPC accepts
+    # runtime bar/gaps commands.
+    (sleep 0.6; "$0" apply-now) &
     disown || true
     ;;
   apply-now)

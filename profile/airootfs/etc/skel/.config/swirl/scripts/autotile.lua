@@ -124,11 +124,10 @@ local function go_home_if_empty(exclude_view)
 end
 
 -- Window gap on the focused workspace whenever frames are on (including a
--- single tiled window). Bar chrome floats with the same toggle.
--- Unfocused workspaces update when they are focused.
+-- single tiled window). Bar chrome and hide_edge_borders are owned by
+-- frame.sh so a theme reload cannot race autotile into flushing the bar.
 -- Mod+Ctrl+g writes ~/.config/sweetpotatos/frame ("off" hides the gap).
 local applied_gap = {}
-local applied_bar = nil
 local applied_enabled = nil
 
 local function frame_enabled()
@@ -169,42 +168,11 @@ local function command_ok(results)
 	return #results > 0
 end
 
-local function sync_bar_frame(active)
-	if applied_bar == active then
-		return
-	end
-	-- Always target bar id "potato" (see config). A bare "bar gaps …"
-	-- with no id can spawn a second bar.
-	-- One IPC chain so gaps/radius/border stay in lockstep. Do not remember
-	-- success unless every part applied — otherwise an empty desktop can keep
-	-- floating insets after the stroke was cleared.
-	local cmd
-	if active then
-		cmd = table.concat({
-			lib.bar_gaps_cmd(true),
-			lib.bar_radius_cmd(true),
-			lib.bar_border_cmd(true),
-		}, "; ")
-	else
-		-- Gaps first (stop floating), then chrome. Render ignores border
-		-- when radius is 0, so a partial apply cannot leave a sharp stroke.
-		cmd = table.concat({
-			lib.bar_gaps_cmd(false),
-			lib.bar_border_cmd(false),
-			lib.bar_radius_cmd(false),
-		}, "; ")
-	end
-	if command_ok(scroll.command(nil, cmd)) then
-		applied_bar = active
-	end
-end
-
 local function sync_gaps(workspace, exclude_view)
 	local enabled = frame_enabled()
-	-- frame.sh can zero every workspace without going through this cache.
+	-- frame.sh can set every workspace without going through this cache.
 	if applied_enabled ~= enabled then
 		applied_gap = {}
-		applied_bar = nil
 		applied_enabled = enabled
 	end
 	if applying_gap or not workspace or scroll.focused_workspace() ~= workspace then
@@ -212,8 +180,7 @@ local function sync_gaps(workspace, exclude_view)
 	end
 	local count = workspace_view_count(workspace, exclude_view)
 	local px = lib.inner_gap_px(count, enabled)
-	local bar_on = lib.bar_frame_active(enabled)
-	if applied_gap[workspace] == px and applied_bar == bar_on then
+	if applied_gap[workspace] == px then
 		return
 	end
 	-- Runtime gap commands are rejected while the config file is still loading.
@@ -224,9 +191,6 @@ local function sync_gaps(workspace, exclude_view)
 	if command_ok(results) then
 		applied_gap[workspace] = px
 	end
-	-- Bar chrome follows the frame toggle only (not window count), so it
-	-- still applies even when the focused desktop is empty or lone.
-	sync_bar_frame(bar_on)
 end
 
 local function on_view_map(view, _)
@@ -336,7 +300,6 @@ scroll.add_callback("ipc_view", on_ipc_view, nil)
 scroll.add_callback("workspace_focus", on_workspace_focus, nil)
 
 remember_open_views()
--- Defer sync_gaps: config parse still rejects "gaps … current", and any
--- `bar potato …` issued too early used to invent a duplicate bar
--- ("Id potato already defined … bar-1"). The mark below retries after load.
+-- Defer sync_gaps: config parse still rejects "gaps … current".
+-- Bar chrome is applied by frame.sh apply (exec_always), not here.
 scroll.exec_process("sleep 0.3; swaymsg 'mark --add __spo_gaps' >/dev/null 2>&1; swaymsg 'unmark __spo_gaps' >/dev/null 2>&1")
