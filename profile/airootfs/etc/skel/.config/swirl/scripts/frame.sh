@@ -78,7 +78,7 @@ case "${cmd}" in
   on|enable)
     write_state on
     apply_now
-    notify "Corners and gaps on" "Rounded frames, and a gap when several windows are tiled"
+    notify "Corners and gaps on" "Rounded frames, floating bar, and a gap around tiled windows"
     ;;
   off|disable)
     write_state off
@@ -89,7 +89,7 @@ case "${cmd}" in
     if [[ "$(state_now)" == "off" ]]; then
       write_state on
       apply_now
-      notify "Corners and gaps on" "Rounded frames, and a gap when several windows are tiled"
+      notify "Corners and gaps on" "Rounded frames, floating bar, and a gap around tiled windows"
     else
       write_state off
       apply_now

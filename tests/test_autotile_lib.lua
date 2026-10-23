@@ -81,13 +81,14 @@ check(lib.should_go_home({ { 1 } }, 1) == true, "go home when only dying view re
 check(lib.should_go_home({ { 1 }, { 2 } }, 1) == false, "stay when another workspace has a window")
 check(lib.should_go_home({ {}, {} }, nil) == true, "go home when all empty")
 
-check(lib.inner_gap_px(0) == 0, "no gap with no windows")
-check(lib.inner_gap_px(1) == 0, "no gap with one window")
+check(lib.inner_gap_px(0) == lib.INNER_GAP, "gap when frames on with no windows")
+check(lib.inner_gap_px(1) == lib.INNER_GAP, "gap with one window when frames on")
 check(lib.inner_gap_px(2) == lib.INNER_GAP, "gap with two windows")
 check(lib.inner_gap_px(3) == lib.INNER_GAP, "gap with three windows")
 check(lib.inner_gap_px(3, false) == 0, "toggle off clears a multi-window gap")
 check(lib.inner_gap_px(3, true) == lib.INNER_GAP, "toggle on keeps a multi-window gap")
 check(lib.inner_gap_px(1, false) == 0, "toggle off stays flush with one window")
+check(lib.inner_gap_px(1, true) == lib.INNER_GAP, "toggle on gaps a lone window")
 
 check(lib.bar_frame_active(true) == true, "bar framed when frames on")
 check(lib.bar_frame_active(nil) == true, "bar framed when frame file missing")

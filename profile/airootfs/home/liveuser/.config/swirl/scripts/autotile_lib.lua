@@ -95,8 +95,10 @@ function lib.should_go_home(workspace_view_lists, exclude_view)
 end
 
 -- Inner gap in px. Scroll insets every side, so two windows have twice this
--- between them. A single tiled window stays edge to edge.
--- enabled == false (Mod+Ctrl+g frames off) forces 0. nil or true keeps the usual rule.
+-- between them. With frames on, every tiled window (including a lone one)
+-- keeps the gap so rounded corners and borders stay visible.
+-- enabled == false (Mod+Ctrl+g frames off) forces 0. nil or true keeps the gap.
+-- view_count is unused; kept so callers/tests can keep the same signature.
 lib.INNER_GAP = 8
 -- Floating swirlbar frame (same radius / weight as window decorations).
 lib.BAR_ID = "potato"
@@ -106,10 +108,7 @@ function lib.inner_gap_px(view_count, enabled)
 	if enabled == false then
 		return 0
 	end
-	if view_count > 1 then
-		return lib.INNER_GAP
-	end
-	return 0
+	return lib.INNER_GAP
 end
 
 -- Floating rounded swirlbar whenever frames are on (Mod+Ctrl+g).

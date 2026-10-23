@@ -361,8 +361,8 @@ bar {
 }
 
 # Autotile after the bar block so `bar potato …` never invents a second bar
-# during config parse. With frames on, swirlbar always floats; window gaps
-# open only when more than one tiled window is on the focused desktop.
+# during config parse. With frames on, swirlbar always floats and tiled
+# windows keep an 8px gap (including a lone window).
 # Mod+Ctrl+g turns frames, bar chrome, and that gap off together.
 lua ~/.config/swirl/scripts/autotile.lua
 

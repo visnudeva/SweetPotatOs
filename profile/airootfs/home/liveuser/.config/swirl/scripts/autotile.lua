@@ -123,8 +123,8 @@ local function go_home_if_empty(exclude_view)
 	end
 end
 
--- Window gap only on the focused workspace, and only while it has more
--- than one tiled window. Bar chrome floats whenever frames are on.
+-- Window gap on the focused workspace whenever frames are on (including a
+-- single tiled window). Bar chrome floats with the same toggle.
 -- Unfocused workspaces update when they are focused.
 -- Mod+Ctrl+g writes ~/.config/sweetpotatos/frame ("off" hides the gap).
 local applied_gap = {}
