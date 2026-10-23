@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=43
+pkgrel=44
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -80,6 +80,7 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'overview-fit-strips.patch'
         'overview-coverflow-stripes.patch'
         'swaybar-rounded-frame.patch'
+        'swaybar-gaps-margin-refresh.patch'
         'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
         'wmenu-selection-radius.patch'
         'wmenu-layer-margins.patch')
@@ -97,6 +98,7 @@ sha256sums=('SKIP'
             '0f434fbd20c4953b319744793a85121b84b72caf0ca4eaa505377ec0be120c78'
             'cb00ba9da577549479417716819eba2ac1c0a68fbdf244a64c0aa9826299753f'
             '66d22925cb86f95be38d6f2187f7d867c2b4924568d07366eaca748c001ca6c7'
+            '50841dd1a6e38920391d3197924bdfbaf07e3e6d6816e6d1188c196d13755898'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46'
             'c0fd32d07027e5e4f290392df0acaaf64c61b9fe1a421f9fee317550b9f9dc92')
@@ -134,8 +136,10 @@ prepare() {
   git apply "${srcdir}/overview-fit-strips.patch"
   # Stack desktops as equal-height horizontal stripes (stable click targets).
   git apply "${srcdir}/overview-coverflow-stripes.patch"
-  # Floating rounded swirlbar with accent border (driven by autotile + frames).
+  # Floating rounded swirlbar with accent border (driven by frame.sh + frames).
   git apply "${srcdir}/swaybar-rounded-frame.patch"
+  # Re-apply layer margins on every redraw so Mod+Ctrl+g floats the bar live.
+  git apply "${srcdir}/swaybar-gaps-margin-refresh.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"

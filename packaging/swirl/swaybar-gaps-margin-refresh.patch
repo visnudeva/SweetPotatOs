@@ -1,0 +1,26 @@
+--- a/swaybar/render.c
++++ b/swaybar/render.c
+@@ -1106,14 +1106,18 @@
+ 	if (config_height > 0) {
+ 		height = config_height;
+ 	}
++	/* Always push margins before size or buffer commit. Runtime
++	 * `bar gaps` used to only call set_margin when height changed, so
++	 * toggling frames on could draw the border while the bar stayed flush
++	 * until a full Swirl reload. */
++	zwlr_layer_surface_v1_set_margin(output->layer_surface,
++			output->bar->config->gaps.top,
++			output->bar->config->gaps.right,
++			output->bar->config->gaps.bottom,
++			output->bar->config->gaps.left);
+ 	if (height != output->height || output->width == 0) {
+ 		// Reconfigure surface
+ 		zwlr_layer_surface_v1_set_size(output->layer_surface, 0, height);
+-		zwlr_layer_surface_v1_set_margin(output->layer_surface,
+-				output->bar->config->gaps.top,
+-				output->bar->config->gaps.right,
+-				output->bar->config->gaps.bottom,
+-				output->bar->config->gaps.left);
+ 		if (strcmp(output->bar->config->mode, "dock") == 0 ||
+ 			strcmp(output->bar->config->mode, "top") == 0) {
+ 			zwlr_layer_surface_v1_set_exclusive_zone(output->layer_surface, height);
