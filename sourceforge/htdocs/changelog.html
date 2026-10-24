@@ -95,6 +95,8 @@
         <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
       </summary>
       <ul>
+        <li>GRUB no longer lists every firmware boot entry as <code>(EFI BootNext)</code>. That showed up after a menu regenerate under grub 2.16; it is turned off now. Reboot once after <code>sudo sweetpotatos-update</code>.</li>
+        <li>Logging out no longer flashes compositor and tray text on the login screen. Log out and back in after <code>sudo sweetpotatos-update</code> so the next session starts with the quiet wrapper.</li>
         <li><strong>Smart Brightness</strong> shows the same brightness bar as the keys when it raises or restores the backlight. On the keybind page (<code>Mod+?</code>) and the website, <code>Mod+Ctrl+b</code> sits under Displays / look; Escape or a click leaves overview. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
         <li>Logging out or powering off no longer flashes a list of red swirlbar/tray errors on the login screen. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
         <li>Overview (<code>Mod+Tab</code>) keeps an even full frame on every window (no more thin or missing sides that changed with hover). Escape or a click leaves overview. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
