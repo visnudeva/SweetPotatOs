@@ -1,0 +1,60 @@
+#!/bin/bash
+# Clean the SweetPotatOs GRUB menu: sole-OS, no os-prober UEFI clutter.
+# Safe to run any time: sudo sweetpotatos-fix-grub
+set -euo pipefail
+
+if [[ "${EUID}" -ne 0 ]]; then
+  echo "Run as root: sudo sweetpotatos-fix-grub" >&2
+  exit 1
+fi
+
+LOG=/var/log/sweetpotatos-fix-grub.log
+exec > >(tee -a "${LOG}") 2>&1
+echo "=== sweetpotatos-fix-grub $(date -Is) ==="
+
+[[ -f /etc/mkinitcpio.conf.d/archiso.conf ]] && {
+  echo "Live ISO — skipping."
+  exit 0
+}
+
+GRUB_DEFAULT=/etc/default/grub
+GRUB_CFG=/boot/grub/grub.cfg
+
+if [[ ! -f "${GRUB_DEFAULT}" ]]; then
+  echo "No ${GRUB_DEFAULT}; nothing to do."
+  exit 0
+fi
+
+# 1) Force os-prober off (also uncomment a commented false).
+if grep -qE '^[[:space:]]*#?[[:space:]]*GRUB_DISABLE_OS_PROBER=' "${GRUB_DEFAULT}"; then
+  sed -i -E 's/^[[:space:]]*#?[[:space:]]*GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=true/' \
+    "${GRUB_DEFAULT}"
+else
+  printf '\n# SweetPotatOs: sole-OS menu (set false only if you dual-boot).\nGRUB_DISABLE_OS_PROBER=true\n' \
+    >>"${GRUB_DEFAULT}"
+fi
+echo "GRUB_DISABLE_OS_PROBER line: $(grep -E '^[[:space:]]*GRUB_DISABLE_OS_PROBER=' "${GRUB_DEFAULT}" | tail -1)"
+
+# 2) Do not run the os-prober hook even if someone flips the flag later.
+if [[ -e /etc/grub.d/30_os-prober ]]; then
+  chmod a-x /etc/grub.d/30_os-prober || true
+  echo "Disabled /etc/grub.d/30_os-prober (chmod -x)."
+  echo "Dual-boot later: sudo chmod +x /etc/grub.d/30_os-prober && set GRUB_DISABLE_OS_PROBER=false"
+fi
+
+# 3) Regenerate the menu GRUB loads.
+if ! command -v grub-mkconfig >/dev/null 2>&1; then
+  echo "grub-mkconfig not found." >&2
+  exit 1
+fi
+mkdir -p /boot/grub
+before="$(grep -cE '^[[:space:]]*menuentry ' "${GRUB_CFG}" 2>/dev/null || echo 0)"
+grub-mkconfig -o "${GRUB_CFG}"
+after="$(grep -cE '^[[:space:]]*menuentry ' "${GRUB_CFG}" 2>/dev/null || echo 0)"
+echo "Wrote ${GRUB_CFG} (menuentry count ${before} → ${after})"
+
+echo "--- menuentry titles ---"
+grep -E "^[[:space:]]*menuentry " "${GRUB_CFG}" | sed -E 's/^[[:space:]]*menuentry[[:space:]]+//' || true
+
+echo "Done. Reboot to see the cleaned GRUB menu."
+echo "Log: ${LOG}"

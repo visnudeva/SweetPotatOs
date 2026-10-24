@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-191
+What changed: Extra GRUB UEFI entries are removed by disabling os-prober for real and regenerating the menu (also sudo sweetpotatos-fix-grub). Reboot once after updating.
+
 @2026.10.3-190
 What changed: GRUB really drops the extra UEFI entries now (os-prober is forced off and the menu is regenerated). Reboot once after updating.
 

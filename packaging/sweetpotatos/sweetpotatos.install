@@ -42,8 +42,7 @@ _refresh_boot_splash() {
   mkinitcpio -P
 }
 
-# Undo the 186–188 boot-quiet experiment: deadlock drop-in, extra cmdline
-# tokens (duplicate splash), and os-prober flooding the GRUB menu with UEFI entries.
+# Undo the 186–188 boot-quiet experiment leftovers, then clean GRUB.
 _revert_boot_quiet_experiment() {
   [[ -f /etc/mkinitcpio.conf.d/archiso.conf ]] && return 0
   rm -f /usr/local/bin/sweetpotatos-boot-quiet
@@ -53,9 +52,7 @@ _revert_boot_quiet_experiment() {
     systemctl daemon-reload || true
   fi
   local grub=/etc/default/grub
-  [[ -f "${grub}" ]] || return 0
-  local changed=0
-  if grep -qE '^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=' "${grub}"; then
+  if [[ -f "${grub}" ]] && grep -qE '^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=' "${grub}"; then
     local line val new
     line="$(grep -E '^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=' "${grub}")"
     val="${line#*GRUB_CMDLINE_LINUX_DEFAULT=}"
@@ -83,27 +80,10 @@ _revert_boot_quiet_experiment() {
         { print }
       ' "${grub}" >"${tmp}"
       mv -f "${tmp}" "${grub}"
-      changed=1
     fi
   fi
-  # Arch often has GRUB_DISABLE_OS_PROBER=false; that is what flooded the menu.
-  # Force it off for sole-OS SweetPotatOs (set false again only if you dual-boot).
-  if grep -qE '^[[:space:]]*GRUB_DISABLE_OS_PROBER=' "${grub}"; then
-    if ! grep -qE '^[[:space:]]*GRUB_DISABLE_OS_PROBER=true' "${grub}"; then
-      sed -i 's/^[[:space:]]*GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=true/' "${grub}"
-      changed=1
-    fi
-  else
-    printf '\n# SweetPotatOs: sole-OS menu (set false only if you dual-boot).\nGRUB_DISABLE_OS_PROBER=true\n' >>"${grub}"
-    changed=1
-  fi
-  # Always rewrite grub.cfg on this path so leftover os-prober UEFI entries go away.
-  if command -v grub-mkconfig >/dev/null 2>&1; then
-    if [[ -d /boot/grub ]]; then
-      grub-mkconfig -o /boot/grub/grub.cfg >/dev/null 2>&1 || true
-    elif [[ -d /boot/grub/x86_64-efi ]] || [[ -e /boot/EFI ]]; then
-      grub-mkconfig -o /boot/grub/grub.cfg >/dev/null 2>&1 || true
-    fi
+  if [[ -x /usr/local/bin/sweetpotatos-fix-grub ]]; then
+    /usr/local/bin/sweetpotatos-fix-grub || true
   fi
 }
 
