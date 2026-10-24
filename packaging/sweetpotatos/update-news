@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-188
+What changed: Boot no longer sticks on the white logo. The splash hands off to the login screen again, and GRUB stops listing every UEFI entry on the disk. Reboot once after updating.
+
 @2026.10.3-187
 What changed: Logging out no longer flashes compositor and tray text on the login screen. Log out and back in after updating (the session wrapper change applies on the next login).
 

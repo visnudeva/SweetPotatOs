@@ -54,6 +54,14 @@ else
   fi
 fi
 
+# Regenerating grub.cfg with os-prober on can flood the menu with every
+# EFI binary on the ESP. Default to off unless the user already chose.
+if ! grep -qE '^[[:space:]]*GRUB_DISABLE_OS_PROBER=' "${GRUB_DEFAULT}"; then
+  printf '\n# SweetPotatOs: keep the GRUB menu to this install (set false to dual-boot).\nGRUB_DISABLE_OS_PROBER=true\n' \
+    >>"${GRUB_DEFAULT}"
+  changed=1
+fi
+
 if [[ "${changed}" -eq 1 ]] && command -v grub-mkconfig >/dev/null 2>&1; then
   if [[ -d "${BOOT_GRUB_DIR}" ]]; then
     grub-mkconfig -o "${BOOT_GRUB_DIR}/grub.cfg" >/dev/null 2>&1 || true

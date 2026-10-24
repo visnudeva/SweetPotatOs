@@ -39,6 +39,12 @@ _refresh_boot_splash() {
   if [[ -x /usr/local/bin/sweetpotatos-boot-quiet ]]; then
     /usr/local/bin/sweetpotatos-boot-quiet || true
   fi
+  # 186 waited on Ly + retain-splash and deadlocked boot; drop that override.
+  if [[ -e /usr/lib/systemd/system/plymouth-quit.service.d/10-sweetpotatos-retain-splash.conf ]]; then
+    rm -f /usr/lib/systemd/system/plymouth-quit.service.d/10-sweetpotatos-retain-splash.conf
+    rmdir /usr/lib/systemd/system/plymouth-quit.service.d 2>/dev/null || true
+    systemctl daemon-reload || true
+  fi
   # Live ISO build and the live session keep the archiso preset.
   [[ -f /etc/mkinitcpio.conf.d/archiso.conf ]] && return 0
   compgen -G '/etc/mkinitcpio.d/*.preset' >/dev/null || return 0
