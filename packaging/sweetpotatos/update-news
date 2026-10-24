@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-192
+What changed: The extra GRUB “EFI BootNext” entries are gone. Regenerating the menu under grub 2.16 had listed every firmware boot entry; that is turned off now. Reboot once after updating.
+
 @2026.10.3-191
 What changed: Extra GRUB UEFI entries are removed by disabling os-prober for real and regenerating the menu (also sudo sweetpotatos-fix-grub). Reboot once after updating.
 

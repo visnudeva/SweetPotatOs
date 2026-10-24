@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=191
+pkgrel=192
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -47,7 +47,6 @@ package() {
     sweetpotatos-displays \
     sweetpotatos-branding \
     sweetpotatos-plymouth \
-    sweetpotatos-fix-grub \
     sweetpotatos-fix-mkinitcpio \
     sweetpotatos-install-nvidia \
     sweetpotatos-fix-ly \

@@ -42,17 +42,22 @@ _refresh_boot_splash() {
   mkinitcpio -P
 }
 
-# Undo the 186–188 boot-quiet experiment leftovers, then clean GRUB.
+# Undo the boot-quiet experiment. Regenerating grub.cfg under grub 2.16 ran
+# 31_efi_bootnext, which listed every firmware Boot#### as "(EFI BootNext)".
+# Turn that off and regenerate once — no helper scripts.
 _revert_boot_quiet_experiment() {
   [[ -f /etc/mkinitcpio.conf.d/archiso.conf ]] && return 0
-  rm -f /usr/local/bin/sweetpotatos-boot-quiet
+  rm -f /usr/local/bin/sweetpotatos-boot-quiet /usr/local/bin/sweetpotatos-fix-grub
   if [[ -e /usr/lib/systemd/system/plymouth-quit.service.d/10-sweetpotatos-retain-splash.conf ]]; then
     rm -f /usr/lib/systemd/system/plymouth-quit.service.d/10-sweetpotatos-retain-splash.conf
     rmdir /usr/lib/systemd/system/plymouth-quit.service.d 2>/dev/null || true
     systemctl daemon-reload || true
   fi
+
   local grub=/etc/default/grub
-  if [[ -f "${grub}" ]] && grep -qE '^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=' "${grub}"; then
+  [[ -f "${grub}" ]] || return 0
+
+  if grep -qE '^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=' "${grub}"; then
     local line val new
     line="$(grep -E '^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=' "${grub}")"
     val="${line#*GRUB_CMDLINE_LINUX_DEFAULT=}"
@@ -82,8 +87,17 @@ _revert_boot_quiet_experiment() {
       mv -f "${tmp}" "${grub}"
     fi
   fi
-  if [[ -x /usr/local/bin/sweetpotatos-fix-grub ]]; then
-    /usr/local/bin/sweetpotatos-fix-grub || true
+
+  # This is the real fix for the extra "… (EFI BootNext)" lines.
+  if grep -qE '^[[:space:]]*#?[[:space:]]*GRUB_DISABLE_BOOTNEXT=' "${grub}"; then
+    sed -i -E 's/^[[:space:]]*#?[[:space:]]*GRUB_DISABLE_BOOTNEXT=.*/GRUB_DISABLE_BOOTNEXT=true/' "${grub}"
+  else
+    printf '\n# SweetPotatOs: do not list firmware Boot#### entries in GRUB.\nGRUB_DISABLE_BOOTNEXT=true\n' \
+      >>"${grub}"
+  fi
+
+  if command -v grub-mkconfig >/dev/null 2>&1 && [[ -d /boot/grub ]]; then
+    grub-mkconfig -o /boot/grub/grub.cfg >/dev/null 2>&1 || true
   fi
 }
 
