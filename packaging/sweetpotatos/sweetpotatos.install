@@ -86,19 +86,24 @@ _revert_boot_quiet_experiment() {
       changed=1
     fi
   fi
-  if ! grep -qE '^[[:space:]]*GRUB_DISABLE_OS_PROBER=' "${grub}"; then
+  # Arch often has GRUB_DISABLE_OS_PROBER=false; that is what flooded the menu.
+  # Force it off for sole-OS SweetPotatOs (set false again only if you dual-boot).
+  if grep -qE '^[[:space:]]*GRUB_DISABLE_OS_PROBER=' "${grub}"; then
+    if ! grep -qE '^[[:space:]]*GRUB_DISABLE_OS_PROBER=true' "${grub}"; then
+      sed -i 's/^[[:space:]]*GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=true/' "${grub}"
+      changed=1
+    fi
+  else
     printf '\n# SweetPotatOs: sole-OS menu (set false only if you dual-boot).\nGRUB_DISABLE_OS_PROBER=true\n' >>"${grub}"
     changed=1
   fi
-  # Always regenerate once on this upgrade so the UEFI os-prober entries go away
-  # when DISABLE_OS_PROBER is already true (or just became true).
-  if command -v grub-mkconfig >/dev/null 2>&1 && [[ -d /boot/grub ]]; then
-    if grep -qE '^[[:space:]]*GRUB_DISABLE_OS_PROBER=true' "${grub}"; then
-      changed=1
+  # Always rewrite grub.cfg on this path so leftover os-prober UEFI entries go away.
+  if command -v grub-mkconfig >/dev/null 2>&1; then
+    if [[ -d /boot/grub ]]; then
+      grub-mkconfig -o /boot/grub/grub.cfg >/dev/null 2>&1 || true
+    elif [[ -d /boot/grub/x86_64-efi ]] || [[ -e /boot/EFI ]]; then
+      grub-mkconfig -o /boot/grub/grub.cfg >/dev/null 2>&1 || true
     fi
-  fi
-  if [[ "${changed}" -eq 1 ]] && command -v grub-mkconfig >/dev/null 2>&1 && [[ -d /boot/grub ]]; then
-    grub-mkconfig -o /boot/grub/grub.cfg >/dev/null 2>&1 || true
   fi
 }
 
