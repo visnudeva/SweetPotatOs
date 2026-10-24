@@ -42,8 +42,12 @@ case "${1:-}" in
     brightnessctl set "${STEP}-" >/dev/null
     notify_brightness
     ;;
+  notify)
+    # Same OSD as up/down — used by Smart Brightness after it sets the backlight.
+    notify_brightness
+    ;;
   *)
-    echo "Usage: $0 {up|down}" >&2
+    echo "Usage: $0 {up|down|notify}" >&2
     exit 1
     ;;
 esac

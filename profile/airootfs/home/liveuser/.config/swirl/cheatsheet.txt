@@ -42,11 +42,11 @@
   Mod+Ctrl+t         SweetPotato themer
   Mod+Ctrl+g         Corners and gaps
   Mod+Ctrl+d         Displays (nwg-displays)
+  Mod+Ctrl+b         Smart Brightness (toggle; fullscreen video → max)
 
   System
   Mod+l              Lock
   Mod+c              Caffeine (idle lock off)
-  Mod+Ctrl+b         Smart Brightness (toggle)
   Mod+Shift+c        Reload config
   Mod+Shift+e        Exit Swirl
   Mod+Esc            Power menu
@@ -59,7 +59,6 @@
   Mod+Print          Screen record toggle
   XF86 audio keys    Volume / mute / mic / media
   XF86 brightness    Brightness up / down
-  Smart Brightness   Max backlight for fullscreen video (on by default)
 
   Gestures
   3-finger L/R       Scroll the window strip

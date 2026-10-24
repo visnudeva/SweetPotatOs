@@ -40,6 +40,12 @@
   </header>
 
   <main>
+    <h2>This page</h2>
+    <table>
+      <tr><th>Bind</th><th>Action</th></tr>
+      <tr><td><code>x</code></td><td>Keybind reminder</td></tr>
+    </table>
+
     <h2>Apps</h2>
     <table>
       <tr><th>Bind</th><th>Action</th></tr>
@@ -74,8 +80,8 @@
     <h2>Workspaces / overview</h2>
     <table>
       <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+Tab</code></td><td>Overview (stacked desktops, all windows)</td></tr>
-      <tr><td>Click</td><td>Zoom back in (focus that window / desktop)</td></tr>
+      <tr><td><code>Mod+Tab</code></td><td>Overview (desktop stripes, all windows)</td></tr>
+      <tr><td>click / <code>Esc</code></td><td>Leave overview (click focuses that window/desktop)</td></tr>
       <tr><td><code>Mod+Up</code> / <code>Down</code></td><td>Workspace above / below (exits overview)</td></tr>
       <tr><td><code>Mod+Ctrl+Up</code> / <code>Down</code></td><td>Move window to workspace above / below</td></tr>
       <tr><td><code>Mod+1</code>…<code>0</code></td><td>Workspace 1–10 (exits overview)</td></tr>
@@ -89,6 +95,7 @@
       <tr><td><code>Mod+Ctrl+t</code></td><td>SweetPotato themer</td></tr>
       <tr><td><code>Mod+Ctrl+g</code></td><td>Corners and gaps</td></tr>
       <tr><td><code>Mod+Ctrl+d</code></td><td>Displays (nwg-displays)</td></tr>
+      <tr><td><code>Mod+Ctrl+b</code></td><td>Smart Brightness (toggle; fullscreen video → max)</td></tr>
     </table>
 
     <h2>System</h2>
@@ -109,15 +116,15 @@
       <tr><td><code>Print</code></td><td>Screenshot (full)</td></tr>
       <tr><td><code>Mod+Shift+Print</code></td><td>Screenshot (region)</td></tr>
       <tr><td><code>Mod+Print</code></td><td>Screen record toggle</td></tr>
-      <tr><td>Audio keys</td><td>Volume / mute / mic / media</td></tr>
-      <tr><td>Brightness keys</td><td>Brightness up / down</td></tr>
+      <tr><td>XF86 audio keys</td><td>Volume / mute / mic / media</td></tr>
+      <tr><td>XF86 brightness</td><td>Brightness up / down</td></tr>
     </table>
 
     <h2>Gestures</h2>
     <table>
       <tr><th>Gesture</th><th>Action</th></tr>
-      <tr><td>3-finger left / right</td><td>Scroll the window strip</td></tr>
-      <tr><td>4-finger up / down</td><td>Next / previous workspace</td></tr>
+      <tr><td>3-finger L/R</td><td>Scroll the window strip</td></tr>
+      <tr><td>4-finger up/down</td><td>Next / previous workspace</td></tr>
     </table>
 
     <h2>Resize mode</h2>
@@ -128,17 +135,26 @@
       <tr><td><code>Enter</code> / <code>Esc</code></td><td>Leave resize mode</td></tr>
     </table>
 
-    <h2>Your own binds</h2>
+    <h2>Customize</h2>
     <p>
-      Edit <code>~/.config/swirl/config.d/user</code>, then <code>Mod+Shift+c</code>.
-      That file survives updates, and later binds win over the defaults.
+      Edit <code>~/.config/swirl/config.d/user</code>, then <code>Mod+Shift+c</code>
+      (survives updates; later binds win over defaults).
       See <a href="index.html#overrides">custom Swirl config</a> on the home page.
     </p>
-    <p>
-      While the on-screen cheatsheet is open, <code>w</code> opens this website
-      and <code>x</code> turns the keybind reminder off. Press <code>x</code> again
-      to turn that reminder back on. <code>Mod+?</code> still opens the page.
-    </p>
+
+    <h2>Desktop / package updates</h2>
+    <table>
+      <tr><th>Command</th><th>Note</th></tr>
+      <tr><td><code>sudo sweetpotatos-update</code></td><td>Update the desktop</td></tr>
+      <tr><td></td><td>A notice once a week when updates are ready</td></tr>
+      <tr><td></td><td>After an update, a note says what changed</td></tr>
+    </table>
+
+    <h2>Project</h2>
+    <table>
+      <tr><th>Bind</th><th>Action</th></tr>
+      <tr><td><code>w</code></td><td>Open project website</td></tr>
+    </table>
   </main>
 
   <footer>sweetpotatos 2026</footer>

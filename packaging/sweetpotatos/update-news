@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-185
+What changed: Smart Brightness shows the same brightness bar as the keys when it raises or restores the backlight. Mod+Ctrl+b is listed under Displays / look on the keybind page (and on the website). Log out and back in after updating.
+
 @2026.10.3-184
 What changed: Status bar is back (the quiet-launch path broke it). Logout teardown spam is muted at the compositor. Log out and back in after updating.
 

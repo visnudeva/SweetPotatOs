@@ -50,6 +50,10 @@ set_brightness_percent() {
   local pct="$1"
   [[ -n "${pct}" ]] || return 0
   brightnessctl set "${pct}%" >/dev/null 2>&1 || true
+  # Same progress OSD as the brightness keys (mako int:value bar).
+  if [[ -x "${ROOT}/brightness.sh" ]]; then
+    "${ROOT}/brightness.sh" notify
+  fi
 }
 
 is_active() {
