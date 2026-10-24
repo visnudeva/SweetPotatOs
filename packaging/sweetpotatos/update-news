@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-187
+What changed: Logging out no longer flashes compositor and tray text on the login screen. Log out and back in after updating (the session wrapper change applies on the next login).
+
 @2026.10.3-186
 What changed: Boot keeps the white SweetPotatOs logo up until the login screen, and quiets the kernel text before and after the splash. Reboot once after updating to see it.
 

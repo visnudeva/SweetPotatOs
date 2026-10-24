@@ -6,7 +6,8 @@ if [ -n "${HOME:-}" ] && [ -x "${HOME}/.config/swirl/scripts/ensure-display-stat
   /usr/bin/env bash "${HOME}/.config/swirl/scripts/ensure-display-state.sh" 2>/dev/null || true
 fi
 dir=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
-for bin in /usr/bin/swirl /usr/local/bin/swirl \
+# Prefer the system wrapper (quiet logout VT); fall back to the binary.
+for bin in /usr/local/bin/swirl /usr/bin/swirl \
            "${HOME}/.local/libexec/swirl" \
            "${dir}/../libexec/swirl"; do
   if [ -x "$bin" ] && [ ! "$bin" -ef "$0" ]; then

@@ -28,6 +28,7 @@ run "caffeine" bash "${ROOT}/tests/test_caffeine.sh"
 run "login_tip" bash "${ROOT}/tests/test_login_tip.sh"
 run "smart_brightness" bash "${ROOT}/tests/test_smart_brightness.sh"
 run "boot_splash" bash "${ROOT}/tests/test_boot_splash.sh"
+run "logout_quiet" bash "${ROOT}/tests/test_logout_quiet.sh"
 run "smoke-check" bash "${ROOT}/scripts/smoke-check.sh"
 
 if [[ "${FAIL}" -eq 0 ]]; then
