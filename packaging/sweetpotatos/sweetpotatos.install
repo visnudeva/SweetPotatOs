@@ -35,6 +35,10 @@ _refresh_boot_splash() {
   if [[ -x /usr/local/bin/sweetpotatos-plymouth ]]; then
     /usr/local/bin/sweetpotatos-plymouth || true
   fi
+  # Quiet cmdline so the logo is not sandwiched between two text bursts.
+  if [[ -x /usr/local/bin/sweetpotatos-boot-quiet ]]; then
+    /usr/local/bin/sweetpotatos-boot-quiet || true
+  fi
   # Live ISO build and the live session keep the archiso preset.
   [[ -f /etc/mkinitcpio.conf.d/archiso.conf ]] && return 0
   compgen -G '/etc/mkinitcpio.d/*.preset' >/dev/null || return 0

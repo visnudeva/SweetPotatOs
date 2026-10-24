@@ -1,0 +1,61 @@
+#!/bin/bash
+# Keep GRUB_CMDLINE_LINUX_DEFAULT quiet enough that the WhiteLogo splash
+# is not sandwiched between two bursts of kernel/systemd text.
+set -euo pipefail
+
+GRUB_DEFAULT="${GRUB_DEFAULT:-/etc/default/grub}"
+BOOT_GRUB_DIR="${BOOT_GRUB_DIR:-/boot/grub}"
+# Live ISO keeps the archiso preset and its own loader entries.
+[[ -f /etc/mkinitcpio.conf.d/archiso.conf ]] && exit 0
+[[ -f "${GRUB_DEFAULT}" ]] || exit 0
+
+WANT=(
+  quiet
+  splash
+  loglevel=3
+  systemd.show_status=false
+  rd.systemd.show_status=false
+  rd.udev.log_level=3
+)
+
+line="$(grep -E '^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=' "${GRUB_DEFAULT}" || true)"
+changed=0
+if [[ -z "${line}" ]]; then
+  printf 'GRUB_CMDLINE_LINUX_DEFAULT="quiet splash loglevel=3 systemd.show_status=false rd.systemd.show_status=false rd.udev.log_level=3"\n' \
+    >>"${GRUB_DEFAULT}"
+  changed=1
+else
+  # Strip prefix and surrounding quotes.
+  val="${line#*GRUB_CMDLINE_LINUX_DEFAULT=}"
+  val="${val#\"}"
+  val="${val%\"}"
+  val="${val#\'}"
+  val="${val%\'}"
+  new="${val}"
+  for tok in "${WANT[@]}"; do
+    if [[ " ${new} " != *" ${tok} "* ]]; then
+      new="${new} ${tok}"
+    fi
+  done
+  new="$(echo "${new}" | awk '{$1=$1;print}')"
+  if [[ "${new}" != "${val}" ]]; then
+    tmp="$(mktemp)"
+    awk -v n="${new}" '
+      BEGIN { done=0 }
+      /^[[:space:]]*GRUB_CMDLINE_LINUX_DEFAULT=/ && !done {
+        print "GRUB_CMDLINE_LINUX_DEFAULT=\"" n "\""
+        done=1
+        next
+      }
+      { print }
+    ' "${GRUB_DEFAULT}" >"${tmp}"
+    mv -f "${tmp}" "${GRUB_DEFAULT}"
+    changed=1
+  fi
+fi
+
+if [[ "${changed}" -eq 1 ]] && command -v grub-mkconfig >/dev/null 2>&1; then
+  if [[ -d "${BOOT_GRUB_DIR}" ]]; then
+    grub-mkconfig -o "${BOOT_GRUB_DIR}/grub.cfg" >/dev/null 2>&1 || true
+  fi
+fi
