@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Laniakea</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #141414;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      image-rendering: auto;
+      /* Letterboxed / centered when the GTK window aspect changes. */
+      position: absolute;
+      inset: 0;
+      margin: auto;
+    }
+  </style>
+  <script src="p5.min.js"></script>
+</head>
+<body>
+
+<script type="module">
+  import {
+    getCentralAreaDivisor,
+    getMaskRadius,
+    isInsideMask,
+    MASK_MODES,
+  } from './mask.js';
+
+  window.LaniakeaMask = {
+    MASK_MODES,
+    getCentralAreaDivisor,
+    getMaskRadius,
+    isInsideMask,
+  };
+
+  var points = [];
+  var mult = 0.005;
+
+  var r1, r2;
+  var g1, g2;
+  var b1, b2;
+
+  var patternSeed = 1;
+  // Fixed drawing buffer — window resizes only reflow CSS, never reset the art.
+  var drawW = 0;
+  var drawH = 0;
+
+  window.LANIAKEA_CONFIG = {
+    maskMode: 'circle',
+  };
+
+  function effectiveDensity() {
+    var dpr = window.devicePixelRatio || 1;
+    var gtk = window.LANIAKEA_GTK_SCALE || 1;
+    return Math.max(1, dpr, gtk);
+  }
+
+  function applyPixelDensity() {
+    if (typeof pixelDensity !== 'function')
+      return;
+    pixelDensity(effectiveDensity());
+  }
+
+  function particleSize() {
+    return Math.max(0.7, Math.min(1.25, width / 1500));
+  }
+
+  function strokeWeightForCanvas() {
+    return Math.max(0.45, Math.min(0.9, width / 2000));
+  }
+
+  /** Keep the bitmap size fixed; scale+center the canvas in the WebView. */
+  function fitCanvasInViewport() {
+    var canvas = document.querySelector('canvas');
+    if (!canvas || !drawW || !drawH)
+      return;
+
+    var vw = window.innerWidth || drawW;
+    var vh = window.innerHeight || drawH;
+    var scale = Math.min(vw / drawW, vh / drawH);
+    var dw = Math.max(1, Math.floor(drawW * scale));
+    var dh = Math.max(1, Math.floor(drawH * scale));
+    canvas.style.width = dw + 'px';
+    canvas.style.height = dh + 'px';
+    canvas.style.left = Math.floor((vw - dw) / 2) + 'px';
+    canvas.style.top = Math.floor((vh - dh) / 2) + 'px';
+    canvas.style.right = 'auto';
+    canvas.style.bottom = 'auto';
+    canvas.style.margin = '0';
+  }
+
+  function initPoints() {
+    points = [];
+
+    var density = 50;
+    var space = height / density;
+
+    for (var x = 0; x < width; x += space / 2) {
+      for (var y = 0; y < height; y += space * 2) {
+        var p = createVector(x + random(-100, 100), y + random(-100, 100));
+        points.push(p);
+      }
+    }
+  }
+
+  function initColors() {
+    r1 = random(255);
+    r2 = random(255);
+    g1 = random(255);
+    g2 = random(255);
+    b1 = random(255);
+    b2 = random(255);
+
+    mult = random(0.002, 0.01);
+  }
+
+  function stepPoints() {
+    var weight = strokeWeightForCanvas();
+    var size = particleSize();
+    strokeWeight(weight);
+    strokeCap(ROUND);
+
+    for (var i = 0; i < points.length; i++) {
+      var ox = points[i].x;
+      var oy = points[i].y;
+
+      var r = map(points[i].x, 0, width, r1, r2);
+      var g = map(points[i].x, 0, height, g1, g2);
+      var b = map(points[i].x, 0, width, b1, b2);
+
+      var alpha = map(
+        dist(width / 2, height / 2, points[i].x, points[i].y),
+        0,
+        height / 2,
+        235,
+        0,
+      );
+
+      var angle = map(
+        noise(points[i].x * mult, points[i].y * mult),
+        0,
+        1,
+        0,
+        720,
+      );
+
+      points[i].add(createVector(cos(angle), sin(angle)));
+
+      if (isInsideDrawMask(points[i].x, points[i].y)) {
+        stroke(r, g, b, alpha * 0.85);
+        line(ox, oy, points[i].x, points[i].y);
+        noStroke();
+        fill(r, g, b, alpha);
+        ellipse(points[i].x, points[i].y, size);
+      }
+    }
+  }
+
+  function resetDrawing(keepSeed) {
+    if (typeof width === 'undefined' || width === 0)
+      return;
+
+    if (!keepSeed)
+      patternSeed = Math.floor(Math.random() * 1e9) + 1;
+
+    randomSeed(patternSeed);
+    noiseSeed(patternSeed);
+    background(20);
+    initPoints();
+    initColors();
+
+    if (typeof loop === 'function')
+      loop();
+  }
+
+  function setMaskMode(mode) {
+    window.LANIAKEA_CONFIG.maskMode = mode || 'circle';
+    resetDrawing(false);
+  }
+
+  function isInsideDrawMask(x, y) {
+    return isInsideMask(
+      x,
+      y,
+      width,
+      height,
+      window.LANIAKEA_CONFIG.maskMode,
+    );
+  }
+
+  function exportWallpaperPng(targetW, targetH) {
+    var src = document.querySelector('canvas');
+    if (!src)
+      return '';
+
+    if (!targetW || !targetH)
+      return src.toDataURL('image/png');
+
+    targetW = Math.max(640, Math.floor(targetW));
+    targetH = Math.max(360, Math.floor(targetH));
+
+    if (src.width === targetW && src.height === targetH)
+      return src.toDataURL('image/png');
+
+    var out = document.createElement('canvas');
+    out.width = targetW;
+    out.height = targetH;
+    var ctx = out.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.fillStyle = '#141414';
+    ctx.fillRect(0, 0, targetW, targetH);
+
+    var scale = Math.max(targetW / src.width, targetH / src.height);
+    var dw = src.width * scale;
+    var dh = src.height * scale;
+    var dx = (targetW - dw) / 2;
+    var dy = (targetH - dh) / 2;
+    ctx.drawImage(src, dx, dy, dw, dh);
+    return out.toDataURL('image/png');
+  }
+
+  function exportPngDataUrl() {
+    return exportWallpaperPng();
+  }
+
+  function setup() {
+    applyPixelDensity();
+    drawW = Math.max(320, windowWidth);
+    drawH = Math.max(240, windowHeight);
+    createCanvas(drawW, drawH);
+    smooth();
+    background(20);
+    angleMode(DEGREES);
+    noiseDetail(1);
+    patternSeed = Math.floor(Math.random() * 1e9) + 1;
+    randomSeed(patternSeed);
+    noiseSeed(patternSeed);
+    initPoints();
+    initColors();
+    fitCanvasInViewport();
+  }
+
+  function draw() {
+    stepPoints();
+  }
+
+  function mousePressed() {
+    if (isInsideDrawMask(mouseX, mouseY))
+      resetDrawing(false);
+  }
+
+  function windowResized() {
+    // Do not resizeCanvas / resetDrawing — keep the same centered artwork.
+    fitCanvasInViewport();
+  }
+
+  window.setup = setup;
+  window.draw = draw;
+  window.windowResized = windowResized;
+  window.mousePressed = mousePressed;
+  window.resetDrawing = function () { resetDrawing(false); };
+  window.setMaskMode = setMaskMode;
+  window.exportPngDataUrl = exportPngDataUrl;
+  window.exportWallpaperPng = exportWallpaperPng;
+  window.applyPixelDensity = applyPixelDensity;
+  window.fitCanvasInViewport = fitCanvasInViewport;
+</script>
+
+</body>
+</html>

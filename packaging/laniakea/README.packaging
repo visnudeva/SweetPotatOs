@@ -1,3 +1,7 @@
-Laniakea is packaged from the sibling checkout at `GITHUB/laniakea` (or
-`LANIAKEA_SRC`). When that project gets a public GitHub repo, switch this
-PKGBUILD `source=` to the git URL like spore/tuber.
+Upstream: https://github.com/visnudeva/swirl-laniakea
+
+`makepkg` clones `main` from that URL. For a local unpushed tree, set:
+
+```bash
+LANIAKEA_SRC=/path/to/swirl-laniakea makepkg -sf
+```

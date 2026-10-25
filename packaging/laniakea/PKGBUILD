@@ -1,12 +1,10 @@
 # Maintainer: visnudeva
-# Desktop app source lives in the sibling checkout ../laniakea until a GitHub
-# repo exists (then switch source= to that URL).
 pkgname=laniakea
-pkgver=0.1.0
-pkgrel=1
+pkgver=0.1.5
+pkgrel=2
 pkgdesc='Generative flow-field wallpaper for Swirl (opt-in)'
 arch=('any')
-url='https://github.com/visnudeva/laniakea'
+url='https://github.com/visnudeva/swirl-laniakea'
 license=('GPL-3.0-or-later')
 depends=(
   'python'
@@ -19,24 +17,15 @@ depends=(
 optdepends=(
   'waypaper: remember the applied wallpaper across logins'
 )
-# Placeholder until the app has a public git URL (see README.packaging).
-source=('README.packaging')
+makedepends=('git')
+source=("git+https://github.com/visnudeva/swirl-laniakea.git#branch=main")
 sha256sums=('SKIP')
 
-_laniakea_src() {
-  if [[ -n "${LANIAKEA_SRC:-}" && -d "${LANIAKEA_SRC}" ]]; then
-    printf '%s\n' "${LANIAKEA_SRC}"
-    return
-  fi
-  # packaging/laniakea → SweetPotatOs → GITHUB/laniakea
-  local sibling
-  sibling="$(cd "${startdir}/../.." && pwd)/../laniakea"
-  if [[ -d "${sibling}/laniakea" ]]; then
-    printf '%s\n' "$(cd "${sibling}" && pwd)"
-    return
-  fi
-  echo "laniakea sources not found (set LANIAKEA_SRC)" >&2
-  return 1
+pkgver() {
+  cd swirl-laniakea
+  local n
+  n="$(git rev-list --count HEAD)"
+  printf '0.1.5.r%s.g%s' "${n}" "$(git rev-parse --short=7 HEAD)"
 }
 
 build() {
@@ -44,8 +33,11 @@ build() {
 }
 
 package() {
-  local src
-  src="$(_laniakea_src)"
+  local src="${srcdir}/swirl-laniakea"
+  # Local override while iterating before a push lands.
+  if [[ -n "${LANIAKEA_SRC:-}" && -d "${LANIAKEA_SRC}/laniakea" ]]; then
+    src="${LANIAKEA_SRC}"
+  fi
 
   install -d "${pkgdir}/usr/lib/laniakea"
   cp -a "${src}/laniakea" "${pkgdir}/usr/lib/laniakea/"
