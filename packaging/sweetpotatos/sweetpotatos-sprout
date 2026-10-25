@@ -14,7 +14,12 @@ BACKGROUNDS_SRC="${SWEETPOTATO_BACKGROUNDS:-/usr/share/sweetpotato/backgrounds}"
 DEST="${XDG_CONFIG_HOME:-${HOME}/.config}"
 OVERLAY="${DEST}/sweetpotatos/user_edits"
 STATE_DIR="${XDG_STATE_HOME:-${HOME}/.local/state}/sweetpotatos"
-MANIFEST="${STATE_DIR}/materialized"
+MANIFEST="${STATE_DIR}/sprouted"
+# Older installs used "materialized"; fold that into the new name once.
+if [[ -f "${STATE_DIR}/materialized" && ! -f "${MANIFEST}" ]]; then
+  mv -f "${STATE_DIR}/materialized" "${MANIFEST}"
+fi
+rm -f "${STATE_DIR}/materialized"
 
 # Relative to DEST — copy from base only when missing.
 SEED_ONLY=(
@@ -159,7 +164,7 @@ rm -f "${DEST}/swirl/scripts/network-applet.py" \
       "${DEST}/swirl/scripts/pin-window.sh" \
       "${DEST}/swirl/scripts/escape.sh" \
       "${DEST}/swirl/scripts/swirlbar.sh"
-echo "[+] Materialized shipped config into ${DEST}"
+echo "[+] Sprouted shipped config into ${DEST}"
 echo "    Overlay: ${OVERLAY}"
 
 # Shipped files are the default Sweet potato colors. The chosen theme lives

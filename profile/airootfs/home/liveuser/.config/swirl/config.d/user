@@ -1,6 +1,6 @@
 # --- ~/.config/swirl/config.d/user ----------------------------------------
 # Your Swirl overrides. Loaded LAST, so anything here wins over SweetPotato
-# defaults. Updates (sweetpotatos-update / materialize / install.sh re-runs)
+# defaults. Updates (sweetpotatos-update / sprout / install.sh re-runs)
 # never overwrite this file once it exists.
 #
 # Edit this file, then reload: Mod+Shift+c

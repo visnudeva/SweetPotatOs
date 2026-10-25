@@ -33,13 +33,13 @@ assert "grep -q 'TAG=pacman-repo-testing' '${ROOT}/scripts/publish-repo.sh'" \
   "testing publish does not follow a leftover live TAG"
 assert "grep -q 'sweetpotatos$' '${UPD}'" "upgrades sweetpotatos package"
 assert "grep -q 'swirl$' '${UPD}'" "upgrades swirl package"
-assert "grep -q 'sweetpotatos-materialize' '${UPD}'" "runs materialize after upgrade"
+assert "grep -q 'sweetpotatos-sprout' '${UPD}'" "runs sprout after upgrade"
 assert "grep -q 'pacman -Syu' '${UPD}'" "reminds Arch lane is separate"
-assert "grep -q 'swaymsg reload' '${UPD}'" "reloads Swirl after materialize"
+assert "grep -q 'swaymsg reload' '${UPD}'" "reloads Swirl after sprout"
 assert "grep -q -- '--quiet apply' '${UPD}'" \
   "reapplies the saved theme before reload"
-assert "grep -q -- '--quiet apply' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
-  "materialize reapplies the saved theme"
+assert "grep -q -- '--quiet apply' '${ROOT}/packaging/sweetpotatos/sweetpotatos-sprout'" \
+  "sprout reapplies the saved theme"
 assert "grep -q 'Open Mod+?' '${UPD}'" "tells users Mod+? is enough after update"
 assert "! grep -q 'spo-upgrade' '${UPD}'" "no spo-upgrade"
 assert "grep -q 'swaylock-effects' '${UPD}'" "upgrades swaylock-effects package"
@@ -53,9 +53,9 @@ assert "grep -q '^indicator$' '${ROOT}/profile/airootfs/etc/skel/.config/swayloc
 assert "grep -q 'set \\\$lockcmd swaylock' \
   '${ROOT}/profile/airootfs/etc/skel/.config/swirl/config'" \
   "skel uses explicit swaylock config path"
-assert "grep -q 'getent passwd' '${UPD}'" "materialize uses getent for user home"
-assert "grep -q 'Pictures/Wallpapers' '${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize'" \
-  "materialize syncs wallpapers into Pictures/Wallpapers"
+assert "grep -q 'getent passwd' '${UPD}'" "sprout uses getent for user home"
+assert "grep -q 'Pictures/Wallpapers' '${ROOT}/packaging/sweetpotatos/sweetpotatos-sprout'" \
+  "sprout syncs wallpapers into Pictures/Wallpapers"
 assert "grep -q 'usr/share/sweetpotato/backgrounds' '${ROOT}/packaging/sweetpotatos/PKGBUILD'" \
   "sweetpotatos package ships system wallpapers"
 assert "[[ -f '${ROOT}/profile/airootfs/etc/skel/.config/swirl/config.d/user' ]]" \

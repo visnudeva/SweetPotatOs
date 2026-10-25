@@ -185,7 +185,7 @@ What changed: Mod+? opens the keybind page again. The last update broke that sho
 What changed: On the keybind page (Mod+?), pressing x to toggle the login reminder no longer types into the page. Open the page again after updating.
 
 @2026.10.3-132
-What changed: Mod+o / Mod+Esc opens a power menu with lock, sleep, logout, reboot, and power off. The buttons are icons. Escape or a click outside the bar dismisses it. Log out and back in after updating (or Mod+Shift+c after materialize).
+What changed: Mod+o / Mod+Esc opens a power menu with lock, sleep, logout, reboot, and power off. The buttons are icons. Escape or a click outside the bar dismisses it. Log out and back in after updating (or Mod+Shift+c after sprout).
 
 @2026.10.3-129
 What changed: On the power-off and exit bars, Enter confirms and Escape dismisses. Open the bar again after updating.

@@ -20,7 +20,7 @@ run() {
 
 run "autotile_lib" lua "${ROOT}/tests/test_autotile_lib.lua"
 run "overview" bash "${ROOT}/tests/test_overview.sh"
-run "materialize" bash "${ROOT}/tests/test_materialize.sh"
+run "sprout" bash "${ROOT}/tests/test_sprout.sh"
 run "update_channel" bash "${ROOT}/tests/test_update_channel.sh"
 run "update_notify" bash "${ROOT}/tests/test_update_notify.sh"
 run "hues" bash "${ROOT}/tests/test_hues.sh"

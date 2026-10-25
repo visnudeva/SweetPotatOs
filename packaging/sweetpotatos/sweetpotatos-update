@@ -185,8 +185,8 @@ echo "[*] Installing/upgrading: ${to_touch[*]}"
 pacman -S --needed --noconfirm "${to_touch[@]}"
 
 reloaded=0
-if command -v sweetpotatos-materialize >/dev/null 2>&1; then
-  # Materialize as the real desktop user (never root's HOME).
+if command -v sweetpotatos-sprout >/dev/null 2>&1; then
+  # Sprout as the real desktop user (never root's HOME).
   target_user="${SUDO_USER:-}"
   if [[ -z "${target_user}" || "${target_user}" == root ]]; then
     target_user="$(logname 2>/dev/null || true)"
@@ -197,11 +197,11 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
       target_home="$(eval echo "~${target_user}")"
     fi
     target_uid="$(id -u "${target_user}" 2>/dev/null || true)"
-    echo "[*] Materializing desktop config for ${target_user} (${target_home})…"
+    echo "[*] Sprouting desktop config for ${target_user} (${target_home})…"
     sudo -u "${target_user}" HOME="${target_home}" \
       XDG_CONFIG_HOME="${target_home}/.config" \
       XDG_STATE_HOME="${target_home}/.local/state" \
-      sweetpotatos-materialize || true
+      sweetpotatos-sprout || true
 
     # Guaranteed refresh of the help sheet and its login tip (no overlay / stale copy).
     src_cheat="/usr/share/sweetpotato/config/swirl/scripts/cheatsheet.sh"
@@ -217,7 +217,7 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
       chown "${target_user}:${target_user}" "${dst_tips}" 2>/dev/null || true
     fi
 
-    # Materialize writes the default Sweet potato colors. Put the saved
+    # Sprout writes the default Sweet potato colors. Put the saved
     # choice back before Swirl reloads, so the desktop does not snap back.
     theme_script="${target_home}/.config/swirl/scripts/theme.sh"
     if [[ -f "${theme_script}" ]]; then
@@ -271,7 +271,7 @@ if command -v sweetpotatos-materialize >/dev/null 2>&1; then
       fi
     fi
   else
-    echo "[!] Skipping materialize — no non-root user to target (ran as root?)." >&2
+    echo "[!] Skipping sprout — no non-root user to target (ran as root?)." >&2
   fi
 fi
 

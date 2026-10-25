@@ -36,7 +36,7 @@ meaningful and a stuck Arch mirror does not block a desktop fix.
 | Ryoku | SweetPotatOs analogue |
 |-------|------------------------|
 | `[ryoku]` | Remote `[sweetpotatos]` (`swirl`, `sweetpotatos`, maybe theme pkg) |
-| `/usr/share/ryoku/config` + materialize | `/usr/share/sweetpotato/` → `~/.config/swirl`, gtk, foot, … |
+| `/usr/share/ryoku/config` + materialize (Ryoku) | `/usr/share/sweetpotato/` → `~/.config/swirl`, gtk, foot, … |
 | `user_edits` | `~/.config/sweetpotatos/user_edits/` + Swirl `~/.config/swirl/config.d/user` (seed-only) |
 | `ryoku update` | Thin `sweetpotatos-update` / `spo` CLI |
 | Point-release ISO | Keep as golden path for new installs |
@@ -68,10 +68,10 @@ Server = https://github.com/visnudeva/SweetPotatOs/releases/download/…/
    `Server=` (Calamares / `sweetpotatos` package post_install).
 3. **Split theme delivery:** ship pristine base in a package; stop treating
    skel-only copy as the only path for updates.
-4. **`sweetpotatos-materialize`:** clobber shipped files, honour overlay,
+4. **`sweetpotatos-sprout`:** clobber shipped files, honour overlay,
    seed-only for kanshi/outputs/monitors.
 5. **`sweetpotatos-update`:** `pacman -Sy` + upgrade SPO package set by name →
-   materialize → remind that Arch `pacman -Syu` is separate (no kernel in this
+   sprout → remind that Arch `pacman -Syu` is separate (no kernel in this
    command).
 6. Keep **point-release ISOs on SourceForge**; do **not** bring back overlay
    `spo-upgrade` or SF `Files/repo/`.
@@ -88,7 +88,7 @@ Skip for v1: Snapper/boot-guard, Hub UI, doctor reconcilers.
 **MVP live:** GitHub release [`pacman-repo`](https://github.com/visnudeva/SweetPotatOs/releases/tag/pacman-repo)
 holds the package set. Publish with `./scripts/publish-repo.sh`. The `sweetpotatos`
 package (≥ 2026.10.2) installs `/etc/pacman.d/sweetpotatos.conf`,
-`sweetpotatos-update`, and `sweetpotatos-materialize`. Swirl user overrides live in
+`sweetpotatos-update`, and `sweetpotatos-sprout`. Swirl user overrides live in
 `~/.config/swirl/config.d/user` (seeded once; never overwritten).
 
 **Testing channel:** package builds stay here until an explicit “push to stable”.

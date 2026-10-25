@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Unit tests for sweetpotatos-materialize seed-only + overlay behaviour.
+# Unit tests for sweetpotatos-sprout seed-only + overlay behaviour.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-MAT="${ROOT}/packaging/sweetpotatos/sweetpotatos-materialize"
+SPROUT="${ROOT}/packaging/sweetpotatos/sweetpotatos-sprout"
 PASS=0
 FAIL=0
 
@@ -45,9 +45,9 @@ echo "SEED_USER_V1" >"${BASE}/swirl/config.d/user"
 echo "AUTOTILE" >"${BASE}/swirl/scripts/autotile.lua"
 echo "KANSHI_V1" >"${BASE}/kanshi/config"
 
-# First materialize: everything appears.
-bash "${MAT}" >/dev/null
-assert_file "${DEST}/swirl/config" "materialize creates swirl/config"
+# First sprout: everything appears.
+bash "${SPROUT}" >/dev/null
+assert_file "${DEST}/swirl/config" "sprout creates swirl/config"
 assert_eq "SHIPPED_CONFIG" "$(cat "${DEST}/swirl/config")" "config content from base"
 assert_eq "SEED_USER_V1" "$(cat "${DEST}/swirl/config.d/user")" "user seed created"
 assert_eq "KANSHI_V1" "$(cat "${DEST}/kanshi/config")" "kanshi seed created"
@@ -60,8 +60,8 @@ echo "SEED_USER_V2" >"${BASE}/swirl/config.d/user"
 echo "KANSHI_V2" >"${BASE}/kanshi/config"
 echo "AUTOTILE_V2" >"${BASE}/swirl/scripts/autotile.lua"
 
-# Second materialize: clobber shipped, keep seeds.
-bash "${MAT}" >/dev/null
+# Second sprout: clobber shipped, keep seeds.
+bash "${SPROUT}" >/dev/null
 assert_eq "SHIPPED_CONFIG_V2" "$(cat "${DEST}/swirl/config")" "shipped config upgraded"
 assert_eq "AUTOTILE_V2" "$(cat "${DEST}/swirl/scripts/autotile.lua")" "scripts upgraded"
 assert_eq "USER_BINDS" "$(cat "${DEST}/swirl/config.d/user")" "user override preserved"
@@ -70,7 +70,7 @@ assert_eq "KANSHI_CUSTOM" "$(cat "${DEST}/kanshi/config")" "kanshi seed preserve
 # Overlay wins over base for a shipped path.
 mkdir -p "${DEST}/sweetpotatos/user_edits/swirl"
 echo "OVERLAY_CONFIG" >"${DEST}/sweetpotatos/user_edits/swirl/config"
-bash "${MAT}" >/dev/null
+bash "${SPROUT}" >/dev/null
 assert_eq "OVERLAY_CONFIG" "$(cat "${DEST}/swirl/config")" "user_edits overlay wins"
 
 # Wallpapers: always sync before config; land in Pictures/Wallpapers (+ local backgrounds).
@@ -85,14 +85,14 @@ printf 'OLD' >"${HOME}/Pictures/Wallpapers/SpoNeon.png"
 
 # Even with no config base, wallpapers should still sync.
 rm -rf "${BASE}"
-bash "${MAT}" >/dev/null 2>&1 || true
+bash "${SPROUT}" >/dev/null 2>&1 || true
 assert_eq "PNG_A" "$(cat "${HOME}/Pictures/Wallpapers/SpoNeon.png")" "wallpaper synced without config base"
 
 mkdir -p "${BASE}/swirl/config.d" "${BASE}/swirl/scripts" "${BASE}/kanshi"
 echo "SHIPPED_CONFIG" >"${BASE}/swirl/config"
 echo "SEED_USER_V1" >"${BASE}/swirl/config.d/user"
 echo "KANSHI_V1" >"${BASE}/kanshi/config"
-bash "${MAT}" >/dev/null
+bash "${SPROUT}" >/dev/null
 assert_eq "PNG_A" "$(cat "${HOME}/Pictures/Wallpapers/SpoNeon.png")" "wallpaper refreshed in Pictures"
 assert_eq "PNG_B" "$(cat "${HOME}/Pictures/Wallpapers/SPixelBG.png")" "wallpaper added in Pictures"
 assert_eq "USER_EXTRA" "$(cat "${HOME}/Pictures/Wallpapers/my-custom.png")" "user wallpaper preserved"
@@ -105,9 +105,9 @@ cat >"${BASE}/swirl/scripts/theme.sh" << 'EOF'
 printf '%s\n' "$*" > "${SPO_CONFIG_ROOT}/theme-called"
 EOF
 chmod +x "${BASE}/swirl/scripts/theme.sh"
-bash "${MAT}" >/dev/null
-assert_eq "--quiet apply" "$(cat "${DEST}/theme-called")" "materialize reapplies the saved theme"
+bash "${SPROUT}" >/dev/null
+assert_eq "--quiet apply" "$(cat "${DEST}/theme-called")" "sprout reapplies the saved theme"
 
 echo
-echo "materialize: ${PASS} passed, ${FAIL} failed"
+echo "sprout: ${PASS} passed, ${FAIL} failed"
 [[ "${FAIL}" -eq 0 ]]
