@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-export PYTHONPATH="/usr/lib/laniakea${PYTHONPATH:+:$PYTHONPATH}"
-export LANIAKEA_WEB_ROOT="${LANIAKEA_WEB_ROOT:-/usr/share/laniakea/web}"
-exec python3 -m laniakea "$@"

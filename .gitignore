@@ -44,6 +44,12 @@ packaging/swirl/pkg/
 packaging/swirl/swirl/
 packaging/swirl/*.pkg.tar.*
 
+# Other packaging/*/ makepkg leftovers
+packaging/*/src/
+packaging/*/pkg/
+packaging/*/*.pkg.tar.*
+packaging/*/*.pkg.tar.*.sig
+
 # Editor / OS junk
 *~
 *.swp
