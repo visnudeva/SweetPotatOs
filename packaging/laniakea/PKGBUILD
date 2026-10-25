@@ -1,6 +1,6 @@
 # Maintainer: visnudeva
 pkgname=laniakea
-pkgver=0.1.6
+pkgver=0.1.6.r17.g511babc
 pkgrel=1
 pkgdesc='Generative flow-field wallpaper for Swirl (opt-in)'
 arch=('any')
@@ -25,7 +25,7 @@ pkgver() {
   cd swirl-laniakea
   local n
   n="$(git rev-list --count HEAD)"
-  printf '0.1.5.r%s.g%s' "${n}" "$(git rev-parse --short=7 HEAD)"
+  printf '0.1.6.r%s.g%s' "${n}" "$(git rev-parse --short=7 HEAD)"
 }
 
 build() {

@@ -273,8 +273,22 @@ main .hero {
 @media (min-width: 720px) {
   .shot-row { grid-template-columns: 1fr 1fr; }
 }
+.shot-hint {
+  margin: 0.25rem 0 0.6rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
 .shot-row figure {
   margin: 0;
+}
+.shot-row a {
+  display: block;
+  cursor: zoom-in;
+  border-radius: 10px;
+}
+.shot-row a:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
 }
 .shot-row img,
 .wall-grid img {
@@ -284,6 +298,19 @@ main .hero {
   border-radius: 10px;
   border: 1px solid var(--border);
   background: #111;
+}
+.project-shot-link {
+  display: block;
+  cursor: zoom-in;
+  margin: 0 0 1rem;
+  border-radius: 10px;
+}
+.project-shot-link:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
+}
+.project-shot-link .project-shot {
+  margin-bottom: 0;
 }
 .shot-row figcaption,
 .wall-grid figcaption {
@@ -777,6 +804,8 @@ ul strong { color: var(--text); }
 .app-grid a.app-spore:hover { color: #4ad99a; }
 .app-grid a.app-tuber { color: #f89f22; font-weight: 700; }
 .app-grid a.app-tuber:hover { color: #ffc15a; }
+.app-grid a.app-laniakea { color: #6c8cff; font-weight: 700; }
+.app-grid a.app-laniakea:hover { color: #9bb0ff; }
 table {
   width: 100%;
   border-collapse: collapse;

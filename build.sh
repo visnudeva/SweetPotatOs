@@ -205,7 +205,7 @@ if ! need_repo_pkg calamares || ! need_repo_pkg swirl || ! need_repo_pkg sweetpo
 
 Build them first:
 
-  sudo ./build.sh --build-packages   # builds calamares, swirl, sweetpotatos, yay-bin, shelly-bin, localsend-bin, spore, tuber, swaylock-effects, brave-origin-bin, waypaper
+  sudo ./build.sh --build-packages   # builds calamares, swirl, sweetpotatos, yay-bin, shelly-bin, localsend-bin, spore, tuber, laniakea, swaylock-effects, brave-origin-bin, waypaper
 
 EOF
   exit 1

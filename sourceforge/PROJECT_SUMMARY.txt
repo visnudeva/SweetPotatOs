@@ -8,3 +8,4 @@ Homepage / source: https://github.com/visnudeva/SweetPotatOs
 Theme: https://github.com/visnudeva/SweetPotato
 Compositor: https://github.com/visnudeva/swirl
 Music: https://github.com/visnudeva/spore
+Wallpaper: https://github.com/visnudeva/swirl-laniakea

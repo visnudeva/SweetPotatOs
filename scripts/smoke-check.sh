@@ -89,6 +89,7 @@ else
   ok "no spo-upgrade references in airootfs"
 fi
 check_grep '^spore$' "${ROOT}/profile/packages.x86_64" "spore package listed"
+check_grep '^laniakea$' "${ROOT}/profile/packages.x86_64" "laniakea package listed"
 check_grep '^VERSION_ID=' "${PKG_FILES}/usr/local/share/sweetpotatos/os-release" "os-release has VERSION_ID"
 check_grep 'fingerprint' "${ISO}/usr/local/bin/sweetpotatos-sway-xkb-watch" \
   "xkb watcher polls locale1 via busctl"

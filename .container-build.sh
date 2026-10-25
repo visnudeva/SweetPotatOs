@@ -158,6 +158,23 @@ if ! ls "${ROOT}/repo/tuber"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[+] tuber copied to repo/"
 fi
 
+if ! ls "${ROOT}/repo/laniakea"-*.pkg.tar.* >/dev/null 2>&1; then
+  echo "[*] Building laniakea from packaging/laniakea..."
+  build_dir="${BUILD_ROOT}/laniakea-local"
+  rm -rf "${build_dir}"
+  sudo -u "${BUILD_USER}" mkdir -p "${BUILD_ROOT}"
+  cp -a "${ROOT}/packaging/laniakea/." "${build_dir}/"
+  chown -R "${BUILD_USER}:${BUILD_USER}" "${build_dir}"
+  export LANIAKEA_SRC="${LANIAKEA_SRC:-$(cd "${ROOT}/../laniakea" 2>/dev/null && pwd || true)}"
+  sudo -u "${BUILD_USER}" bash -c "cd '${build_dir}' && LANIAKEA_SRC='${LANIAKEA_SRC:-}' makepkg -sr --noconfirm"
+  shopt -s nullglob
+  pkgs=( "${build_dir}"/*.pkg.tar.* )
+  shopt -u nullglob
+  ((${#pkgs[@]})) || { echo "[!] laniakea build produced no packages" >&2; exit 1; }
+  cp "${pkgs[@]}" "${ROOT}/repo/"
+  echo "[+] laniakea copied to repo/"
+fi
+
 if ! ls "${ROOT}/repo/swaylock-effects"-*.pkg.tar.* >/dev/null 2>&1; then
   echo "[*] Building swaylock-effects from packaging/swaylock-effects..."
   build_dir="${BUILD_ROOT}/swaylock-effects-local"

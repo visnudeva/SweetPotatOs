@@ -186,6 +186,8 @@ localsend-bin
 spore
 # Torrents TUI (local PKGBUILD — replaces transmission-gtk)
 tuber
+# Generative flow-field wallpaper (local PKGBUILD)
+laniakea
 # GUI wallpaper picker (AUR)
 waypaper
 # AUR build deps for end users from official repos

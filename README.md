@@ -130,6 +130,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | PDF | mupdf |
 | Images | swayimg |
 | Torrents | tuber |
+| Wallpaper draw | laniakea |
 | Webcam | guvcview |
 | Color picker | hyprpicker |
 | Packages | Shelly (+ yay / AUR) |

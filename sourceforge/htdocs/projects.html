@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Projects</title>
-  <meta name="description" content="SweetPotatOs source, Swirl, Spore, Tuber, and the SweetPotato theme.">
+  <meta name="description" content="SweetPotatOs source, Swirl, Spore, Tuber, Laniakea, and the SweetPotato theme.">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="site.css">
   <script src="site.js" defer></script>
@@ -47,7 +47,9 @@
           <p>The Arch live ISO, installer, and package channel.</p>
         </div>
       </div>
-      <img class="project-shot" src="projects/sweetpotatos-shot.jpg" alt="SweetPotatOs desktop overview">
+      <a class="project-shot-link" href="projects/sweetpotatos-shot.jpg">
+        <img class="project-shot" src="projects/sweetpotatos-shot.jpg" alt="SweetPotatOs desktop overview">
+      </a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotatOs">GitHub</a>
     </article>
 
@@ -59,7 +61,9 @@
           <p>Scrolling tiling Wayland compositor. Columns sit on a horizontal strip.</p>
         </div>
       </div>
-      <img class="project-shot" src="projects/swirl-shot.jpg" alt="Swirl desktop from the GitHub demo">
+      <a class="project-shot-link" href="projects/swirl-shot.jpg">
+        <img class="project-shot" src="projects/swirl-shot.jpg" alt="Swirl desktop from the GitHub demo">
+      </a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/swirl">Swirl</a>
     </article>
 
@@ -71,7 +75,9 @@
           <p>Terminal web radio and local music, with a visualizer.</p>
         </div>
       </div>
-      <img class="project-shot" src="projects/spore-shot.png" alt="Spore favorites list and visualizer">
+      <a class="project-shot-link" href="projects/spore-shot.png">
+        <img class="project-shot" src="projects/spore-shot.png" alt="Spore favorites list and visualizer">
+      </a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/spore">Spore</a>
     </article>
 
@@ -83,8 +89,24 @@
           <p>Light terminal BitTorrent client.</p>
         </div>
       </div>
-      <img class="project-shot" src="projects/tuber-shot.png" alt="Tuber torrent list">
+      <a class="project-shot-link" href="projects/tuber-shot.png">
+        <img class="project-shot" src="projects/tuber-shot.png" alt="Tuber torrent list">
+      </a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/tuber">Tuber</a>
+    </article>
+
+    <article class="project" id="laniakea">
+      <div class="project-head">
+        <img class="project-logo" src="projects/laniakea-logo.png" alt="Laniakea logo">
+        <div>
+          <h2>Laniakea</h2>
+          <p>Generative flow-field wallpaper. Watch it draw, pick a shape mask, then Apply.</p>
+        </div>
+      </div>
+      <a class="project-shot-link" href="projects/laniakea-shot.png">
+        <img class="project-shot" src="projects/laniakea-shot.png" alt="Laniakea generative flow-field drawing">
+      </a>
+      <a class="btn btn-secondary" href="https://github.com/visnudeva/swirl-laniakea">Laniakea</a>
     </article>
 
     <article class="project">
@@ -95,11 +117,21 @@
           <p>Desktop theme for Swirl: colors, bar, lock screen, and terminal.</p>
         </div>
       </div>
-      <img class="project-shot" src="projects/sweetpotato-themer.png" alt="SweetPotato themer">
+      <a class="project-shot-link" href="projects/sweetpotato-themer.png">
+        <img class="project-shot" src="projects/sweetpotato-themer.png" alt="SweetPotato themer">
+      </a>
       <a class="btn btn-secondary" href="https://github.com/visnudeva/SweetPotato">SweetPotato theme</a>
     </article>
   </main>
 
   <footer>sweetpotatos 2026</footer>
+  <div class="wall-view" hidden data-lightbox>
+    <button type="button" class="wall-view-close" aria-label="Close">×</button>
+    <img alt="">
+    <div class="wall-view-bar">
+      <p class="wall-view-caption"></p>
+      <a class="wall-view-save">Save original</a>
+    </div>
+  </div>
 </body>
 </html>
