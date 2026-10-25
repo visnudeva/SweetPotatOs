@@ -52,6 +52,10 @@ assert "! grep -q 'overview-smooth-jump' '${PKGBUILD}'" "PKGBUILD does not apply
 
 assert "grep -q 'equal-height horizontal stripes' '${COVER}'" \
   "coverflow patch uses equal-height stripes"
+assert "grep -q 'No workspace numbers/names' '${COVER}'" \
+  "coverflow patch hides workspace labels"
+assert "grep -q 'workspace_name_decoration(child, false)' '${COVER}'" \
+  "coverflow patch does not enable name decorations"
 assert "! grep -q 'focus_weight' '${COVER}'" "coverflow patch has no focus_weight reflow"
 assert "! grep -q 'layout_overview_workspaces_recompute_scale' '${COVER}'" \
   "coverflow patch does not reflow on seat focus"

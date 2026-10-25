@@ -1,7 +1,7 @@
 diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 --- a/sway/tree/layout.c
 +++ b/sway/tree/layout.c
-@@ -410,48 +410,61 @@
+@@ -410,48 +410,62 @@
  }
  
  static void overview_workspaces_recompute_scale(struct sway_output *output) {
@@ -27,9 +27,10 @@ diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 +		return;
 +	}
 +
-+	const double label_h = config->workspace_labels_height;
-+	const double gap = fmax(8.0, label_h * 0.35);
-+	const double reserved = gap * (length + 1) + label_h * length;
++	/* No workspace numbers/names — stripes only. */
++	const double label_h = 0.0;
++	const double gap = 8.0;
++	const double reserved = gap * (length + 1);
 +	double avail_h = usable_area->height - reserved;
 +	if (avail_h < 48.0) {
 +		avail_h = 48.0;
@@ -88,7 +89,7 @@ diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 -				struct sway_container *con = child->floating->items[f];
 -				con->scene_tree->node.info.workspace = child;
 -			}
-+		workspace_name_decoration(child, true);
++		workspace_name_decoration(child, false);
 +		for (int f = 0; f < child->floating->length; ++f) {
 +			struct sway_container *con = child->floating->items[f];
 +			con->scene_tree->node.info.workspace = child;
