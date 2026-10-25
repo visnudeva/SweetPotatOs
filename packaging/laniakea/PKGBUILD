@@ -1,0 +1,70 @@
+# Maintainer: visnudeva
+# Desktop app source lives in the sibling checkout ../laniakea until a GitHub
+# repo exists (then switch source= to that URL).
+pkgname=laniakea
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Generative flow-field wallpaper for Swirl (opt-in)'
+arch=('any')
+url='https://github.com/visnudeva/laniakea'
+license=('GPL-3.0-or-later')
+depends=(
+  'python'
+  'python-gobject'
+  'gtk4'
+  'libadwaita'
+  'webkitgtk-6.0'
+  'swaybg'
+)
+optdepends=(
+  'waypaper: remember the applied wallpaper across logins'
+)
+# Placeholder until the app has a public git URL (see README.packaging).
+source=('README.packaging')
+sha256sums=('SKIP')
+
+_laniakea_src() {
+  if [[ -n "${LANIAKEA_SRC:-}" && -d "${LANIAKEA_SRC}" ]]; then
+    printf '%s\n' "${LANIAKEA_SRC}"
+    return
+  fi
+  # packaging/laniakea → SweetPotatOs → GITHUB/laniakea
+  local sibling
+  sibling="$(cd "${startdir}/../.." && pwd)/../laniakea"
+  if [[ -d "${sibling}/laniakea" ]]; then
+    printf '%s\n' "$(cd "${sibling}" && pwd)"
+    return
+  fi
+  echo "laniakea sources not found (set LANIAKEA_SRC)" >&2
+  return 1
+}
+
+build() {
+  :
+}
+
+package() {
+  local src
+  src="$(_laniakea_src)"
+
+  install -d "${pkgdir}/usr/lib/laniakea"
+  cp -a "${src}/laniakea" "${pkgdir}/usr/lib/laniakea/"
+  find "${pkgdir}/usr/lib/laniakea" -type d -name '__pycache__' -exec rm -rf {} +
+  find "${pkgdir}/usr/lib/laniakea" -type f -name '*.pyc' -delete
+  install -d "${pkgdir}/usr/share/laniakea"
+  cp -a "${src}/share/laniakea/web" "${pkgdir}/usr/share/laniakea/"
+
+  install -Dm644 "${src}/data/laniakea.desktop" \
+    "${pkgdir}/usr/share/applications/laniakea.desktop"
+  install -Dm644 "${src}/README.md" \
+    "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 "${src}/LICENSE" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  cat <<'EOF' | install -Dm755 /dev/stdin "${pkgdir}/usr/bin/laniakea"
+#!/usr/bin/env bash
+export PYTHONPATH="/usr/lib/laniakea${PYTHONPATH:+:$PYTHONPATH}"
+export LANIAKEA_WEB_ROOT="${LANIAKEA_WEB_ROOT:-/usr/share/laniakea/web}"
+exec python3 -m laniakea "$@"
+EOF
+}

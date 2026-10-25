@@ -89,6 +89,7 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - `packaging/shelly-bin`: local PKGBUILD wrapping Seafoam Labs release tarball (no Flatpak backend package).
 - `packaging/spore`: local PKGBUILD for visnudeva/spore (Go TUI radio + local files; optional `ffmpeg` for some codecs).
 - `packaging/tuber`: local PKGBUILD for visnudeva/tuber (Go BitTorrent TUI; replaces transmission-gtk; Mod+t).
+- `packaging/laniakea`: opt-in generative wallpaper app (sibling `GITHUB/laniakea`; testing channel first). Live draw + masks → PNG → swaybg/waypaper. Not on the ISO by default.
 - `packaging/swaylock-effects`: jirutka fork with lock-screen clock; replaces Arch `swaylock` (ISO + `sweetpotatos-update`).
 
 ## Live ISO specifics (`sync-theme.sh` injects into liveuser Swirl config)

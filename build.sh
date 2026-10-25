@@ -102,6 +102,7 @@ DO_CALAMARES=0
 DO_SWIRL=0
 DO_SWEETPOTATOS=0
 DO_AUR_APPS=0
+DO_LANIAKEA=0
 DO_ISO=1
 for arg in "$@"; do
   case "${arg}" in
@@ -109,6 +110,7 @@ for arg in "$@"; do
     --build-swirl) DO_SWIRL=1; DO_ISO=0 ;;
     --build-sweetpotatos) DO_SWEETPOTATOS=1; DO_ISO=0 ;;
     --build-aur-apps) DO_AUR_APPS=1; DO_ISO=0 ;;
+    --build-laniakea) DO_LANIAKEA=1; DO_ISO=0 ;;
     --build-packages) DO_CALAMARES=1; DO_SWIRL=1; DO_SWEETPOTATOS=1; DO_AUR_APPS=1; DO_ISO=0 ;;
     --help|-h)
       cat <<EOF
@@ -118,7 +120,8 @@ Usage: sudo ./build.sh [options]
   --build-calamares   Build Calamares into repo/ only
   --build-swirl       Build Swirl compositor into repo/ only
   --build-sweetpotatos  Build sweetpotatos branding package into repo/ only
-  --build-aur-apps    Build yay-bin + shelly-bin + localsend-bin + spore + tuber + swaylock-effects + brave-origin-bin into repo/ only
+  --build-laniakea    Build laniakea wallpaper app into repo/ only
+  --build-aur-apps    Build yay-bin + shelly-bin + localsend-bin + spore + tuber + laniakea + swaylock-effects + brave-origin-bin into repo/ only
   --build-packages    Build calamares + swirl + sweetpotatos + AUR apps into repo/ only
 EOF
       exit 0
@@ -161,6 +164,12 @@ elif (( DO_SWEETPOTATOS )); then
   echo "[*] sweetpotatos already in ${REPO}/ — skipping"
 fi
 
+if (( DO_LANIAKEA )) && ! need_repo_pkg laniakea; then
+  build_local_pkg laniakea "${ROOT}/packaging/laniakea"
+elif (( DO_LANIAKEA )); then
+  echo "[*] laniakea already in ${REPO}/ — skipping"
+fi
+
 if (( DO_AUR_APPS )); then
   need_repo_pkg yay-bin || build_aur_pkg yay-bin https://aur.archlinux.org/yay-bin.git
   # Local PKGBUILD: AUR shelly-bin often blocked/empty behind Anubis; no zig needed
@@ -169,6 +178,7 @@ if (( DO_AUR_APPS )); then
   need_repo_pkg localsend-bin || build_local_pkg localsend-bin "${ROOT}/packaging/localsend-bin"
   need_repo_pkg spore || build_local_pkg spore "${ROOT}/packaging/spore"
   need_repo_pkg tuber || build_local_pkg tuber "${ROOT}/packaging/tuber"
+  need_repo_pkg laniakea || build_local_pkg laniakea "${ROOT}/packaging/laniakea"
   # Local PKGBUILD: jirutka fork with clock; replaces Arch swaylock
   need_repo_pkg swaylock-effects || build_local_pkg swaylock-effects "${ROOT}/packaging/swaylock-effects"
   # Local PKGBUILD: AUR prepare() still chmods brave/; zip ships brave-origin

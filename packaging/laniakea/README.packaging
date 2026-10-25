@@ -1,0 +1,3 @@
+Laniakea is packaged from the sibling checkout at `GITHUB/laniakea` (or
+`LANIAKEA_SRC`). When that project gets a public GitHub repo, switch this
+PKGBUILD `source=` to the git URL like spore/tuber.

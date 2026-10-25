@@ -34,6 +34,7 @@ assert "grep -q 'TAG=pacman-repo-testing' '${ROOT}/scripts/publish-repo.sh'" \
 assert "grep -q 'sweetpotatos$' '${UPD}'" "upgrades sweetpotatos package"
 assert "grep -q 'swirl$' '${UPD}'" "upgrades swirl package"
 assert "grep -q 'sweetpotatos-sprout' '${UPD}'" "runs sprout after upgrade"
+assert "grep -q '^  laniakea$' '${UPD}'" "testing channel can install laniakea"
 assert "grep -q 'pacman -Syu' '${UPD}'" "reminds Arch lane is separate"
 assert "grep -q 'swaymsg reload' '${UPD}'" "reloads Swirl after sprout"
 assert "grep -q -- '--quiet apply' '${UPD}'" \
