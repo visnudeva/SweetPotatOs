@@ -2,10 +2,10 @@
 # shellcheck disable=SC2034
 
 iso_name="Sweetpotatos"
-iso_label="SPOTATO_FOURTH202610"
+iso_label="SPOTATO_FOURTH202611"
 iso_publisher="SweetPotatOs"
-iso_application="SweetPotatOs 2026.10 Fourth Harvest"
-iso_version="2026.10_Fourth_Harvest"
+iso_application="SweetPotatOs 2026.11 Fourth Harvest"
+iso_version="2026.11_Fourth_Harvest"
 install_dir="spotato"
 buildmodes=('iso')
 bootmodes=('bios.syslinux'

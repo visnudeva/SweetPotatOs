@@ -42,32 +42,32 @@
 
   <main>
     <div class="banner-row">
-      <div class="rolling-note" aria-label="Fourth Harvest changes on the update channel">
-        <p>Desktop changes below are already live for <strong>Third Harvest</strong></p>
+      <div class="rolling-note" aria-label="Fifth Harvest changes on the update channel">
+        <p>Desktop changes below are already live for <strong>Fourth Harvest</strong></p>
         <p>installs via <code>sudo sweetpotatos-update</code></p>
-        <p>No need to wait for the Fourth Harvest ISO.</p>
+        <p>No need to wait for the Fifth Harvest ISO.</p>
       </div>
       <div class="banner-stack">
-        <aside class="countdown out" aria-label="Third Harvest released">
+        <aside class="countdown out" aria-label="Fourth Harvest released">
           <p class="countdown-label">
-            <strong>Third Harvest</strong> ISO
+            <strong>Fourth Harvest</strong> ISO
           </p>
           <p class="countdown-days">Out now</p>
           <p class="countdown-sub">
-            Released 24 September 2026 ·
-            <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.10_Third_Harvest/">Download</a>
+            Released 28 October 2026 ·
+            <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.11_Fourth_Harvest/">Download</a>
           </p>
         </aside>
         <aside
           class="countdown"
-          id="fourth-harvest-countdown"
+          id="fifth-harvest-countdown"
           aria-live="polite"
-          data-release="2026-11-01">
+          data-release="2026-12-01">
           <p class="countdown-label">
-            <strong>Fourth Harvest</strong> ISO — planned release
+            <strong>Fifth Harvest</strong> ISO — planned release
           </p>
-          <p class="countdown-days" id="countdown-days">— <span>days left</span></p>
-          <p class="countdown-sub">1 November 2026</p>
+          <p class="countdown-days" id="countdown-days">— <span>about days left</span></p>
+          <p class="countdown-sub">about 1 December 2026</p>
         </aside>
       </div>
     </div>
@@ -75,21 +75,39 @@
     <nav class="toc" aria-label="Releases">
       <h2>Releases</h2>
       <ol>
-        <li><a href="#fourth-harvest">2026.11 — Fourth Harvest</a> (rolling + planned ISO)</li>
+        <li><a href="#fifth-harvest">2026.12 — Fifth Harvest</a> (planned ISO)</li>
+        <li><a href="#fourth-harvest">2026.11 — Fourth Harvest</a></li>
         <li><a href="#third-harvest">2026.10 — Third Harvest</a></li>
         <li><a href="#second-harvest">2026.09 — Second Harvest</a></li>
         <li><a href="#first-harvest">2026.08 — First Harvest</a></li>
       </ol>
     </nav>
 
-    <details class="release" id="fourth-harvest">
+    <details class="release" id="fifth-harvest" open>
+      <summary>
+        <span class="release-heading">
+          <h2>Fifth Harvest</h2>
+          <p class="meta">
+            Planned ISO <strong>about 1 December 2026</strong>
+        · Desktop changes will ship on the
+        <code>sweetpotatos-update</code> channel for Fourth Harvest installs
+          </p>
+        </span>
+        <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
+      </summary>
+      <ul>
+        <li>Planned ISO window — exact day may shift a little; watch the countdown above.</li>
+      </ul>
+    </details>
+
+    <details class="release" id="fourth-harvest" open>
       <summary>
         <span class="release-heading">
           <h2>Fourth Harvest</h2>
           <p class="meta">
-            Planned ISO <strong>1 November 2026</strong>
-        · Desktop changes already on the
-        <code>sweetpotatos-update</code> channel for Third Harvest installs
+            Released <strong>28 October 2026</strong>
+        · ISO <code>Sweetpotatos_2026.11_Fourth_Harvest.iso</code>
+        · Files folder <code>2026.11_Fourth_Harvest</code>
           </p>
         </span>
         <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
@@ -268,11 +286,11 @@
   </script>
   <script>
     (function () {
-      var box = document.getElementById("fourth-harvest-countdown");
+      var box = document.getElementById("fifth-harvest-countdown");
       var daysEl = document.getElementById("countdown-days");
       if (!box || !daysEl) return;
 
-      var releaseIso = box.getAttribute("data-release") || "2026-11-01";
+      var releaseIso = box.getAttribute("data-release") || "2026-12-01";
       var parts = releaseIso.split("-").map(Number);
       var release = new Date(parts[0], parts[1] - 1, parts[2]);
       release.setHours(0, 0, 0, 0);
@@ -283,15 +301,15 @@
       var days = Math.round((release - now) / msPerDay);
 
       if (days > 1) {
-        daysEl.innerHTML = days + ' <span>days left</span>';
+        daysEl.innerHTML = 'about ' + days + ' <span>days left</span>';
       } else if (days === 1) {
-        daysEl.innerHTML = '1 <span>day left</span>';
+        daysEl.innerHTML = 'about 1 <span>day left</span>';
       } else if (days === 0) {
-        daysEl.innerHTML = 'Today <span>release day</span>';
+        daysEl.innerHTML = 'about <span>today</span>';
       } else {
         daysEl.innerHTML = 'Out now';
         box.querySelector(".countdown-sub").textContent =
-          "Released 1 November 2026";
+          "Released about 1 December 2026";
       }
     })();
   </script>
