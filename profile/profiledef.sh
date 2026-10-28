@@ -12,7 +12,9 @@ bootmodes=('bios.syslinux'
            'uefi.systemd-boot')
 pacman_conf="pacman.conf"
 airootfs_image_type="squashfs"
-airootfs_image_tool_options=('-comp' 'xz' '-Xbcj' 'x86' '-b' '1M' '-Xdict-size' '1M')
+# -processors 2: parallel xz + -Xbcj was aborting with
+# "xz uncompress failed with error code 9" on this build host.
+airootfs_image_tool_options=('-comp' 'xz' '-Xbcj' 'x86' '-b' '1M' '-Xdict-size' '1M' '-processors' '2')
 bootstrap_tarball_compression=('zstd' '-c' '-T0' '--auto-threads=logical' '--long' '-19')
 file_permissions=(
   ["/etc/shadow"]="0:0:400"
