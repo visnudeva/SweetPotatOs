@@ -66,8 +66,8 @@
           <p class="countdown-label">
             <strong>Fifth Harvest</strong> ISO — planned release
           </p>
-          <p class="countdown-days" id="countdown-days">— <span>about days left</span></p>
-          <p class="countdown-sub">about 1 December 2026</p>
+          <p class="countdown-days" id="countdown-days"><span>about</span> — <span>days left</span></p>
+          <p class="countdown-sub">December 2026</p>
         </aside>
       </div>
     </div>
@@ -88,7 +88,7 @@
         <span class="release-heading">
           <h2>Fifth Harvest</h2>
           <p class="meta">
-            Planned ISO <strong>about 1 December 2026</strong>
+            Planned ISO <strong>December 2026</strong>
         · Desktop changes will ship on the
         <code>sweetpotatos-update</code> channel for Fourth Harvest installs
           </p>
@@ -301,15 +301,15 @@
       var days = Math.round((release - now) / msPerDay);
 
       if (days > 1) {
-        daysEl.innerHTML = 'about ' + days + ' <span>days left</span>';
+        daysEl.innerHTML = '<span>about</span> ' + days + ' <span>days left</span>';
       } else if (days === 1) {
-        daysEl.innerHTML = 'about 1 <span>day left</span>';
+        daysEl.innerHTML = '<span>about</span> 1 <span>day left</span>';
       } else if (days === 0) {
-        daysEl.innerHTML = 'about <span>today</span>';
+        daysEl.innerHTML = '<span>about</span> <span>today</span>';
       } else {
         daysEl.innerHTML = 'Out now';
         box.querySelector(".countdown-sub").textContent =
-          "Released about 1 December 2026";
+          "Released December 2026";
       }
     })();
   </script>

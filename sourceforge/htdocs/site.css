@@ -1048,6 +1048,10 @@ footer {
   vertical-align: middle;
   margin-left: 0.35rem;
 }
+.countdown-days span:first-child {
+  margin-left: 0;
+  margin-right: 0.35rem;
+}
 .countdown-sub {
   margin: 0.55rem 0 0;
   color: var(--text-dim);
