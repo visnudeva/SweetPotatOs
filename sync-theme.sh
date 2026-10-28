@@ -57,8 +57,12 @@ inject_live_caffeine() {
     return 0
   fi
   if grep -q '^exec swayidle' "${f}"; then
-    sed -i '/^exec swayidle -w \\$/,/^[[:space:]]*before-sleep/d' "${f}"
+    # Drop the whole swayidle stanza, including the after-resume continuation.
+    # Leaving that line behind is a Swirl parse error on the live session.
+    sed -i '/^exec swayidle -w \\$/,/^[[:space:]]*after-resume/d' "${f}"
   fi
+  # Idempotent cleanup if an older inject left a dangling after-resume.
+  sed -i '/^[[:space:]]*after-resume .*output \* power on/d' "${f}"
   sed -i '/^### Idle configuration/a\
 #\
 # Live ISO: caffeine on by default so install does not sleep/lock\
