@@ -1,0 +1,31 @@
+{
+  "title": "SweetPotatOs Fourth Harvest — Swirl desktop screencast",
+  "description": "SweetPotatOs Fourth Harvest (2026.10) — a quick tour of the Swirl desktop on an Arch-based ISO built for older and low-spec PCs.\n\nDownload the ISO\nhttps://sourceforge.net/projects/sweetpotatos/files/2026.10_Fourth_Harvest/\n\nProject site / showroom\nhttps://sweetpotatos.sourceforge.io/\nhttps://sweetpotatos.sourceforge.io/showroom.html\n\nChangelog\nhttps://sweetpotatos.sourceforge.io/changelog.html\n\nWhat you are seeing\n• Swirl desktop (SweetPotato) on SweetPotatOs\n• Overview (Mod+Tab), tiled windows, status bar, and themes\n• Fourth Harvest highlights: Laniakea generative wallpapers, Smart Brightness, quieter logout, floating bar with gaps, new Plymouth logo, and the rolling sweetpotatos-update channel\n\nStay updated on an installed system\nsudo sweetpotatos-update\n\nThat refreshes SPO-owned packages (theme, Swirl, Spore, Tuber, Laniakea, …) without a full Arch pacman -Syu. New Harvest ISOs remain for fresh installs.\n\nLinks\n• SourceForge: https://sourceforge.net/projects/sweetpotatos/\n• Website: https://sweetpotatos.sourceforge.io/\n• Keybinds: https://sweetpotatos.sourceforge.io/keybinds.html\n\n#SweetPotatOs #Linux #ArchLinux #Desktop #Screencast #FourthHarvest #OpenSource #LowSpec",
+  "tags": [
+    "SweetPotatOs",
+    "Fourth Harvest",
+    "Linux",
+    "Arch Linux",
+    "Swirl",
+    "SweetPotato",
+    "desktop",
+    "screencast",
+    "low-spec",
+    "old PC",
+    "ISO",
+    "SourceForge",
+    "Laniakea",
+    "Smart Brightness",
+    "tiling",
+    "Wayland",
+    "open source"
+  ],
+  "privacyStatus": "public",
+  "categoryId": "28",
+  "language": "en",
+  "embeddable": true,
+  "publicStatsViewable": true,
+  "license": "youtube",
+  "madeForKids": false,
+  "recordingDate": "2026-10-28"
+}
