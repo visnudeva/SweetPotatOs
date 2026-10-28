@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Showroom</title>
-  <meta name="description" content="SweetPotatOs screencast, desktop screenshots, and wallpapers.">
+  <meta name="description" content="SweetPotatOs screencast, desktop screenshots, themer, Laniakea, and wallpapers.">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="stylesheet" href="site.css">
   <script src="site.js" defer></script>
@@ -34,7 +34,7 @@
   <header class="page">
     <h1>Showroom</h1>
     <p class="lead">
-      The desktop in motion, screenshots, the color themes, and the wallpapers that ship with the theme.
+      The desktop in motion, screenshots, the color themes, Laniakea, and the wallpapers that ship with the theme.
     </p>
   </header>
 
@@ -146,6 +146,38 @@
           <i class="themer-stage-dot" data-stage-highlight></i>
         </div>
         <div class="swatches themer-swatches" data-preview-swatches></div>
+      </div>
+    </div>
+
+    <h2>Laniakea</h2>
+    <p>
+      Open it from the app menu. A generative flow field draws inside a shape mask; <strong>Apply</strong> sets it as the wallpaper.
+      The same shape picker sits below as a live preview — change the mask or hit Redraw to start a new field.
+    </p>
+    <div class="laniakea" data-laniakea>
+      <div class="laniakea-window">
+        <p class="laniakea-title">Laniakea</p>
+        <label class="laniakea-field">
+          <span>Shape mask</span>
+          <select data-mask aria-label="Shape mask">
+            <option value="circle">Circle</option>
+            <option value="triangle-up" selected>Triangle up</option>
+            <option value="triangle-down">Triangle down</option>
+            <option value="diamond">Diamond</option>
+            <option value="hexagon">Hexagon</option>
+            <option value="rectangle-vertical">Vertical rectangle</option>
+            <option value="rectangle-horizontal">Horizontal rectangle</option>
+            <option value="wide">Wide</option>
+          </select>
+        </label>
+        <button type="button" class="laniakea-redraw" data-redraw>Redraw</button>
+        <p class="laniakea-hint">Preview only — Apply lives in the desktop app.</p>
+      </div>
+      <div class="laniakea-preview">
+        <p class="laniakea-preview-kicker">Live draw</p>
+        <div class="laniakea-stage">
+          <canvas data-canvas width="720" height="420" aria-label="Laniakea flow-field preview"></canvas>
+        </div>
       </div>
     </div>
 
@@ -641,6 +673,164 @@
       window.addEventListener("resize", render);
       render();
     }());
+  </script>
+
+  <script>
+    (function () {
+      var root = document.querySelector("[data-laniakea]");
+      if (!root) return;
+      var canvas = root.querySelector("[data-canvas]");
+      var select = root.querySelector("[data-mask]");
+      var redrawBtn = root.querySelector("[data-redraw]");
+      var ctx = canvas.getContext("2d");
+      var W = canvas.width;
+      var H = canvas.height;
+      var points = [];
+      var colors = {};
+      var mult = 0.005;
+      var mode = select.value || "triangle-up";
+      var raf = 0;
+      var steps = 0;
+      var maxSteps = 420;
+
+      function rnd(seed) {
+        var x = Math.sin(seed) * 10000;
+        return x - Math.floor(x);
+      }
+
+      function inTriangle(px, py, x1, y1, x2, y2, x3, y3) {
+        function sign(p1x, p1y, p2x, p2y, p3x, p3y) {
+          return (p1x - p3x) * (p2y - p3y) - (p2x - p3x) * (p1y - p3y);
+        }
+        var d1 = sign(px, py, x1, y1, x2, y2);
+        var d2 = sign(px, py, x2, y2, x3, y3);
+        var d3 = sign(px, py, x3, y3, x1, y1);
+        var hasNeg = d1 < 0 || d2 < 0 || d3 < 0;
+        var hasPos = d1 > 0 || d2 > 0 || d3 > 0;
+        return !(hasNeg && hasPos);
+      }
+
+      function inPoly(px, py, verts) {
+        var inside = false;
+        for (var i = 0, j = verts.length - 1; i < verts.length; j = i++) {
+          var xi = verts[i][0], yi = verts[i][1];
+          var xj = verts[j][0], yj = verts[j][1];
+          if ((yi > py) !== (yj > py) && px < ((xj - xi) * (py - yi)) / (yj - yi) + xi)
+            inside = !inside;
+        }
+        return inside;
+      }
+
+      function radius() {
+        return Math.min(H, W) / 3;
+      }
+
+      function inside(x, y) {
+        if (mode === "wide") return true;
+        var cx = W / 2, cy = H / 2, r = radius();
+        if (mode === "circle")
+          return (x - cx) * (x - cx) + (y - cy) * (y - cy) < r * r;
+        if (mode === "triangle-up")
+          return inTriangle(x, y, cx, cy - r, cx - r * 0.92, cy + r * 0.8, cx + r * 0.92, cy + r * 0.8);
+        if (mode === "triangle-down")
+          return inTriangle(x, y, cx, cy + r, cx - r * 0.92, cy - r * 0.8, cx + r * 0.92, cy - r * 0.8);
+        if (mode === "diamond")
+          return Math.abs(x - cx) + Math.abs(y - cy) < r;
+        if (mode === "hexagon") {
+          var verts = [];
+          for (var i = 0; i < 6; i++) {
+            var a = -Math.PI / 2 + (i * Math.PI) / 3;
+            verts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+          }
+          return inPoly(x, y, verts);
+        }
+        if (mode === "rectangle-vertical")
+          return Math.abs(x - cx) <= r * 0.45 && Math.abs(y - cy) <= r;
+        if (mode === "rectangle-horizontal")
+          return Math.abs(x - cx) <= r && Math.abs(y - cy) <= r * 0.45;
+        return true;
+      }
+
+      function fieldAngle(x, y) {
+        var n =
+          Math.sin(x * mult * 1.7 + colors.seed) * Math.cos(y * mult * 1.3 - colors.seed) +
+          Math.sin((x * mult * 0.55 - y * mult) * 2.1 + colors.seed * 0.7);
+        return n * Math.PI * 2;
+      }
+
+      function reset() {
+        cancelAnimationFrame(raf);
+        steps = 0;
+        colors.seed = Math.random() * 1000;
+        colors.r1 = 40 + Math.random() * 180;
+        colors.r2 = 80 + Math.random() * 175;
+        colors.g1 = 20 + Math.random() * 120;
+        colors.g2 = 40 + Math.random() * 160;
+        colors.b1 = 90 + Math.random() * 165;
+        colors.b2 = 120 + Math.random() * 135;
+        mult = 0.0025 + Math.random() * 0.007;
+        points = [];
+        var space = H / 42;
+        for (var x = 0; x < W; x += space / 2) {
+          for (var y = 0; y < H; y += space * 2) {
+            points.push({
+              x: x + (Math.random() - 0.5) * 80,
+              y: y + (Math.random() - 0.5) * 80,
+            });
+          }
+        }
+        ctx.fillStyle = "#141414";
+        ctx.fillRect(0, 0, W, H);
+        tick();
+      }
+
+      function tick() {
+        if (steps++ > maxSteps) return;
+        ctx.lineWidth = 0.7;
+        ctx.lineCap = "round";
+        for (var i = 0; i < points.length; i++) {
+          var p = points[i];
+          var ox = p.x, oy = p.y;
+          var ang = fieldAngle(p.x, p.y);
+          p.x += Math.cos(ang);
+          p.y += Math.sin(ang);
+          if (!inside(p.x, p.y)) continue;
+          var t = p.x / W;
+          var r = colors.r1 + (colors.r2 - colors.r1) * t;
+          var g = colors.g1 + (colors.g2 - colors.g1) * t;
+          var b = colors.b1 + (colors.b2 - colors.b1) * (oy / H);
+          var dx = p.x - W / 2, dy = p.y - H / 2;
+          var alpha = Math.max(0, 0.85 - Math.sqrt(dx * dx + dy * dy) / (H * 0.55));
+          ctx.strokeStyle = "rgba(" + (r|0) + "," + (g|0) + "," + (b|0) + "," + alpha + ")";
+          ctx.beginPath();
+          ctx.moveTo(ox, oy);
+          ctx.lineTo(p.x, p.y);
+          ctx.stroke();
+        }
+        raf = requestAnimationFrame(tick);
+      }
+
+      select.addEventListener("change", function () {
+        mode = select.value;
+        reset();
+      });
+      redrawBtn.addEventListener("click", reset);
+      if ("IntersectionObserver" in window) {
+        var seen = false;
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting && !seen) {
+              seen = true;
+              reset();
+              io.disconnect();
+            }
+          });
+        }, { threshold: 0.25 });
+        io.observe(root);
+      } else {
+        reset();
+      }
+    })();
   </script>
 </body>
 </html>

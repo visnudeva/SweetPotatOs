@@ -690,6 +690,105 @@ main .hero {
   }
   .themer-hex { font-size: 0.62rem; }
 }
+
+.laniakea {
+  --panel-bg: #1d1f21;
+  --panel-fg: #f5e6e8;
+  --live-accent: #a73b50;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin: 0.85rem 0 0.35rem;
+}
+@media (min-width: 860px) {
+  .laniakea {
+    grid-template-columns: minmax(0, 22.5rem) minmax(0, 1fr);
+    align-items: stretch;
+  }
+}
+.laniakea-window,
+.laniakea-preview {
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.laniakea-window {
+  background: var(--panel-bg);
+  color: var(--panel-fg);
+  border: 2px solid var(--live-accent);
+  padding: 0.95rem 1rem 1rem;
+}
+.laniakea-title {
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+  color: var(--panel-fg);
+}
+.laniakea-field {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+  font-size: 0.92rem;
+  color: var(--panel-fg);
+}
+.laniakea-field span { font-weight: 700; }
+.laniakea-field select {
+  width: 100%;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--panel-fg) 28%, transparent);
+  background: color-mix(in srgb, var(--panel-fg) 8%, var(--panel-bg));
+  color: var(--panel-fg);
+  font: inherit;
+}
+.laniakea-redraw {
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: var(--live-accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.laniakea-redraw:hover {
+  filter: brightness(1.08);
+}
+.laniakea-hint {
+  margin: 0.85rem 0 0;
+  color: color-mix(in srgb, var(--panel-fg) 65%, transparent);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.laniakea-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--surface);
+}
+.laniakea-preview-kicker {
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+}
+.laniakea-stage {
+  flex: 1;
+  min-height: 14rem;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #141414;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.laniakea-stage canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 26rem;
+  object-fit: contain;
+}
+
 .btn {
   display: inline-block;
   padding: 0.85rem 1.35rem;
