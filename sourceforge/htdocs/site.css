@@ -73,7 +73,8 @@ a:hover { color: #ffae4a; }
 }
 .topnav-links a.shop,
 .topnav-links a.donate,
-.topnav-links a.support {
+.topnav-links a.support,
+.topnav-links a.contact-nav {
   color: var(--orange);
 }
 .topnav-links a.shop:hover,
@@ -84,15 +85,8 @@ a:hover { color: #ffae4a; }
 }
 .topnav-links a.support:hover,
 .topnav-links a.support[aria-current="page"],
-.topnav-links a.support[aria-current="page"]:hover {
-  color: var(--red);
-}
-.topnav-links a.contact-nav {
-  color: var(--red);
-}
-.topnav-links a.contact-nav:hover {
-  color: var(--orange);
-}
+.topnav-links a.support[aria-current="page"]:hover,
+.topnav-links a.contact-nav:hover,
 .topnav-links a.contact-nav[aria-current="page"],
 .topnav-links a.contact-nav[aria-current="page"]:hover {
   color: var(--red);
@@ -984,6 +978,7 @@ pre code {
 }
 .support-card .support-label {
   margin: 0 0 0.35rem;
+  flex: none;
   color: var(--orange);
   font-size: 0.78rem;
   font-weight: 700;
@@ -997,7 +992,7 @@ pre code {
   display: block;
   font-size: 1.35rem;
 }
-.support-card p {
+.support-card > p:not(.support-label) {
   margin: 0 0 1.15rem;
   flex: 1;
   font-size: 0.98rem;
