@@ -823,11 +823,11 @@ main .hero {
 }
 .btn-orange {
   background: var(--orange);
-  color: #1d1f21;
+  color: #fff;
 }
 .btn-orange:hover {
   filter: brightness(1.08);
-  color: #1d1f21;
+  color: #fff;
 }
 .project {
   scroll-margin-top: 4.5rem;
