@@ -110,6 +110,9 @@ seat * xcursor_theme capitaine-cursors 24
     # Wallpaper selector
     bindsym $mod+Ctrl+w exec waypaper
 
+    # Laniakea generative wallpaper
+    bindsym $mod+Ctrl+l exec laniakea
+
     # Displays. Apply in that window saves the layout.
     bindsym $mod+Ctrl+d exec ~/.config/swirl/scripts/nwg-displays.sh
 

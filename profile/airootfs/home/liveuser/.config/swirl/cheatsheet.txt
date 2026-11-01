@@ -39,6 +39,7 @@
 
   Displays / look
   Mod+Ctrl+w         Wallpaper
+  Mod+Ctrl+l         Laniakea
   Mod+Ctrl+t         SweetPotato themer
   Mod+Ctrl+g         Corners and gaps
   Mod+Ctrl+d         Displays (nwg-displays)

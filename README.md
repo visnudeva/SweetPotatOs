@@ -153,6 +153,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+a` | Floating toggle |
 | `Mod+?` | Keybind cheatsheet (toggle) |
 | `Mod+Ctrl+w` | Wallpaper selector (waypaper) |
+| `Mod+Ctrl+l` | Laniakea (generative wallpaper) |
 | `Mod+Shift+r` | Resize mode (arrow keys; Enter/Esc to exit) |
 | `Print` | Screenshot → `~/Pictures/Screenshots` (+ clipboard) |
 | `Mod+Shift+Print` | Region screenshot |
