@@ -163,8 +163,15 @@ class Picker(Gtk.Window):
 
         self.dark.connect("toggled", self._on_mode)
         self.light.connect("toggled", self._on_mode)
+        self.connect("key-press-event", self._on_key)
         self._rebuild_presets(self._preset_id)
         self.refresh_swatches()
+
+    def _on_key(self, _widget, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.destroy()
+            return True
+        return False
 
     def do_draw(self, cr):
         red, green, blue = self._bg

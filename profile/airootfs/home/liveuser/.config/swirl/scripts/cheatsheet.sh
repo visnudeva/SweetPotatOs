@@ -68,6 +68,7 @@ TTY_PATH="$(tty 2>/dev/null || true)"
 content="$(mktemp)"
 opener="$(mktemp)"
 toggler="$(mktemp)"
+closer="$(mktemp)"
 restart_flag="$(mktemp)"
 less_pid_file="$(mktemp)"
 rm -f "${restart_flag}"
@@ -106,7 +107,8 @@ cleanup() {
   swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
   swaymsg unbindsym x >/dev/null 2>&1 || true
   swaymsg unbindsym Shift+x >/dev/null 2>&1 || true
-  rm -f "${content}" "${opener}" "${toggler}" "${fifo}" "${restart_flag}" "${less_pid_file}"
+  swaymsg unbindsym Escape >/dev/null 2>&1 || true
+  rm -f "${content}" "${opener}" "${toggler}" "${closer}" "${fifo}" "${restart_flag}" "${less_pid_file}"
 }
 trap cleanup EXIT
 
@@ -224,6 +226,29 @@ printf "toggle\n" > "\${FIFO}"
 EOF
 chmod 755 "${toggler}"
 
+# Closer: Escape (while focused) kills this floating sheet.
+cat >"${closer}" <<EOF
+#!/bin/bash
+set -euo pipefail
+APP_ID=$(printf '%q' "${APP_ID}")
+focused="\$(swaymsg -t get_tree 2>/dev/null | python3 -c "
+import json, sys
+def walk(n):
+    if n.get(\"focused\"):
+        return n.get(\"app_id\") or \"\"
+    for key in (\"nodes\", \"floating_nodes\"):
+        for c in n.get(key) or []:
+            r = walk(c)
+            if r is not None:
+                return r
+    return None
+print(walk(json.load(sys.stdin)) or \"\")
+" 2>/dev/null || true)"
+[[ "\${focused}" == "\${APP_ID}" ]] || exit 0
+swaymsg "[app_id=\"\${APP_ID}\"] kill" >/dev/null 2>&1 || true
+EOF
+chmod 755 "${closer}"
+
 cheat_focused() {
   local focused
   focused="$(swaymsg -t get_tree 2>/dev/null | python3 -c "
@@ -242,7 +267,7 @@ print(walk(json.load(sys.stdin)) or \"\")
   [[ "${focused}" == "${APP_ID}" ]]
 }
 
-# Bind w only while this sheet is focused so other apps keep their w key.
+# Bind w/x/Escape only while this sheet is focused so other apps keep those keys.
 (
   local_bound=0
   while true; do
@@ -252,6 +277,7 @@ print(walk(json.load(sys.stdin)) or \"\")
         swaymsg "bindsym --no-warn Shift+w exec ${opener}" >/dev/null 2>&1 || true
         swaymsg "bindsym --no-warn x exec ${toggler}" >/dev/null 2>&1 || true
         swaymsg "bindsym --no-warn Shift+x exec ${toggler}" >/dev/null 2>&1 || true
+        swaymsg "bindsym --no-warn Escape exec ${closer}" >/dev/null 2>&1 || true
         local_bound=1
       fi
     else
@@ -260,6 +286,7 @@ print(walk(json.load(sys.stdin)) or \"\")
         swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
         swaymsg unbindsym x >/dev/null 2>&1 || true
         swaymsg unbindsym Shift+x >/dev/null 2>&1 || true
+        swaymsg unbindsym Escape >/dev/null 2>&1 || true
         local_bound=0
       fi
     fi
@@ -268,7 +295,7 @@ print(walk(json.load(sys.stdin)) or \"\")
 ) &
 watch_pid=$!
 
-status="${PINK}w${RESET} ${CREAM}website${RESET}  ${PINK}x${RESET} ${CREAM}keybind reminder${RESET}  ${PINK}q${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
+status="${PINK}w${RESET} ${CREAM}website${RESET}  ${PINK}x${RESET} ${CREAM}keybind reminder${RESET}  ${PINK}q/Esc${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
 
 render_content
 
@@ -296,7 +323,7 @@ else
   printf "\n%s\n" "${status}"
   while IFS= read -rsn1 k; do
     case "${k}" in
-      q|Q) exit 0 ;;
+      q|Q|$'\e') exit 0 ;;
       x|X)
         state="$(tip_state)"
         mkdir -p "$(dirname "${TIP_FILE}")"
