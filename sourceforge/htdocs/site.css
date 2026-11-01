@@ -79,10 +79,23 @@ a:hover { color: #ffae4a; }
 .topnav-links a.shop:hover,
 .topnav-links a.shop[aria-current="page"],
 .topnav-links a.donate:hover,
-.topnav-links a.donate[aria-current="page"],
-.topnav-links a.support:hover,
-.topnav-links a.support[aria-current="page"] {
+.topnav-links a.donate[aria-current="page"] {
   color: #ffae4a;
+}
+.topnav-links a.support:hover,
+.topnav-links a.support[aria-current="page"],
+.topnav-links a.support[aria-current="page"]:hover {
+  color: var(--red);
+}
+.topnav-links a.contact-nav {
+  color: var(--red);
+}
+.topnav-links a.contact-nav:hover {
+  color: var(--orange);
+}
+.topnav-links a.contact-nav[aria-current="page"],
+.topnav-links a.contact-nav[aria-current="page"]:hover {
+  color: var(--red);
 }
 .nav-toggle {
   display: none;
