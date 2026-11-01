@@ -821,6 +821,11 @@ main .hero {
   border-color: var(--orange);
   color: var(--orange);
 }
+.btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: default;
+  pointer-events: none;
+}
 .btn-orange {
   background: var(--orange);
   color: #fff;
