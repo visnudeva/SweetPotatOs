@@ -6,6 +6,7 @@
   <title>SweetPotatOs — Arch-based Linux for old potato PCs</title>
   <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Swirl desktop, and Calamares installer.">
   <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="preload" href="SweetPotatOs-glitch.png" as="image">
   <link rel="stylesheet" href="site.css">
   <script src="site.js" defer></script>
 </head>
@@ -32,10 +33,12 @@
 
   <header class="page">
     <div class="title-row">
-      <img class="logo" src="SweetPotatOs.png" alt="SweetPotatOs logo">
+      <button type="button" class="logo-hit" id="tuber-vault-hit" aria-expanded="false" aria-controls="tuber-vault" title="…">
+        <img class="logo" id="tuber-vault-logo" src="SweetPotatOs.png" data-clean="SweetPotatOs.png" data-glitch="SweetPotatOs-glitch.png" alt="SweetPotatOs logo">
+      </button>
       <h1>SweetPotatOs</h1>
     </div>
-    <p class="tagline">A unique minimalist distro made with love</p>
+    <p class="tagline" data-vault-tagline>A unique minimalist distro made with love</p>
     <span class="tag">Arch-based Linux distro</span>
     <p class="lead">
       A live graphical ISO with the SweetPotato <strong>Swirl</strong> desktop and a Calamares installer —
@@ -47,6 +50,26 @@
       <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.11_Fourth_Harvest/">Files page</a>.
     </p>
   </header>
+
+  <div id="tuber-vault" class="tuber-vault" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="tuber-vault-title">
+    <div class="tuber-vault-scan" aria-hidden="true"></div>
+    <div class="tuber-vault-noise" aria-hidden="true"></div>
+    <div class="tuber-vault-panel">
+      <p class="tuber-vault-eyebrow" id="tuber-vault-title">CLASSIFIED · TUBER VAULT</p>
+      <p class="tuber-vault-line" data-vault-line data-final="Harvest telemetry nominal. Old potatoes still boot."></p>
+      <p class="tuber-vault-line" data-vault-line data-final="Swirl strip infinite. Workspaces stacked like soil beds."></p>
+      <p class="tuber-vault-line" data-vault-line data-final="You found the glitch tuber. Nothing illegal grows here."></p>
+      <p class="tuber-vault-line" data-vault-line data-final="Channel rolling. sudo sweetpotatos-update keeps the patch alive."></p>
+      <nav class="tuber-vault-links" aria-label="Vault exits">
+        <a href="showroom.html">Showroom</a>
+        <a href="projects.html">Projects</a>
+        <a href="support.html">Support the harvest</a>
+        <a href="contact.html">Contact</a>
+        <a href="keybinds.html">Keybinds</a>
+      </nav>
+      <button type="button" class="tuber-vault-close" id="tuber-vault-close">Close vault · Esc</button>
+    </div>
+  </div>
 
   <main>
     <aside class="notice" aria-label="Who this distro is for">
