@@ -271,6 +271,9 @@ body.tuber-vault-open header.page .tagline {
   font-family: "IBM Plex Mono", "Cascadia Mono", "SFMono-Regular", ui-monospace, monospace;
   text-align: left;
   overflow: hidden;
+  animation:
+    tuber-panel-jitter 4.8s steps(1, end) infinite,
+    tuber-panel-border 3.6s linear infinite;
 }
 .tuber-vault-panel::before {
   content: "";
@@ -278,15 +281,41 @@ body.tuber-vault-open header.page .tagline {
   inset: 0 auto 0 0;
   width: 3px;
   background: linear-gradient(var(--red), var(--orange));
+  z-index: 2;
+}
+/* Chromatic tear slices — brief RGB ghosts across the panel. */
+.tuber-vault-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0 18%,
+      rgba(62, 199, 255, 0.08) 18% 22%,
+      transparent 22% 58%,
+      rgba(167, 59, 80, 0.1) 58% 63%,
+      transparent 63% 100%
+    );
+  mix-blend-mode: screen;
+  opacity: 0;
+  animation: tuber-panel-tear 5.2s steps(1, end) infinite;
 }
 .tuber-vault-eyebrow {
+  position: relative;
+  z-index: 2;
   margin: 0 0 1rem;
   color: var(--orange);
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   font-weight: 700;
+  animation: tuber-eyebrow-glitch 3.2s steps(1, end) infinite;
 }
 .tuber-vault-line {
+  position: relative;
+  z-index: 2;
   margin: 0 0 0.65rem;
   min-height: 1.45em;
   color: var(--text);
@@ -299,7 +328,12 @@ body.tuber-vault-open header.page .tagline {
   color: #9ef0d8;
   text-shadow: 1px 0 #a73b50, -1px 0 #3ec7ff;
 }
+.tuber-vault-line:nth-child(3) { animation: tuber-line-nudge 6.1s steps(1, end) infinite; }
+.tuber-vault-line:nth-child(4) { animation: tuber-line-nudge 7.4s steps(1, end) infinite 0.4s; }
+.tuber-vault-line:nth-child(5) { animation: tuber-line-nudge 5.5s steps(1, end) infinite 0.8s; }
 .tuber-vault-links {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem 0.65rem;
@@ -320,6 +354,8 @@ body.tuber-vault-open header.page .tagline {
   border-bottom-color: var(--orange);
 }
 .tuber-vault-close {
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -363,12 +399,126 @@ body.tuber-vault-open header.page .tagline {
   50% { transform: translate(-1%, 1%); }
   100% { transform: translate(1%, -1%); }
 }
+@keyframes tuber-panel-jitter {
+  0%, 86%, 100% {
+    transform: translate(0, 0) skewX(0deg);
+    filter: none;
+  }
+  87% {
+    transform: translate(-3px, 1px) skewX(-0.4deg);
+    filter: drop-shadow(2px 0 #3ec7ff) drop-shadow(-2px 0 #a73b50);
+  }
+  88% {
+    transform: translate(4px, -1px) skewX(0.55deg);
+    filter: drop-shadow(-3px 0 #3ec7ff) drop-shadow(2px 0 #f79b29);
+  }
+  89% {
+    transform: translate(-1px, 2px) skewX(-0.2deg);
+    filter: none;
+  }
+  94% {
+    transform: translate(2px, 0) skewX(0.3deg);
+    filter: drop-shadow(1px 0 #a73b50);
+  }
+  95% {
+    transform: translate(0, 0) skewX(0deg);
+    filter: none;
+  }
+}
+@keyframes tuber-panel-border {
+  0%, 100% { border-color: rgba(247, 155, 41, 0.45); }
+  40% { border-color: rgba(247, 155, 41, 0.45); }
+  42% { border-color: rgba(62, 199, 255, 0.55); }
+  44% { border-color: rgba(167, 59, 80, 0.65); }
+  46% { border-color: rgba(247, 155, 41, 0.45); }
+  78% { border-color: rgba(247, 155, 41, 0.45); }
+  79% { border-color: rgba(158, 240, 216, 0.5); }
+  81% { border-color: rgba(247, 155, 41, 0.45); }
+}
+@keyframes tuber-panel-tear {
+  0%, 100% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  18% {
+    opacity: 0.9;
+    transform: translate(6px, 0);
+    clip-path: inset(18% 0 76% 0);
+  }
+  19% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+  61% {
+    opacity: 0.85;
+    transform: translate(-8px, 0);
+    clip-path: inset(56% 0 34% 0);
+  }
+  62%, 63% {
+    opacity: 0.7;
+    transform: translate(5px, 1px);
+    clip-path: inset(40% 0 48% 0);
+  }
+  64% {
+    opacity: 0;
+    transform: translate(0, 0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes tuber-eyebrow-glitch {
+  0%, 70%, 100% {
+    transform: translate(0, 0);
+    text-shadow: none;
+    letter-spacing: 0.16em;
+  }
+  71% {
+    transform: translate(2px, 0);
+    text-shadow: -2px 0 #3ec7ff, 2px 0 #a73b50;
+    letter-spacing: 0.22em;
+  }
+  72% {
+    transform: translate(-2px, 0);
+    text-shadow: 2px 0 #3ec7ff, -1px 0 #f79b29;
+    letter-spacing: 0.12em;
+  }
+  73% {
+    transform: translate(0, 0);
+    text-shadow: none;
+    letter-spacing: 0.16em;
+  }
+}
+@keyframes tuber-line-nudge {
+  0%, 88%, 100% {
+    transform: translate(0, 0);
+    text-shadow: none;
+  }
+  89% {
+    transform: translate(3px, 0);
+    text-shadow: -1px 0 #3ec7ff, 1px 0 #a73b50;
+  }
+  90% {
+    transform: translate(-2px, 0);
+    text-shadow: 1px 0 #f79b29;
+  }
+  91% {
+    transform: translate(0, 0);
+    text-shadow: none;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   body.tuber-vault-open header.page img.logo,
   body.tuber-vault-open header.page .tagline,
   .tuber-vault-scan,
-  .tuber-vault-noise {
+  .tuber-vault-noise,
+  .tuber-vault-panel,
+  .tuber-vault-panel::after,
+  .tuber-vault-eyebrow,
+  .tuber-vault-line:nth-child(3),
+  .tuber-vault-line:nth-child(4),
+  .tuber-vault-line:nth-child(5) {
     animation: none;
   }
 }
