@@ -333,6 +333,7 @@ body.tuber-vault-open header.page .tagline {
 .tuber-vault-line:nth-child(3) { animation: tuber-line-nudge 6.1s steps(1, end) infinite; }
 .tuber-vault-line:nth-child(4) { animation: tuber-line-nudge 7.4s steps(1, end) infinite 0.4s; }
 .tuber-vault-line:nth-child(5) { animation: tuber-line-nudge 5.5s steps(1, end) infinite 0.8s; }
+.tuber-vault-line:nth-child(6) { animation: tuber-line-nudge 6.8s steps(1, end) infinite 0.2s; }
 .tuber-vault-links {
   position: relative;
   z-index: 2;
@@ -566,7 +567,8 @@ body.tuber-core-open header.page .tagline {
   .tuber-vault-eyebrow-deep,
   .tuber-vault-line:nth-child(3),
   .tuber-vault-line:nth-child(4),
-  .tuber-vault-line:nth-child(5) {
+  .tuber-vault-line:nth-child(5),
+  .tuber-vault-line:nth-child(6) {
     animation: none;
   }
 }
