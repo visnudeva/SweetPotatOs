@@ -264,7 +264,9 @@ body.tuber-vault-open header.page .tagline {
   border: 1px solid rgba(247, 155, 41, 0.45);
   border-radius: 4px;
   background:
-    linear-gradient(180deg, rgba(37, 39, 41, 0.96), rgba(29, 31, 33, 0.98));
+    linear-gradient(180deg, rgba(37, 39, 41, 0.72), rgba(29, 31, 33, 0.68));
+  backdrop-filter: blur(10px) saturate(1.15);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15);
   box-shadow:
     0 0 0 1px rgba(167, 59, 80, 0.25),
     0 18px 50px rgba(0, 0, 0, 0.45);
