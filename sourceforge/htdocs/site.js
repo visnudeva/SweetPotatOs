@@ -24,21 +24,27 @@
   }
 })();
 
-/** Home-page logo easter egg: the Tuber Vault. */
+/** Home-page logo easter egg: the Tuber Vault (+ deeper root on letter P). */
 (function () {
   var hit = document.getElementById("tuber-vault-hit");
   var vault = document.getElementById("tuber-vault");
   var logo = document.getElementById("tuber-vault-logo");
   var closeBtn = document.getElementById("tuber-vault-close");
-  if (!hit || !vault || !logo) return;
+  var outer = document.getElementById("tuber-vault-outer");
+  var deep = document.getElementById("tuber-vault-deep");
+  var deepClose = document.getElementById("tuber-vault-deep-close");
+  if (!hit || !vault || !logo || !outer || !deep) return;
 
   var tagline = document.querySelector("[data-vault-tagline]");
   var cleanTag = tagline ? tagline.textContent : "";
   var vaultTag = "Tuber vault · harvest override";
+  var deepTag = "Mashed core · root access";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#*&%<>/\\|";
   var timers = [];
   var open = false;
+  var deepOpen = false;
+  var SEED = "p";
 
   function clearTimers() {
     while (timers.length) window.clearTimeout(timers.pop());
@@ -71,38 +77,85 @@
     timers.push(window.setTimeout(tick, delay));
   }
 
-  function runLines() {
-    var lines = vault.querySelectorAll("[data-vault-line]");
+  function runLines(selector) {
+    var lines = vault.querySelectorAll(selector);
     Array.prototype.forEach.call(lines, function (line, index) {
       line.textContent = "";
       scrambleInto(line, line.getAttribute("data-final") || "", index * 220);
     });
   }
 
+  function syncHash() {
+    var want = deepOpen ? "#tuber-core" : open ? "#tuber-vault" : "";
+    if ((window.location.hash || "") === want) return;
+    if (!want) {
+      history.pushState("", "", window.location.pathname + window.location.search);
+      return;
+    }
+    history.pushState({ tuberVault: true, deep: deepOpen }, "", want);
+  }
+
+  function setDeep(next) {
+    if (!open && next) return;
+    deepOpen = next;
+    document.body.classList.toggle("tuber-core-open", deepOpen);
+    deep.hidden = !deepOpen;
+    outer.hidden = deepOpen;
+    clearTimers();
+    if (deepOpen) {
+      if (tagline) tagline.textContent = deepTag;
+      runLines("[data-deep-line]");
+      if (deepClose) deepClose.focus();
+    } else if (open) {
+      if (tagline) tagline.textContent = vaultTag;
+      runLines("[data-vault-line]");
+      if (closeBtn) closeBtn.focus();
+    }
+    syncHash();
+  }
+
   function setVault(next) {
     open = next;
+    if (!open) deepOpen = false;
     document.body.classList.toggle("tuber-vault-open", open);
+    document.body.classList.toggle("tuber-core-open", open && deepOpen);
     hit.setAttribute("aria-expanded", open ? "true" : "false");
     vault.hidden = !open;
     vault.setAttribute("aria-hidden", open ? "false" : "true");
+    deep.hidden = !(open && deepOpen);
+    outer.hidden = !open || deepOpen;
     logo.src = open
       ? (logo.getAttribute("data-glitch") || logo.src)
       : (logo.getAttribute("data-clean") || logo.src);
-    if (tagline) tagline.textContent = open ? vaultTag : cleanTag;
+    if (tagline) {
+      tagline.textContent = !open ? cleanTag : deepOpen ? deepTag : vaultTag;
+    }
     clearTimers();
     if (open) {
-      runLines();
-      if (closeBtn) closeBtn.focus();
-      if (window.location.hash !== "#tuber-vault") {
-        history.pushState({ tuberVault: true }, "", "#tuber-vault");
-      }
-    } else if (window.location.hash === "#tuber-vault") {
-      history.pushState("", "", window.location.pathname + window.location.search);
+      if (deepOpen) runLines("[data-deep-line]");
+      else runLines("[data-vault-line]");
+      if (deepOpen && deepClose) deepClose.focus();
+      else if (closeBtn) closeBtn.focus();
+    }
+    syncHash();
+  }
+
+  function applyHash() {
+    var hash = window.location.hash || "";
+    if (hash === "#tuber-core") {
+      if (!open) setVault(true);
+      setDeep(true);
+    } else if (hash === "#tuber-vault") {
+      if (!open) setVault(true);
+      else if (deepOpen) setDeep(false);
+    } else if (open) {
+      setVault(false);
     }
   }
 
   hit.addEventListener("click", function () {
-    setVault(!open);
+    if (open) setVault(false);
+    else setVault(true);
   });
   if (closeBtn) {
     closeBtn.addEventListener("click", function () {
@@ -110,19 +163,37 @@
       hit.focus();
     });
   }
+  if (deepClose) {
+    deepClose.addEventListener("click", function () {
+      setDeep(false);
+    });
+  }
   vault.addEventListener("click", function (event) {
-    if (event.target === vault) setVault(false);
-  });
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && open) {
+    if (event.target === vault) {
       setVault(false);
       hit.focus();
     }
   });
-  window.addEventListener("popstate", function () {
-    setVault(window.location.hash === "#tuber-vault");
+  document.addEventListener("keydown", function (event) {
+    if (!open) return;
+    if (event.key === "Escape") {
+      if (deepOpen) setDeep(false);
+      else {
+        setVault(false);
+        hit.focus();
+      }
+      return;
+    }
+    if (deepOpen) return;
+    if (event.target && /INPUT|TEXTAREA|SELECT/.test(event.target.tagName)) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if ((event.key || "").toLowerCase() === SEED) {
+      event.preventDefault();
+      setDeep(true);
+    }
   });
-  if (window.location.hash === "#tuber-vault") setVault(true);
+  window.addEventListener("popstate", applyHash);
+  applyHash();
 })();
 
 /** Shared lightbox for showroom stills and project shots. */
