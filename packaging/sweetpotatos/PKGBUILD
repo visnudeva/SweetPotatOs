@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=198
+pkgrel=199
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -25,13 +25,14 @@ source=(
   'sweetpotatos.conf'
   'sweetpotatos-update'
   'sweetpotatos-sprout'
+  'sweetpotatos-pruning'
   'sweetpotatos-update-notify'
   'sweetpotatos-update-check.service'
   'sweetpotatos-update-check.timer'
   'sweetpotatos-update-notify.service'
   'update-news'
 )
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
   local root="${SWEETPOTATOS_ROOT:-$(cd "${startdir}/../.." && pwd)}"
@@ -63,6 +64,8 @@ package() {
     "${pkgdir}/usr/local/bin/sweetpotatos-update"
   install -Dm755 "${srcdir}/sweetpotatos-sprout" \
     "${pkgdir}/usr/local/bin/sweetpotatos-sprout"
+  install -Dm755 "${srcdir}/sweetpotatos-pruning" \
+    "${pkgdir}/usr/local/bin/sweetpotatos-pruning"
   install -Dm755 "${srcdir}/sweetpotatos-update-notify" \
     "${pkgdir}/usr/local/bin/sweetpotatos-update-notify"
 

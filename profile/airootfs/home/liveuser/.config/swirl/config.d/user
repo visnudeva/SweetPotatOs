@@ -5,10 +5,15 @@
 #
 # Edit this file, then reload: Mod+Shift+c
 #
+# If experiments break the desktop, run:  sweetpotatos-pruning
+# That restores shipped config like an update, clears user_edits forks,
+# and keeps this personal file (and kanshi display layout).
+#
 # --- who owns what --------------------------------------------------------
 #   SweetPotato defaults   ~/.config/swirl/config (+ scripts)   replaced by updates
 #   you                    this file                            yours forever
 #   whole-file fork        ~/.config/sweetpotatos/user_edits/…  also survives updates
+#                                                                   (cleared by pruning)
 #
 # --- examples -------------------------------------------------------------
 # Extra bind (does not remove the default unless you unbind first):

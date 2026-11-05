@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+# Reset shipped SweetPotato desktop config after experiments go wrong.
+#
+# Like an update's sprout pass, but also clears ~/.config/sweetpotatos/user_edits/
+# so whole-file forks cannot put the mess back. Keeps the personal Swirl file
+# (~/.config/swirl/config.d/user) and the display layout (~/.config/kanshi/config).
+# Theme choice under ~/.config/sweetpotatos/ (except user_edits) stays.
+set -euo pipefail
+
+BASE="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}"
+DEST="${XDG_CONFIG_HOME:-${HOME}/.config}"
+OVERLAY="${DEST}/sweetpotatos/user_edits"
+STATE_DIR="${XDG_STATE_HOME:-${HOME}/.local/state}/sweetpotatos"
+SPROUT="${SWEETPOTATOS_SPROUT:-sweetpotatos-sprout}"
+BACKUP_ROOT="${STATE_DIR}/pruning-backups"
+
+# Relative to DEST — never delete these; sprout also treats them as seed-only.
+KEEP=(
+  swirl/config.d/user
+  kanshi/config
+)
+
+usage() {
+  cat <<'EOF'
+Usage: sweetpotatos-pruning [--yes]
+
+Reset SweetPotatOs desktop config files to the shipped defaults (same as
+sprout after an update), but also drop user_edits overlays that would
+otherwise re-apply broken forks.
+
+Kept:
+  ~/.config/swirl/config.d/user     personal Swirl binds / overrides
+  ~/.config/kanshi/config           saved display layout
+  ~/.config/sweetpotatos/*          theme / hues / tips (except user_edits)
+
+A copy of what was cleared lands under:
+  ~/.local/state/sweetpotatos/pruning-backups/<timestamp>/
+
+Pass --yes to skip the confirmation prompt.
+EOF
+}
+
+confirm=1
+for arg in "$@"; do
+  case "${arg}" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -y|--yes)
+      confirm=0
+      ;;
+    *)
+      echo "Unknown option: ${arg}" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ ! -d "${BASE}" ]]; then
+  echo "[!] No shipped config at ${BASE} (install/upgrade sweetpotatos)." >&2
+  exit 1
+fi
+
+if [[ "${SPROUT}" == /* ]]; then
+  if [[ ! -x "${SPROUT}" && ! -f "${SPROUT}" ]]; then
+    echo "[!] sprout script not found: ${SPROUT}" >&2
+    exit 1
+  fi
+elif ! command -v "${SPROUT}" >/dev/null 2>&1; then
+  echo "[!] ${SPROUT} not found on PATH." >&2
+  exit 1
+fi
+
+if ((confirm)); then
+  cat <<EOF
+This will:
+  • clear ${OVERLAY} (whole-file forks)
+  • restore shipped files under ${DEST} from ${BASE}
+  • keep ${DEST}/swirl/config.d/user and ${DEST}/kanshi/config
+  • keep theme/hues under ${DEST}/sweetpotatos/ (except user_edits)
+EOF
+  read -r -p "Prune and restore shipped desktop config? [y/N] " ans
+  case "${ans}" in
+    y|Y|yes|YES) ;;
+    *)
+      echo "Aborted."
+      exit 0
+      ;;
+  esac
+fi
+
+is_keep() {
+  local rel="$1"
+  local k
+  for k in "${KEEP[@]}"; do
+    [[ "${rel}" == "${k}" ]] && return 0
+  done
+  return 1
+}
+
+stamp="$(date +%Y%m%d-%H%M%S)"
+backup="${BACKUP_ROOT}/${stamp}"
+mkdir -p "${backup}"
+
+# 1) Park and clear user_edits so the next sprout cannot re-apply forks.
+if [[ -e "${OVERLAY}" || -L "${OVERLAY}" ]]; then
+  echo "[*] Backing up user_edits → ${backup}/user_edits"
+  mkdir -p "${backup}"
+  cp -a "${OVERLAY}" "${backup}/user_edits"
+  rm -rf "${OVERLAY}"
+fi
+
+# 2) Remove shipped-path clutter under each managed top-level dir (except KEEP).
+#    Orphans the user dropped into those trees go away; KEEP files stay.
+while IFS= read -r -d '' top; do
+  name="$(basename "${top}")"
+  dest_top="${DEST}/${name}"
+  [[ -d "${dest_top}" ]] || continue
+
+  while IFS= read -r -d '' path; do
+    rel="${path#"${DEST}"/}"
+    if is_keep "${rel}"; then
+      continue
+    fi
+    # Never touch theme state except user_edits (already cleared).
+    if [[ "${rel}" == sweetpotatos || "${rel}" == sweetpotatos/* ]]; then
+      continue
+    fi
+    mkdir -p "${backup}/config/$(dirname "${rel}")"
+    # Move aside so a failed sprout is not a hard loss.
+    if [[ -e "${path}" || -L "${path}" ]]; then
+      mv -f "${path}" "${backup}/config/${rel}"
+    fi
+  done < <(find "${dest_top}" \( -type f -o -type l \) -print0 2>/dev/null)
+done < <(find "${BASE}" -mindepth 1 -maxdepth 1 -type d -print0)
+
+# Drop empty leftover dirs under managed tops (KEEP parents stay).
+while IFS= read -r -d '' top; do
+  name="$(basename "${top}")"
+  dest_top="${DEST}/${name}"
+  [[ -d "${dest_top}" ]] || continue
+  find "${dest_top}" -depth -type d -empty -delete 2>/dev/null || true
+done < <(find "${BASE}" -mindepth 1 -maxdepth 1 -type d -print0)
+
+# 3) Lay shipped files back (preserves KEEP via sprout seed-only rules).
+echo "[*] Sprouting shipped config…"
+if [[ "${SPROUT}" == /* ]]; then
+  bash "${SPROUT}"
+else
+  command "${SPROUT}"
+fi
+
+# 4) Reload Swirl when a session is up (same idea as sweetpotatos-update).
+uid="$(id -u)"
+shopt -s nullglob
+socks=(/run/user/"${uid}"/sway-ipc.*.sock /run/user/"${uid}"/swirl-ipc.*.sock)
+shopt -u nullglob
+if ((${#socks[@]} > 0)) && command -v swaymsg >/dev/null 2>&1; then
+  echo "[*] Reloading Swirl…"
+  SWAYSOCK="${socks[0]}" swaymsg reload >/dev/null 2>&1 || true
+fi
+
+echo "[+] Pruned. Personal file kept: ${DEST}/swirl/config.d/user"
+echo "    Backup: ${backup}"
+echo "    Reload already attempted; otherwise press Mod+Shift+c."

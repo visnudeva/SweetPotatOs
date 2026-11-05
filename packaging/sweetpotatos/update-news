@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-199
+What changed: New command sweetpotatos-pruning restores shipped desktop config after experiments go wrong. It clears user_edits forks, keeps ~/.config/swirl/config.d/user (and kanshi), then sprouts like an update. Run it as your user, then Mod+Shift+c if Swirl did not reload.
+
 @2026.10.3-198
 What changed: Sweet potato and Ube fastfetch 芋 logos use a smooth drawn glyph (not the old blocky pixel font), still in the theme accent. Switch theme or run sweetpotatos-update, then open a new terminal.
 
