@@ -639,15 +639,19 @@ EOF
     if [[ "${ID}" == "sweet-potato" || "${ID}" == "ube" ]]; then
       kanji=1
     fi
+    # foot speaks sixel (not kitty). chafa only paints ~cell-resolution
+    # Unicode blocks, so clean PNGs still looked chunky there.
     changed_note="$(python3 - "${ROOT}/fastfetch/config.jsonc" "${INK_ACCENT}" "${INK_HIGHLIGHT}" \
-      "${ACCENT}" "${HIGHLIGHT}" "${kanji}" "${ID}" "${SCRIPT_DIR}" << 'PY'
+      "${ACCENT}" "${HIGHLIGHT}" "${SURFACE}" "${kanji}" "${ID}" "${SCRIPT_DIR}" << 'PY'
 import collections, pathlib, re, sys
 
-path, key_color, title_color, accent, highlight, kanji, theme_id, script_dir = sys.argv[1:]
+path, key_color, title_color, accent, highlight, surface, kanji, theme_id, script_dir = sys.argv[1:]
 file = pathlib.Path(path)
 text = file.read_text()
 new = re.sub(r'("keys":\s*")#[0-9A-Fa-f]+', rf'\1#{key_color}', text, count=1)
 new = re.sub(r'("title":\s*")#[0-9A-Fa-f]+', rf'\1#{title_color}', new, count=1)
+# First "type" in the file is logo.type.
+new = re.sub(r'("type"\s*:\s*")[^"]*"', r'\1sixel"', new, count=1)
 logo_dir = file.parent
 kanji_png = logo_dir / "KanjiLogo.png"
 script_dir = pathlib.Path(script_dir)
@@ -692,7 +696,7 @@ def find_asset(theme):
             return c
     return None
 
-def install_kanji(dest, asset, accent_hex, highlight_hex):
+def install_kanji(dest, asset, accent_hex, highlight_hex, bg_hex):
     from PIL import Image
 
     im = Image.open(asset).convert("RGBA")
@@ -728,8 +732,8 @@ def install_kanji(dest, asset, accent_hex, highlight_hex):
             out.append((ar, ag, ab, a))
     im.putdata(out)
 
-    # Source art is hard-edged (no AA). Nearest upscale made stair-steps
-    # worse; supersample then Lanczos-down so chafa gets smooth edges.
+    # Supersample hard-edged source art so sixel gets soft edges at
+    # terminal pixel density (not Unicode-block chafa density).
     w, h = im.size
     target = 1024
     if max(w, h) < target:
@@ -741,6 +745,12 @@ def install_kanji(dest, asset, accent_hex, highlight_hex):
             Image.Resampling.LANCZOS,
         )
 
+    # ImageMagick sixel turns transparency into black; paste on the
+    # theme surface so the logo plate matches the terminal background.
+    bg = Image.new("RGBA", im.size, (*rgb(bg_hex), 255))
+    bg.paste(im, mask=im.split()[3])
+    im = bg
+
     dest.parent.mkdir(parents=True, exist_ok=True)
     im.save(dest, "PNG")
     return True
@@ -751,9 +761,9 @@ if kanji == "1":
         asset = find_asset(theme_id)
         if asset is None:
             raise FileNotFoundError("KanjiPink/KanjiUbe.png")
-        wrote_logo = install_kanji(kanji_png, asset, accent, highlight)
+        wrote_logo = install_kanji(kanji_png, asset, accent, highlight, surface)
         new = set_source(new, str(kanji_png))
-        new = set_logo_size(new, 34, 17)
+        new = set_logo_size(new, 28, 14)
     except Exception:
         if current_source.endswith("KanjiLogo.png"):
             new = set_source(new, potato_source())

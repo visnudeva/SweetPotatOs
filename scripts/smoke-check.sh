@@ -185,6 +185,8 @@ check_file "${ISO}/etc/skel/.config/swirl/scripts/SweetPotatoImo.otf"
 check_file "${ISO}/etc/skel/.config/swirl/scripts/SweetPotatoImoDraw.otf"
 check_file "${ISO}/etc/skel/.config/fastfetch/KanjiPink.png"
 check_file "${ISO}/etc/skel/.config/fastfetch/KanjiUbe.png"
+check_grep '"type": "sixel"' "${ISO}/etc/skel/.config/fastfetch/config.jsonc" \
+  "fastfetch logo uses sixel (real PNG in foot, not chafa blocks)"
 check_file "${PKG_FILES}/usr/local/share/sweetpotatos/KanjiPink.png"
 check_file "${PKG_FILES}/usr/local/share/sweetpotatos/KanjiUbe.png"
 check_grep '^fish$' "${ROOT}/profile/packages.x86_64" "fish shell listed for the ISO"
