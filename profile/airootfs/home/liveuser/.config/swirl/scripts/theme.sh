@@ -696,13 +696,6 @@ def install_kanji(dest, asset, accent_hex, highlight_hex):
     from PIL import Image
 
     im = Image.open(asset).convert("RGBA")
-    # Upscale with nearest-neighbor so the designed block edges stay crisp.
-    w, h = im.size
-    target = 1024
-    scale = max(1, target // max(w, h))
-    if scale > 1:
-        im = im.resize((w * scale, h * scale), Image.Resampling.NEAREST)
-
     counts = collections.Counter()
     pixels = list(im.getdata())
     for r, g, b, a in pixels:
@@ -724,7 +717,7 @@ def install_kanji(dest, asset, accent_hex, highlight_hex):
     out = []
     for r, g, b, a in pixels:
         if a < 128:
-            out.append((r, g, b, a))
+            out.append((0, 0, 0, 0))
             continue
         # Snap to nearest of the two source tones, then recolor.
         d_hi = (r - hi_src[0]) ** 2 + (g - hi_src[1]) ** 2 + (b - hi_src[2]) ** 2
@@ -734,6 +727,20 @@ def install_kanji(dest, asset, accent_hex, highlight_hex):
         else:
             out.append((ar, ag, ab, a))
     im.putdata(out)
+
+    # Source art is hard-edged (no AA). Nearest upscale made stair-steps
+    # worse; supersample then Lanczos-down so chafa gets smooth edges.
+    w, h = im.size
+    target = 1024
+    if max(w, h) < target:
+        factor = 4
+        big = im.resize((w * factor, h * factor), Image.Resampling.NEAREST)
+        scale = target / max(big.size)
+        im = big.resize(
+            (max(1, round(big.width * scale)), max(1, round(big.height * scale))),
+            Image.Resampling.LANCZOS,
+        )
+
     dest.parent.mkdir(parents=True, exist_ok=True)
     im.save(dest, "PNG")
     return True

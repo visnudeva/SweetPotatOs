@@ -2,7 +2,7 @@
 
 **Purpose:** Full durable memory for Cursor agents and humans after reinstalling the build machine (e.g. leave Bluefin/GNOME → Arch-based host). Prefer this + `NOTES.md` + `.cursor/rules/project-notes.mdc` over chat history.
 
-**Snapshot date:** 2026-11-05 (Ryoku host, Fourth Harvest shipped, testing channel through `sweetpotatos-2026.10.3-200`)  
+**Snapshot date:** 2026-11-05 (Ryoku host, Fourth Harvest shipped, testing channel through `sweetpotatos-2026.10.3-201`)  
 **Maintainer / SF / GitHub user:** `visnudeva`  
 **Off-disk copy of this snapshot:** `/run/media/visnudeva/500/Backup/SweetPotatOs/2026-11-05/` (read `WHERE-WE-ARE.md` there first; older `1T/…/2026-10-15/` may still exist)
 
@@ -25,7 +25,7 @@ Repos (siblings):
 
 | Package | Version on stable |
 |---------|-------------------|
-| sweetpotatos | 2026.10.3-**197** stable; **200** on testing (designed KanjiPink/KanjiUbe fastfetch 芋 + pruning) |
+| sweetpotatos | 2026.10.3-**197** stable; **201** on testing (KanjiPink/KanjiUbe 芋 with smooth supersampled edges + pruning) |
 | swirl | 1.13.0.r8567.gcd070469-**56** |
 | laniakea | 0.1.6.r17.g511babc-1 |
 | spore | 0.1.0.r17.g0042a20-1 (follows `tui-colors`) |
