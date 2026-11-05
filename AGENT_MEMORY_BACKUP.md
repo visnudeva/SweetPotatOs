@@ -2,7 +2,7 @@
 
 **Purpose:** Full durable memory for Cursor agents and humans after reinstalling the build machine (e.g. leave Bluefin/GNOME → Arch-based host). Prefer this + `NOTES.md` + `.cursor/rules/project-notes.mdc` over chat history.
 
-**Snapshot date:** 2026-11-05 (Ryoku host, Fourth Harvest shipped, promoting channel through `sweetpotatos-2026.10.3-197`)  
+**Snapshot date:** 2026-11-05 (Ryoku host, Fourth Harvest shipped, testing channel through `sweetpotatos-2026.10.3-200`)  
 **Maintainer / SF / GitHub user:** `visnudeva`  
 **Off-disk copy of this snapshot:** `/run/media/visnudeva/500/Backup/SweetPotatOs/2026-11-05/` (read `WHERE-WE-ARE.md` there first; older `1T/…/2026-10-15/` may still exist)
 
@@ -25,7 +25,7 @@ Repos (siblings):
 
 | Package | Version on stable |
 |---------|-------------------|
-| sweetpotatos | 2026.10.3-**197** |
+| sweetpotatos | 2026.10.3-**197** stable; **200** on testing (designed KanjiPink/KanjiUbe fastfetch 芋 + pruning) |
 | swirl | 1.13.0.r8567.gcd070469-**56** |
 | laniakea | 0.1.6.r17.g511babc-1 |
 | spore | 0.1.0.r17.g0042a20-1 (follows `tui-colors`) |
@@ -40,9 +40,9 @@ Repos (siblings):
 | python-screeninfo | 0.8.1-2 |
 | python-imageio-ffmpeg | 0.6.0-2 |
 
-`sweetpotatos-update` installs `brave-origin-bin` and `laniakea` when missing. Theme edits start in SweetPotato (`82a7463` plain 芋 logos), then `./sync-theme.sh --iso-only` on this host.
+`sweetpotatos-update` installs `brave-origin-bin` and `laniakea` when missing. Theme edits start in SweetPotato (`KanjiPink.png` / `KanjiUbe.png` under `fastfetch/`), then `./sync-theme.sh --iso-only` on this host. Hue apply recolors those two-tone assets into `KanjiLogo.png`.
 
-**ISO / website.** Fourth Harvest is built and published (`Sweetpotatos_2026.11_Fourth_Harvest.iso`, label `SPOTATO_FOURTH202611`, Files folder `2026.11_Fourth_Harvest`). Site download points at that folder. Fifth Harvest is the planned December ISO; channel polish (plain kanji logos, Esc-close themer/cheatsheet, Laniakea bind, Spore/tuber palette follow) lands via `sweetpotatos-update` first.
+**ISO / website.** Fourth Harvest is built and published (`Sweetpotatos_2026.11_Fourth_Harvest.iso`, label `SPOTATO_FOURTH202611`, Files folder `2026.11_Fourth_Harvest`). Site download points at that folder. Fifth Harvest is the planned December ISO; channel polish (designed kanji PNGs, `sweetpotatos-pruning`, Esc-close themer/cheatsheet, Laniakea bind, Spore/tuber palette follow) lands via `sweetpotatos-update` first.
 
 **Left uncommitted on purpose:** `.cheatsheet-snapshots/`, `.publish-repo-stage*`, `packaging/laniakea/swirl-laniakea/`, `packaging/swirl/wmenu-0.2.0.tar.gz`, SweetPotato `swirl/cheatsheet-snapshots/` / `__pycache__`. Do not commit those. `profile/pacman.conf` is often root-owned on the build host — fix the `file://` path after restore; do not force-commit a host-local Server line.
 

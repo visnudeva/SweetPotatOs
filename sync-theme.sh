@@ -208,6 +208,8 @@ sync_common_into() {
   cp -f "${SP}/fastfetch/config.jsonc" "${dest}/.config/fastfetch/"
   cp -f "${SP}/fastfetch/SPLogo.png" "${dest}/.config/fastfetch/"
   cp -f "${SP}/fastfetch/SPLogo.asc" "${dest}/.config/fastfetch/"
+  cp -f "${SP}/fastfetch/KanjiPink.png" "${dest}/.config/fastfetch/"
+  cp -f "${SP}/fastfetch/KanjiUbe.png" "${dest}/.config/fastfetch/"
   # ISO trees: absolute system path (airootfs ships the logo under /usr/local/share)
   if [[ "${dest}" == "${ISO}"/* ]]; then
     sed -i 's|"source": "~/.config/fastfetch/SPLogo\.png"|"source": "/usr/local/share/sweetpotatos/SPLogo.png"|' \
@@ -332,6 +334,8 @@ mkdir -p "${PKG_FILES}/usr/local/share/sweetpotatos" \
          "${ISO}/etc/fastfetch"
 cp -f "${SP}/fastfetch/SPLogo.asc" "${PKG_FILES}/usr/local/share/sweetpotatos/SPLogo.asc"
 cp -f "${SP}/fastfetch/SPLogo.png" "${PKG_FILES}/usr/local/share/sweetpotatos/SPLogo.png"
+cp -f "${SP}/fastfetch/KanjiPink.png" "${PKG_FILES}/usr/local/share/sweetpotatos/KanjiPink.png"
+cp -f "${SP}/fastfetch/KanjiUbe.png" "${PKG_FILES}/usr/local/share/sweetpotatos/KanjiUbe.png"
 install -Dm755 "${SP}/bin/swirl" "${PKG_FILES}/usr/local/bin/swirl"
 install -Dm755 "${SP}/bin/sweetpotatos-displays" "${PKG_FILES}/usr/local/bin/sweetpotatos-displays"
 # Drop any leftover copies under airootfs from older syncs.

@@ -632,23 +632,25 @@ EOF
   fi
 
   if [[ -f "${ROOT}/fastfetch/config.jsonc" ]]; then
-    # Dark Sweet potato and Ube swap the potato mark for a smooth drawn 芋
-    # in that theme's accent. Every other preset puts the potato mark back.
+    # Dark Sweet potato and Ube swap the potato mark for the designed 芋 PNGs
+    # (KanjiPink / KanjiUbe). Hue sliders recolor those two tones. Other
+    # presets put the potato mark back.
     local kanji=0
     if [[ "${ID}" == "sweet-potato" || "${ID}" == "ube" ]]; then
       kanji=1
     fi
     changed_note="$(python3 - "${ROOT}/fastfetch/config.jsonc" "${INK_ACCENT}" "${INK_HIGHLIGHT}" \
-      "${ACCENT}" "${HIGHLIGHT}" "${kanji}" "${SCRIPT_DIR}/SweetPotatoImoDraw.otf" << 'PY'
-import os, pathlib, re, sys, tempfile
+      "${ACCENT}" "${HIGHLIGHT}" "${kanji}" "${ID}" "${SCRIPT_DIR}" << 'PY'
+import collections, pathlib, re, sys
 
-path, key_color, title_color, accent, highlight, kanji, font_path = sys.argv[1:]
+path, key_color, title_color, accent, highlight, kanji, theme_id, script_dir = sys.argv[1:]
 file = pathlib.Path(path)
 text = file.read_text()
 new = re.sub(r'("keys":\s*")#[0-9A-Fa-f]+', rf'\1#{key_color}', text, count=1)
 new = re.sub(r'("title":\s*")#[0-9A-Fa-f]+', rf'\1#{title_color}', new, count=1)
 logo_dir = file.parent
 kanji_png = logo_dir / "KanjiLogo.png"
+script_dir = pathlib.Path(script_dir)
 source_match = re.search(r'"source"\s*:\s*"([^"]*)"', new)
 current_source = source_match.group(1) if source_match else ""
 
@@ -670,72 +672,80 @@ def potato_source():
         return current_source
     return str(beside)
 
-def render_kanji(dest, accent_hex, highlight_hex, font_file):
-    font_file = pathlib.Path(font_file)
-    if not font_file.is_file():
-        # Older installs may only have the pixel Imo font.
-        fallback = font_file.with_name("SweetPotatoImo.otf")
-        if fallback.is_file():
-            font_file = fallback
+def rgb(h):
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+def lum(c):
+    r, g, b = c
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+def find_asset(theme):
+    name = "KanjiUbe.png" if theme == "ube" else "KanjiPink.png"
+    # Prefer the synced copy beside config.jsonc, then the theme tree.
+    candidates = [
+        logo_dir / name,
+        script_dir.parent.parent / "fastfetch" / name,
+        pathlib.Path("/usr/local/share/sweetpotatos") / name,
+    ]
+    for c in candidates:
+        if c.is_file():
+            return c
+    return None
+
+def install_kanji(dest, asset, accent_hex, highlight_hex):
+    from PIL import Image
+
+    im = Image.open(asset).convert("RGBA")
+    # Upscale with nearest-neighbor so the designed block edges stay crisp.
+    w, h = im.size
+    target = 1024
+    scale = max(1, target // max(w, h))
+    if scale > 1:
+        im = im.resize((w * scale, h * scale), Image.Resampling.NEAREST)
+
+    counts = collections.Counter()
+    pixels = list(im.getdata())
+    for r, g, b, a in pixels:
+        if a < 128:
+            continue
+        counts[(r, g, b)] += 1
+    if len(counts) < 1:
+        raise RuntimeError("kanji asset has no opaque pixels")
+    top = [c for c, _ in counts.most_common(8)]
+    # Two-tone art: lighter → highlight, darker → accent.
+    if len(top) == 1:
+        hi_src = ac_src = top[0]
+    else:
+        a, b = top[0], top[1]
+        hi_src, ac_src = (a, b) if lum(a) >= lum(b) else (b, a)
+
+    ar, ag, ab = rgb(accent_hex)
+    hr, hg, hb = rgb(highlight_hex)
+    out = []
+    for r, g, b, a in pixels:
+        if a < 128:
+            out.append((r, g, b, a))
+            continue
+        # Snap to nearest of the two source tones, then recolor.
+        d_hi = (r - hi_src[0]) ** 2 + (g - hi_src[1]) ** 2 + (b - hi_src[2]) ** 2
+        d_ac = (r - ac_src[0]) ** 2 + (g - ac_src[1]) ** 2 + (b - ac_src[2]) ** 2
+        if d_hi <= d_ac:
+            out.append((hr, hg, hb, a))
         else:
-            raise FileNotFoundError(font_file)
-    conf = tempfile.NamedTemporaryFile("w", suffix=".conf", delete=False)
-    conf.write(
-        '<?xml version="1.0"?>\n'
-        '<!DOCTYPE fontconfig SYSTEM "fonts.dtd">\n'
-        "<fontconfig>\n"
-        f"  <dir>{font_file.parent}</dir>\n"
-        '  <include ignore_missing="yes">/etc/fonts/fonts.conf</include>\n'
-        "</fontconfig>\n"
-    )
-    conf.close()
-    os.environ["FONTCONFIG_FILE"] = conf.name
-    try:
-        import gi
-        gi.require_version("Pango", "1.0")
-        gi.require_version("PangoCairo", "1.0")
-        from gi.repository import Pango, PangoCairo
-        import cairo
-
-        def rgb(h):
-            return tuple(int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
-
-        # High-res antialiased glyph (Noto Serif subset) so chafa has smooth
-        # edges to sample instead of the old blocky pixel font.
-        size = 1024
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, size, size)
-        ctx = cairo.Context(surface)
-        ctx.set_antialias(cairo.ANTIALIAS_BEST)
-        layout = PangoCairo.create_layout(ctx)
-        family = "SweetPotato Imo Draw"
-        if font_file.name == "SweetPotatoImo.otf":
-            family = "SweetPotato Imo"
-        layout.set_font_description(Pango.FontDescription(f"{family} Bold 160"))
-        layout.set_text("芋", -1)
-        PangoCairo.update_layout(ctx, layout)
-        ink = layout.get_pixel_extents()[0]
-        if ink.width < 8 or ink.height < 8:
-            raise RuntimeError("kanji glyph did not draw")
-        pad = 72
-        scale = min((size - 2 * pad) / ink.width, (size - 2 * pad) / ink.height)
-        ctx.translate(size / 2, size / 2)
-        ctx.scale(scale, scale)
-        ctx.translate(-(ink.x + ink.width / 2), -(ink.y + ink.height / 2))
-        _ = highlight_hex
-        ar, ag, ab = rgb(accent_hex)
-        ctx.set_source_rgb(ar, ag, ab)
-        PangoCairo.show_layout(ctx, layout)
-        surface.write_to_png(str(dest))
-    finally:
-        os.unlink(conf.name)
+            out.append((ar, ag, ab, a))
+    im.putdata(out)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    im.save(dest, "PNG")
     return True
 
 wrote_logo = False
 if kanji == "1":
     try:
-        wrote_logo = render_kanji(kanji_png, accent, highlight, font_path)
+        asset = find_asset(theme_id)
+        if asset is None:
+            raise FileNotFoundError("KanjiPink/KanjiUbe.png")
+        wrote_logo = install_kanji(kanji_png, asset, accent, highlight)
         new = set_source(new, str(kanji_png))
-        # Slightly larger than the potato mark so the drawn glyph stays readable.
         new = set_logo_size(new, 34, 17)
     except Exception:
         if current_source.endswith("KanjiLogo.png"):
