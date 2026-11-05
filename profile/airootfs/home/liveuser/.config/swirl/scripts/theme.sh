@@ -632,8 +632,8 @@ EOF
   fi
 
   if [[ -f "${ROOT}/fastfetch/config.jsonc" ]]; then
-    # Dark Sweet potato and Ube swap the potato mark for 芋 in that
-    # theme's colors. Every other preset puts the potato mark back.
+    # Dark Sweet potato and Ube swap the potato mark for a plain solid 芋
+    # in that theme's accent. Every other preset puts the potato mark back.
     local kanji=0
     if [[ "${ID}" == "sweet-potato" || "${ID}" == "ube" ]]; then
       kanji=1
@@ -706,17 +706,12 @@ def render_kanji(dest, accent_hex, highlight_hex, font_file):
         ctx.translate(size / 2, size / 2)
         ctx.scale(scale, scale)
         ctx.translate(-(ink.x + ink.width / 2), -(ink.y + ink.height / 2))
-        ctx.push_group()
-        ctx.set_source_rgba(1, 1, 1, 1)
-        PangoCairo.show_layout(ctx, layout)
-        mask = ctx.pop_group()
-        paint = cairo.LinearGradient(ink.x, ink.y, ink.x, ink.y + ink.height)
-        hr, hg, hb = rgb(highlight_hex)
+        # Flat accent fill — no gradient — so chafa gets a clean plain glyph
+        # in that theme's color (Sweet potato pink, Ube purple, or a hue mix).
+        _ = highlight_hex
         ar, ag, ab = rgb(accent_hex)
-        paint.add_color_stop_rgb(0, hr, hg, hb)
-        paint.add_color_stop_rgb(1, ar, ag, ab)
-        ctx.set_source(paint)
-        ctx.mask(mask)
+        ctx.set_source_rgb(ar, ag, ab)
+        PangoCairo.show_layout(ctx, layout)
         surface.write_to_png(str(dest))
     finally:
         os.unlink(conf.name)

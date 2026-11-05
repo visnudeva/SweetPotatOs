@@ -4,6 +4,21 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-197
+What changed: Update notes now include the sprout rename and Laniakea channel landings that were missing from earlier builds. Spore and tuber on the channel follow the desktop palette from themer. No desktop change beyond what 196 already shipped for the plain 芋 logos.
+
+@2026.10.3-196
+What changed: The Sweet potato and Ube fastfetch 芋 logos are plain solid accent color (no gradient). Switch theme or run sweetpotatos-update, then open a new terminal to see it.
+
+@2026.10.3-195
+What changed: Laniakea (generative wallpaper) is on the stable update channel and the ISO package list. Open it from the app menu or with Mod+Ctrl+l. Log out and back in after updating (or Mod+Shift+c).
+
+@2026.10.3-194
+What changed: Laniakea is available as an opt-in package on the testing channel. Installed systems on testing can pick it up with sudo sweetpotatos-update --testing.
+
+@2026.10.3-193
+What changed: The config deploy command is sweetpotatos-sprout (was sweetpotatos-materialize). Updates still call it for you; only scripts or docs that named materialize need the new name.
+
 @2026.10.3-192
 What changed: The extra GRUB “EFI BootNext” entries are gone. Regenerating the menu under grub 2.16 had listed every firmware boot entry; that is turned off now. Reboot once after updating.
 
