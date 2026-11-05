@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-203
+What changed: Sweet potato and Ube fastfetch 芋 logos use the cleaner KanjiPink/KanjiUbe art. Switch theme or run sweetpotatos-update, then open a new terminal.
+
 @2026.10.3-202
 What changed: Fastfetch logos use sixel in foot so the designed 芋 PNG shows as a real image (chafa only painted chunky text blocks). Switch theme or run sweetpotatos-update, then open a new terminal.
 

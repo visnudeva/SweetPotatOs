@@ -708,8 +708,16 @@ def install_kanji(dest, asset, accent_hex, highlight_hex, bg_hex):
         counts[(r, g, b)] += 1
     if len(counts) < 1:
         raise RuntimeError("kanji asset has no opaque pixels")
-    top = [c for c, _ in counts.most_common(8)]
-    # Two-tone art: lighter → highlight, darker → accent.
+    # Prefer two well-separated tones (AA/gradient sources list near-
+    # duplicates first). Lighter → highlight, darker → accent.
+    top = []
+    for c, _ in counts.most_common(64):
+        if all(sum((c[i] - t[i]) ** 2 for i in range(3)) > 40 * 40 for t in top):
+            top.append(c)
+        if len(top) >= 2:
+            break
+    if not top:
+        raise RuntimeError("kanji asset has no opaque pixels")
     if len(top) == 1:
         hi_src = ac_src = top[0]
     else:
@@ -720,16 +728,20 @@ def install_kanji(dest, asset, accent_hex, highlight_hex, bg_hex):
     hr, hg, hb = rgb(highlight_hex)
     out = []
     for r, g, b, a in pixels:
-        if a < 128:
+        if a < 8:
             out.append((0, 0, 0, 0))
             continue
-        # Snap to nearest of the two source tones, then recolor.
+        # Soft mix by distance so AA fringes stay smooth.
         d_hi = (r - hi_src[0]) ** 2 + (g - hi_src[1]) ** 2 + (b - hi_src[2]) ** 2
         d_ac = (r - ac_src[0]) ** 2 + (g - ac_src[1]) ** 2 + (b - ac_src[2]) ** 2
-        if d_hi <= d_ac:
-            out.append((hr, hg, hb, a))
-        else:
-            out.append((ar, ag, ab, a))
+        tot = d_hi + d_ac
+        t = 0.5 if tot == 0 else d_ac / tot
+        out.append((
+            round(ar + (hr - ar) * t),
+            round(ag + (hg - ag) * t),
+            round(ab + (hb - ab) * t),
+            a,
+        ))
     im.putdata(out)
 
     # Supersample hard-edged source art so sixel gets soft edges at
