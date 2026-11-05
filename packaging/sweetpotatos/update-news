@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-198
+What changed: Sweet potato and Ube fastfetch 芋 logos use a smooth drawn glyph (not the old blocky pixel font), still in the theme accent. Switch theme or run sweetpotatos-update, then open a new terminal.
+
 @2026.10.3-197
 What changed: Update notes now include the sprout rename and Laniakea channel landings that were missing from earlier builds. Spore and tuber on the channel follow the desktop palette from themer. No desktop change beyond what 196 already shipped for the plain 芋 logos.
 

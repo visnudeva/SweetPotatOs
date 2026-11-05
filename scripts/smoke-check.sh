@@ -182,6 +182,7 @@ check_grep 'KanjiLogo.png' \
   "${ISO}/etc/skel/.config/swirl/scripts/theme.sh" \
   "fastfetch kanji logo for sweet potato and ube"
 check_file "${ISO}/etc/skel/.config/swirl/scripts/SweetPotatoImo.otf"
+check_file "${ISO}/etc/skel/.config/swirl/scripts/SweetPotatoImoDraw.otf"
 check_grep '^fish$' "${ROOT}/profile/packages.x86_64" "fish shell listed for the ISO"
 check_file "${ISO}/etc/skel/.config/swirl/config.d/user"
 check_grep 'include ~/.config/swirl/config.d/user' \

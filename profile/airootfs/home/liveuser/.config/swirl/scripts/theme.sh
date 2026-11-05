@@ -632,14 +632,14 @@ EOF
   fi
 
   if [[ -f "${ROOT}/fastfetch/config.jsonc" ]]; then
-    # Dark Sweet potato and Ube swap the potato mark for a plain solid 芋
+    # Dark Sweet potato and Ube swap the potato mark for a smooth drawn 芋
     # in that theme's accent. Every other preset puts the potato mark back.
     local kanji=0
     if [[ "${ID}" == "sweet-potato" || "${ID}" == "ube" ]]; then
       kanji=1
     fi
     changed_note="$(python3 - "${ROOT}/fastfetch/config.jsonc" "${INK_ACCENT}" "${INK_HIGHLIGHT}" \
-      "${ACCENT}" "${HIGHLIGHT}" "${kanji}" "${SCRIPT_DIR}/SweetPotatoImo.otf" << 'PY'
+      "${ACCENT}" "${HIGHLIGHT}" "${kanji}" "${SCRIPT_DIR}/SweetPotatoImoDraw.otf" << 'PY'
 import os, pathlib, re, sys, tempfile
 
 path, key_color, title_color, accent, highlight, kanji, font_path = sys.argv[1:]
@@ -655,6 +655,10 @@ current_source = source_match.group(1) if source_match else ""
 def set_source(body, source):
     return re.sub(r'("source"\s*:\s*")[^"]*"', rf'\1{source}"', body, count=1)
 
+def set_logo_size(body, width, height):
+    body = re.sub(r'("width"\s*:\s*)\d+', rf'\g<1>{width}', body, count=1)
+    return re.sub(r'("height"\s*:\s*)\d+', rf'\g<1>{height}', body, count=1)
+
 def potato_source():
     beside = logo_dir / "SPLogo.png"
     if beside.is_file():
@@ -669,7 +673,12 @@ def potato_source():
 def render_kanji(dest, accent_hex, highlight_hex, font_file):
     font_file = pathlib.Path(font_file)
     if not font_file.is_file():
-        raise FileNotFoundError(font_file)
+        # Older installs may only have the pixel Imo font.
+        fallback = font_file.with_name("SweetPotatoImo.otf")
+        if fallback.is_file():
+            font_file = fallback
+        else:
+            raise FileNotFoundError(font_file)
     conf = tempfile.NamedTemporaryFile("w", suffix=".conf", delete=False)
     conf.write(
         '<?xml version="1.0"?>\n'
@@ -691,23 +700,27 @@ def render_kanji(dest, accent_hex, highlight_hex, font_file):
         def rgb(h):
             return tuple(int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
 
-        size = 512
+        # High-res antialiased glyph (Noto Serif subset) so chafa has smooth
+        # edges to sample instead of the old blocky pixel font.
+        size = 1024
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, size, size)
         ctx = cairo.Context(surface)
+        ctx.set_antialias(cairo.ANTIALIAS_BEST)
         layout = PangoCairo.create_layout(ctx)
-        layout.set_font_description(Pango.FontDescription("SweetPotato Imo Bold 400"))
+        family = "SweetPotato Imo Draw"
+        if font_file.name == "SweetPotatoImo.otf":
+            family = "SweetPotato Imo"
+        layout.set_font_description(Pango.FontDescription(f"{family} Bold 160"))
         layout.set_text("芋", -1)
         PangoCairo.update_layout(ctx, layout)
         ink = layout.get_pixel_extents()[0]
         if ink.width < 8 or ink.height < 8:
             raise RuntimeError("kanji glyph did not draw")
-        pad = 28
+        pad = 72
         scale = min((size - 2 * pad) / ink.width, (size - 2 * pad) / ink.height)
         ctx.translate(size / 2, size / 2)
         ctx.scale(scale, scale)
         ctx.translate(-(ink.x + ink.width / 2), -(ink.y + ink.height / 2))
-        # Flat accent fill — no gradient — so chafa gets a clean plain glyph
-        # in that theme's color (Sweet potato pink, Ube purple, or a hue mix).
         _ = highlight_hex
         ar, ag, ab = rgb(accent_hex)
         ctx.set_source_rgb(ar, ag, ab)
@@ -722,11 +735,15 @@ if kanji == "1":
     try:
         wrote_logo = render_kanji(kanji_png, accent, highlight, font_path)
         new = set_source(new, str(kanji_png))
+        # Slightly larger than the potato mark so the drawn glyph stays readable.
+        new = set_logo_size(new, 34, 17)
     except Exception:
         if current_source.endswith("KanjiLogo.png"):
             new = set_source(new, potato_source())
+            new = set_logo_size(new, 28, 14)
 elif current_source.endswith("KanjiLogo.png"):
     new = set_source(new, potato_source())
+    new = set_logo_size(new, 28, 14)
 
 if new != text or wrote_logo:
     if new != text:

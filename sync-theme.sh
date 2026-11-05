@@ -159,9 +159,12 @@ sync_common_into() {
   fi
   cp -f "${SP}/swirl/scripts/autotile.lua" "${dest}/.config/swirl/scripts/autotile.lua"
   cp -f "${SP}/swirl/scripts/autotile_lib.lua" "${dest}/.config/swirl/scripts/autotile_lib.lua"
-  # One-glyph font for the fastfetch 芋 logo on Sweet potato and Ube.
+  # Fonts for the fastfetch 芋 logo on Sweet potato and Ube.
+  # ImoDraw = smooth Noto Serif CJK subset; Imo = old pixel fallback.
   cp -f "${SP}/swirl/scripts/SweetPotatoImo.otf" "${dest}/.config/swirl/scripts/SweetPotatoImo.otf"
+  cp -f "${SP}/swirl/scripts/SweetPotatoImoDraw.otf" "${dest}/.config/swirl/scripts/SweetPotatoImoDraw.otf"
   cp -f "${SP}/swirl/scripts/SweetPotatoImo-OFL.txt" "${dest}/.config/swirl/scripts/SweetPotatoImo-OFL.txt"
+  cp -f "${SP}/swirl/scripts/SweetPotatoImoDraw-NOTICE.txt" "${dest}/.config/swirl/scripts/SweetPotatoImoDraw-NOTICE.txt"
   # Drop retired Wi‑Fi tray experiments (nm-applet is the tray icon again)
   # and the Mod+P pin helper.
   rm -f "${dest}/.config/swirl/scripts/network-applet.py" \

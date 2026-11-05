@@ -1,0 +1,10 @@
+SweetPotatoImoDraw.otf is a one-glyph subset of Noto Serif CJK JP Bold,
+containing only 芋, renamed for SweetPotatOs so the reserved "Noto" name
+is not used.
+
+Noto Serif CJK is Copyright 2017 Adobe Systems Incorporated (http://www.adobe.com/),
+with Reserved Font Name 'Source'.
+Source is available from https://github.com/notofonts/noto-cjk
+
+Licensed under the SIL Open Font License, Version 1.1 — see
+SweetPotatoImo-OFL.txt in this directory.
