@@ -3,8 +3,6 @@
 
   This page
   Mod+Shift+x          Keybind reminder
-  q/Esc                Close
-  arrows/pgup          Scroll
 
   Apps
   Mod+Space          App launcher (Esc closes it)

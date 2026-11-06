@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-206
+What changed: Mod+? cheatsheet drops the q/Esc and arrows/pgup hints (they clipped and were not useful). Status still shows Mod+Shift+w / Mod+Shift+x. Log out and back in after updating (or Mod+Shift+c).
+
 @2026.10.3-205
 What changed: Mod+? cheatsheet status line only shows Mod+Shift+w / Mod+Shift+x so they are not clipped; q/Esc and arrows/pgup sit under This page. Log out and back in after updating (or Mod+Shift+c).
 

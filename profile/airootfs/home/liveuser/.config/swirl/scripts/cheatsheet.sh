@@ -135,7 +135,7 @@ render_content() {
             printf "%s                       Press Mod+Shift+x to hide the keybind reminder%s\n" "${MUTED}" "${RESET}"
           fi
           ;;
-        "  q/Esc"*|"  arrows/pgup"*|"  Mod+Shift+w"*|"  sudo sweetpotatos-update"*)
+        "  Mod+Shift+w"*|"  sudo sweetpotatos-update"*)
           printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
         "")
           printf "\n" ;;
@@ -291,10 +291,8 @@ print(walk(json.load(sys.stdin)) or \"\")
 ) &
 watch_pid=$!
 
-# One sticky less line only — a longer prompt clipped Mod+Shift+w to "ft+w".
-# Close/scroll hints live under This page in the sheet (below the tip bind).
+# Sticky less line stays short so Mod+Shift+w is not clipped.
 status="${PINK}Mod+Shift+w${RESET} ${CREAM}website${RESET}  ${PINK}Mod+Shift+x${RESET} ${CREAM}keybind reminder${RESET}"
-status_extra="${PINK}q/Esc${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
 
 render_content
 
@@ -319,7 +317,7 @@ if command -v less >/dev/null 2>&1; then
 else
   printf "\033[2J\033[H"
   cat "${content}"
-  printf "\n%s\n%s\n" "${status}" "${status_extra}"
+  printf "\n%s\n" "${status}"
   while IFS= read -rsn1 k; do
     case "${k}" in
       q|Q|$'\e') exit 0 ;;
