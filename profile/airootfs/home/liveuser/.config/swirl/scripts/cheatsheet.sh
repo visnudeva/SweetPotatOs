@@ -292,7 +292,7 @@ print(walk(json.load(sys.stdin)) or \"\")
 watch_pid=$!
 
 # Sticky less line stays short so Mod+Shift+w is not clipped.
-status="${PINK}Mod+Shift+w${RESET} ${CREAM}website${RESET}  ${PINK}Mod+Shift+x${RESET} ${CREAM}keybind reminder${RESET}"
+status="${PINK}Mod+Shift+w${RESET} ${CREAM}website${RESET}  ${PINK}Mod+Shift+x${RESET} ${CREAM}keybind reminder on/off${RESET}"
 
 render_content
 
