@@ -124,7 +124,7 @@ render_content() {
           printf "%s%s%s\n" "${MUTED}" "${line}" "${RESET}" ;;
         "  Apps"|"  Window / layout"|"  Workspaces / overview"|"  Displays / look"|\
         "  System"|"  Screenshots / media keys"|"  Gestures"|"  Resize mode"*|\
-        "  Customize"|"  Desktop / package updates"|"  Project"|"  This page")
+        "  Customize"|"  Desktop / package updates"|"  This page")
           printf "%s%s%s\n" "${ORANGE}" "${line}" "${RESET}" ;;
         *"Keybind reminder"*)
           if [[ "${state}" == off ]]; then
@@ -135,7 +135,7 @@ render_content() {
             printf "%s                       Press Mod+Shift+x to hide the keybind reminder%s\n" "${MUTED}" "${RESET}"
           fi
           ;;
-        "  Mod+Shift+w"*|"  sudo sweetpotatos-update"*)
+        "  sudo sweetpotatos-update"*)
           printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
         "")
           printf "\n" ;;

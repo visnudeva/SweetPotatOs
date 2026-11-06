@@ -77,6 +77,3 @@
   sudo sweetpotatos-update
   A notice once a week when updates are ready
   After an update, a note says what changed
-
-  Project
-  Mod+Shift+w          Open project website

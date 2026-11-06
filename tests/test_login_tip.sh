@@ -84,7 +84,6 @@ off="$(render)"
 grep -q 'Keybind reminder       off' <<<"${off}" || fail "sheet did not show reminder off"
 grep -q 'Press Mod+Shift+x to show it at login again' <<<"${off}" || fail "sheet missing turn-on hint"
 grep -q 'Mod+?' <<<"${off}" || fail "sheet lost the Mod+? line"
-grep -q 'Mod+Shift+w' <<<"${off}" || fail "sheet lost the website chord"
 
 rm -f "${XDG_CONFIG_HOME}/sweetpotatos/login-tip"
 on="$(render)"
