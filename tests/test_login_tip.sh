@@ -82,12 +82,13 @@ render() {
 printf 'off\n' >"${XDG_CONFIG_HOME}/sweetpotatos/login-tip"
 off="$(render)"
 grep -q 'Keybind reminder       off' <<<"${off}" || fail "sheet did not show reminder off"
-grep -q 'Press x to show it at login again' <<<"${off}" || fail "sheet missing turn-on hint"
+grep -q 'Press Mod+Shift+x to show it at login again' <<<"${off}" || fail "sheet missing turn-on hint"
 grep -q 'Mod+?' <<<"${off}" || fail "sheet lost the Mod+? line"
+grep -q 'Mod+Shift+w' <<<"${off}" || fail "sheet lost the website chord"
 
 rm -f "${XDG_CONFIG_HOME}/sweetpotatos/login-tip"
 on="$(render)"
 grep -q 'Keybind reminder       on' <<<"${on}" || fail "sheet did not show reminder on"
-grep -q 'Press x to hide the keybind reminder' <<<"${on}" || fail "sheet missing turn-off hint"
+grep -q 'Press Mod+Shift+x to hide the keybind reminder' <<<"${on}" || fail "sheet missing turn-off hint"
 
 echo "login tip ok"

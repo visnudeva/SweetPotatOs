@@ -172,7 +172,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | `Mod+Escape` | Power menu (lock / sleep / logout / reboot / power off) |
 | `Mod+Shift+c` | Reload config |
 
-`Mod` is usually the Super/Windows key. A keybind reminder points at `Mod+?` for the cheatsheet. On that page, `x` turns the reminder off (and on again). `Mod+?` still opens the page.
+`Mod` is usually the Super/Windows key. A keybind reminder points at `Mod+?` for the cheatsheet. On that page, `Mod+Shift+x` turns the reminder off (and on again); `Mod+Shift+w` opens the project website. `Mod+?` still opens the page.
 
 ### Gestures
 

@@ -2,7 +2,7 @@
   Mod = Super / Windows key
 
   This page
-  x                    Keybind reminder
+  Mod+Shift+x          Keybind reminder
 
   Apps
   Mod+Space          App launcher (Esc closes it)
@@ -79,4 +79,4 @@
   After an update, a note says what changed
 
   Project
-  w                    Open project website
+  Mod+Shift+w          Open project website

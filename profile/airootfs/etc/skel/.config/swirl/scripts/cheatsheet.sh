@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Floating terminal cheatsheet (toggle with Mod+?). SPO colors; w → website.
-# x, while this page is focused, turns the keybind reminder on or off.
+# Floating terminal cheatsheet (toggle with Mod+?). SPO colors.
+# While this page is focused: Mod+Shift+w → website, Mod+Shift+x → tip toggle.
 # Uses less so the sheet opens at the top (not scrolled to the bottom).
-# Website key is a temporary Swirl bind while this window is focused — less's
-# "shell" action always shows "!done (press RETURN)" and dumps browser stderr.
+# Those chords are temporary Swirl binds while this window is focused — bare
+# w/x used to leak and steal typing (fixed with Mod+Shift).
 set -euo pipefail
 
 APP_ID="sweetpotato-cheatsheet"
@@ -49,13 +49,10 @@ export SPO_SITE_URL="${SITE_URL}"
 export SPO_APP_ID="${APP_ID}"
 export SPO_PINK="${PINK}" SPO_ORANGE="${ORANGE}" SPO_CREAM="${CREAM}" SPO_MUTED="${MUTED}" SPO_RESET="${RESET}"
 
-# Swallow w/x in foot so they never type into less if the compositor bind
-# is late or the key still reaches the terminal. Swirl still runs the binds.
 exec "${TERM_BIN}" -a "${APP_ID}" -T "SweetPotato help" \
   -o colors-dark.background="${SPO_SURFACE}" \
   -o colors-dark.foreground="${SPO_TEXT}" \
   -o colors-dark.alpha=1.0 \
-  -o "key-bindings.noop=x X w W" \
   bash -c '
 set -euo pipefail
 PINK="${SPO_PINK}" ORANGE="${SPO_ORANGE}" CREAM="${SPO_CREAM}" MUTED="${SPO_MUTED}" RESET="${SPO_RESET}"
@@ -103,6 +100,9 @@ cleanup() {
       kill "${lp}" >/dev/null 2>&1 || true
     fi
   fi
+  # New Mod+Shift chords, plus bare w/x leftovers from older sheets.
+  swaymsg unbindsym Mod4+Shift+w >/dev/null 2>&1 || true
+  swaymsg unbindsym Mod4+Shift+x >/dev/null 2>&1 || true
   swaymsg unbindsym w >/dev/null 2>&1 || true
   swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
   swaymsg unbindsym x >/dev/null 2>&1 || true
@@ -128,14 +128,14 @@ render_content() {
           printf "%s%s%s\n" "${ORANGE}" "${line}" "${RESET}" ;;
         *"Keybind reminder"*)
           if [[ "${state}" == off ]]; then
-            printf "%s  x%s %sKeybind reminder       off%s\n" "${PINK}" "${RESET}" "${CREAM}" "${RESET}"
-            printf "%s                       Press x to show it at login again%s\n" "${MUTED}" "${RESET}"
+            printf "%s  Mod+Shift+x%s %sKeybind reminder       off%s\n" "${PINK}" "${RESET}" "${CREAM}" "${RESET}"
+            printf "%s                       Press Mod+Shift+x to show it at login again%s\n" "${MUTED}" "${RESET}"
           else
-            printf "%s  x%s %sKeybind reminder       on%s\n" "${PINK}" "${RESET}" "${CREAM}" "${RESET}"
-            printf "%s                       Press x to hide the keybind reminder%s\n" "${MUTED}" "${RESET}"
+            printf "%s  Mod+Shift+x%s %sKeybind reminder       on%s\n" "${PINK}" "${RESET}" "${CREAM}" "${RESET}"
+            printf "%s                       Press Mod+Shift+x to hide the keybind reminder%s\n" "${MUTED}" "${RESET}"
           fi
           ;;
-        "  w  "*|"  sudo sweetpotatos-update"*)
+        "  Mod+Shift+w"*|"  sudo sweetpotatos-update"*)
           printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
         "")
           printf "\n" ;;
@@ -267,25 +267,21 @@ print(walk(json.load(sys.stdin)) or \"\")
   [[ "${focused}" == "${APP_ID}" ]]
 }
 
-# Bind w/x/Escape only while this sheet is focused so other apps keep those keys.
+# Bind Mod+Shift+w/x and Escape only while this sheet is focused.
 (
   local_bound=0
   while true; do
     if cheat_focused; then
       if ((local_bound == 0)); then
-        swaymsg "bindsym --no-warn w exec ${opener}" >/dev/null 2>&1 || true
-        swaymsg "bindsym --no-warn Shift+w exec ${opener}" >/dev/null 2>&1 || true
-        swaymsg "bindsym --no-warn x exec ${toggler}" >/dev/null 2>&1 || true
-        swaymsg "bindsym --no-warn Shift+x exec ${toggler}" >/dev/null 2>&1 || true
+        swaymsg "bindsym --no-warn Mod4+Shift+w exec ${opener}" >/dev/null 2>&1 || true
+        swaymsg "bindsym --no-warn Mod4+Shift+x exec ${toggler}" >/dev/null 2>&1 || true
         swaymsg "bindsym --no-warn Escape exec ${closer}" >/dev/null 2>&1 || true
         local_bound=1
       fi
     else
       if ((local_bound == 1)); then
-        swaymsg unbindsym w >/dev/null 2>&1 || true
-        swaymsg unbindsym Shift+w >/dev/null 2>&1 || true
-        swaymsg unbindsym x >/dev/null 2>&1 || true
-        swaymsg unbindsym Shift+x >/dev/null 2>&1 || true
+        swaymsg unbindsym Mod4+Shift+w >/dev/null 2>&1 || true
+        swaymsg unbindsym Mod4+Shift+x >/dev/null 2>&1 || true
         swaymsg unbindsym Escape >/dev/null 2>&1 || true
         local_bound=0
       fi
@@ -295,7 +291,7 @@ print(walk(json.load(sys.stdin)) or \"\")
 ) &
 watch_pid=$!
 
-status="${PINK}w${RESET} ${CREAM}website${RESET}  ${PINK}x${RESET} ${CREAM}keybind reminder${RESET}  ${PINK}q/Esc${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
+status="${PINK}Mod+Shift+w${RESET} ${CREAM}website${RESET}  ${PINK}Mod+Shift+x${RESET} ${CREAM}keybind reminder${RESET}  ${PINK}q/Esc${RESET} ${CREAM}close${RESET}  ${ORANGE}arrows/pgup${RESET} ${CREAM}scroll${RESET}"
 
 render_content
 
@@ -324,24 +320,6 @@ else
   while IFS= read -rsn1 k; do
     case "${k}" in
       q|Q|$'\e') exit 0 ;;
-      x|X)
-        state="$(tip_state)"
-        mkdir -p "$(dirname "${TIP_FILE}")"
-        if [[ "${state}" == off ]]; then
-          printf "on\n" > "${TIP_FILE}"
-        else
-          printf "off\n" > "${TIP_FILE}"
-        fi
-        render_content
-        printf "\033[2J\033[H"
-        cat "${content}"
-        printf "\n%s\n" "${status}"
-        ;;
-      w|W)
-        if command -v xdg-open >/dev/null 2>&1; then
-          setsid xdg-open "${SITE_URL}" </dev/null >/dev/null 2>&1 || true
-        fi
-        ;;
     esac
   done
 fi

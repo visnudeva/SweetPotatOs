@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Keybind reminder pointing at the Mod+? cheatsheet (once per session).
-# Turn it off from the cheatsheet: focus that page and press x.
+# Turn it off from the cheatsheet: focus that page and press Mod+Shift+x.
 set -euo pipefail
 
 TIP_FILE="${XDG_CONFIG_HOME:-${HOME}/.config}/sweetpotatos/login-tip"
