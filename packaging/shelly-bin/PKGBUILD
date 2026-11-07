@@ -3,7 +3,7 @@
 # Flatpak backend package omitted (SweetPotatOs ships no Flatpak).
 # Upstream: https://github.com/Seafoam-Labs/Shelly-ALPM
 pkgname=shelly-bin
-pkgver=3.0.6
+pkgver=3.2.0
 pkgrel=1
 pkgdesc="Shelly: A Modern Arch Package Manager (prebuilt binary)"
 arch=('x86_64')
@@ -36,7 +36,7 @@ optdepends=(
   'fuse2: run AppImages that require FUSE 2'
 )
 source=("Shelly-ALPM-linux-x64-${pkgver}.tar.gz::https://github.com/Seafoam-Labs/Shelly-ALPM/releases/download/v${pkgver}/Shelly-ALPM-linux-x64.tar.gz")
-sha256sums=('2770ddeda7390c100184f3a3e243d50e9c7aee3a244f324b328279917b54dff7')
+sha256sums=('451dcb53f452cf42c21c3d9e66f234360b03887d30209f01e7329ada72383f62')
 
 package() {
   install -Dm755 "$srcdir/shelly-ui" "$pkgdir/usr/bin/shelly-ui"

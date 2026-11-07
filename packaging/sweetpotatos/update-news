@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-209
+What changed: Brave Origin is updated to 1.99.55, with Shelly, LocalSend, yay, and swaylock-effects refreshed on the channel. Run sudo sweetpotatos-update.
+
 @2026.10.3-208
 What changed: Mod+? cheatsheet no longer lists the website bind under Project (it stays on the status line only). Log out and back in after updating (or Mod+Shift+c).
 

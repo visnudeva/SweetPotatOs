@@ -1,11 +1,12 @@
 # Local PKGBUILD: AUR brave-origin-bin with prepare() fixed for the
-# current zip layout (binary is brave-origin, not brave).
+# current zip layout (wrapper runs brave-origin; AUR only chmods brave/).
 # Upstream AUR: https://aur.archlinux.org/packages/brave-origin-bin
 # Maintainer upstream: brave <aur-release@brave.com>
 pkgname=brave-origin-bin
-pkgver=1.95.101
+pkgver=1.99.55
 pkgrel=1
-# No epoch: GitHub Release asset names cannot contain ':' (epoch:pkgver).
+epoch=1
+# Epoch kept so upgrades from 1:1.95.101 sort correctly. Filenames omit epoch.
 pkgdesc='The minimalist browser from the makers of Brave (binary release).'
 arch=(x86_64 aarch64)
 url=https://brave.com/origin/download
@@ -24,14 +25,15 @@ source_aarch64=("${pkgname}-${pkgver}-aarch64.zip::https://github.com/brave/brav
 noextract=("${pkgname}-${pkgver}-x86_64.zip" "${pkgname}-${pkgver}-aarch64.zip")
 sha256sums=('5ff70ee473f35c2fc7642c422c8abe20aaac0d7cc30a3292744eb9fbeafba1bd'
             'c70bc71c696b6764247070375ae111bd76c8bad9c7bda4d46e03975b95571a8a')
-sha256sums_x86_64=('7dadff86aefdd1ed49bc39575fc2ef20534a8ab51086f58000f92c70f1fcc1cf')
-sha256sums_aarch64=('be96cd08982cbef4b3752710563da487594ed7334a7209709d734b897bec55ee')
+sha256sums_x86_64=('9d0e39e4020bfdf7aafc51308017d440ec009f8f3bbd91b67876b0d65a55505d')
+sha256sums_aarch64=('6000e3cbc78ef4a1683d59c2b2a1d8d58749aabb288e0c083f29241971f1a31d')
 
 prepare() {
 	mkdir -p brave
 	bsdtar -xf "$pkgname-$pkgver-$CARCH.zip" -C brave
-	# Zip ships brave-origin (AUR still chmods brave/).
+	# Zip ships both brave-origin (wrapper target) and brave/.
 	chmod +x brave/brave-origin
+	[[ -f brave/brave ]] && chmod +x brave/brave
 }
 
 package() {

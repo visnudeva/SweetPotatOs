@@ -2,7 +2,7 @@
 # Upstream: jirutka/swaylock-effects (fork with clock/effects; replaces Arch swaylock)
 pkgname=swaylock-effects
 pkgver=1.7.0.0
-pkgrel=1
+pkgrel=4
 pkgdesc='Screen locker for Wayland with clock and visual effects (SweetPotatOs)'
 arch=('x86_64')
 url='https://github.com/jirutka/swaylock-effects'
