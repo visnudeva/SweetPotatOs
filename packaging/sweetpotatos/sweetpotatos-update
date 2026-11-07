@@ -300,7 +300,7 @@ if [[ "${waiting}" != 0 ]]; then
   echo "    Arch/system packages waiting: ${waiting}"
   # Prompt on a real terminal (sudo still has /dev/tty). Non-interactive runs skip.
   if [[ -r /dev/tty ]]; then
-    printf '    Do you want to also update the Arch/system packages too? [y/N] ' >/dev/tty
+    printf '    Do you want to update the Arch/system packages as well? [y/N] ' >/dev/tty
     reply=""
     IFS= read -r reply </dev/tty || true
     case "${reply}" in
