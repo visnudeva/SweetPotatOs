@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-212
+What changed: After sudo sweetpotatos-update, if Arch/system packages are waiting you are asked whether to run pacman -Syu too (y/N).
+
 @2026.10.3-211
 What changed: sweetpotatos-pruning is listed on the website, keybinds page, and Mod+? cheatsheet. Log out and back in after updating (or Mod+Shift+c).
 

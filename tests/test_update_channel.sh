@@ -35,7 +35,9 @@ assert "grep -q 'sweetpotatos$' '${UPD}'" "upgrades sweetpotatos package"
 assert "grep -q 'swirl$' '${UPD}'" "upgrades swirl package"
 assert "grep -q 'sweetpotatos-sprout' '${UPD}'" "runs sprout after upgrade"
 assert "grep -q '^  laniakea$' '${UPD}'" "testing channel can install laniakea"
-assert "grep -q 'pacman -Syu' '${UPD}'" "reminds Arch lane is separate"
+assert "grep -q 'pacman -Syu' '${UPD}'" "can run or remind Arch lane Syu"
+assert "grep -q 'Do you want to also update the Arch/system packages too' '${UPD}'" \
+  "prompts to also update Arch/system packages when some are waiting"
 assert "grep -q 'swaymsg reload' '${UPD}'" "reloads Swirl after sprout"
 assert "grep -q -- '--quiet apply' '${UPD}'" \
   "reapplies the saved theme before reload"

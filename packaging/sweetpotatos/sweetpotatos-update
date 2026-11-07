@@ -297,5 +297,22 @@ fi
 waiting="$(pacman -Qu 2>/dev/null | wc -l | tr -d ' ')"
 echo "[+] SweetPotatOs update done. Open Mod+? for the help sheet — nothing else to run."
 if [[ "${waiting}" != 0 ]]; then
-  echo "    (Optional later: Arch/system packages waiting: ${waiting} — pacman -Syu)"
+  echo "    Arch/system packages waiting: ${waiting}"
+  # Prompt on a real terminal (sudo still has /dev/tty). Non-interactive runs skip.
+  if [[ -r /dev/tty ]]; then
+    printf '    Do you want to also update the Arch/system packages too? [y/N] ' >/dev/tty
+    reply=""
+    IFS= read -r reply </dev/tty || true
+    case "${reply}" in
+      y|Y|yes|Yes|YES)
+        echo "[*] Running pacman -Syu…"
+        pacman -Syu
+        ;;
+      *)
+        echo "    Skipped. Optional later: pacman -Syu"
+        ;;
+    esac
+  else
+    echo "    (Optional later: pacman -Syu)"
+  fi
 fi
