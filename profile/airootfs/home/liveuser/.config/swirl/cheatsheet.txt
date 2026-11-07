@@ -77,3 +77,8 @@
   sudo sweetpotatos-update
   A notice once a week when updates are ready
   After an update, a note says what changed
+
+  sweetpotatos-pruning
+  Reset shipped desktop config after experiments go wrong
+  Keeps config.d/user and kanshi; clears user_edits
+  Run as your user, then Mod+Shift+c if needed

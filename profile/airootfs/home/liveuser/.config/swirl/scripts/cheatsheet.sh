@@ -135,7 +135,7 @@ render_content() {
             printf "%s                       Press Mod+Shift+x to hide the keybind reminder%s\n" "${MUTED}" "${RESET}"
           fi
           ;;
-        "  sudo sweetpotatos-update"*)
+        "  sudo sweetpotatos-update"*|"  sweetpotatos-pruning"*)
           printf "%s%s%s\n" "${PINK}" "${line}" "${RESET}" ;;
         "")
           printf "\n" ;;
