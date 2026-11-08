@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-216
+What changed: Tuber adds n to toggle finish notifications, and S sort includes size. Close and reopen Tuber after updating.
+
 @2026.10.3-215
 What changed: Tuber’s ↑/↓ footer keys are potato orange too. Close and reopen Tuber after updating.
 
