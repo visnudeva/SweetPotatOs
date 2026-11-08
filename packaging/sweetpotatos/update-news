@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-215
+What changed: Tuber’s ↑/↓ footer keys are potato orange too. Close and reopen Tuber after updating.
+
 @2026.10.3-214
 What changed: Tuber can sort with s (name, done, status, down, up, eta, peers), and the footer keys are potato orange. Close and reopen Tuber after updating.
 
