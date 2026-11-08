@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-217
+What changed: Tuber torrent names use the full window width when maximized. Close and reopen Tuber after updating.
+
 @2026.10.3-216
 What changed: Tuber adds n to toggle finish notifications, and S sort includes size. Close and reopen Tuber after updating.
 
