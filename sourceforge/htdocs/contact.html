@@ -1,38 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page-title="contact.title" data-i18n-page-desc="contact.desc">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Contact</title>
   <meta name="description" content="Send a message to the SweetPotatOs maintainer.">
   <link rel="icon" href="favicon.png" type="image/png">
+  <script>
+    (function () {
+      try {
+        var k = "spo-lang", l = localStorage.getItem(k);
+        if (l !== "en" && l !== "fr") {
+          l = ((navigator.languages && navigator.languages[0]) || navigator.language || "en")
+            .toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        document.documentElement.setAttribute("data-lang", l);
+      } catch (e) {
+        document.documentElement.lang = "en";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="site.css">
+  <script src="i18n.js" defer></script>
   <script src="site.js" defer></script>
 </head>
 <body>
-  <nav class="topnav" aria-label="Site">
+  <nav class="topnav" data-i18n-aria="nav.aria" aria-label="Site">
     <a class="brand" href="index.html">
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-      <span class="visually-hidden">Menu</span>
-    </button>
+    <div class="topnav-end">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.aria" aria-label="Language">
+        <button type="button" class="lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden" data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
     <div class="topnav-links" id="site-nav">
-      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
-      <a href="showroom.html">Showroom</a>
-      <a href="changelog.html">Changelog</a>
-      <a href="keybinds.html">Keybinds</a>
-      <a href="projects.html">Projects</a>
-      <a class="contact-nav" href="contact.html" aria-current="page">Contact</a>
-      <a class="support" href="support.html">Support</a>
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download" data-i18n="nav.download">Download</a>
+      <a href="showroom.html" data-i18n="nav.showroom">Showroom</a>
+      <a href="changelog.html" data-i18n="nav.changelog">Changelog</a>
+      <a href="keybinds.html" data-i18n="nav.keybinds">Keybinds</a>
+      <a href="projects.html" data-i18n="nav.projects">Projects</a>
+      <a class="contact-nav" href="contact.html" aria-current="page" data-i18n="nav.contact">Contact</a>
+      <a class="support" href="support.html" data-i18n="nav.support">Support</a>
     </div>
   </nav>
 
   <header class="page">
-    <h1>Contact</h1>
-    <p class="lead">
+    <h1 data-i18n="contact.h1">Contact</h1>
+    <p class="lead" data-i18n="contact.lead">
       Questions, feedback, or “it runs on my potato”? Send a message —
       it goes straight to the maintainer’s inbox. No account needed.
     </p>
@@ -40,7 +62,7 @@
 
   <main>
     <div class="contact">
-      <p>
+      <p data-i18n="contact.privacy">
         Your email is only used to reply to you — never shared, sold, or used for mailing lists.
       </p>
       <form class="contact-form"
@@ -53,22 +75,31 @@
         <input type="hidden" name="_replyto" value="">
         <input type="text" name="_gotcha" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label>
-          Name
+          <span data-i18n="contact.name">Name</span>
           <input type="text" name="name" required autocomplete="name">
         </label>
         <label>
-          Email
+          <span data-i18n="contact.email">Email</span>
           <input type="email" name="email" required autocomplete="email" placeholder="you@example.com">
         </label>
         <label>
-          Message
+          <span data-i18n="contact.message">Message</span>
           <textarea name="message" required></textarea>
         </label>
-        <button class="btn btn-primary" type="submit">Send message</button>
+        <button class="btn btn-primary" type="submit" data-i18n="contact.send">Send message</button>
       </form>
     </div>
   </main>
 
-  <footer>sweetpotatos 2026</footer>
+  <footer>
+    <div class="footer-inner">
+      <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
+        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <span data-i18n="origin.made">Made in Réunion Island</span>
+      </a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.year">sweetpotatos 2026</span>
+    </div>
+  </footer>
 </body>
 </html>

@@ -1,39 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page-title="changelog.title" data-i18n-page-desc="changelog.desc">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Changelog</title>
   <meta name="description" content="Release notes for SweetPotatOs Harvest ISOs from First Harvest onward.">
   <link rel="icon" href="favicon.png" type="image/png">
+  <script>
+    (function () {
+      try {
+        var k = "spo-lang", l = localStorage.getItem(k);
+        if (l !== "en" && l !== "fr") {
+          l = ((navigator.languages && navigator.languages[0]) || navigator.language || "en")
+            .toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        document.documentElement.setAttribute("data-lang", l);
+      } catch (e) {
+        document.documentElement.lang = "en";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="site.css">
+  <script src="i18n.js" defer></script>
   <script src="site.js" defer></script>
 </head>
 <body>
-  <nav class="topnav" aria-label="Site">
+  <nav class="topnav" data-i18n-aria="nav.aria" aria-label="Site">
     <a class="brand" href="index.html">
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-      <span class="visually-hidden">Menu</span>
-    </button>
+    <div class="topnav-end">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.aria" aria-label="Language">
+        <button type="button" class="lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden" data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
     <div class="topnav-links" id="site-nav">
-      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
-      <a href="showroom.html">Showroom</a>
-      <a href="changelog.html" aria-current="page">Changelog</a>
-      <a href="keybinds.html">Keybinds</a>
-      <a href="projects.html">Projects</a>
-      <a class="contact-nav" href="contact.html">Contact</a>
-      <a class="support" href="support.html">Support</a>
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download" data-i18n="nav.download">Download</a>
+      <a href="showroom.html" data-i18n="nav.showroom">Showroom</a>
+      <a href="changelog.html" aria-current="page" data-i18n="nav.changelog">Changelog</a>
+      <a href="keybinds.html" data-i18n="nav.keybinds">Keybinds</a>
+      <a href="projects.html" data-i18n="nav.projects">Projects</a>
+      <a class="contact-nav" href="contact.html" data-i18n="nav.contact">Contact</a>
+      <a class="support" href="support.html" data-i18n="nav.support">Support</a>
     </div>
   </nav>
 
   <header class="page">
-    <h1>Changelog</h1>
-    <span class="tag">Harvest releases</span>
-    <p class="lead">
+    <h1 data-i18n="changelog.h1">Changelog</h1>
+    <span class="tag" data-i18n="changelog.tag">Harvest releases</span>
+    <p class="lead" data-i18n-html="changelog.lead">
       What changed in each SweetPotatOs ISO from <strong>First Harvest</strong> onward.
       Newer releases are listed first.
     </p>
@@ -41,20 +63,20 @@
 
   <main>
     <div class="banner-row">
-      <div class="rolling-note" aria-label="Fifth Harvest changes on the update channel">
-        <p>Desktop changes below are already live for <strong>Fourth Harvest</strong></p>
-        <p>installs via <code>sudo sweetpotatos-update</code></p>
-        <p>No need to wait for the Fifth Harvest ISO.</p>
+      <div class="rolling-note" data-i18n-aria="changelog.rolling.aria" aria-label="Fifth Harvest changes on the update channel">
+        <p data-i18n-html="changelog.rolling1">Desktop changes below are already live for <strong>Fourth Harvest</strong></p>
+        <p data-i18n-html="changelog.rolling2">installs via <code>sudo sweetpotatos-update</code></p>
+        <p data-i18n="changelog.rolling3">No need to wait for the Fifth Harvest ISO.</p>
       </div>
       <div class="banner-stack">
-        <aside class="countdown out" aria-label="Fourth Harvest released">
+        <aside class="countdown out" data-i18n-aria="changelog.out.aria" aria-label="Fourth Harvest released">
           <p class="countdown-label">
             <strong>Fourth Harvest</strong> ISO
           </p>
-          <p class="countdown-days">Out now</p>
+          <p class="countdown-days" data-i18n="changelog.out.now">Out now</p>
           <p class="countdown-sub">
-            Released 28 October 2026 ·
-            <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.11_Fourth_Harvest/">Download</a>
+            <span data-i18n="changelog.out.sub">Released 28 October 2026 ·</span>
+            <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.11_Fourth_Harvest/" data-i18n="nav.download">Download</a>
           </p>
         </aside>
         <aside
@@ -62,7 +84,7 @@
           id="fifth-harvest-countdown"
           aria-live="polite"
           data-release="2026-12-01">
-          <p class="countdown-label">
+          <p class="countdown-label" data-i18n-html="changelog.fifth.label">
             <strong>Fifth Harvest</strong> ISO — planned release
           </p>
           <p class="countdown-days" id="countdown-days"><span>about</span> — <span>days left</span></p>
@@ -71,10 +93,12 @@
       </div>
     </div>
 
-    <nav class="toc" aria-label="Releases">
-      <h2>Releases</h2>
+    <p class="changelog-lang-note" data-i18n="changelog.notes.en">Release notes stay in English (technical detail).</p>
+
+    <nav class="toc" data-i18n-aria="changelog.toc" aria-label="Releases">
+      <h2 data-i18n="changelog.toc">Releases</h2>
       <ol>
-        <li><a href="#fifth-harvest">2026.12 — Fifth Harvest</a> (planned ISO)</li>
+        <li><a href="#fifth-harvest">2026.12 — Fifth Harvest</a> <span data-i18n="changelog.planned">(planned ISO)</span></li>
         <li><a href="#fourth-harvest">2026.11 — Fourth Harvest</a></li>
         <li><a href="#third-harvest">2026.10 — Third Harvest</a></li>
         <li><a href="#second-harvest">2026.09 — Second Harvest</a></li>
@@ -92,9 +116,10 @@
         <code>sweetpotatos-update</code> channel for Fourth Harvest installs
           </p>
         </span>
-        <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
+        <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
+        <li>The website shows <strong>Made in Réunion Island</strong> with the regional flag (links to an OpenStreetMap view of where Réunion is), and a full <strong>English / French</strong> toggle on every page. French browsers open in French by default; the choice is remembered.</li>
         <li><strong>Tuber</strong> gains <code>n</code> to toggle desktop notifications when a download finishes, <code>s</code> to cycle sort (name → done → status → size → down → up → eta → peers), potato-orange footer keys, and torrent names that use the full window width. Close and reopen Tuber after <code>sudo sweetpotatos-update</code>.</li>
         <li>After <code>sudo sweetpotatos-update</code>, if Arch/system packages are waiting you are asked whether to run <code>pacman -Syu</code> as well (<code>y</code>/<code>N</code>). Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
         <li><code>sweetpotatos-pruning</code> is listed on the home page (after Staying updated), the keybinds page, and the Mod+? cheatsheet. Installed systems pick the cheatsheet line up with <code>sudo sweetpotatos-update</code>.</li>
@@ -121,7 +146,7 @@
         · Files folder <code>2026.11_Fourth_Harvest</code>
           </p>
         </span>
-        <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
+        <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
         <li>Overview (<code>Mod+Tab</code>) no longer shows workspace numbers or names — only the desktop stripes. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
@@ -218,7 +243,7 @@
         · Files folder <code>2026.10_Third_Harvest</code>
           </p>
         </span>
-        <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
+        <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
         <li><strong>Tuber</strong> replaced Transmission for torrents (<code>Mod+t</code>) — light terminal BitTorrent client; magnet clicks hand off to the open session. Existing installs pick it up with <code>sweetpotatos-update</code> once the package is on the channel (Transmission is replaced).</li>
@@ -247,7 +272,7 @@
         · Files folder <code>2026.09_Second_Harvest</code>
           </p>
         </span>
-        <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
+        <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
         <li>Added <strong>Spore</strong> (web radio + local music, <code>Mod+r</code>) and <strong>LocalSend</strong> (nearby sharing); replaced <strong>tera</strong> and <strong>Audacious</strong>.</li>
@@ -265,7 +290,7 @@
         · Files folder <code>2026.08_First_Harvest</code>
           </p>
         </span>
-        <span class="expand-btn" aria-hidden="true"><span class="when-closed">Expand</span><span class="when-open">Collapse</span></span>
+        <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
         <li>First stable <strong>Harvest</strong> ISO (left the earlier BETA branding).</li>
@@ -277,7 +302,16 @@
     </details>
   </main>
 
-  <footer>sweetpotatos 2026</footer>
+  <footer>
+    <div class="footer-inner">
+      <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
+        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <span data-i18n="origin.made">Made in Réunion Island</span>
+      </a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.year">sweetpotatos 2026</span>
+    </div>
+  </footer>
 
   <script>
     (function () {
@@ -308,22 +342,43 @@
       var release = new Date(parts[0], parts[1] - 1, parts[2]);
       release.setHours(0, 0, 0, 0);
 
-      var now = new Date();
-      now.setHours(0, 0, 0, 0);
-      var msPerDay = 24 * 60 * 60 * 1000;
-      var days = Math.round((release - now) / msPerDay);
-
-      if (days > 1) {
-        daysEl.innerHTML = '<span>about</span> ' + days + ' <span>days left</span>';
-      } else if (days === 1) {
-        daysEl.innerHTML = '<span>about</span> 1 <span>day left</span>';
-      } else if (days === 0) {
-        daysEl.innerHTML = '<span>about</span> <span>today</span>';
-      } else {
-        daysEl.innerHTML = 'Out now';
-        box.querySelector(".countdown-sub").textContent =
-          "Released December 2026";
+      function t(key, fallback) {
+        var i18n = window.SweetPotatOsI18n;
+        if (i18n && typeof i18n.t === "function") {
+          var v = i18n.t(key);
+          if (v != null) return v;
+        }
+        return fallback;
       }
+
+      function render() {
+        var now = new Date();
+        now.setHours(0, 0, 0, 0);
+        var msPerDay = 24 * 60 * 60 * 1000;
+        var days = Math.round((release - now) / msPerDay);
+        var sub = box.querySelector(".countdown-sub");
+
+        if (days > 1) {
+          daysEl.innerHTML =
+            "<span>" + t("changelog.about", "about") + "</span> " +
+            days +
+            " <span>" + t("changelog.daysLeft", "days left") + "</span>";
+        } else if (days === 1) {
+          daysEl.innerHTML =
+            "<span>" + t("changelog.about", "about") + "</span> 1 <span>" +
+            t("changelog.dayLeft", "day left") + "</span>";
+        } else if (days === 0) {
+          daysEl.innerHTML =
+            "<span>" + t("changelog.about", "about") + "</span> <span>" +
+            t("changelog.today", "today") + "</span>";
+        } else {
+          daysEl.textContent = t("changelog.out.now", "Out now");
+          if (sub) sub.textContent = t("changelog.releasedDec", "Released December 2026");
+        }
+      }
+
+      render();
+      document.addEventListener("spo:lang", render);
     })();
   </script>
 </body>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page-title="home.title" data-i18n-page-desc="home.desc">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,27 +7,49 @@
   <meta name="description" content="Arch-based Linux distro with a live graphical ISO, SweetPotato Swirl desktop, and Calamares installer.">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="preload" href="SweetPotatOs-glitch.png" as="image">
+  <script>
+    (function () {
+      try {
+        var k = "spo-lang", l = localStorage.getItem(k);
+        if (l !== "en" && l !== "fr") {
+          l = ((navigator.languages && navigator.languages[0]) || navigator.language || "en")
+            .toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        document.documentElement.setAttribute("data-lang", l);
+      } catch (e) {
+        document.documentElement.lang = "en";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="site.css">
+  <script src="i18n.js" defer></script>
   <script src="site.js" defer></script>
 </head>
 <body>
-  <nav class="topnav" aria-label="Site">
+  <nav class="topnav" data-i18n-aria="nav.aria" aria-label="Site">
     <a class="brand" href="index.html">
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-      <span class="visually-hidden">Menu</span>
-    </button>
+    <div class="topnav-end">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.aria" aria-label="Language">
+        <button type="button" class="lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden" data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
     <div class="topnav-links" id="site-nav">
-      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
-      <a href="showroom.html">Showroom</a>
-      <a href="changelog.html">Changelog</a>
-      <a href="keybinds.html">Keybinds</a>
-      <a href="projects.html">Projects</a>
-      <a class="contact-nav" href="contact.html">Contact</a>
-      <a class="support" href="support.html">Support</a>
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download" data-i18n="nav.download">Download</a>
+      <a href="showroom.html" data-i18n="nav.showroom">Showroom</a>
+      <a href="changelog.html" data-i18n="nav.changelog">Changelog</a>
+      <a href="keybinds.html" data-i18n="nav.keybinds">Keybinds</a>
+      <a href="projects.html" data-i18n="nav.projects">Projects</a>
+      <a class="contact-nav" href="contact.html" data-i18n="nav.contact">Contact</a>
+      <a class="support" href="support.html" data-i18n="nav.support">Support</a>
     </div>
   </nav>
 
@@ -38,13 +60,19 @@
       </button>
       <h1>SweetPotatOs</h1>
     </div>
-    <p class="tagline" data-vault-tagline>A unique minimalist distro made with love</p>
-    <span class="tag">Arch-based Linux distro</span>
-    <p class="lead">
+    <p class="tagline" data-vault-tagline data-i18n="home.tagline">A unique minimalist distro made with love</p>
+    <p class="origin-row">
+      <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
+        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <span data-i18n="origin.made">Made in Réunion Island</span>
+      </a>
+    </p>
+    <span class="tag" data-i18n="home.tag">Arch-based Linux distro</span>
+    <p class="lead" data-i18n-html="home.lead1">
       A live graphical ISO with the SweetPotato <strong>Swirl</strong> desktop and a Calamares installer —
       because reviving slow old potato PCs shouldn't mean sacrificing looks for speed.
     </p>
-    <p class="lead">
+    <p class="lead" data-i18n-html="home.lead2">
       64-bit. The installer needs 1 GB of RAM and 8 GB of disk.<br>
       The ISO size and the <code>.sha256</code> file are on the
       <a href="https://sourceforge.net/projects/sweetpotatos/files/2026.11_Fourth_Harvest/">Files page</a>.
@@ -87,95 +115,95 @@
   </div>
 
   <main>
-    <aside class="notice" aria-label="Who this distro is for">
-      <p>
+    <aside class="notice" data-i18n-aria="home.notice.aria" aria-label="Who this distro is for">
+      <p data-i18n="home.notice1">
         This distro comes fully configured with a tiling window manager and gesture controls,
         ready to use out of the box without requiring any configuration changes.
       </p>
-      <p>
+      <p data-i18n-html="home.notice2">
         However, <strong>pre-configured does not mean beginner-friendly</strong>.
         The interface follows a keyboard- and gesture-first workflow designed for power users.
         If you're unfamiliar with tiling window managers, keybindings, or gestures,
         even basic tasks such as opening a browser may not be immediately obvious.
       </p>
-      <p>
+      <p data-i18n="home.notice3">
         Once the workflow is learned, the system is designed to be fast, efficient, and intuitive
         for users who prefer a keyboard-driven experience.
       </p>
     </aside>
 
-    <h2>What you get</h2>
+    <h2 data-i18n="home.what">What you get</h2>
     <ul>
-      <li>Live <strong>Swirl</strong> session (<code>liveuser</code>, empty password, sudo without password)</li>
-      <li>Autologin on tty1 → SweetPotato desktop</li>
-      <li>Installer autostarts (also <code>Mod+i</code> / <em>Install SweetPotatOs</em>)</li>
-      <li>Installed system uses GRUB and Ly on tty2 (pick the <strong>Swirl</strong> session)</li>
+      <li data-i18n-html="home.what1">Live <strong>Swirl</strong> session (<code>liveuser</code>, empty password, sudo without password)</li>
+      <li data-i18n="home.what2">Autologin on tty1 → SweetPotato desktop</li>
+      <li data-i18n-html="home.what3">Installer autostarts (also <code>Mod+i</code> / <em>Install SweetPotatOs</em>)</li>
+      <li data-i18n-html="home.what4">Installed system uses GRUB and Ly on tty2 (pick the <strong>Swirl</strong> session)</li>
     </ul>
 
-    <h2>Swirl</h2>
-    <p>
+    <h2 data-i18n="home.swirl">Swirl</h2>
+    <p data-i18n-html="home.swirl1">
       <a href="projects.html#swirl">Swirl</a> is the Wayland compositor SweetPotatOs ships:
       a light scrolling tiling window manager forked from Scroll/Sway, with a layout inspired by Niri.
       Windows sit as <strong>columns on an infinite horizontal strip</strong>; workspaces move vertically.
       Config stays Sway-compatible under <code>~/.config/swirl/</code>.
     </p>
-    <p>
+    <p data-i18n-html="home.swirl2">
       Swirl ships the compositor together with <code>swirlbar</code>, <code>swaymsg</code>, the power-off bar, and <code>swirlmenu</code>.
       The older <code>swaybar</code>, <code>swaymsg</code>, and <code>swaynag</code> names still work as aliases.
     </p>
-    <p>
+    <p data-i18n-html="home.swirl3">
       <strong>Smart Brightness</strong> is on by default: fullscreen video (mpv, YouTube in a browser, and similar) goes to max backlight, then your level comes back when you leave.
       Toggle with <code>Mod+Ctrl+b</code>.
     </p>
     <table>
-      <tr><th>Gesture</th><th>Action</th></tr>
-      <tr><td>3-finger left / right</td><td>Scroll the window strip</td></tr>
-      <tr><td>4-finger up / down</td><td>Next / previous workspace</td></tr>
+      <tr><th data-i18n="home.th.gesture">Gesture</th><th data-i18n="home.th.action">Action</th></tr>
+      <tr><td data-i18n="home.g1">3-finger left / right</td><td data-i18n="home.g1a">Scroll the window strip</td></tr>
+      <tr><td data-i18n="home.g2">4-finger up / down</td><td data-i18n="home.g2a">Next / previous workspace</td></tr>
     </table>
     <table>
-      <tr><th>Windows</th><th>Auto-tile</th></tr>
-      <tr><td>1</td><td>Full width</td></tr>
-      <tr><td>2</td><td>50 / 50</td></tr>
-      <tr><td>3+</td><td>New window half; others keep their size</td></tr>
+      <tr><th data-i18n="home.th.windows">Windows</th><th data-i18n="home.th.autotile">Auto-tile</th></tr>
+      <tr><td>1</td><td data-i18n="home.w1a">Full width</td></tr>
+      <tr><td>2</td><td data-i18n="home.w2a">50 / 50</td></tr>
+      <tr><td>3+</td><td data-i18n="home.w3a">New window half; others keep their size</td></tr>
     </table>
 
-    <h2>Default apps</h2>
+    <h2 data-i18n="home.apps">Default apps</h2>
     <ul class="app-grid">
-      <li><span>Browser</span> Brave Origin</li>
-      <li><span>Files</span> Thunar</li>
-      <li><span>Editor</span> Geany</li>
-      <li><span>Calculator</span> galculator</li>
-      <li><span>Terminal</span> foot</li>
-      <li><span>Shell</span> fish</li>
-      <li><span>Video</span> mpv + yt-dlp</li>
-      <li><span>Image edit</span> GIMP</li>
-      <li><span>Music / radio</span> <a class="app-spore" href="projects.html#spore">Spore</a></li>
-      <li><span>Nearby share</span> LocalSend</li>
-      <li><span>PDF</span> mupdf</li>
-      <li><span>Images</span> swayimg</li>
-      <li><span>Torrents</span> <a class="app-tuber" href="projects.html#tuber">Tuber</a></li>
-      <li><span>Wallpaper draw</span> <a class="app-laniakea" href="projects.html#laniakea">Laniakea</a></li>
-      <li><span>Webcam</span> guvcview</li>
-      <li><span>Color picker</span> hyprpicker</li>
-      <li><span>Packages</span> Shelly (+ yay)</li>
-      <li><span>Disks</span> GNOME Disks</li>
-      <li><span>System monitor</span> btop</li>
+      <li><span data-i18n="home.app.browser">Browser</span> Brave Origin</li>
+      <li><span data-i18n="home.app.files">Files</span> Thunar</li>
+      <li><span data-i18n="home.app.editor">Editor</span> Geany</li>
+      <li><span data-i18n="home.app.calc">Calculator</span> galculator</li>
+      <li><span data-i18n="home.app.term">Terminal</span> foot</li>
+      <li><span data-i18n="home.app.shell">Shell</span> fish</li>
+      <li><span data-i18n="home.app.video">Video</span> mpv + yt-dlp</li>
+      <li><span data-i18n="home.app.imageedit">Image edit</span> GIMP</li>
+      <li><span data-i18n="home.app.music">Music / radio</span> <a class="app-spore" href="projects.html#spore">Spore</a></li>
+      <li><span data-i18n="home.app.share">Nearby share</span> LocalSend</li>
+      <li><span data-i18n="home.app.pdf">PDF</span> mupdf</li>
+      <li><span data-i18n="home.app.images">Images</span> swayimg</li>
+      <li><span data-i18n="home.app.torrents">Torrents</span> <a class="app-tuber" href="projects.html#tuber">Tuber</a></li>
+      <li><span data-i18n="home.app.wall">Wallpaper draw</span> <a class="app-laniakea" href="projects.html#laniakea">Laniakea</a></li>
+      <li><span data-i18n="home.app.webcam">Webcam</span> guvcview</li>
+      <li><span data-i18n="home.app.color">Color picker</span> hyprpicker</li>
+      <li><span data-i18n="home.app.packages">Packages</span> Shelly (+ yay)</li>
+      <li><span data-i18n="home.app.disks">Disks</span> GNOME Disks</li>
+      <li><span data-i18n="home.app.monitor">System monitor</span> btop</li>
     </ul>
 
-    <h2>Staying updated</h2>
-    <p>
+    <h2 data-i18n="home.updates">Staying updated</h2>
+    <p data-i18n-html="home.updates1">
       From <strong>Third Harvest</strong> onward, desktop and SweetPotatOs package fixes ship as a
       <strong>rolling</strong> channel. On an installed system:
     </p>
     <pre><code>sudo sweetpotatos-update</code></pre>
-    <p>
+    <p data-i18n-html="home.updates2">
       That installs or upgrades SPO-owned packages (theme, Swirl, Spore, Tuber, …) and refreshes shipped
       <code>~/.config</code> defaults. New apps added on the channel (for example Tuber replacing
       Transmission) land on the next update — you do not need a fresh ISO. It does <strong>not</strong>
       run a full Arch <code>pacman -Syu</code> (kernel / base stay on the Arch lane). New Harvest ISOs
       remain for fresh installs and marketing.
     </p>
-    <p>
+    <p data-i18n-html="home.updates3">
       If experiments leave the desktop messy, reset shipped config to the channel defaults. It clears
       <code>user_edits</code> forks, keeps <code>~/.config/swirl/config.d/user</code> and your display
       layout, then sprouts like an update. Run it as your user (not root), then
@@ -183,26 +211,26 @@
     </p>
     <pre><code>sweetpotatos-pruning</code></pre>
 
-    <h2 id="overrides">Custom Swirl config (overrides)</h2>
-    <p>
+    <h2 id="overrides" data-i18n="home.overrides">Custom Swirl config (overrides)</h2>
+    <p data-i18n-html="home.overrides1">
       Do <strong>not</strong> edit the main <code>~/.config/swirl/config</code> for personal
       binds — updates replace that file. Put your changes in the override file instead:
     </p>
     <pre><code>~/.config/swirl/config.d/user</code></pre>
-    <p>
+    <p data-i18n-html="home.overrides2">
       It is seeded once on first install, included <strong>last</strong> by the main config
       (so your lines win), and is <strong>never overwritten</strong> by
       <code>sweetpotatos-update</code> / sprout. Edit it, then reload with
       <code>Mod+Shift+c</code>.
     </p>
-    <p><strong>Who owns what</strong></p>
+    <p><strong data-i18n="home.overrides.who">Who owns what</strong></p>
     <table>
-      <tr><th>Path</th><th>Role</th></tr>
-      <tr><td><code>~/.config/swirl/config</code> (+ scripts)</td><td>SweetPotato defaults — replaced by updates</td></tr>
-      <tr><td><code>~/.config/swirl/config.d/user</code></td><td>Your overrides — yours forever</td></tr>
-      <tr><td><code>~/.config/sweetpotatos/user_edits/…</code></td><td>Optional whole-file forks that also survive updates</td></tr>
+      <tr><th data-i18n="home.th.path">Path</th><th data-i18n="home.th.role">Role</th></tr>
+      <tr><td><code>~/.config/swirl/config</code> (+ scripts)</td><td data-i18n="home.role1">SweetPotato defaults — replaced by updates</td></tr>
+      <tr><td><code>~/.config/swirl/config.d/user</code></td><td data-i18n="home.role2">Your overrides — yours forever</td></tr>
+      <tr><td><code>~/.config/sweetpotatos/user_edits/…</code></td><td data-i18n="home.role3">Optional whole-file forks that also survive updates</td></tr>
     </table>
-    <p><strong>Examples</strong> (add under the header in <code>config.d/user</code>):</p>
+    <p><strong data-i18n="home.overrides.ex">Examples</strong><span data-i18n-html="home.overrides.exnote"> (add under the header in <code>config.d/user</code>):</span></p>
     <pre><code># Extra bind (keeps the default unless you unbind first):
 bindsym $mod+Shift+b exec firefox
 
@@ -212,17 +240,26 @@ bindsym $mod+w exec firefox
 
 # Floating rule:
 for_window [app_id="mpv"] floating enable</code></pre>
-    <p>
+    <p data-i18n-html="home.overrides.tip">
       Tip: the cheatsheet (<code>Mod+?</code>) also points at this file.
       The full bind list is on the <a href="keybinds.html">keybinds</a> page.
     </p>
 
-    <h2>Write ISO to USB</h2>
+    <h2 data-i18n="home.usb">Write ISO to USB</h2>
     <pre><code>lsblk   # find the USB disk, e.g. /dev/sdX — not a partition
 sudo dd if=Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync</code></pre>
-    <p>Prefer verifying the download with the <code>.sha256</code> file next to the ISO on the Files page.</p>
+    <p data-i18n-html="home.usb.note">Prefer verifying the download with the <code>.sha256</code> file next to the ISO on the Files page.</p>
   </main>
 
-  <footer>sweetpotatos 2026</footer>
+  <footer>
+    <div class="footer-inner">
+      <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
+        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <span data-i18n="origin.made">Made in Réunion Island</span>
+      </a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.year">sweetpotatos 2026</span>
+    </div>
+  </footer>
 </body>
 </html>

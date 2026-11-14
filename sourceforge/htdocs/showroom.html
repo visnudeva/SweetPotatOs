@@ -1,44 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page-title="showroom.title" data-i18n-page-desc="showroom.desc">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Showroom</title>
   <meta name="description" content="SweetPotatOs screencast, 9to5Linux review, desktop screenshots, themer, Laniakea, and wallpapers.">
   <link rel="icon" href="favicon.png" type="image/png">
+  <script>
+    (function () {
+      try {
+        var k = "spo-lang", l = localStorage.getItem(k);
+        if (l !== "en" && l !== "fr") {
+          l = ((navigator.languages && navigator.languages[0]) || navigator.language || "en")
+            .toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        document.documentElement.setAttribute("data-lang", l);
+      } catch (e) {
+        document.documentElement.lang = "en";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="site.css">
+  <script src="i18n.js" defer></script>
   <script src="site.js" defer></script>
 </head>
 <body>
-  <nav class="topnav" aria-label="Site">
+  <nav class="topnav" data-i18n-aria="nav.aria" aria-label="Site">
     <a class="brand" href="index.html">
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-      <span class="visually-hidden">Menu</span>
-    </button>
+    <div class="topnav-end">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.aria" aria-label="Language">
+        <button type="button" class="lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden" data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
     <div class="topnav-links" id="site-nav">
-      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
-      <a href="showroom.html" aria-current="page">Showroom</a>
-      <a href="changelog.html">Changelog</a>
-      <a href="keybinds.html">Keybinds</a>
-      <a href="projects.html">Projects</a>
-      <a class="contact-nav" href="contact.html">Contact</a>
-      <a class="support" href="support.html">Support</a>
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download" data-i18n="nav.download">Download</a>
+      <a href="showroom.html" aria-current="page" data-i18n="nav.showroom">Showroom</a>
+      <a href="changelog.html" data-i18n="nav.changelog">Changelog</a>
+      <a href="keybinds.html" data-i18n="nav.keybinds">Keybinds</a>
+      <a href="projects.html" data-i18n="nav.projects">Projects</a>
+      <a class="contact-nav" href="contact.html" data-i18n="nav.contact">Contact</a>
+      <a class="support" href="support.html" data-i18n="nav.support">Support</a>
     </div>
   </nav>
 
   <header class="page">
-    <h1>Showroom</h1>
-    <p class="lead">
+    <h1 data-i18n="showroom.h1">Showroom</h1>
+    <p class="lead" data-i18n="showroom.lead">
       The desktop in motion, a community review, screenshots, the color themes, Laniakea, and the wallpapers that ship with the theme.
     </p>
   </header>
 
   <main>
-    <h2>Screencast</h2>
+    <h2 data-i18n="showroom.screencast">Screencast</h2>
     <div class="hero">
       <div class="hero-frame">
         <video
@@ -53,13 +75,13 @@
         </video>
       </div>
       <p class="hero-caption">
-        <strong>Swirl on SweetPotatOs — Fourth Harvest</strong>
-        <span>2m 36s screencast</span>
+        <strong data-i18n="showroom.screencast.cap">Swirl on SweetPotatOs — Fourth Harvest</strong>
+        <span data-i18n="showroom.screencast.meta">2m 36s screencast</span>
       </p>
     </div>
 
-    <h2 id="review">Community review</h2>
-    <p class="shot-hint">
+    <h2 id="review" data-i18n="showroom.review">Community review</h2>
+    <p class="shot-hint" data-i18n="showroom.review.hint">
       9to5Linux walks through Fourth Harvest — Swirl, the app set, and why old potato PCs are the point.
     </p>
     <div class="hero">
@@ -78,8 +100,8 @@
       </p>
     </div>
 
-    <h2>Screenshots</h2>
-    <p class="shot-hint">Click a still to open it larger.</p>
+    <h2 data-i18n="showroom.shots">Screenshots</h2>
+    <p class="shot-hint" data-i18n="showroom.shots.hint">Click a still to open it larger.</p>
     <div class="shot-row" data-lightbox-gallery>
       <figure>
         <a href="showroom/shot-overview.png">
@@ -91,13 +113,13 @@
         <a href="showroom/shot-desktop.png">
           <img src="showroom/shot-desktop.png" alt="Spore radio and Laniakea with corners and gaps on">
         </a>
-        <figcaption>Desktop with gaps</figcaption>
+        <figcaption data-i18n="showroom.cap.gaps">Desktop with gaps</figcaption>
       </figure>
       <figure>
         <a href="showroom/shot-spore.png">
           <img src="showroom/shot-spore.png" alt="Spore web radio with BarsDot visualizer">
         </a>
-        <figcaption>Spore radio</figcaption>
+        <figcaption data-i18n="showroom.cap.spore">Spore radio</figcaption>
       </figure>
       <figure>
         <a href="showroom/shot-laniakea.png">
@@ -109,30 +131,30 @@
         <a href="showroom/shot-keybinds.png">
           <img src="showroom/shot-keybinds.png" alt="SweetPotato keybind cheatsheet">
         </a>
-        <figcaption>Keybinds</figcaption>
+        <figcaption data-i18n="showroom.cap.keybinds">Keybinds</figcaption>
       </figure>
       <figure>
         <a href="showroom/shot-files.png">
           <img src="showroom/shot-files.png" alt="fish terminal and Thunar side by side">
         </a>
-        <figcaption>Files and terminal</figcaption>
+        <figcaption data-i18n="showroom.cap.files">Files and terminal</figcaption>
       </figure>
       <figure>
         <a href="showroom/shot-themer.png">
           <img src="showroom/shot-themer.png" alt="SweetPotato themer with Ube theme selected">
         </a>
-        <figcaption>Themer</figcaption>
+        <figcaption data-i18n="showroom.cap.themer">Themer</figcaption>
       </figure>
       <figure>
         <a href="showroom/shot-overview-stripes.png">
           <img src="showroom/shot-overview-stripes.png" alt="Mod+Tab overview with desktop stripes">
         </a>
-        <figcaption>Overview</figcaption>
+        <figcaption data-i18n="showroom.cap.overview">Overview</figcaption>
       </figure>
     </div>
 
-    <h2>Themes</h2>
-    <p>
+    <h2 data-i18n="showroom.themes">Themes</h2>
+    <p data-i18n-html="showroom.themes.p">
       <code>Mod+Ctrl+t</code> opens SweetPotato themer: the dark and light presets, plus sliders for the accent and highlight. Apply commits the choice.
       The same controls are below. A slider keeps that preset’s lightness and saturation and changes the hue.
       On the desktop, windows that are already open refresh their accents. The surface stays until those windows are closed and opened again.
@@ -140,25 +162,25 @@
     <div class="themer" data-themer>
       <div class="themer-window">
         <p class="themer-title">SweetPotato themer</p>
-        <div class="themer-modes" role="radiogroup" aria-label="Dark or light">
-          <label><input type="radio" name="spo-mode" value="dark" checked> Dark</label>
-          <label><input type="radio" name="spo-mode" value="light"> Light</label>
+        <div class="themer-modes" role="radiogroup" data-i18n-aria="showroom.mode.aria" aria-label="Dark or light">
+          <label><input type="radio" name="spo-mode" value="dark" checked> <span data-i18n="showroom.themer.dark">Dark</span></label>
+          <label><input type="radio" name="spo-mode" value="light"> <span data-i18n="showroom.themer.light">Light</span></label>
         </div>
-        <div class="themer-presets" role="radiogroup" aria-label="Color theme"></div>
+        <div class="themer-presets" role="radiogroup" data-i18n-aria="showroom.theme.aria" aria-label="Color theme"></div>
         <label class="themer-slider">
-          <span>Accent</span>
-          <input type="range" min="0" max="360" step="0.01" value="0" data-accent aria-label="Accent hue">
+          <span data-i18n="showroom.themer.accent">Accent</span>
+          <input type="range" min="0" max="360" step="0.01" value="0" data-accent data-i18n-aria="showroom.accent.aria" aria-label="Accent hue">
           <i class="themer-dot" data-accent-dot></i>
         </label>
         <label class="themer-slider">
-          <span>Highlight</span>
-          <input type="range" min="0" max="360" step="0.01" value="0" data-highlight aria-label="Highlight hue">
+          <span data-i18n="showroom.themer.highlight">Highlight</span>
+          <input type="range" min="0" max="360" step="0.01" value="0" data-highlight data-i18n-aria="showroom.highlight.aria" aria-label="Highlight hue">
           <i class="themer-dot" data-highlight-dot></i>
         </label>
-        <button type="button" class="themer-reset" data-reset>Reset</button>
+        <button type="button" class="themer-reset" data-reset data-i18n="showroom.themer.reset">Reset</button>
       </div>
       <div class="themer-preview">
-        <p class="themer-preview-kicker">Your colors</p>
+        <p class="themer-preview-kicker" data-i18n="showroom.themer.colors">Your colors</p>
         <div class="themer-stage" data-stage>
           <span class="themer-stage-title" data-stage-title>Sweet potato</span>
           <i class="themer-stage-dot" data-stage-accent></i>
@@ -168,8 +190,8 @@
       </div>
     </div>
 
-    <h2>Laniakea</h2>
-    <p>
+    <h2 data-i18n="showroom.laniakea.h">Laniakea</h2>
+    <p data-i18n-html="showroom.laniakea.p">
       Open it from the app menu. A generative flow field draws inside a shape mask; <strong>Apply</strong> sets it as the wallpaper.
       The same shape picker sits below as a live preview — change the mask or hit Redraw to start a new field.
     </p>
@@ -177,31 +199,31 @@
       <div class="laniakea-window">
         <p class="laniakea-title">Laniakea</p>
         <label class="laniakea-field">
-          <span>Shape mask</span>
-          <select data-mask aria-label="Shape mask">
-            <option value="circle">Circle</option>
-            <option value="triangle-up" selected>Triangle up</option>
-            <option value="triangle-down">Triangle down</option>
-            <option value="diamond">Diamond</option>
-            <option value="hexagon">Hexagon</option>
-            <option value="rectangle-vertical">Vertical rectangle</option>
-            <option value="rectangle-horizontal">Horizontal rectangle</option>
-            <option value="wide">Wide</option>
+          <span data-i18n="showroom.laniakea.shape">Shape mask</span>
+          <select data-mask data-i18n-aria="showroom.laniakea.shape" aria-label="Shape mask">
+            <option value="circle" data-i18n="showroom.mask.circle">Circle</option>
+            <option value="triangle-up" selected data-i18n="showroom.mask.triup">Triangle up</option>
+            <option value="triangle-down" data-i18n="showroom.mask.tridn">Triangle down</option>
+            <option value="diamond" data-i18n="showroom.mask.diamond">Diamond</option>
+            <option value="hexagon" data-i18n="showroom.mask.hex">Hexagon</option>
+            <option value="rectangle-vertical" data-i18n="showroom.mask.rvert">Vertical rectangle</option>
+            <option value="rectangle-horizontal" data-i18n="showroom.mask.rhoriz">Horizontal rectangle</option>
+            <option value="wide" data-i18n="showroom.mask.wide">Wide</option>
           </select>
         </label>
-        <button type="button" class="laniakea-redraw" data-redraw>Redraw</button>
-        <p class="laniakea-hint">Preview only — Apply lives in the desktop app.</p>
+        <button type="button" class="laniakea-redraw" data-redraw data-i18n="showroom.laniakea.redraw">Redraw</button>
+        <p class="laniakea-hint" data-i18n="showroom.laniakea.hint">Preview only — Apply lives in the desktop app.</p>
       </div>
       <div class="laniakea-preview">
-        <p class="laniakea-preview-kicker">Live draw</p>
+        <p class="laniakea-preview-kicker" data-i18n="showroom.laniakea.live">Live draw</p>
         <div class="laniakea-stage">
           <canvas data-canvas width="720" height="420" aria-label="Laniakea flow-field preview"></canvas>
         </div>
       </div>
     </div>
 
-    <h2>Wallpapers</h2>
-    <p>
+    <h2 data-i18n="showroom.walls">Wallpapers</h2>
+    <p data-i18n-html="showroom.walls.p">
       New installs start on <strong>Neon kanji default</strong>.
       On the desktop, <code>Mod+Ctrl+w</code> opens the picker.
       Rest the pointer on either side to move through them. The one in front opens here, and you can save the original from that view.
@@ -335,8 +357,8 @@
         </figure>
     </div>
     </div>
-    <button type="button" class="coverflow-nav coverflow-prev" aria-label="Previous wallpaper">‹</button>
-    <button type="button" class="coverflow-nav coverflow-next" aria-label="Next wallpaper">›</button>
+    <button type="button" class="coverflow-nav coverflow-prev" data-i18n-aria="showroom.prev" aria-label="Previous wallpaper">‹</button>
+    <button type="button" class="coverflow-nav coverflow-next" data-i18n-aria="showroom.next" aria-label="Next wallpaper">›</button>
     <p class="coverflow-meta">
       <span class="coverflow-caption"></span>
       <span class="coverflow-count"></span>
@@ -344,13 +366,22 @@
     </div>
   </main>
 
-  <footer>sweetpotatos 2026</footer>
+  <footer>
+    <div class="footer-inner">
+      <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
+        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <span data-i18n="origin.made">Made in Réunion Island</span>
+      </a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.year">sweetpotatos 2026</span>
+    </div>
+  </footer>
   <div class="wall-view" hidden data-lightbox>
-    <button type="button" class="wall-view-close" aria-label="Close">×</button>
+    <button type="button" class="wall-view-close" data-i18n-aria="common.close" aria-label="Close">×</button>
     <img alt="">
     <div class="wall-view-bar">
       <p class="wall-view-caption"></p>
-      <a class="wall-view-save">Save original</a>
+      <a class="wall-view-save" data-i18n="common.saveOriginal">Save original</a>
     </div>
   </div>
   <script>

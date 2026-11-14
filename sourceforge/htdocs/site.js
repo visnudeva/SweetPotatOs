@@ -36,7 +36,10 @@
   if (!hit || !vault || !logo || !outer || !deep) return;
 
   var tagline = document.querySelector("[data-vault-tagline]");
-  var cleanTag = tagline ? tagline.textContent : "";
+  function cleanTagline() {
+    if (!tagline) return "";
+    return tagline.getAttribute("data-i18n-clean") || tagline.textContent || "";
+  }
   var vaultTag = "Tuber vault · harvest override";
   var deepTag = "Mashed core · root access";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -128,7 +131,7 @@
       ? (logo.getAttribute("data-glitch") || logo.src)
       : (logo.getAttribute("data-clean") || logo.src);
     if (tagline) {
-      tagline.textContent = !open ? cleanTag : deepOpen ? deepTag : vaultTag;
+      tagline.textContent = !open ? cleanTagline() : deepOpen ? deepTag : vaultTag;
     }
     clearTimers();
     if (open) {

@@ -1,38 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page-title="projects.title" data-i18n-page-desc="projects.desc">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Projects</title>
   <meta name="description" content="SweetPotatOs source, Swirl, Spore, Tuber, Laniakea, and SweetPotato themer.">
   <link rel="icon" href="favicon.png" type="image/png">
+  <script>
+    (function () {
+      try {
+        var k = "spo-lang", l = localStorage.getItem(k);
+        if (l !== "en" && l !== "fr") {
+          l = ((navigator.languages && navigator.languages[0]) || navigator.language || "en")
+            .toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        document.documentElement.setAttribute("data-lang", l);
+      } catch (e) {
+        document.documentElement.lang = "en";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="site.css">
+  <script src="i18n.js" defer></script>
   <script src="site.js" defer></script>
 </head>
 <body>
-  <nav class="topnav" aria-label="Site">
+  <nav class="topnav" data-i18n-aria="nav.aria" aria-label="Site">
     <a class="brand" href="index.html">
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-      <span class="visually-hidden">Menu</span>
-    </button>
+    <div class="topnav-end">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.aria" aria-label="Language">
+        <button type="button" class="lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden" data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
     <div class="topnav-links" id="site-nav">
-      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
-      <a href="showroom.html">Showroom</a>
-      <a href="changelog.html">Changelog</a>
-      <a href="keybinds.html">Keybinds</a>
-      <a href="projects.html" aria-current="page">Projects</a>
-      <a class="contact-nav" href="contact.html">Contact</a>
-      <a class="support" href="support.html">Support</a>
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download" data-i18n="nav.download">Download</a>
+      <a href="showroom.html" data-i18n="nav.showroom">Showroom</a>
+      <a href="changelog.html" data-i18n="nav.changelog">Changelog</a>
+      <a href="keybinds.html" data-i18n="nav.keybinds">Keybinds</a>
+      <a href="projects.html" aria-current="page" data-i18n="nav.projects">Projects</a>
+      <a class="contact-nav" href="contact.html" data-i18n="nav.contact">Contact</a>
+      <a class="support" href="support.html" data-i18n="nav.support">Support</a>
     </div>
   </nav>
 
   <header class="page">
-    <h1>Projects</h1>
-    <p class="lead">
+    <h1 data-i18n="projects.h1">Projects</h1>
+    <p class="lead" data-i18n="projects.lead">
       The distro, the compositor, the apps that ship with it, and SweetPotato themer.
     </p>
   </header>
@@ -43,7 +65,7 @@
         <img class="project-logo" src="projects/sweetpotatos-logo.png" alt="SweetPotatOs logo">
         <div>
           <h2>SweetPotatOs</h2>
-          <p>The Arch live ISO, installer, and package channel.</p>
+          <p data-i18n="projects.spo">The Arch live ISO, installer, and package channel.</p>
         </div>
       </div>
       <a class="project-shot-link" href="projects/sweetpotatos-shot.jpg">
@@ -57,7 +79,7 @@
         <img class="project-logo" src="projects/swirl-logo.png" alt="Swirl logo">
         <div>
           <h2>Swirl</h2>
-          <p>Scrolling tiling Wayland compositor. Columns sit on a horizontal strip.</p>
+          <p data-i18n="projects.swirl">Scrolling tiling Wayland compositor. Columns sit on a horizontal strip.</p>
         </div>
       </div>
       <a class="project-shot-link" href="projects/swirl-shot.jpg">
@@ -71,7 +93,7 @@
         <img class="project-logo" src="projects/spore-logo.png" alt="Spore logo">
         <div>
           <h2>Spore</h2>
-          <p>Terminal web radio and local music, with a visualizer.</p>
+          <p data-i18n="projects.spore">Terminal web radio and local music, with a visualizer.</p>
         </div>
       </div>
       <a class="project-shot-link" href="projects/spore-shot.png">
@@ -85,7 +107,7 @@
         <img class="project-logo" src="projects/tuber-logo.png" alt="Tuber logo">
         <div>
           <h2>Tuber</h2>
-          <p>Light terminal BitTorrent client.</p>
+          <p data-i18n="projects.tuber">Light terminal BitTorrent client.</p>
         </div>
       </div>
       <a class="project-shot-link" href="projects/tuber-shot.png">
@@ -99,7 +121,7 @@
         <img class="project-logo" src="projects/laniakea-logo.png" alt="Laniakea logo">
         <div>
           <h2>Laniakea</h2>
-          <p>Generative flow-field wallpaper. Watch it draw, pick a shape mask, then Apply.</p>
+          <p data-i18n="projects.laniakea">Generative flow-field wallpaper. Watch it draw, pick a shape mask, then Apply.</p>
         </div>
       </div>
       <a class="project-shot-link" href="projects/laniakea-shot.png">
@@ -113,7 +135,7 @@
         <img class="project-logo" src="projects/sweetpotato-logo.png" alt="SweetPotato themer logo">
         <div>
           <h2>SweetPotato themer</h2>
-          <p>Desktop themer for Swirl: colors, bar, lock screen, and terminal.</p>
+          <p data-i18n="projects.themer">Desktop themer for Swirl: colors, bar, lock screen, and terminal.</p>
         </div>
       </div>
       <a class="project-shot-link" href="projects/sweetpotato-themer.png">
@@ -123,13 +145,22 @@
     </article>
   </main>
 
-  <footer>sweetpotatos 2026</footer>
+  <footer>
+    <div class="footer-inner">
+      <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
+        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <span data-i18n="origin.made">Made in Réunion Island</span>
+      </a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.year">sweetpotatos 2026</span>
+    </div>
+  </footer>
   <div class="wall-view" hidden data-lightbox>
-    <button type="button" class="wall-view-close" aria-label="Close">×</button>
+    <button type="button" class="wall-view-close" data-i18n-aria="common.close" aria-label="Close">×</button>
     <img alt="">
     <div class="wall-view-bar">
       <p class="wall-view-caption"></p>
-      <a class="wall-view-save">Save original</a>
+      <a class="wall-view-save" data-i18n="common.saveOriginal">Save original</a>
     </div>
   </div>
 </body>

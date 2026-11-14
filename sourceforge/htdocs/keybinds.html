@@ -1,154 +1,185 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page-title="keybinds.title" data-i18n-page-desc="keybinds.desc">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Keybinds</title>
   <meta name="description" content="SweetPotatOs Swirl keybinds. Mod is the Super / Windows key.">
   <link rel="icon" href="favicon.png" type="image/png">
+  <script>
+    (function () {
+      try {
+        var k = "spo-lang", l = localStorage.getItem(k);
+        if (l !== "en" && l !== "fr") {
+          l = ((navigator.languages && navigator.languages[0]) || navigator.language || "en")
+            .toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        document.documentElement.setAttribute("data-lang", l);
+      } catch (e) {
+        document.documentElement.lang = "en";
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="site.css">
+  <script src="i18n.js" defer></script>
   <script src="site.js" defer></script>
 </head>
 <body>
-  <nav class="topnav" aria-label="Site">
+  <nav class="topnav" data-i18n-aria="nav.aria" aria-label="Site">
     <a class="brand" href="index.html">
       <img src="SweetPotatOs.png" alt="">
       <span>SweetPotatOs</span>
     </a>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      <span class="nav-toggle-bars" aria-hidden="true"></span>
-      <span class="visually-hidden">Menu</span>
-    </button>
+    <div class="topnav-end">
+      <div class="lang-switch" role="group" data-i18n-aria="lang.aria" aria-label="Language">
+        <button type="button" class="lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+        <span class="visually-hidden" data-i18n="nav.menu">Menu</span>
+      </button>
+    </div>
     <div class="topnav-links" id="site-nav">
-      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download">Download</a>
-      <a href="showroom.html">Showroom</a>
-      <a href="changelog.html">Changelog</a>
-      <a href="keybinds.html" aria-current="page">Keybinds</a>
-      <a href="projects.html">Projects</a>
-      <a class="contact-nav" href="contact.html">Contact</a>
-      <a class="support" href="support.html">Support</a>
+      <a href="https://sourceforge.net/projects/sweetpotatos/files/latest/download" data-i18n="nav.download">Download</a>
+      <a href="showroom.html" data-i18n="nav.showroom">Showroom</a>
+      <a href="changelog.html" data-i18n="nav.changelog">Changelog</a>
+      <a href="keybinds.html" aria-current="page" data-i18n="nav.keybinds">Keybinds</a>
+      <a href="projects.html" data-i18n="nav.projects">Projects</a>
+      <a class="contact-nav" href="contact.html" data-i18n="nav.contact">Contact</a>
+      <a class="support" href="support.html" data-i18n="nav.support">Support</a>
     </div>
   </nav>
 
   <header class="page">
-    <h1>Keybinds</h1>
-    <p class="lead">
+    <h1 data-i18n="keybinds.h1">Keybinds</h1>
+    <p class="lead" data-i18n-html="keybinds.lead">
       <code>Mod</code> is the Super / Windows key.
       On the desktop, <code>Mod+?</code> opens this same list.
     </p>
   </header>
 
   <main>
-    <h2>Apps</h2>
+    <h2 data-i18n="keybinds.apps">Apps</h2>
     <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+Space</code></td><td>App launcher (Esc closes it)</td></tr>
-      <tr><td><code>Mod+Return</code></td><td>Terminal (foot, fish)</td></tr>
-      <tr><td><code>Mod+w</code></td><td>Web browser (Brave Origin)</td></tr>
-      <tr><td><code>Mod+f</code></td><td>Files (Thunar)</td></tr>
-      <tr><td><code>Mod+e</code></td><td>Editor (Geany)</td></tr>
-      <tr><td><code>Mod+r</code></td><td>Music / radio (Spore)</td></tr>
-      <tr><td><code>Mod+t</code></td><td>Torrents (tuber)</td></tr>
-      <tr><td><code>Mod+n</code></td><td>Network (Wi‑Fi)</td></tr>
-      <tr><td><code>Mod+i</code></td><td>Installer (live ISO)</td></tr>
+      <tr><th data-i18n="keybinds.th.bind">Bind</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td><code>Mod+Space</code></td><td data-i18n="kb.launcher">App launcher (Esc closes it)</td></tr>
+      <tr><td><code>Mod+Return</code></td><td data-i18n="kb.terminal">Terminal (foot, fish)</td></tr>
+      <tr><td><code>Mod+w</code></td><td data-i18n="kb.browser">Web browser (Brave Origin)</td></tr>
+      <tr><td><code>Mod+f</code></td><td data-i18n="kb.files">Files (Thunar)</td></tr>
+      <tr><td><code>Mod+e</code></td><td data-i18n="kb.editor">Editor (Geany)</td></tr>
+      <tr><td><code>Mod+r</code></td><td data-i18n="kb.music">Music / radio (Spore)</td></tr>
+      <tr><td><code>Mod+t</code></td><td data-i18n="kb.torrents">Torrents (tuber)</td></tr>
+      <tr><td><code>Mod+n</code></td><td data-i18n="kb.network">Network (Wi‑Fi)</td></tr>
+      <tr><td><code>Mod+i</code></td><td data-i18n="kb.installer">Installer (live ISO)</td></tr>
     </table>
 
-    <h2>Window / layout</h2>
+    <h2 data-i18n="keybinds.window">Window / layout</h2>
     <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+q</code></td><td>Close window</td></tr>
-      <tr><td><code>Mod+m</code></td><td>Toggle column 100% ↔ 50%</td></tr>
-      <tr><td><code>Mod+Shift+f</code></td><td>Fullscreen</td></tr>
-      <tr><td><code>Mod+a</code></td><td>Floating toggle</td></tr>
-      <tr><td><code>Mod+b</code> / <code>Mod+v</code></td><td>Split horizontal / vertical</td></tr>
-      <tr><td><code>Mod+Shift+a</code></td><td>Focus parent</td></tr>
-      <tr><td><code>Mod+h</code> / <code>j</code> / <code>k</code></td><td>Focus left / down / up</td></tr>
-      <tr><td><code>Mod+Left</code> / <code>Right</code></td><td>Focus left / right</td></tr>
-      <tr><td><code>Mod+Shift+h</code> / <code>j</code> / <code>k</code> / <code>l</code></td><td>Move window (vim keys)</td></tr>
-      <tr><td><code>Mod+Shift+arrows</code></td><td>Move window</td></tr>
-      <tr><td><code>Mod+drag</code></td><td>Move floating window</td></tr>
-      <tr><td><code>Mod+right-drag</code></td><td>Resize floating window</td></tr>
+      <tr><th data-i18n="keybinds.th.bind">Bind</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td><code>Mod+q</code></td><td data-i18n="kb.close">Close window</td></tr>
+      <tr><td><code>Mod+m</code></td><td data-i18n="kb.col">Toggle column 100% ↔ 50%</td></tr>
+      <tr><td><code>Mod+Shift+f</code></td><td data-i18n="kb.full">Fullscreen</td></tr>
+      <tr><td><code>Mod+a</code></td><td data-i18n="kb.float">Floating toggle</td></tr>
+      <tr><td><code>Mod+b</code> / <code>Mod+v</code></td><td data-i18n="kb.split">Split horizontal / vertical</td></tr>
+      <tr><td><code>Mod+Shift+a</code></td><td data-i18n="kb.parent">Focus parent</td></tr>
+      <tr><td><code>Mod+h</code> / <code>j</code> / <code>k</code></td><td data-i18n="kb.focus.vim">Focus left / down / up</td></tr>
+      <tr><td><code>Mod+Left</code> / <code>Right</code></td><td data-i18n="kb.focus.arrow">Focus left / right</td></tr>
+      <tr><td><code>Mod+Shift+h</code> / <code>j</code> / <code>k</code> / <code>l</code></td><td data-i18n="kb.move.vim">Move window (vim keys)</td></tr>
+      <tr><td><code>Mod+Shift+arrows</code></td><td data-i18n="kb.move.arrow">Move window</td></tr>
+      <tr><td><code>Mod+drag</code></td><td data-i18n="kb.drag">Move floating window</td></tr>
+      <tr><td><code>Mod+right-drag</code></td><td data-i18n="kb.rdrag">Resize floating window</td></tr>
     </table>
 
-    <h2>Workspaces / overview</h2>
+    <h2 data-i18n="keybinds.ws">Workspaces / overview</h2>
     <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+Tab</code></td><td>Overview (desktop stripes, all windows)</td></tr>
-      <tr><td>click / <code>Esc</code></td><td>Leave overview (click focuses that window/desktop)</td></tr>
-      <tr><td><code>Mod+Up</code> / <code>Down</code></td><td>Workspace above / below (exits overview)</td></tr>
-      <tr><td><code>Mod+Ctrl+Up</code> / <code>Down</code></td><td>Move window to workspace above / below</td></tr>
-      <tr><td><code>Mod+1</code>…<code>0</code></td><td>Workspace 1–10 (exits overview)</td></tr>
-      <tr><td><code>Mod+Shift+1</code>…<code>0</code></td><td>Move window to workspace 1–10</td></tr>
+      <tr><th data-i18n="keybinds.th.bind">Bind</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td><code>Mod+Tab</code></td><td data-i18n="kb.overview">Overview (desktop stripes, all windows)</td></tr>
+      <tr><td>click / <code>Esc</code></td><td data-i18n="kb.leave.ov">Leave overview (click focuses that window/desktop)</td></tr>
+      <tr><td><code>Mod+Up</code> / <code>Down</code></td><td data-i18n="kb.ws.ud">Workspace above / below (exits overview)</td></tr>
+      <tr><td><code>Mod+Ctrl+Up</code> / <code>Down</code></td><td data-i18n="kb.move.ws">Move window to workspace above / below</td></tr>
+      <tr><td><code>Mod+1</code>…<code>0</code></td><td data-i18n="kb.ws.num">Workspace 1–10 (exits overview)</td></tr>
+      <tr><td><code>Mod+Shift+1</code>…<code>0</code></td><td data-i18n="kb.move.num">Move window to workspace 1–10</td></tr>
     </table>
 
-    <h2>Displays / look</h2>
+    <h2 data-i18n="keybinds.display">Displays / look</h2>
     <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+Ctrl+w</code></td><td>Wallpaper</td></tr>
-      <tr><td><code>Mod+Ctrl+l</code></td><td>Laniakea</td></tr>
-      <tr><td><code>Mod+Ctrl+t</code></td><td>SweetPotato themer</td></tr>
-      <tr><td><code>Mod+Ctrl+g</code></td><td>Corners and gaps</td></tr>
-      <tr><td><code>Mod+Ctrl+d</code></td><td>Displays (nwg-displays)</td></tr>
-      <tr><td><code>Mod+Ctrl+b</code></td><td>Smart Brightness (toggle; fullscreen video → max)</td></tr>
+      <tr><th data-i18n="keybinds.th.bind">Bind</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td><code>Mod+Ctrl+w</code></td><td data-i18n="kb.wall">Wallpaper</td></tr>
+      <tr><td><code>Mod+Ctrl+l</code></td><td data-i18n="kb.laniakea">Laniakea</td></tr>
+      <tr><td><code>Mod+Ctrl+t</code></td><td data-i18n="kb.themer">SweetPotato themer</td></tr>
+      <tr><td><code>Mod+Ctrl+g</code></td><td data-i18n="kb.gaps">Corners and gaps</td></tr>
+      <tr><td><code>Mod+Ctrl+d</code></td><td data-i18n="kb.displays">Displays (nwg-displays)</td></tr>
+      <tr><td><code>Mod+Ctrl+b</code></td><td data-i18n="kb.bright">Smart Brightness (toggle; fullscreen video → max)</td></tr>
     </table>
 
-    <h2>System</h2>
+    <h2 data-i18n="keybinds.system">System</h2>
     <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Mod+l</code></td><td>Lock</td></tr>
-      <tr><td><code>Mod+c</code></td><td>Caffeine (idle lock off)</td></tr>
-      <tr><td><code>Mod+Shift+c</code></td><td>Reload config</td></tr>
-      <tr><td><code>Mod+Shift+e</code></td><td>Exit Swirl</td></tr>
-      <tr><td><code>Mod+Esc</code></td><td>Power menu</td></tr>
-      <tr><td><code>Mod+Shift+r</code></td><td>Resize mode</td></tr>
-      <tr><td><code>Mod+?</code></td><td>Keybind cheatsheet (toggle)</td></tr>
+      <tr><th data-i18n="keybinds.th.bind">Bind</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td><code>Mod+l</code></td><td data-i18n="kb.lock">Lock</td></tr>
+      <tr><td><code>Mod+c</code></td><td data-i18n="kb.caffeine">Caffeine (idle lock off)</td></tr>
+      <tr><td><code>Mod+Shift+c</code></td><td data-i18n="kb.reload">Reload config</td></tr>
+      <tr><td><code>Mod+Shift+e</code></td><td data-i18n="kb.exit">Exit Swirl</td></tr>
+      <tr><td><code>Mod+Esc</code></td><td data-i18n="kb.power">Power menu</td></tr>
+      <tr><td><code>Mod+Shift+r</code></td><td data-i18n="kb.resize">Resize mode</td></tr>
+      <tr><td><code>Mod+?</code></td><td data-i18n="kb.cheat">Keybind cheatsheet (toggle)</td></tr>
     </table>
 
-    <h2>Screenshots / media keys</h2>
+    <h2 data-i18n="keybinds.media">Screenshots / media keys</h2>
     <table>
-      <tr><th>Bind</th><th>Action</th></tr>
-      <tr><td><code>Print</code></td><td>Screenshot (full)</td></tr>
-      <tr><td><code>Mod+Shift+Print</code></td><td>Screenshot (region)</td></tr>
-      <tr><td><code>Mod+Print</code></td><td>Screen record toggle</td></tr>
-      <tr><td>XF86 audio keys</td><td>Volume / mute / mic / media</td></tr>
-      <tr><td>XF86 brightness</td><td>Brightness up / down</td></tr>
+      <tr><th data-i18n="keybinds.th.bind">Bind</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td><code>Print</code></td><td data-i18n="kb.ss.full">Screenshot (full)</td></tr>
+      <tr><td><code>Mod+Shift+Print</code></td><td data-i18n="kb.ss.region">Screenshot (region)</td></tr>
+      <tr><td><code>Mod+Print</code></td><td data-i18n="kb.record">Screen record toggle</td></tr>
+      <tr><td>XF86 audio keys</td><td data-i18n="kb.audio">Volume / mute / mic / media</td></tr>
+      <tr><td>XF86 brightness</td><td data-i18n="kb.brightness">Brightness up / down</td></tr>
     </table>
 
-    <h2>Gestures</h2>
+    <h2 data-i18n="keybinds.gestures">Gestures</h2>
     <table>
-      <tr><th>Gesture</th><th>Action</th></tr>
-      <tr><td>3-finger L/R</td><td>Scroll the window strip</td></tr>
-      <tr><td>4-finger up/down</td><td>Next / previous workspace</td></tr>
+      <tr><th data-i18n="keybinds.th.gesture">Gesture</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td data-i18n="kb.g1">3-finger L/R</td><td data-i18n="kb.g1a">Scroll the window strip</td></tr>
+      <tr><td data-i18n="kb.g2">4-finger up/down</td><td data-i18n="kb.g2a">Next / previous workspace</td></tr>
     </table>
 
-    <h2>Resize mode</h2>
-    <p>After <code>Mod+Shift+r</code>:</p>
+    <h2 data-i18n="keybinds.resize">Resize mode</h2>
+    <p data-i18n-html="keybinds.resize.after">After <code>Mod+Shift+r</code>:</p>
     <table>
-      <tr><th>Key</th><th>Action</th></tr>
-      <tr><td><code>h</code> <code>j</code> <code>k</code> <code>l</code> or arrows</td><td>Resize focused window</td></tr>
-      <tr><td><code>Enter</code> / <code>Esc</code></td><td>Leave resize mode</td></tr>
+      <tr><th data-i18n="keybinds.th.key">Key</th><th data-i18n="keybinds.th.action">Action</th></tr>
+      <tr><td><code>h</code> <code>j</code> <code>k</code> <code>l</code> or arrows</td><td data-i18n="kb.resize.keys">Resize focused window</td></tr>
+      <tr><td><code>Enter</code> / <code>Esc</code></td><td data-i18n="kb.resize.leave">Leave resize mode</td></tr>
     </table>
 
-    <h2>Customize</h2>
-    <p>
+    <h2 data-i18n="keybinds.customize">Customize</h2>
+    <p data-i18n-html="keybinds.customize.p">
       Edit <code>~/.config/swirl/config.d/user</code>, then <code>Mod+Shift+c</code>
       (survives updates; later binds win over defaults).
       See <a href="index.html#overrides">custom Swirl config</a> on the home page.
     </p>
 
-    <h2>Desktop / package updates</h2>
+    <h2 data-i18n="keybinds.updates">Desktop / package updates</h2>
     <table>
-      <tr><th>Command</th><th>Note</th></tr>
-      <tr><td><code>sudo sweetpotatos-update</code></td><td>Update the desktop</td></tr>
-      <tr><td><code>sweetpotatos-pruning</code></td><td>Reset shipped desktop config after experiments go wrong (keeps <code>config.d/user</code> and kanshi; clears <code>user_edits</code>)</td></tr>
+      <tr><th data-i18n="keybinds.th.command">Command</th><th data-i18n="keybinds.th.note">Note</th></tr>
+      <tr><td><code>sudo sweetpotatos-update</code></td><td data-i18n="kb.upd">Update the desktop</td></tr>
+      <tr><td><code>sweetpotatos-pruning</code></td><td data-i18n-html="kb.prune">Reset shipped desktop config after experiments go wrong (keeps <code>config.d/user</code> and kanshi; clears <code>user_edits</code>)</td></tr>
     </table>
-    <p>
+    <p data-i18n-html="keybinds.updates.p">
       A notice appears once a week when updates are ready.
       After an update, a note says what changed.
       Run pruning as your user, then <code>Mod+Shift+c</code> if Swirl did not reload.
     </p>
   </main>
 
-  <footer>sweetpotatos 2026</footer>
+  <footer>
+    <div class="footer-inner">
+      <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
+        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <span data-i18n="origin.made">Made in Réunion Island</span>
+      </a>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.year">sweetpotatos 2026</span>
+    </div>
+  </footer>
 </body>
 </html>
