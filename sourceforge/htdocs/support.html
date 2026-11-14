@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SweetPotatOs — Support</title>
-  <meta name="description" content="Support SweetPotatOs development with Ko-fi, GitHub Sponsors, merch, or a free star on GitHub.">
+  <meta name="description" content="Support SweetPotatOs development with Ko-fi, merch, or a free star on GitHub.">
   <link rel="icon" href="favicon.png" type="image/png">
   <script>
     (function () {
@@ -85,32 +85,34 @@
         <a class="btn btn-primary" href="https://www.redbubble.com/people/PodgaiaDesigns/shop?anchor=profile&amp;collections=4598231" target="_blank" rel="noopener noreferrer" data-i18n="support.shop.btn">Visit the shop</a>
       </article>
 
-      <article class="support-card" id="sponsors">
-        <p class="support-label" data-i18n="support.sponsor">Sponsor</p>
-        <h2>GitHub Sponsors</h2>
-        <p data-i18n="support.gh.p">
-          Prefer to support from the same place you star and fork? GitHub Sponsors
-          is a tidy monthly (or one-off) way to back the work behind Swirl, Spore,
-          Tuber, Laniakea, and the distro itself. The Sponsors profile is still
-          under review — until it goes live, Ko-fi is the best path.
+      <article class="support-card" id="star">
+        <p class="support-label" data-i18n="support.free.label">Free</p>
+        <h2 data-i18n="support.star.h2">Star on GitHub</h2>
+        <p data-i18n="support.star.p">
+          Can’t donate right now? A star helps more than you’d think — it makes
+          the project easier to find, cheers on the maintainer, and tells search
+          engines this little distro is loved. Sharing a screenshot or mentioning
+          SweetPotatOs to a friend with an old PC counts too.
         </p>
-        <span class="btn btn-secondary" aria-disabled="true" data-i18n="support.soon">Coming soon</span>
+        <a class="btn btn-orange" href="https://github.com/visnudeva/SweetPotatOs" target="_blank" rel="noopener noreferrer" data-i18n="support.star">Star SweetPotatOs</a>
       </article>
     </div>
 
-    <aside class="support-star notice" data-i18n-aria="support.free.aria" aria-label="Free ways to help">
-      <p data-i18n-html="support.free1">
-        <strong>Can’t donate right now?</strong> That’s completely fine.
-        A <a href="https://github.com/visnudeva/SweetPotatOs" target="_blank" rel="noopener noreferrer">star on GitHub</a>
-        helps more than you’d think — it makes the project easier to find, cheers
-        on the maintainer, and tells search engines this little distro is loved.
+    <section class="support-qr" aria-labelledby="support-qr-heading">
+      <h2 id="support-qr-heading" data-i18n="support.qr.h2">Scan &amp; share</h2>
+      <p class="lead support-qr-lead" data-i18n="support.qr.lead">
+        Two stickers, one harvest. Scan either QR to open the SweetPotatOs site —
+        print them, stick them on a laptop lid, or pass them along.
       </p>
-      <p data-i18n="support.free2">
-        Sharing a screenshot, mentioning SweetPotatOs to a friend with an old PC,
-        or opening a thoughtful issue all count as real support too.
-      </p>
-      <a class="btn btn-orange" href="https://github.com/visnudeva/SweetPotatOs" target="_blank" rel="noopener noreferrer" data-i18n="support.star">Star SweetPotatOs</a>
-    </aside>
+      <div class="support-qr-grid" data-lightbox-gallery>
+        <a class="support-qr-card" href="SPOQR1.png">
+          <img src="SPOQR1.png" width="400" height="800" alt="SweetPotatOs logo with QR code to the project site" data-i18n-alt="support.qr1.alt">
+        </a>
+        <a class="support-qr-card" href="SPOQR2.png">
+          <img src="SPOQR2.png" width="400" height="800" alt="SweetPotatOs mark with QR code to the project site" data-i18n-alt="support.qr2.alt">
+        </a>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -123,5 +125,13 @@
       <span data-i18n="footer.year">sweetpotatos 2026</span>
     </div>
   </footer>
+  <div class="wall-view" hidden data-lightbox>
+    <button type="button" class="wall-view-close" data-i18n-aria="common.close" aria-label="Close">×</button>
+    <img alt="">
+    <div class="wall-view-bar">
+      <p class="wall-view-caption"></p>
+      <a class="wall-view-save" data-i18n="common.saveOriginal">Save original</a>
+    </div>
+  </div>
 </body>
 </html>

@@ -98,7 +98,7 @@
       "contact.send": "Send message",
 
       "support.title": "SweetPotatOs — Support",
-      "support.desc": "Support SweetPotatOs development with Ko-fi, GitHub Sponsors, merch, or a free star on GitHub.",
+      "support.desc": "Support SweetPotatOs development with Ko-fi, merch, or a free star on GitHub.",
       "support.h1": "Support SweetPotatOs",
       "support.lead": "SweetPotatOs is a one-person harvest — nights of compositor tweaks, package builds, and “does it still boot on that dusty laptop?” testing. If the project has been useful to you, here’s how you can keep the sweet potatoes growing.",
       "support.donate": "Donate",
@@ -107,13 +107,14 @@
       "support.merch": "Merch",
       "support.shop.p": "Wear the potato. Stickers, shirts, and prints from the Podgaia Designs collection — a little something for your desk or backpack, and a little something back to the project.",
       "support.shop.btn": "Visit the shop",
-      "support.sponsor": "Sponsor",
-      "support.gh.p": "Prefer to support from the same place you star and fork? GitHub Sponsors is a tidy monthly (or one-off) way to back the work behind Swirl, Spore, Tuber, Laniakea, and the distro itself. The Sponsors profile is still under review — until it goes live, Ko-fi is the best path.",
-      "support.soon": "Coming soon",
-      "support.free.aria": "Free ways to help",
-      "support.free1": "<strong>Can’t donate right now?</strong> That’s completely fine. A <a href=\"https://github.com/visnudeva/SweetPotatOs\" target=\"_blank\" rel=\"noopener noreferrer\">star on GitHub</a> helps more than you’d think — it makes the project easier to find, cheers on the maintainer, and tells search engines this little distro is loved.",
-      "support.free2": "Sharing a screenshot, mentioning SweetPotatOs to a friend with an old PC, or opening a thoughtful issue all count as real support too.",
+      "support.free.label": "Free",
+      "support.star.h2": "Star on GitHub",
+      "support.star.p": "Can’t donate right now? A star helps more than you’d think — it makes the project easier to find, cheers on the maintainer, and tells search engines this little distro is loved. Sharing a screenshot or mentioning SweetPotatOs to a friend with an old PC counts too.",
       "support.star": "Star SweetPotatOs",
+      "support.qr.h2": "Scan & share",
+      "support.qr.lead": "Two stickers, one harvest. Scan either QR to open the SweetPotatOs site — print them, stick them on a laptop lid, or pass them along.",
+      "support.qr1.alt": "SweetPotatOs logo with QR code to the project site",
+      "support.qr2.alt": "SweetPotatOs mark with QR code to the project site",
 
       "projects.title": "SweetPotatOs — Projects",
       "projects.desc": "SweetPotatOs source, Swirl, Spore, Tuber, Laniakea, and SweetPotato themer.",
@@ -274,6 +275,7 @@
       "changelog.expand": "Expand",
       "changelog.collapse": "Collapse",
       "changelog.fifth.meta": "Planned ISO <strong>December 2026</strong> · Desktop changes will ship on the <code>sweetpotatos-update</code> channel for Fourth Harvest installs",
+      "changelog.fifth.17": "The website <a href=\"support.html\">Support</a> page adds two centered QR stickers (click to enlarge), replaces GitHub Sponsors with a <strong>Star on GitHub</strong> card, and keeps Ko-fi and the shop.",
       "changelog.fifth.16": "The website <strong>EN / FR</strong> toggle is tinted with SweetPotato red and orange, and the <strong>Made in Réunion Island</strong> / <strong>Fait à La Réunion</strong> label is potato orange.",
       "changelog.fifth.15": "The website home page opens with a soft staggered entrance (logo, tagline, chips, then lead). Motion respects <code>prefers-reduced-motion</code>.",
       "changelog.fifth.1": "The website home page shows an <strong>Arch-based</strong> chip linking to <a href=\"https://archlinux.org/\">archlinux.org</a>, beside <strong>Made in Réunion Island</strong> / <strong>Fait à La Réunion</strong> with the Twemoji Réunion flag (links to OpenStreetMap). Every page has an <strong>English / French</strong> toggle; French browsers open in French by default and the choice is remembered.",
@@ -490,7 +492,7 @@
       "contact.send": "Envoyer",
 
       "support.title": "SweetPotatOs — Soutenir",
-      "support.desc": "Soutenir le développement de SweetPotatOs via Ko-fi, GitHub Sponsors, merch, ou une étoile gratuite sur GitHub.",
+      "support.desc": "Soutenir le développement de SweetPotatOs via Ko-fi, merch, ou une étoile gratuite sur GitHub.",
       "support.h1": "Soutenir SweetPotatOs",
       "support.lead": "SweetPotatOs, c’est une récolte en solo — des nuits de réglages de compositeur, de builds de paquets, et de « ça démarre encore sur ce vieux portable poussiéreux ? ». Si le projet vous a servi, voici comment faire pousser les patates douces.",
       "support.donate": "Donner",
@@ -499,13 +501,14 @@
       "support.merch": "Merch",
       "support.shop.p": "Portez la patate. Stickers, t-shirts et prints de la collection Podgaia Designs — un petit quelque chose pour le bureau ou le sac, et un petit quelque chose pour le projet.",
       "support.shop.btn": "Voir la boutique",
-      "support.sponsor": "Sponsor",
-      "support.gh.p": "Vous préférez soutenir depuis le même endroit où vous mettez des étoiles ? GitHub Sponsors est une façon propre (mensuelle ou ponctuelle) de soutenir Swirl, Spore, Tuber, Laniakea et la distro. Le profil Sponsors est encore en revue — en attendant, Ko-fi est le meilleur chemin.",
-      "support.soon": "Bientôt",
-      "support.free.aria": "Aider gratuitement",
-      "support.free1": "<strong>Pas possible de donner pour l’instant ?</strong> Aucun souci. Une <a href=\"https://github.com/visnudeva/SweetPotatOs\" target=\"_blank\" rel=\"noopener noreferrer\">étoile sur GitHub</a> aide plus qu’on ne croit — elle rend le projet plus visible, encourage le mainteneur, et dit aux moteurs de recherche que cette petite distro est aimée.",
-      "support.free2": "Partager une capture, parler de SweetPotatOs à un ami avec un vieux PC, ou ouvrir une issue soignée, ça compte aussi comme un vrai soutien.",
+      "support.free.label": "Gratuit",
+      "support.star.h2": "Étoile sur GitHub",
+      "support.star.p": "Pas possible de donner pour l’instant ? Une étoile aide plus qu’on ne croit — elle rend le projet plus visible, encourage le mainteneur, et dit aux moteurs de recherche que cette petite distro est aimée. Partager une capture ou parler de SweetPotatOs à un ami avec un vieux PC, ça compte aussi.",
       "support.star": "Étoiler SweetPotatOs",
+      "support.qr.h2": "Scanner & partager",
+      "support.qr.lead": "Deux stickers, une harvest. Scannez l’un ou l’autre QR pour ouvrir le site SweetPotatOs — imprimez-les, collez-les sur un portable, ou faites-les circuler.",
+      "support.qr1.alt": "Logo SweetPotatOs avec QR code vers le site du projet",
+      "support.qr2.alt": "Marque SweetPotatOs avec QR code vers le site du projet",
 
       "projects.title": "SweetPotatOs — Projets",
       "projects.desc": "Sources SweetPotatOs, Swirl, Spore, Tuber, Laniakea et le themer SweetPotato.",
@@ -666,6 +669,7 @@
       "changelog.expand": "Déplier",
       "changelog.collapse": "Replier",
       "changelog.fifth.meta": "ISO prévue en <strong>décembre 2026</strong> · Les changements bureau arriveront sur le canal <code>sweetpotatos-update</code> pour les installs Fourth Harvest",
+      "changelog.fifth.17": "La page <a href=\"support.html\">Soutenir</a> du site ajoute deux stickers QR centrés (clic pour agrandir), remplace GitHub Sponsors par une carte <strong>Étoile sur GitHub</strong>, et garde Ko-fi et la boutique.",
       "changelog.fifth.16": "Le basculeur <strong>EN / FR</strong> du site est teinté en rouge et orange SweetPotato, et le libellé <strong>Fait à La Réunion</strong> est en orange patate.",
       "changelog.fifth.15": "La page d’accueil du site s’ouvre avec une entrée douce en décalé (logo, slogan, puces, puis le texte). Le mouvement respecte <code>prefers-reduced-motion</code>.",
       "changelog.fifth.1": "La page d’accueil du site montre une puce <strong>basée sur Arch</strong> vers <a href=\"https://archlinux.org/\">archlinux.org</a>, à côté de <strong>Fait à La Réunion</strong> avec le drapeau Twemoji de La Réunion (lien OpenStreetMap). Chaque page a un basculeur <strong>anglais / français</strong> ; les navigateurs en français s’ouvrent en français par défaut et le choix est mémorisé.",
@@ -868,6 +872,14 @@
       function (el) {
         var key = el.getAttribute("data-i18n-placeholder");
         if (key && pack[key] != null) el.setAttribute("placeholder", pack[key]);
+      }
+    );
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("[data-i18n-alt]"),
+      function (el) {
+        var key = el.getAttribute("data-i18n-alt");
+        if (key && pack[key] != null) el.setAttribute("alt", pack[key]);
       }
     );
 

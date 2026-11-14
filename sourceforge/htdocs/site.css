@@ -1602,11 +1602,51 @@ pre code {
 .support-card .btn {
   margin-top: auto;
 }
-.support-star {
-  margin-top: 0.25rem;
+.support-qr {
+  margin: 0.5rem 0 1.75rem;
+  text-align: center;
 }
-.support-star .btn {
-  margin-top: 0.85rem;
+.support-qr h2 {
+  margin-bottom: 0.45rem;
+}
+.support-qr-lead {
+  max-width: 40rem;
+  margin: 0 auto 1.15rem;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+}
+.support-qr-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.15rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+@media (min-width: 560px) {
+  .support-qr-grid {
+    grid-template-columns: 1fr 1fr;
+    max-width: 36rem;
+  }
+}
+.support-qr-card {
+  display: block;
+  padding: 0.85rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  line-height: 0;
+  cursor: zoom-in;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.support-qr-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.36);
+}
+.support-qr-card img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .contact {
   margin: 0.5rem 0 0.5rem;
