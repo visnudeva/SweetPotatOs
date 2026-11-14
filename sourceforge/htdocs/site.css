@@ -698,6 +698,15 @@ h1 {
   font-size: 0.85rem;
   font-weight: 600;
   line-height: 1.3;
+  text-decoration: none;
+}
+a.tag:hover {
+  color: var(--orange);
+  border-color: var(--orange);
+}
+a.tag:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 3px;
 }
 .tag-row .tag {
   margin-top: 0;
