@@ -102,9 +102,9 @@ a:hover { color: #ffae4a; }
   align-items: center;
   gap: 0.1rem;
   padding: 0.15rem;
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in srgb, var(--red) 40%, var(--border));
   border-radius: 8px;
-  background: var(--surface);
+  background: color-mix(in srgb, var(--red) 8%, var(--surface));
 }
 .lang-btn {
   margin: 0;
@@ -112,7 +112,7 @@ a:hover { color: #ffae4a; }
   border: 0;
   border-radius: 6px;
   background: transparent;
-  color: var(--text-muted);
+  color: color-mix(in srgb, var(--orange) 55%, var(--text-muted));
   font: inherit;
   font-size: 0.78rem;
   font-weight: 700;
@@ -120,11 +120,20 @@ a:hover { color: #ffae4a; }
   cursor: pointer;
   line-height: 1.2;
 }
-.lang-btn:hover { color: var(--orange); }
+.lang-btn:hover {
+  color: var(--orange);
+  background: color-mix(in srgb, var(--orange) 14%, transparent);
+}
 .lang-btn.is-active,
 .lang-btn[aria-pressed="true"] {
-  color: var(--text);
-  background: var(--surface-raised);
+  color: #fff;
+  background: var(--red);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--orange) 35%, transparent);
+}
+.lang-btn.is-active:hover,
+.lang-btn[aria-pressed="true"]:hover {
+  color: #fff;
+  background: color-mix(in srgb, var(--red) 88%, var(--orange));
 }
 .lang-btn:focus-visible {
   outline: 2px solid var(--orange);
