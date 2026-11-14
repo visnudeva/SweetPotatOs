@@ -190,6 +190,11 @@ header.page .origin-chip:hover {
 footer .origin {
   font-size: 0.88rem;
 }
+footer .footer-year {
+  color: var(--orange);
+  font-weight: 600;
+  font-size: 0.88rem;
+}
 .footer-inner {
   display: flex;
   flex-wrap: wrap;
