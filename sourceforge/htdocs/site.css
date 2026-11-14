@@ -148,12 +148,12 @@ a:hover { color: #ffae4a; }
   outline-offset: 3px;
 }
 .origin-flag {
-  width: 1.35rem;
-  height: auto;
+  width: 1.25rem;
+  height: 1.25rem;
   display: block;
   border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
   flex: none;
+  object-fit: contain;
 }
 .tag-row {
   display: flex;
