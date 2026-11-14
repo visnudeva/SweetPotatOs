@@ -143,14 +143,14 @@ a:hover { color: #ffae4a; }
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  color: var(--text-muted);
+  color: var(--orange);
   text-decoration: none;
   font-weight: 600;
   font-size: 0.92rem;
   border-radius: 8px;
 }
 .origin:hover {
-  color: var(--orange);
+  color: #ffae4a;
 }
 .origin:focus-visible {
   outline: 2px solid var(--orange);
@@ -178,13 +178,13 @@ header.page .origin-chip {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
-  color: var(--text-muted);
+  color: var(--orange);
   font-size: 0.85rem;
   font-weight: 600;
   line-height: 1.3;
 }
 header.page .origin-chip:hover {
-  color: var(--orange);
+  color: #ffae4a;
   border-color: var(--orange);
 }
 footer .origin {
