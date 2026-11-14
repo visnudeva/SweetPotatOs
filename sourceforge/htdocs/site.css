@@ -261,6 +261,60 @@ header.page {
   padding: 2.5rem 1.25rem 1rem;
   text-align: center;
 }
+@keyframes spo-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes spo-rise-soft {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.hero-enter .title-row {
+  animation: spo-rise 0.48s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+  animation-delay: 0.04s;
+}
+.hero-enter .tagline {
+  animation: spo-rise 0.48s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+  animation-delay: 0.12s;
+}
+.hero-enter .tag-row {
+  animation: spo-rise-soft 0.5s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+  animation-delay: 0.2s;
+}
+.hero-enter > .lead {
+  animation: spo-rise 0.5s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+.hero-enter > .lead:nth-child(4) { animation-delay: 0.3s; }
+.hero-enter > .lead:nth-child(5) { animation-delay: 0.38s; }
+body.page-enter .topnav {
+  animation: spo-rise 0.4s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+body.page-enter main {
+  animation: spo-rise 0.55s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+  animation-delay: 0.42s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter .title-row,
+  .hero-enter .tagline,
+  .hero-enter .tag-row,
+  .hero-enter .lead,
+  body.page-enter .topnav,
+  body.page-enter main {
+    animation: none;
+  }
+}
 header.page .title-row {
   display: flex;
   align-items: flex-end;
