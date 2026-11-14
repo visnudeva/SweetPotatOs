@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 60" role="img" aria-label="Réunion">
-  <!-- Regional emblem: Volcan et soleil (Guy Pignolet) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="90" height="60" viewBox="0 0 90 60">
   <rect width="90" height="60" fill="#0055A4"/>
-  <circle cx="45" cy="26" r="13" fill="#FFD100"/>
-  <path fill="#E30613" d="M18 54 L32 28 L45 48 L58 28 L72 54 Z"/>
-  <path fill="#E30613" d="M32 54 L45 34 L58 54 Z"/>
+  <circle cx="45" cy="24" r="14" fill="#FFD100"/>
+  <path fill="#E30613" d="M10 57 L27.5 28 L39 57 Z"/>
+  <path fill="#E30613" d="M51 57 L62.5 28 L80 57 Z"/>
+  <path fill="#E30613" d="M27.5 57 L45 21 L62.5 57 Z"/>
 </svg>

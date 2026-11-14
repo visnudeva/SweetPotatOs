@@ -93,8 +93,6 @@
       </div>
     </div>
 
-    <p class="changelog-lang-note" data-i18n="changelog.notes.en">Release notes stay in English (technical detail).</p>
-
     <nav class="toc" data-i18n-aria="changelog.toc" aria-label="Releases">
       <h2 data-i18n="changelog.toc">Releases</h2>
       <ol>
@@ -110,29 +108,27 @@
       <summary>
         <span class="release-heading">
           <h2>Fifth Harvest</h2>
-          <p class="meta">
-            Planned ISO <strong>December 2026</strong>
-        · Desktop changes will ship on the
-        <code>sweetpotatos-update</code> channel for Fourth Harvest installs
+          <p class="meta" data-i18n-html="changelog.fifth.meta">
+            Planned ISO <strong>December 2026</strong> · Desktop changes will ship on the <code>sweetpotatos-update</code> channel for Fourth Harvest installs
           </p>
         </span>
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
-        <li>The website shows <strong>Made in Réunion Island</strong> with the regional flag (links to an OpenStreetMap view of where Réunion is), and a full <strong>English / French</strong> toggle on every page. French browsers open in French by default; the choice is remembered.</li>
-        <li><strong>Tuber</strong> gains <code>n</code> to toggle desktop notifications when a download finishes, <code>s</code> to cycle sort (name → done → status → size → down → up → eta → peers), potato-orange footer keys, and torrent names that use the full window width. Close and reopen Tuber after <code>sudo sweetpotatos-update</code>.</li>
-        <li>After <code>sudo sweetpotatos-update</code>, if Arch/system packages are waiting you are asked whether to run <code>pacman -Syu</code> as well (<code>y</code>/<code>N</code>). Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>sweetpotatos-pruning</code> is listed on the home page (after Staying updated), the keybinds page, and the Mod+? cheatsheet. Installed systems pick the cheatsheet line up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>Channel package refresh: <strong>Brave Origin</strong> 1.99.55, Shelly 3.2.0, LocalSend 1.18.2, yay 13.1.0, waypaper 2.9, swaylock-effects, and python-imageio-ffmpeg. Installed systems pick them up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>On the Mod+? cheatsheet, website and keybind-reminder shortcuts are <code>Mod+Shift+w</code> and <code>Mod+Shift+x</code> (bare <code>w</code>/<code>x</code> could stick and steal typing until <code>Mod+Shift+c</code>). The status line shows those two binds; the tip toggle is labeled <strong>keybind reminder on/off</strong>. Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
-        <li>The website embeds the <strong>9to5Linux</strong> review of SweetPotatOs under Community review on the <a href="showroom.html#review">Showroom</a>.</li>
-        <li>On the dark Sweet potato and Ube themes, fastfetch shows the cleaner KanjiPink / KanjiUbe 芋 art as a real <strong>sixel</strong> image in foot (not chunky text blocks). Hue sliders still recolor the two tones. After <code>sudo sweetpotatos-update</code>, switch theme or re-apply, then open a new terminal.</li>
-        <li><code>sweetpotatos-pruning</code> restores shipped desktop config after experiments go wrong: clears <code>user_edits</code> forks, keeps <code>~/.config/swirl/config.d/user</code> (and kanshi), then sprouts like an update. Run it as your user, then <code>Mod+Shift+c</code> if Swirl did not reload.</li>
-        <li>Spore and tuber follow the desktop palette from SweetPotato themer when <code>~/.config/sweetpotatos/tui-colors</code> is present. Close and reopen them after <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>Escape</code> closes the floating keybind cheatsheet (<code>Mod+?</code>) and <strong>SweetPotato themer</strong> (<code>Mod+Ctrl+t</code>). Log out and back in after <code>sudo sweetpotatos-update</code> (or reopen those windows after updating).</li>
-        <li>On the website <a href="projects.html">Projects</a> page, the SweetPotato card is named <strong>SweetPotato themer</strong> (was “theme”).</li>
-        <li><code>Mod+Ctrl+l</code> opens <strong>Laniakea</strong> (generative wallpaper). On the keybind page (<code>Mod+?</code>) and the website it sits under Displays / look. Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
-        <li>Planned ISO window — exact day may shift a little; watch the countdown above.</li>
+        <li data-i18n-html="changelog.fifth.1">The website shows <strong>Made in Réunion Island</strong> with the regional flag (links to an OpenStreetMap view of where Réunion is), and a full <strong>English / French</strong> toggle on every page. French browsers open in French by default; the choice is remembered.</li>
+        <li data-i18n-html="changelog.fifth.2"><strong>Tuber</strong> gains <code>n</code> to toggle desktop notifications when a download finishes, <code>s</code> to cycle sort (name → done → status → size → down → up → eta → peers), potato-orange footer keys, and torrent names that use the full window width. Close and reopen Tuber after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fifth.3">After <code>sudo sweetpotatos-update</code>, if Arch/system packages are waiting you are asked whether to run <code>pacman -Syu</code> as well (<code>y</code>/<code>N</code>). Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fifth.4"><code>sweetpotatos-pruning</code> is listed on the home page (after Staying updated), the keybinds page, and the Mod+? cheatsheet. Installed systems pick the cheatsheet line up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fifth.5">Channel package refresh: <strong>Brave Origin</strong> 1.99.55, Shelly 3.2.0, LocalSend 1.18.2, yay 13.1.0, waypaper 2.9, swaylock-effects, and python-imageio-ffmpeg. Installed systems pick them up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fifth.6">On the Mod+? cheatsheet, website and keybind-reminder shortcuts are <code>Mod+Shift+w</code> and <code>Mod+Shift+x</code> (bare <code>w</code>/<code>x</code> could stick and steal typing until <code>Mod+Shift+c</code>). The status line shows those two binds; the tip toggle is labeled <strong>keybind reminder on/off</strong>. Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
+        <li data-i18n-html="changelog.fifth.7">The website embeds the <strong>9to5Linux</strong> review of SweetPotatOs under Community review on the <a href="showroom.html#review">Showroom</a>.</li>
+        <li data-i18n-html="changelog.fifth.8">On the dark Sweet potato and Ube themes, fastfetch shows the cleaner KanjiPink / KanjiUbe 芋 art as a real <strong>sixel</strong> image in foot (not chunky text blocks). Hue sliders still recolor the two tones. After <code>sudo sweetpotatos-update</code>, switch theme or re-apply, then open a new terminal.</li>
+        <li data-i18n-html="changelog.fifth.9"><code>sweetpotatos-pruning</code> restores shipped desktop config after experiments go wrong: clears <code>user_edits</code> forks, keeps <code>~/.config/swirl/config.d/user</code> (and kanshi), then sprouts like an update. Run it as your user, then <code>Mod+Shift+c</code> if Swirl did not reload.</li>
+        <li data-i18n-html="changelog.fifth.10">Spore and tuber follow the desktop palette from SweetPotato themer when <code>~/.config/sweetpotatos/tui-colors</code> is present. Close and reopen them after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fifth.11"><code>Escape</code> closes the floating keybind cheatsheet (<code>Mod+?</code>) and <strong>SweetPotato themer</strong> (<code>Mod+Ctrl+t</code>). Log out and back in after <code>sudo sweetpotatos-update</code> (or reopen those windows after updating).</li>
+        <li data-i18n-html="changelog.fifth.12">On the website <a href="projects.html">Projects</a> page, the SweetPotato card is named <strong>SweetPotato themer</strong> (was “theme”).</li>
+        <li data-i18n-html="changelog.fifth.13"><code>Mod+Ctrl+l</code> opens <strong>Laniakea</strong> (generative wallpaper). On the keybind page (<code>Mod+?</code>) and the website it sits under Displays / look. Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
+        <li data-i18n-html="changelog.fifth.14">Planned ISO window — exact day may shift a little; watch the countdown above.</li>
       </ul>
     </details>
 
@@ -140,96 +136,92 @@
       <summary>
         <span class="release-heading">
           <h2>Fourth Harvest</h2>
-          <p class="meta">
-            Released <strong>28 October 2026</strong>
-        · ISO <code>Sweetpotatos_2026.11_Fourth_Harvest.iso</code>
-        · Files folder <code>2026.11_Fourth_Harvest</code>
+          <p class="meta" data-i18n-html="changelog.fourth.meta">
+            Released <strong>28 October 2026</strong> · ISO <code>Sweetpotatos_2026.11_Fourth_Harvest.iso</code> · Files folder <code>2026.11_Fourth_Harvest</code>
           </p>
         </span>
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
-        <li>Overview (<code>Mod+Tab</code>) no longer shows workspace numbers or names — only the desktop stripes. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li><strong>Laniakea</strong> ships on the update channel and the next ISO: a generative flow-field wallpaper app (live draw, shape masks, Apply to the desktop). Open it from the app menu, or see it on the <a href="projects.html#laniakea">Projects</a> and <a href="showroom.html">Showroom</a> pages. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>GRUB no longer lists every firmware boot entry as <code>(EFI BootNext)</code>. That showed up after a menu regenerate under grub 2.16; it is turned off now. Reboot once after <code>sudo sweetpotatos-update</code>.</li>
-        <li>Logging out no longer flashes compositor and tray text on the login screen. Log out and back in after <code>sudo sweetpotatos-update</code> so the next session starts with the quiet wrapper.</li>
-        <li><strong>Smart Brightness</strong> shows the same brightness bar as the keys when it raises or restores the backlight. On the keybind page (<code>Mod+?</code>) and the website, <code>Mod+Ctrl+b</code> sits under Displays / look; Escape or a click leaves overview. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>Logging out or powering off no longer flashes a list of red swirlbar/tray errors on the login screen. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>Overview (<code>Mod+Tab</code>) keeps an even full frame on every window (no more thin or missing sides that changed with hover). Escape or a click leaves overview. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>With corners and gaps on (<code>Mod+Ctrl+g</code>), the status bar always floats with the same rounded accent border as the windows (including a single window or empty desktop), tiled windows keep an 8px gap, and the app menu matches. Turning gaps off pulls the bar flush again. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>The power menu (<code>Mod+Esc</code>) matches the Menu bubble: a flush left label, smaller round action icons, and — with frames on — the same floating rounded accent panel as the status bar. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>Idle no longer powers the display off. That path left some laptops asleep with the LED on and unable to wake after lid close. Closing the lid still sleeps via logind; opening it should wake again. Log out and back in after <code>sudo sweetpotatos-update</code> so the new idle watcher starts.</li>
-        <li>Boot splash (Plymouth) uses the new white sprouting-potato logo. Reboot once after <code>sudo sweetpotatos-update</code> to see it.</li>
-        <li>Status-bar tray icons are smaller so they match the Wi‑Fi and Bluetooth glyphs. The bar process shows as <code>swirlbar</code> in btop (<code>swaybar</code> was only a symlink name). Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
-        <li><code>Mod+Tab</code> opens overview: equal-height desktop stripes, each showing every window. Enter/exit uses one short ease (no double zoom). <code>Mod+Shift+Tab</code> is removed. Plain click zooms back in; Super+drag still moves windows between desktops. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>Autotile: the first window alone is full width; a second makes 50/50; further windows open at half without resetting sizes you set with <code>Mod+m</code>. Closing a window keeps the others’ widths (a lone survivor goes full again). Moving a full-width window onto a desktop that already has windows makes it half (overview drag included); landing alone stays full. <code>Mod+m</code> toggles the focused column between 100% and 50%. Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
-        <li>The app menu label says <strong>Menu</strong> (was “apps”). The label and the selection highlight use the same corner radius as the windows. Turning corners and gaps off with <code>Mod+Ctrl+g</code> squares the menu highlight too. Open the app menu again after <code>sudo sweetpotatos-update</code>.</li>
-        <li>Sleep and lid wake: the power menu uses a clean suspend path, and the screen turns back on after resume so lid close is less likely to leave a black panel. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li><strong>Smart Brightness</strong> is on by default. Fullscreen video (mpv, browsers on YouTube/Netflix, and similar) goes to max backlight, then your level comes back when you leave. Toggle with <code>Mod+Ctrl+b</code>. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>On the keybind page (<code>Mod+?</code>), <code>x</code> turns the login reminder off or on without printing junk on the page. <code>Mod+?</code> opens the page again after the earlier update glitch. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>Mod+Esc</code> opens a power menu with lock, sleep, logout, reboot, and power off (<code>Mod+o</code> removed). The buttons are icons. Escape or a click outside the bar dismisses it. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
-        <li>During install, Calamares can install <code>nvidia-open</code> online when a Turing or newer NVIDIA GPU is present. Needs network during install.</li>
-        <li>The power-off and exit buttons are round. On those bars, Enter confirms and Escape dismisses. Open the bar again after <code>sudo sweetpotatos-update</code>.</li>
-        <li>Swirl ships its own bar, <code>swaymsg</code>, and power-off bar. The power-off and exit bars follow the theme and stay about the height of the status bar. The bar does not show scroll arrows, an eye, or <code>T0/0 (0)</code>. The app menu, Wi-Fi menu, and wallpaper list use <code>swirlmenu</code>. <code>sudo sweetpotatos-update</code>, then log out and back in.</li>
-        <li><strong>Brave Origin</strong> is on the update channel. <code>sudo sweetpotatos-update</code> installs it when it is missing. <code>Mod+w</code> opens it.</li>
-        <li>The login notice is the <strong>keybind reminder</strong>. On the keybind page (<code>Mod+?</code>), <code>x</code> turns it off. Press <code>x</code> again to turn it back on. <code>Mod+?</code> still opens the page. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>Esc</code> no longer closes a window. <code>Mod+q</code> does. Menus still close on <code>Esc</code>, and resize mode still leaves on <code>Esc</code>. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>Spore opens a dropped radio station again. The line says reconnecting until the sound returns. Close Spore and open it again after updating. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>Screen record (<code>Mod+Print</code>) includes the sound playing through the speakers. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>On the dark Sweet potato and Ube themes, fastfetch shows a smooth drawn kanji 芋 in that theme's accent. Other themes keep the potato logo. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>Spore shows playing and the name of what is playing in green. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>In overview, moving one of two windows to another workspace leaves the remaining window filling that desktop. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>The showroom Themes section includes SweetPotato themer. Pick a dark or light preset and move the accent and highlight sliders. The preview shows the colors from that choice.</li>
-        <li>Caffeine only keeps the screen on while the lid is open. Closing the lid sleeps the same way it does with caffeine off. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>A saved display layout whose refresh rate is missing <code>Hz</code> is corrected in place on update. The arrangement stays, and there is nothing to set again. A layout already saved with Apply is left as it is. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>Floating toggle is <code>Mod+a</code>. LocalSend’s tray icons install beside Papirus instead of through Papirus-Dark’s panel link, so the update no longer stops on a file conflict. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>Look keybinds are <code>Mod+Ctrl</code> plus the letter: <code>w</code> wallpaper, <code>t</code> SweetPotato themer, <code>g</code> corners and gaps, <code>d</code> Displays. Apply in Displays saves the layout. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>Mod+Ctrl+t</code> opens SweetPotato themer. The next-theme and dark/light keybinds are gone. LocalSend’s tray icon is the LocalSend mark instead of the red face. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>With caffeine on, closing the lid still sleeps, and opening it wakes the laptop. The notice says <strong>caffeine on</strong> or <strong>caffeine off</strong>. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><strong>SweetPotato themer</strong> is in the app menu and on <code>Mod+Ctrl+t</code>. Dark lists the dark themes and Light lists the light ones. Sliders recolor the accent and highlight of the theme you pick, and Apply commits that choice. The window floats, and its background follows a switch from dark to light or the other way. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>The terminal opens in <strong>fish</strong>. Close it and open it again after updating. The login shell stays bash, and desktop scripts stay bash. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>Esc</code> closes the app launcher, the Wi-Fi menu, and the wallpaper menu again, and focus comes back. With no menu open, <code>Esc</code> still closes the focused window. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>Mod+Shift+number</code> moves the focused window to that workspace again, and you go with it. A French keyboard is included. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><strong>swayimg</strong> tiles with the other windows, and its corners are rounded. Close it and open the picture again after updating. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><code>Esc</code> closes the focused window, the same as <code>Mod+q</code>. In resize mode, <code>Esc</code> still leaves that mode.</li>
-        <li><strong>Fish</strong> is installed. Desktop scripts stay bash. Installed systems pick Fish up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>Power off with caffeine on turns the computer fully off. Closing the lid still sleeps, and it wakes again. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><strong>Neon kanji 2</strong> is removed from the wallpaper folder. It was the same picture as Neon kanji default.</li>
-        <li>An update keeps the keyboard layout chosen during install.</li>
-        <li><strong>Neon kanji default</strong> is the wallpaper new installs start on. Open the picker with <code>Mod+Shift+w</code>. The wallpaper already on your PC stays.</li>
-        <li><strong>New Spo Neon</strong> and <strong>Pixel</strong> were replaced with lighter versions of those same pictures. If you are using one of them, that lighter picture is the file of the same name. Any other wallpaper stays.</li>
-        <li>The showroom lists each color theme with its surface, text, accent, and second color. Dark and light sit side by side.</li>
-        <li>The home page notes that the ISO is 64-bit, the installer needs 1 GB of RAM and 8 GB of disk, and the ISO size and the <code>.sha256</code> file are on the Files page.</li>
-        <li><strong>Mod+g</strong> turns rounded corners and the gaps between windows off and on. Press it again to bring them back. The choice is remembered. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>23 new wallpapers are in the picker (<code>Mod+Shift+w</code>): neon, retro, chrome, space, and ink pictures. The wallpaper already on your PC stays. Installed systems pick them up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><strong>Cyberpunk</strong> is a dark theme with a light bar: yellow <code>#ffef00</code> and blue <code>#51bad9</code> on a charcoal desktop. It is in the dark set, after Lime. Press <code>Mod+Ctrl+t</code> to reach the dark set, then <code>Mod+Shift+t</code> until the notice says Cyberpunk. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
-        <li><strong>Boot splash.</strong> The white logo is the cleaned mark: two leaves, a short stem, and the cut end of the potato facing you. Reboot after updating. It shows when you turn the computer on and when you turn it off.</li>
-        <li>Starting up was still showing an older white logo, because that picture is stored in the boot image. Updating rebuilds the boot image so startup matches shutdown.</li>
-        <li><strong>Thunar</strong> shows a preview of pictures, not only the image-file icon. Reopen Thunar after updating.</li>
-        <li><strong>Rebrand.</strong> The mark is a new sweet potato: two leaves on a short stem, the cut end facing you, and the word <strong>sweetpotatos</strong> underneath. The old leaning potato is retired. Fastfetch, the menu icon, the boot splash, and this website use the new mark. The boot splash is a white version of it. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
-        <li>New wallpapers are in the picker (<code>Mod+Shift+w</code>). New installs start on <strong>NewSpoNeon</strong>. The wallpaper already on your PC stays, including any older ones you still have.</li>
-        <li>An update keeps the color theme you picked. It no longer snaps back to Sweet potato.</li>
-        <li><strong>Brave</strong> uses the same window frame as the other apps. It no longer draws its own rounded corners. Quit Brave and open it again after updating.</li>
-        <li>Two wallpapers were added: <strong>SpoKawai</strong> and <strong>Spo3d</strong>. Open the wallpaper picker with <code>Mod+Shift+w</code>. The wallpaper you are using stays as it is.</li>
-        <li>When two or more windows are open, an 8px gap shows the wallpaper around each one. The space between them is 16px. A single window stays edge to edge.</li>
-        <li>In <strong>Spore</strong>, the first favorite lines up with the others. The first file on the Files tab and the search line on Radio do too. Quit Spore and open it again after updating.</li>
-        <li>The thin border around windows such as foot is slightly rounded (8 pixels). Shadows stay off. Apps that draw their own title bar, such as Thunar, stay square. Close and reopen a window after updating to see the curve.</li>
-        <li><code>Mod+Shift+t</code> cycles color themes on the current surface. <code>Mod+Ctrl+t</code> switches between the dark set (Sweet potato, Ube, Lime, Cyberpunk, Monochrome) and the light set (Dragon fruit, Sweet potato, Blueberry, Monochrome). The bar, Thunar, foot, notifications, the lock screen, and fastfetch follow the theme. On light themes the tray icons are dark, and Thunar’s file list and menu bar use the same off-white as the bar. Cyberpunk’s desktop is charcoal and its bar is the light strip, so its tray icons are dark too. The Places selection uses the theme accent. Geany stays on its dark editor. <strong>Tuber</strong> and <strong>Spore</strong> follow the theme the next time they open.</li>
-        <li>The status line uses icons for CPU, memory, disk, brightness, battery, volume, and Wi-Fi. The percentages stay. Volume sits after brightness, and the battery sits just before Wi-Fi. The window title, the Wi-Fi name, and the date stay as text. The tray icons after the clock sit closer together. Opening the app menu (<code>Mod+Space</code>) no longer leaves a white pixel from the status line under the app names.</li>
-        <li>The power-off confirmation (<code>Mod+Escape</code> or <code>Mod+O</code>) stays above the status bar. Open windows do not slide up under the yellow bar, including when you switch to an empty workspace. Pressing the shortcut again does not open a second bar.</li>
-        <li>When a workspace has no window, the label next to the CPU percentage is just that workspace’s number. The dots on the left of the bar stay.</li>
-        <li>Workspace numbers on the bar are dots. Other workspaces are SPO orange; the one you are on is SPO pink. <code>Mod+1</code>…<code>0</code> still switch workspaces.</li>
-        <li>A desktop notice once a week when SweetPotatOs packages are ready to install or upgrade (Monday morning, or the next time the machine is on). A missed notice shows once at login. Apply them with <code>sudo sweetpotatos-update</code>.</li>
-        <li>After <code>sudo sweetpotatos-update</code> installs or upgrades packages, a desktop note titled <strong>SweetPotatOs updated</strong> says what changed. The same text is printed in the terminal.</li>
-        <li><strong>Tuber</strong> picks up <code>.torrent</code> files in <code>~/Downloads</code> and magnet links on the clipboard while it is open. The status line says where the torrent came from, then after a few seconds shows the name of the torrent under the cursor.</li>
-        <li>Wipe (<code>w</code>) deletes the download and the <code>.torrent</code> in Downloads. A wiped torrent stays off the list on the next launch, including when its magnet is still on the clipboard. Saving that <code>.torrent</code> file into Downloads again starts it.</li>
-        <li><strong>swaylock-effects</strong> replaces stock <code>swaylock</code>, keeping the SweetPotato charcoal / orange / pink lock theme and adding a lock-screen <strong>clock and date</strong> (larger bold SPO-pink text).</li>
-        <li><strong>Mod+?</strong> floating help cheatsheet (~50% × 90%, centered): SPO colors, opens at the <strong>top</strong> of the sheet, <code>w</code> opens the project website, and a <strong>Desktop / package updates</strong> line for <code>sudo sweetpotatos-update</code>.</li>
-        <li>Login tip now says <em>Mod+? — keybinds &amp; project links</em>.</li>
-        <li><code>sudo sweetpotatos-update</code> alone is enough: it upgrades packages, refreshes shipped config, reloads Swirl, and does not require <code>Mod+Shift+c</code>.</li>
-        <li>Project site: contact form on
-          <a href="contact.html">sweetpotatos.sourceforge.io</a>
-          (email used only to reply).</li>
+        <li data-i18n-html="changelog.fourth.1">Overview (<code>Mod+Tab</code>) no longer shows workspace numbers or names — only the desktop stripes. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.2"><strong>Laniakea</strong> ships on the update channel and the next ISO: a generative flow-field wallpaper app (live draw, shape masks, Apply to the desktop). Open it from the app menu, or see it on the <a href="projects.html#laniakea">Projects</a> and <a href="showroom.html">Showroom</a> pages. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.3">GRUB no longer lists every firmware boot entry as <code>(EFI BootNext)</code>. That showed up after a menu regenerate under grub 2.16; it is turned off now. Reboot once after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.4">Logging out no longer flashes compositor and tray text on the login screen. Log out and back in after <code>sudo sweetpotatos-update</code> so the next session starts with the quiet wrapper.</li>
+        <li data-i18n-html="changelog.fourth.5"><strong>Smart Brightness</strong> shows the same brightness bar as the keys when it raises or restores the backlight. On the keybind page (<code>Mod+?</code>) and the website, <code>Mod+Ctrl+b</code> sits under Displays / look; Escape or a click leaves overview. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.6">Logging out or powering off no longer flashes a list of red swirlbar/tray errors on the login screen. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.7">Overview (<code>Mod+Tab</code>) keeps an even full frame on every window (no more thin or missing sides that changed with hover). Escape or a click leaves overview. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.8">With corners and gaps on (<code>Mod+Ctrl+g</code>), the status bar always floats with the same rounded accent border as the windows (including a single window or empty desktop), tiled windows keep an 8px gap, and the app menu matches. Turning gaps off pulls the bar flush again. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.9">The power menu (<code>Mod+Esc</code>) matches the Menu bubble: a flush left label, smaller round action icons, and — with frames on — the same floating rounded accent panel as the status bar. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.10">Idle no longer powers the display off. That path left some laptops asleep with the LED on and unable to wake after lid close. Closing the lid still sleeps via logind; opening it should wake again. Log out and back in after <code>sudo sweetpotatos-update</code> so the new idle watcher starts.</li>
+        <li data-i18n-html="changelog.fourth.11">Boot splash (Plymouth) uses the new white sprouting-potato logo. Reboot once after <code>sudo sweetpotatos-update</code> to see it.</li>
+        <li data-i18n-html="changelog.fourth.12">Status-bar tray icons are smaller so they match the Wi‑Fi and Bluetooth glyphs. The bar process shows as <code>swirlbar</code> in btop (<code>swaybar</code> was only a symlink name). Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
+        <li data-i18n-html="changelog.fourth.13"><code>Mod+Tab</code> opens overview: equal-height desktop stripes, each showing every window. Enter/exit uses one short ease (no double zoom). <code>Mod+Shift+Tab</code> is removed. Plain click zooms back in; Super+drag still moves windows between desktops. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.14">Autotile: the first window alone is full width; a second makes 50/50; further windows open at half without resetting sizes you set with <code>Mod+m</code>. Closing a window keeps the others’ widths (a lone survivor goes full again). Moving a full-width window onto a desktop that already has windows makes it half (overview drag included); landing alone stays full. <code>Mod+m</code> toggles the focused column between 100% and 50%. Log out and back in after <code>sudo sweetpotatos-update</code> (or <code>Mod+Shift+c</code>).</li>
+        <li data-i18n-html="changelog.fourth.15">The app menu label says <strong>Menu</strong> (was “apps”). The label and the selection highlight use the same corner radius as the windows. Turning corners and gaps off with <code>Mod+Ctrl+g</code> squares the menu highlight too. Open the app menu again after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.16">Sleep and lid wake: the power menu uses a clean suspend path, and the screen turns back on after resume so lid close is less likely to leave a black panel. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.17"><strong>Smart Brightness</strong> is on by default. Fullscreen video (mpv, browsers on YouTube/Netflix, and similar) goes to max backlight, then your level comes back when you leave. Toggle with <code>Mod+Ctrl+b</code>. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.18">On the keybind page (<code>Mod+?</code>), <code>x</code> turns the login reminder off or on without printing junk on the page. <code>Mod+?</code> opens the page again after the earlier update glitch. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.19"><code>Mod+Esc</code> opens a power menu with lock, sleep, logout, reboot, and power off (<code>Mod+o</code> removed). The buttons are icons. Escape or a click outside the bar dismisses it. Log out and back in after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.20">During install, Calamares can install <code>nvidia-open</code> online when a Turing or newer NVIDIA GPU is present. Needs network during install.</li>
+        <li data-i18n-html="changelog.fourth.21">The power-off and exit buttons are round. On those bars, Enter confirms and Escape dismisses. Open the bar again after <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.22">Swirl ships its own bar, <code>swaymsg</code>, and power-off bar. The power-off and exit bars follow the theme and stay about the height of the status bar. The bar does not show scroll arrows, an eye, or <code>T0/0 (0)</code>. The app menu, Wi-Fi menu, and wallpaper list use <code>swirlmenu</code>. <code>sudo sweetpotatos-update</code>, then log out and back in.</li>
+        <li data-i18n-html="changelog.fourth.23"><strong>Brave Origin</strong> is on the update channel. <code>sudo sweetpotatos-update</code> installs it when it is missing. <code>Mod+w</code> opens it.</li>
+        <li data-i18n-html="changelog.fourth.24">The login notice is the <strong>keybind reminder</strong>. On the keybind page (<code>Mod+?</code>), <code>x</code> turns it off. Press <code>x</code> again to turn it back on. <code>Mod+?</code> still opens the page. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.25"><code>Esc</code> no longer closes a window. <code>Mod+q</code> does. Menus still close on <code>Esc</code>, and resize mode still leaves on <code>Esc</code>. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.26">Spore opens a dropped radio station again. The line says reconnecting until the sound returns. Close Spore and open it again after updating. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.27">Screen record (<code>Mod+Print</code>) includes the sound playing through the speakers. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.28">On the dark Sweet potato and Ube themes, fastfetch shows a smooth drawn kanji 芋 in that theme's accent. Other themes keep the potato logo. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.29">Spore shows playing and the name of what is playing in green. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.30">In overview, moving one of two windows to another workspace leaves the remaining window filling that desktop. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.31">The showroom Themes section includes SweetPotato themer. Pick a dark or light preset and move the accent and highlight sliders. The preview shows the colors from that choice.</li>
+        <li data-i18n-html="changelog.fourth.32">Caffeine only keeps the screen on while the lid is open. Closing the lid sleeps the same way it does with caffeine off. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.33">A saved display layout whose refresh rate is missing <code>Hz</code> is corrected in place on update. The arrangement stays, and there is nothing to set again. A layout already saved with Apply is left as it is. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.34">Floating toggle is <code>Mod+a</code>. LocalSend’s tray icons install beside Papirus instead of through Papirus-Dark’s panel link, so the update no longer stops on a file conflict. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.35">Look keybinds are <code>Mod+Ctrl</code> plus the letter: <code>w</code> wallpaper, <code>t</code> SweetPotato themer, <code>g</code> corners and gaps, <code>d</code> Displays. Apply in Displays saves the layout. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.36"><code>Mod+Ctrl+t</code> opens SweetPotato themer. The next-theme and dark/light keybinds are gone. LocalSend’s tray icon is the LocalSend mark instead of the red face. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.37">With caffeine on, closing the lid still sleeps, and opening it wakes the laptop. The notice says <strong>caffeine on</strong> or <strong>caffeine off</strong>. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.38"><strong>SweetPotato themer</strong> is in the app menu and on <code>Mod+Ctrl+t</code>. Dark lists the dark themes and Light lists the light ones. Sliders recolor the accent and highlight of the theme you pick, and Apply commits that choice. The window floats, and its background follows a switch from dark to light or the other way. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.39">The terminal opens in <strong>fish</strong>. Close it and open it again after updating. The login shell stays bash, and desktop scripts stay bash. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.40"><code>Esc</code> closes the app launcher, the Wi-Fi menu, and the wallpaper menu again, and focus comes back. With no menu open, <code>Esc</code> still closes the focused window. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.41"><code>Mod+Shift+number</code> moves the focused window to that workspace again, and you go with it. A French keyboard is included. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.42"><strong>swayimg</strong> tiles with the other windows, and its corners are rounded. Close it and open the picture again after updating. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.43"><code>Esc</code> closes the focused window, the same as <code>Mod+q</code>. In resize mode, <code>Esc</code> still leaves that mode.</li>
+        <li data-i18n-html="changelog.fourth.44"><strong>Fish</strong> is installed. Desktop scripts stay bash. Installed systems pick Fish up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.45">Power off with caffeine on turns the computer fully off. Closing the lid still sleeps, and it wakes again. Installed systems pick this up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.46"><strong>Neon kanji 2</strong> is removed from the wallpaper folder. It was the same picture as Neon kanji default.</li>
+        <li data-i18n-html="changelog.fourth.47">An update keeps the keyboard layout chosen during install.</li>
+        <li data-i18n-html="changelog.fourth.48"><strong>Neon kanji default</strong> is the wallpaper new installs start on. Open the picker with <code>Mod+Shift+w</code>. The wallpaper already on your PC stays.</li>
+        <li data-i18n-html="changelog.fourth.49"><strong>New Spo Neon</strong> and <strong>Pixel</strong> were replaced with lighter versions of those same pictures. If you are using one of them, that lighter picture is the file of the same name. Any other wallpaper stays.</li>
+        <li data-i18n-html="changelog.fourth.50">The showroom lists each color theme with its surface, text, accent, and second color. Dark and light sit side by side.</li>
+        <li data-i18n-html="changelog.fourth.51">The home page notes that the ISO is 64-bit, the installer needs 1 GB of RAM and 8 GB of disk, and the ISO size and the <code>.sha256</code> file are on the Files page.</li>
+        <li data-i18n-html="changelog.fourth.52"><strong>Mod+g</strong> turns rounded corners and the gaps between windows off and on. Press it again to bring them back. The choice is remembered. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.53">23 new wallpapers are in the picker (<code>Mod+Shift+w</code>): neon, retro, chrome, space, and ink pictures. The wallpaper already on your PC stays. Installed systems pick them up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.54"><strong>Cyberpunk</strong> is a dark theme with a light bar: yellow <code>#ffef00</code> and blue <code>#51bad9</code> on a charcoal desktop. It is in the dark set, after Lime. Press <code>Mod+Ctrl+t</code> to reach the dark set, then <code>Mod+Shift+t</code> until the notice says Cyberpunk. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.55"><strong>Boot splash.</strong> The white logo is the cleaned mark: two leaves, a short stem, and the cut end of the potato facing you. Reboot after updating. It shows when you turn the computer on and when you turn it off.</li>
+        <li data-i18n-html="changelog.fourth.56">Starting up was still showing an older white logo, because that picture is stored in the boot image. Updating rebuilds the boot image so startup matches shutdown.</li>
+        <li data-i18n-html="changelog.fourth.57"><strong>Thunar</strong> shows a preview of pictures, not only the image-file icon. Reopen Thunar after updating.</li>
+        <li data-i18n-html="changelog.fourth.58"><strong>Rebrand.</strong> The mark is a new sweet potato: two leaves on a short stem, the cut end facing you, and the word <strong>sweetpotatos</strong> underneath. The old leaning potato is retired. Fastfetch, the menu icon, the boot splash, and this website use the new mark. The boot splash is a white version of it. Installed systems pick it up with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.59">New wallpapers are in the picker (<code>Mod+Shift+w</code>). New installs start on <strong>NewSpoNeon</strong>. The wallpaper already on your PC stays, including any older ones you still have.</li>
+        <li data-i18n-html="changelog.fourth.60">An update keeps the color theme you picked. It no longer snaps back to Sweet potato.</li>
+        <li data-i18n-html="changelog.fourth.61"><strong>Brave</strong> uses the same window frame as the other apps. It no longer draws its own rounded corners. Quit Brave and open it again after updating.</li>
+        <li data-i18n-html="changelog.fourth.62">Two wallpapers were added: <strong>SpoKawai</strong> and <strong>Spo3d</strong>. Open the wallpaper picker with <code>Mod+Shift+w</code>. The wallpaper you are using stays as it is.</li>
+        <li data-i18n-html="changelog.fourth.63">When two or more windows are open, an 8px gap shows the wallpaper around each one. The space between them is 16px. A single window stays edge to edge.</li>
+        <li data-i18n-html="changelog.fourth.64">In <strong>Spore</strong>, the first favorite lines up with the others. The first file on the Files tab and the search line on Radio do too. Quit Spore and open it again after updating.</li>
+        <li data-i18n-html="changelog.fourth.65">The thin border around windows such as foot is slightly rounded (8 pixels). Shadows stay off. Apps that draw their own title bar, such as Thunar, stay square. Close and reopen a window after updating to see the curve.</li>
+        <li data-i18n-html="changelog.fourth.66"><code>Mod+Shift+t</code> cycles color themes on the current surface. <code>Mod+Ctrl+t</code> switches between the dark set (Sweet potato, Ube, Lime, Cyberpunk, Monochrome) and the light set (Dragon fruit, Sweet potato, Blueberry, Monochrome). The bar, Thunar, foot, notifications, the lock screen, and fastfetch follow the theme. On light themes the tray icons are dark, and Thunar’s file list and menu bar use the same off-white as the bar. Cyberpunk’s desktop is charcoal and its bar is the light strip, so its tray icons are dark too. The Places selection uses the theme accent. Geany stays on its dark editor. <strong>Tuber</strong> and <strong>Spore</strong> follow the theme the next time they open.</li>
+        <li data-i18n-html="changelog.fourth.67">The status line uses icons for CPU, memory, disk, brightness, battery, volume, and Wi-Fi. The percentages stay. Volume sits after brightness, and the battery sits just before Wi-Fi. The window title, the Wi-Fi name, and the date stay as text. The tray icons after the clock sit closer together. Opening the app menu (<code>Mod+Space</code>) no longer leaves a white pixel from the status line under the app names.</li>
+        <li data-i18n-html="changelog.fourth.68">The power-off confirmation (<code>Mod+Escape</code> or <code>Mod+O</code>) stays above the status bar. Open windows do not slide up under the yellow bar, including when you switch to an empty workspace. Pressing the shortcut again does not open a second bar.</li>
+        <li data-i18n-html="changelog.fourth.69">When a workspace has no window, the label next to the CPU percentage is just that workspace’s number. The dots on the left of the bar stay.</li>
+        <li data-i18n-html="changelog.fourth.70">Workspace numbers on the bar are dots. Other workspaces are SPO orange; the one you are on is SPO pink. <code>Mod+1</code>…<code>0</code> still switch workspaces.</li>
+        <li data-i18n-html="changelog.fourth.71">A desktop notice once a week when SweetPotatOs packages are ready to install or upgrade (Monday morning, or the next time the machine is on). A missed notice shows once at login. Apply them with <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.72">After <code>sudo sweetpotatos-update</code> installs or upgrades packages, a desktop note titled <strong>SweetPotatOs updated</strong> says what changed. The same text is printed in the terminal.</li>
+        <li data-i18n-html="changelog.fourth.73"><strong>Tuber</strong> picks up <code>.torrent</code> files in <code>~/Downloads</code> and magnet links on the clipboard while it is open. The status line says where the torrent came from, then after a few seconds shows the name of the torrent under the cursor.</li>
+        <li data-i18n-html="changelog.fourth.74">Wipe (<code>w</code>) deletes the download and the <code>.torrent</code> in Downloads. A wiped torrent stays off the list on the next launch, including when its magnet is still on the clipboard. Saving that <code>.torrent</code> file into Downloads again starts it.</li>
+        <li data-i18n-html="changelog.fourth.75"><strong>swaylock-effects</strong> replaces stock <code>swaylock</code>, keeping the SweetPotato charcoal / orange / pink lock theme and adding a lock-screen <strong>clock and date</strong> (larger bold SPO-pink text).</li>
+        <li data-i18n-html="changelog.fourth.76"><strong>Mod+?</strong> floating help cheatsheet (~50% × 90%, centered): SPO colors, opens at the <strong>top</strong> of the sheet, <code>w</code> opens the project website, and a <strong>Desktop / package updates</strong> line for <code>sudo sweetpotatos-update</code>.</li>
+        <li data-i18n-html="changelog.fourth.77">Login tip now says <em>Mod+? — keybinds &amp; project links</em>.</li>
+        <li data-i18n-html="changelog.fourth.78"><code>sudo sweetpotatos-update</code> alone is enough: it upgrades packages, refreshes shipped config, reloads Swirl, and does not require <code>Mod+Shift+c</code>.</li>
+        <li data-i18n-html="changelog.fourth.79">Project site: contact form on <a href="contact.html">sweetpotatos.sourceforge.io</a> (email used only to reply).</li>
       </ul>
     </details>
 
@@ -237,28 +229,25 @@
       <summary>
         <span class="release-heading">
           <h2>Third Harvest</h2>
-          <p class="meta">
-            Released <strong>24 September 2026</strong>
-        · ISO <code>Sweetpotatos_2026.10_Third_Harvest.iso</code>
-        · Files folder <code>2026.10_Third_Harvest</code>
+          <p class="meta" data-i18n-html="changelog.third.meta">
+            Released <strong>24 September 2026</strong> · ISO <code>Sweetpotatos_2026.10_Third_Harvest.iso</code> · Files folder <code>2026.10_Third_Harvest</code>
           </p>
         </span>
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
-        <li><strong>Tuber</strong> replaced Transmission for torrents (<code>Mod+t</code>) — light terminal BitTorrent client; magnet clicks hand off to the open session. Existing installs pick it up with <code>sweetpotatos-update</code> once the package is on the channel (Transmission is replaced).</li>
-        <li><strong>Brave Origin</strong> became the default browser (<code>Mod+w</code>), replacing Firefox on new installs.</li>
-        <li><strong>Mod+Tab</strong> workspace overview (all desktops); hold Super and drag windows between them. Plain click zooms back in.</li>
-        <li><strong>Mod+Shift+Tab</strong> overview of windows on the current desktop.</li>
-        <li><strong>Mod+?</strong> floating keybind cheatsheet (toggle), with a login tip that points at it every session.</li>
-        <li><strong>Mod+a</strong> floating toggle.</li>
-        <li><strong>Mod+Escape</strong> (same as <code>Mod+o</code>) power off.</li>
-        <li><strong>Mod+Up</strong> / <strong>Mod+Down</strong> follow the visual stack (higher workspaces sit below).</li>
-        <li>Default wallpaper is <strong>SpoNeon</strong> (neon tuber art); UsefulBinds / BindsBG are no longer shipped. <code>sweetpotatos-update</code> also refreshes shipped wallpapers into <code>~/Pictures/Wallpapers</code> without changing your active waypaper choice.</li>
-        <li><strong>Spore</strong> ships a few default favorite radio stations on first launch (SomaFM Groove Salad Classic, SomaFM Drone Zone, Echoes of Bluemars, Cryosleep, Ambient Sleeping Pill). On the Favorites tab, <code>r</code> removes a favorite.</li>
-        <li><strong>Rolling desktop updates</strong> from now on: installed systems pull theme / Swirl / SPO package fixes with
-          <code>sudo sweetpotatos-update</code> (GitHub <code>[sweetpotatos]</code> channel). New Harvest ISOs are for fresh installs only — you no longer need a new point-release ISO just to stay current on the desktop.</li>
-        <li><strong>Durable user overrides</strong> at <code>~/.config/swirl/config.d/user</code> (loaded last; never overwritten by updates). Put custom binds and rules there; reload with <code>Mod+Shift+c</code>. See the project home page for a short guide.</li>
+        <li data-i18n-html="changelog.third.1"><strong>Tuber</strong> replaced Transmission for torrents (<code>Mod+t</code>) — light terminal BitTorrent client; magnet clicks hand off to the open session. Existing installs pick it up with <code>sweetpotatos-update</code> once the package is on the channel (Transmission is replaced).</li>
+        <li data-i18n-html="changelog.third.2"><strong>Brave Origin</strong> became the default browser (<code>Mod+w</code>), replacing Firefox on new installs.</li>
+        <li data-i18n-html="changelog.third.3"><strong>Mod+Tab</strong> workspace overview (all desktops); hold Super and drag windows between them. Plain click zooms back in.</li>
+        <li data-i18n-html="changelog.third.4"><strong>Mod+Shift+Tab</strong> overview of windows on the current desktop.</li>
+        <li data-i18n-html="changelog.third.5"><strong>Mod+?</strong> floating keybind cheatsheet (toggle), with a login tip that points at it every session.</li>
+        <li data-i18n-html="changelog.third.6"><strong>Mod+a</strong> floating toggle.</li>
+        <li data-i18n-html="changelog.third.7"><strong>Mod+Escape</strong> (same as <code>Mod+o</code>) power off.</li>
+        <li data-i18n-html="changelog.third.8"><strong>Mod+Up</strong> / <strong>Mod+Down</strong> follow the visual stack (higher workspaces sit below).</li>
+        <li data-i18n-html="changelog.third.9">Default wallpaper is <strong>SpoNeon</strong> (neon tuber art); UsefulBinds / BindsBG are no longer shipped. <code>sweetpotatos-update</code> also refreshes shipped wallpapers into <code>~/Pictures/Wallpapers</code> without changing your active waypaper choice.</li>
+        <li data-i18n-html="changelog.third.10"><strong>Spore</strong> ships a few default favorite radio stations on first launch (SomaFM Groove Salad Classic, SomaFM Drone Zone, Echoes of Bluemars, Cryosleep, Ambient Sleeping Pill). On the Favorites tab, <code>r</code> removes a favorite.</li>
+        <li data-i18n-html="changelog.third.11"><strong>Rolling desktop updates</strong> from now on: installed systems pull theme / Swirl / SPO package fixes with <code>sudo sweetpotatos-update</code> (GitHub <code>[sweetpotatos]</code> channel). New Harvest ISOs are for fresh installs only — you no longer need a new point-release ISO just to stay current on the desktop.</li>
+        <li data-i18n-html="changelog.third.12"><strong>Durable user overrides</strong> at <code>~/.config/swirl/config.d/user</code> (loaded last; never overwritten by updates). Put custom binds and rules there; reload with <code>Mod+Shift+c</code>. See the project home page for a short guide.</li>
       </ul>
     </details>
 
@@ -266,17 +255,15 @@
       <summary>
         <span class="release-heading">
           <h2>Second Harvest</h2>
-          <p class="meta">
-            Released <strong>1 September 2026</strong>
-        · ISO <code>Sweetpotatos_2026.09_Second_Harvest.iso</code>
-        · Files folder <code>2026.09_Second_Harvest</code>
+          <p class="meta" data-i18n-html="changelog.second.meta">
+            Released <strong>1 September 2026</strong> · ISO <code>Sweetpotatos_2026.09_Second_Harvest.iso</code> · Files folder <code>2026.09_Second_Harvest</code>
           </p>
         </span>
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
-        <li>Added <strong>Spore</strong> (web radio + local music, <code>Mod+r</code>) and <strong>LocalSend</strong> (nearby sharing); replaced <strong>tera</strong> and <strong>Audacious</strong>.</li>
-        <li>Workspace navigation polish: restore <code>Mod+Up</code> / <code>Mod+Down</code>, plus <code>Mod+Ctrl+Up</code> / <code>Mod+Ctrl+Down</code> to move windows between workspaces.</li>
+        <li data-i18n-html="changelog.second.1">Added <strong>Spore</strong> (web radio + local music, <code>Mod+r</code>) and <strong>LocalSend</strong> (nearby sharing); replaced <strong>tera</strong> and <strong>Audacious</strong>.</li>
+        <li data-i18n-html="changelog.second.2">Workspace navigation polish: restore <code>Mod+Up</code> / <code>Mod+Down</code>, plus <code>Mod+Ctrl+Up</code> / <code>Mod+Ctrl+Down</code> to move windows between workspaces.</li>
       </ul>
     </details>
 
@@ -284,20 +271,18 @@
       <summary>
         <span class="release-heading">
           <h2>First Harvest</h2>
-          <p class="meta">
-            Released <strong>20 August 2026</strong>
-        · ISO <code>Sweetpotatos_2026.08_First_Harvest.iso</code>
-        · Files folder <code>2026.08_First_Harvest</code>
+          <p class="meta" data-i18n-html="changelog.first.meta">
+            Released <strong>20 August 2026</strong> · ISO <code>Sweetpotatos_2026.08_First_Harvest.iso</code> · Files folder <code>2026.08_First_Harvest</code>
           </p>
         </span>
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
-        <li>First stable <strong>Harvest</strong> ISO (left the earlier BETA branding).</li>
-        <li>Live graphical session: <strong>Swirl</strong> compositor + SweetPotato theme under <code>~/.config/swirl/</code>.</li>
-        <li>Calamares installer on the live desktop; installed systems use GRUB and Ly (Swirl session).</li>
-        <li>Default stack highlights: <strong>foot</strong> terminal, <strong>Shelly</strong> + yay, <strong>waypaper</strong> wallpapers, <strong>nwg-displays</strong> for monitors.</li>
-        <li>Session polish: Ly password focus, login tips, Bluetooth and power-profiles enabled, lid-close suspend, live Calamares keyboard sync to Swirl.</li>
+        <li data-i18n-html="changelog.first.1">First stable <strong>Harvest</strong> ISO (left the earlier BETA branding).</li>
+        <li data-i18n-html="changelog.first.2">Live graphical session: <strong>Swirl</strong> compositor + SweetPotato theme under <code>~/.config/swirl/</code>.</li>
+        <li data-i18n-html="changelog.first.3">Calamares installer on the live desktop; installed systems use GRUB and Ly (Swirl session).</li>
+        <li data-i18n-html="changelog.first.4">Default stack highlights: <strong>foot</strong> terminal, <strong>Shelly</strong> + yay, <strong>waypaper</strong> wallpapers, <strong>nwg-displays</strong> for monitors.</li>
+        <li data-i18n-html="changelog.first.5">Session polish: Ly password focus, login tips, Bluetooth and power-profiles enabled, lid-close suspend, live Calamares keyboard sync to Swirl.</li>
       </ul>
     </details>
   </main>
@@ -305,7 +290,7 @@
   <footer>
     <div class="footer-inner">
       <a class="origin" href="https://www.openstreetmap.org/?mlat=-21.115&amp;mlon=55.536#map=5/-21.12/55.54" target="_blank" rel="noopener noreferrer" data-i18n-title="origin.title" title="Where is Réunion Island? Open map">
-        <img class="origin-flag" src="reunion-flag.svg" width="22" height="15" alt="">
+        <img class="origin-flag" src="reunion-flag.png" width="22" height="15" alt="">
         <span data-i18n="origin.made">Made in Réunion Island</span>
       </a>
       <span class="footer-sep" aria-hidden="true">·</span>
