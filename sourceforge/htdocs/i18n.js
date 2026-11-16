@@ -87,6 +87,26 @@
       "home.usb": "Write ISO to USB",
       "home.usb.note": "Prefer verifying the download with the <code>.sha256</code> file next to the ISO on the Files page.",
 
+      "vault.title": "CLASSIFIED · TUBER VAULT",
+      "vault.tag": "Tuber vault · harvest override",
+      "vault.line1": "Harvest telemetry nominal. Old potatoes still boot.",
+      "vault.line2": "Swirl strip infinite. Workspaces stacked like soil beds.",
+      "vault.line3": "You found the glitch tuber. Nothing illegal grows here.",
+      "vault.line4": "Channel rolling. sudo sweetpotatos-update keeps the patch alive.",
+      "vault.line5": "Deeper soil: type the first letter of potato.",
+      "vault.exits": "Vault exits",
+      "vault.supportHarvest": "Support the harvest",
+      "vault.close": "Close vault · Esc",
+      "vault.deep.title": "ROOT ACCESS · MASHED CORE",
+      "vault.deep.tag": "Mashed core · root access",
+      "vault.deep.line1": "You typed the seed. Welcome under the soil.",
+      "vault.deep.line2": "SPO was grown for tired machines that still want beauty.",
+      "vault.deep.line3": "No megathreads. No loot. Just a potato and a tiling strip.",
+      "vault.deep.line4": "If this made you smile, water the harvest — Support helps.",
+      "vault.deep.exits": "Deep vault exits",
+      "vault.deep.download": "Download ISO",
+      "vault.deep.back": "Back to vault · Esc",
+
       "contact.title": "SweetPotatOs — Contact",
       "contact.desc": "Send a message to the SweetPotatOs maintainer.",
       "contact.h1": "Contact",
@@ -275,6 +295,7 @@
       "changelog.expand": "Expand",
       "changelog.collapse": "Collapse",
       "changelog.fifth.meta": "Planned ISO <strong>December 2026</strong> · Desktop changes will ship on the <code>sweetpotatos-update</code> channel for Fourth Harvest installs",
+      "changelog.fifth.19": "On the website home page, the logo easter egg (Tuber Vault, and the deeper mashed core) now follows the <strong>EN / FR</strong> language toggle.",
       "changelog.fifth.18": "The website footer now reads <strong>sweetpotatos 2026 Made in Réunion Island</strong> / <strong>Fait à La Réunion</strong>, both in potato orange, with no middle-dot separator.",
       "changelog.fifth.17": "The website <a href=\"support.html\">Support</a> page adds two centered QR stickers (click to enlarge), replaces GitHub Sponsors with a <strong>Star on GitHub</strong> card, and keeps Ko-fi and the shop.",
       "changelog.fifth.16": "The website <strong>EN / FR</strong> toggle is tinted with SweetPotato red and orange, and the <strong>Made in Réunion Island</strong> / <strong>Fait à La Réunion</strong> label is potato orange.",
@@ -482,6 +503,26 @@
       "home.usb": "Écrire l’ISO sur une clé USB",
       "home.usb.note": "Préférez vérifier le téléchargement avec le fichier <code>.sha256</code> à côté de l’ISO sur la page Fichiers.",
 
+      "vault.title": "CLASSIFIÉ · COFFRE TUBER",
+      "vault.tag": "Coffre Tuber · override de la récolte",
+      "vault.line1": "Télémétrie Harvest nominale. Les vieilles patates bootent encore.",
+      "vault.line2": "Bande Swirl infinie. Espaces de travail empilés comme des plates-bandes.",
+      "vault.line3": "Tu as trouvé le glitch tuber. Rien d’illégal ne pousse ici.",
+      "vault.line4": "Canal rolling. sudo sweetpotatos-update maintient le patch vivant.",
+      "vault.line5": "Sol plus profond : tape la première lettre de patate.",
+      "vault.exits": "Sorties du coffre",
+      "vault.supportHarvest": "Soutenir la récolte",
+      "vault.close": "Fermer le coffre · Esc",
+      "vault.deep.title": "ACCÈS ROOT · CŒUR EN PURÉE",
+      "vault.deep.tag": "Cœur en purée · accès root",
+      "vault.deep.line1": "Tu as tapé la graine. Bienvenue sous la terre.",
+      "vault.deep.line2": "SPO a poussé pour les machines fatiguées qui veulent encore de la beauté.",
+      "vault.deep.line3": "Pas de mégathreads. Pas de butin. Juste une patate et une bande en mosaïque.",
+      "vault.deep.line4": "Si ça t’a fait sourire, arrose la récolte — Soutenir aide.",
+      "vault.deep.exits": "Sorties du coffre profond",
+      "vault.deep.download": "Télécharger l’ISO",
+      "vault.deep.back": "Retour au coffre · Esc",
+
       "contact.title": "SweetPotatOs — Contact",
       "contact.desc": "Envoyer un message au mainteneur de SweetPotatOs.",
       "contact.h1": "Contact",
@@ -670,6 +711,7 @@
       "changelog.expand": "Déplier",
       "changelog.collapse": "Replier",
       "changelog.fifth.meta": "ISO prévue en <strong>décembre 2026</strong> · Les changements bureau arriveront sur le canal <code>sweetpotatos-update</code> pour les installs Fourth Harvest",
+      "changelog.fifth.19": "Sur la page d’accueil du site, l’easter egg du logo (Coffre Tuber, et le cœur en purée plus profond) suit maintenant le basculeur <strong>EN / FR</strong>.",
       "changelog.fifth.18": "Le pied de page du site lit maintenant <strong>sweetpotatos 2026 Fait à La Réunion</strong>, les deux en orange patate, sans point médian.",
       "changelog.fifth.17": "La page <a href=\"support.html\">Soutenir</a> du site ajoute deux stickers QR centrés (clic pour agrandir), remplace GitHub Sponsors par une carte <strong>Étoile sur GitHub</strong>, et garde Ko-fi et la boutique.",
       "changelog.fifth.16": "Le basculeur <strong>EN / FR</strong> du site est teinté en rouge et orange SweetPotato, et le libellé <strong>Fait à La Réunion</strong> est en orange patate.",
@@ -882,6 +924,14 @@
       function (el) {
         var key = el.getAttribute("data-i18n-alt");
         if (key && pack[key] != null) el.setAttribute("alt", pack[key]);
+      }
+    );
+
+    Array.prototype.forEach.call(
+      document.querySelectorAll("[data-i18n-final]"),
+      function (el) {
+        var key = el.getAttribute("data-i18n-final");
+        if (key && pack[key] != null) el.setAttribute("data-final", pack[key]);
       }
     );
 

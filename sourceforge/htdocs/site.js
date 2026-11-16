@@ -40,8 +40,14 @@
     if (!tagline) return "";
     return tagline.getAttribute("data-i18n-clean") || tagline.textContent || "";
   }
-  var vaultTag = "Tuber vault · harvest override";
-  var deepTag = "Mashed core · root access";
+  function vaultTag() {
+    return (window.SweetPotatOsI18n && window.SweetPotatOsI18n.t("vault.tag")) ||
+      "Tuber vault · harvest override";
+  }
+  function deepTag() {
+    return (window.SweetPotatOsI18n && window.SweetPotatOsI18n.t("vault.deep.tag")) ||
+      "Mashed core · root access";
+  }
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#*&%<>/\\|";
   var timers = [];
@@ -106,11 +112,11 @@
     outer.hidden = deepOpen;
     clearTimers();
     if (deepOpen) {
-      if (tagline) tagline.textContent = deepTag;
+      if (tagline) tagline.textContent = deepTag();
       runLines("[data-deep-line]");
       if (deepClose) deepClose.focus();
     } else if (open) {
-      if (tagline) tagline.textContent = vaultTag;
+      if (tagline) tagline.textContent = vaultTag();
       runLines("[data-vault-line]");
       if (closeBtn) closeBtn.focus();
     }
@@ -131,7 +137,7 @@
       ? (logo.getAttribute("data-glitch") || logo.src)
       : (logo.getAttribute("data-clean") || logo.src);
     if (tagline) {
-      tagline.textContent = !open ? cleanTagline() : deepOpen ? deepTag : vaultTag;
+      tagline.textContent = !open ? cleanTagline() : deepOpen ? deepTag() : vaultTag();
     }
     clearTimers();
     if (open) {
@@ -196,6 +202,13 @@
     }
   });
   window.addEventListener("popstate", applyHash);
+  document.addEventListener("spo:lang", function () {
+    if (!open) return;
+    if (tagline) tagline.textContent = deepOpen ? deepTag() : vaultTag();
+    clearTimers();
+    if (deepOpen) runLines("[data-deep-line]");
+    else runLines("[data-vault-line]");
+  });
   applyHash();
 })();
 
