@@ -25,13 +25,14 @@ diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
 diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
 --- a/sway/input/seatop_move_tiling.c
 +++ b/sway/input/seatop_move_tiling.c
-@@ -208,6 +208,20 @@
+@@ -208,6 +208,52 @@
  		box.x += drop_layout_border;
  		box.y += drop_layout_border;
  	}
 +	/* Overview: never nest windows into a column (that stuck grabs together).
 +	 * Keep swap + before/after reorder so you can still rearrange a stripe
-+	 * and drop beside a window on another stripe. */
++	 * and drop beside a window on another stripe. Accent matches the hovered
++	 * window size, not the full column/workspace height. */
 +	if (layout_overview_workspaces_enabled()) {
 +		if (layout == L_HORIZ) {
 +			if (edge == WLR_EDGE_TOP || edge == WLR_EDGE_BOTTOM) {
@@ -42,11 +43,42 @@ diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
 +				edge = WLR_EDGE_NONE;
 +			}
 +		}
++		struct wlr_box win;
++		node_get_box(node, &win);
++		if (layout_scale_enabled(workspace)) {
++			float scale = layout_scale_get(workspace);
++			win.width *= scale;
++			win.height *= scale;
++		}
++		box = win;
++		switch (edge) {
++		case WLR_EDGE_LEFT:
++			box.width = drop_layout_border;
++			break;
++		case WLR_EDGE_RIGHT:
++			box.x = win.x + win.width - drop_layout_border;
++			box.width = drop_layout_border;
++			break;
++		case WLR_EDGE_TOP:
++			box.height = drop_layout_border;
++			break;
++		case WLR_EDGE_BOTTOM:
++			box.y = win.y + win.height - drop_layout_border;
++			box.height = drop_layout_border;
++			break;
++		case WLR_EDGE_NONE:
++		default:
++			box.x = win.x + drop_layout_border;
++			box.y = win.y + drop_layout_border;
++			box.width = win.width - 2 * drop_layout_border;
++			box.height = win.height - 2 * drop_layout_border;
++			break;
++		}
 +	}
  	set_target_node(e, &con->node);
  	e->target_edge = edge;
  	if (layout_overview_workspaces_enabled()) {
-@@ -241,6 +255,13 @@
+@@ -241,6 +287,13 @@
  	struct seatop_move_tiling_event *e = seat->seatop_data;
  
  	if (!e->target_node) {

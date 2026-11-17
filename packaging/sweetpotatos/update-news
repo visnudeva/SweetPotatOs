@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-224
+What changed: Overview drag accent matches the window size instead of the full desktop stripe. Needs swirl from this update. Log out and back in after updating.
+
 @2026.10.3-223
 What changed: Overview drag can rearrange windows on the same desktop again (and drop beside a window on another stripe) without stacking them into one column. Needs swirl from this update. Log out and back in after updating.
 
