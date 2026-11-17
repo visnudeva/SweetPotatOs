@@ -25,11 +25,45 @@ diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
 diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
 --- a/sway/input/seatop_move_tiling.c
 +++ b/sway/input/seatop_move_tiling.c
-@@ -97,17 +97,51 @@
+@@ -78,10 +78,17 @@
+ }
+ 
+ static void update_indicator(struct seatop_move_tiling_event *e, struct wlr_box *box) {
++	wlr_scene_node_set_enabled(&e->indicator_rect->node, true);
+ 	wlr_scene_node_set_position(&e->indicator_rect->node, box->x, box->y);
+ 	wlr_scene_rect_set_size(e->indicator_rect, box->width, box->height);
+ }
+ 
++static void clear_drop_target(struct seatop_move_tiling_event *e) {
++	set_target_node(e, NULL);
++	e->target_edge = WLR_EDGE_NONE;
++	wlr_scene_node_set_enabled(&e->indicator_rect->node, false);
++}
++
+ static void handle_motion_postthreshold(struct sway_seat *seat) {
+ 	struct seatop_move_tiling_event *e = seat->seatop_data;
+ 	struct wlr_surface *surface = NULL;
+@@ -91,23 +98,64 @@
+ 			cursor->cursor->x, cursor->cursor->y, &surface, &sx, &sy);
+ 
+ 	if (!node) {
+-		// Eg. hovered over a layer surface such as swaybar
+-		set_target_node(e, NULL);
+-		e->target_edge = WLR_EDGE_NONE;
++		/* Between stripes / off a desktop: no drop target. */
++		clear_drop_target(e);
  		return;
  	}
  	if (node->type == N_WORKSPACE) {
 -		// Empty workspace
++		/* Overview: only empty desktops are workspace drop targets.
++		 * Padding around windows (and gaps between stripes) must not
++		 * show an accent — drop onto a window instead. */
++		if (layout_overview_workspaces_enabled() &&
++				workspace_num_tiling_views(node->sway_workspace) > 0) {
++			clear_drop_target(e);
++			return;
++		}
 +		// Empty workspace (or stripe padding in overview)
  		set_target_node(e, node);
  		e->target_edge = WLR_EDGE_NONE;
@@ -83,7 +117,25 @@ diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
  		} else {
  			workspace_get_box(node->sway_workspace, &drop_box);
  		}
-@@ -208,6 +242,52 @@
+@@ -117,15 +165,13 @@
+ 	struct sway_container *con = node->sway_container;
+ 	// If tiling container, exit
+ 	if (container_is_floating(con)) {
+-		set_target_node(e, NULL);
+-		e->target_edge = WLR_EDGE_NONE;
++		clear_drop_target(e);
+ 		return;
+ 	}
+ 	// Deny moving within own workspace if this is the only child
+ 	if (workspace_num_tiling_views(e->con->pending.workspace) == 1 &&
+ 			con->pending.workspace == e->con->pending.workspace) {
+-		set_target_node(e, NULL);
+-		e->target_edge = WLR_EDGE_NONE;
++		clear_drop_target(e);
+ 		return;
+ 	}
+ 	struct sway_workspace *old_workspace = e->con->pending.workspace;
+@@ -208,6 +254,52 @@
  		box.x += drop_layout_border;
  		box.y += drop_layout_border;
  	}
@@ -136,7 +188,7 @@ diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
  	set_target_node(e, &con->node);
  	e->target_edge = edge;
  	if (layout_overview_workspaces_enabled()) {
-@@ -241,6 +321,13 @@
+@@ -241,6 +333,13 @@
  	struct seatop_move_tiling_event *e = seat->seatop_data;
  
  	if (!e->target_node) {

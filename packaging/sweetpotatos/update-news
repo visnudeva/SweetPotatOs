@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-226
+What changed: Overview no longer shows drop accents in the gaps between desktop stripes (or on empty padding around windows). Drop onto a window, or onto an empty desktop. Needs swirl from this update. Log out and back in after updating.
+
 @2026.10.3-225
 What changed: Overview empty-stripe drop accent matches the dragged window (no more full-desktop highlight). Needs swirl from this update. Log out and back in after updating.
 
