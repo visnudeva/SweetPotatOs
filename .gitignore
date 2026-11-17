@@ -55,3 +55,6 @@ packaging/*/*.pkg.tar.*.sig
 *.swp
 .DS_Store
 sourceforge/empty-repo-stage/
+
+# Full wallpaper PNGs live on SourceForge only; showroom keeps JPG thumbs in git.
+sourceforge/htdocs/wallpapers/
