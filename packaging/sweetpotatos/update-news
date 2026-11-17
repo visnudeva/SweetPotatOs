@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-221
+What changed: Overview lets you drag a window to another desktop stripe with the mouse (plain click still zooms in). Needs swirl from this update too. Log out and back in after updating.
+
 @2026.10.3-220
 What changed: Two new wallpapers — SPO16x9-1 and SPO16x9-2 (芋 + QR, cyan and purple glitch). They appear in waypaper after updating; your current wallpaper is unchanged.
 

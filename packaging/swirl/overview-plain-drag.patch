@@ -1,0 +1,43 @@
+diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
+--- a/sway/input/seatop_default.c
++++ b/sway/input/seatop_default.c
+@@ -451,7 +451,21 @@
+ 			}
+ 		}
+ 
+-		/* Exit overview before focus so zoom is a single animation. */
++		/* Overview + plain LMB on a tiled window: start a drag threshold
++		 * (niri-like). Click without moving zooms in via seatop_move_tiling.
++		 * Empty workspace clicks still zoom immediately (handled above).
++		 * Super+drag keeps using the floating_modifier path below. */
++		if (button == BTN_LEFT && !mod_pressed &&
++				layout_overview_workspaces_enabled() &&
++				!is_floating_or_child && cont &&
++				cont->pending.fullscreen_mode == FULLSCREEN_NONE &&
++				config->tiling_drag) {
++			seat_set_focus(seat, node);
++			transaction_commit_dirty();
++			seatop_begin_move_tiling_threshold(seat, cont);
++			return;
++		}
++		/* Floating / other overview clicks: zoom into the selection. */
+ 		bool zoomed = button == BTN_LEFT && !mod_pressed &&
+ 			overview_exit_on_select(cont->pending.workspace);
+ 		seat_set_focus(seat, node);
+diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
+--- a/sway/input/seatop_move_tiling.c
++++ b/sway/input/seatop_move_tiling.c
+@@ -241,6 +241,13 @@
+ 	struct seatop_move_tiling_event *e = seat->seatop_data;
+ 
+ 	if (!e->target_node) {
++		/* Plain click in overview (threshold never reached): zoom in. */
++		if (!e->threshold_reached && layout_overview_workspaces_enabled() &&
++				e->con) {
++			layout_overview_workspaces(false);
++			seat_set_focus(seat, &e->con->node);
++			transaction_commit_dirty();
++		}
+ 		seatop_begin_default(seat);
+ 		return;
+ 	}
