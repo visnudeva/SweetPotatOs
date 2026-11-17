@@ -1,5 +1,8 @@
-  SweetPotato — keybinds
+  SweetPotatOs — keybinds
   Mod = Super / Windows key
+
+  Settings
+  Mod+,              SweetPotatOs Settings
 
   This page
   Mod+Shift+x          Keybind reminder on/off

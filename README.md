@@ -141,6 +141,7 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 
 | Bind | Action |
 |------|--------|
+| `Mod+,` | **SweetPotatOs Settings** (themer, wallpaper, gaps, Smart Brightness, …) |
 | `Mod+n` | Wi‑Fi / NetworkManager |
 | `Mod+Space` | App launcher |
 | `Mod+w` | Web browser (Brave Origin) |

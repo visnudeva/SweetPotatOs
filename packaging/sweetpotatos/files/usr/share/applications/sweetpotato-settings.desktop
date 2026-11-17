@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=SweetPotatOs Settings
+GenericName=Settings
+Comment=Themes, wallpaper, corners and gaps, Smart Brightness, and system tools
+Exec=sweetpotatos-settings
+TryExec=sweetpotatos-settings
+Icon=sweetpotatos
+Terminal=false
+StartupNotify=true
+Categories=Settings;DesktopSettings;System;
+Keywords=settings;theme;wallpaper;laniakea;gaps;corners;brightness;caffeine;sweetpotato;sweetpotatos;

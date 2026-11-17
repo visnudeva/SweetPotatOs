@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Open SweetPotato Settings (Mod+,).
+script="${HOME}/.config/swirl/scripts/settings.py"
+if [[ ! -f "${script}" ]]; then
+  script=/usr/share/sweetpotato/config/swirl/scripts/settings.py
+fi
+exec python3 "${script}"

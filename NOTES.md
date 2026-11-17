@@ -117,28 +117,15 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 - Smoke check: `./scripts/smoke-check.sh`. Unit tests: `./tests/run.sh`.
 - **Gotcha:** shellprocess GS vars must be `${gs[keyboardLayout]}` / `${gs[keyboardVariant]}`. Bare `gs[...]` is passed literally, hits a sed path, and aborts install (seen on 2026.08.12 ISO). Command is prefixed with `-` so a future tweak failure cannot fail the whole install.
 
-## Backlog / ideas (not started)
+## Settings GUI
 
-### Theme selector (hue + dark/light)
+- **SweetPotatOs Settings** (`settings.py`, `sweetpotatos-settings`, Mod+,): hub for look tools and desktop toggles. Lives in SweetPotato; ships via sprout + the `sweetpotatos` package launcher/desktop entry. Wallpaper opens waypaper.
+- **Themer** stays its own window (`hue.py` / Mod+Ctrl+t); Settings opens it.
+- Toggles call the existing scripts: `frame.sh`, `smart-brightness.sh`, `caffeine.sh`.
 
-Goal: a small GUI so users can recolor the desktop without editing configs by hand.
+## Build-host rule (Ryoku)
 
-**Controls (agreed direction)**
-- **Toggle:** Dark / Light (charcoal surfaces ↔ light surfaces; not a charcoal hue slider — near-grey has no useful hue).
-- **Slider 1:** hue of SPO pink/red (`#a73b50`).
-- **Slider 2:** hue of SPO orange (`#f79b29`).
-
-**Apply path (MVP)**
-1. Store user hues + mode under `~/.config/sweetpotatos/` (survive `sweetpotatos-update` / sprout).
-2. Generate a small palette (hex) from base HSL/OKLCH + hue offsets.
-3. Write the consumers that are easy to reload: **Swirl** client/colors, **swaylock**, **mako**, **foot**.
-4. Reload Swirl (`Mod+Shift+c`) + restart mako/foot as needed. Not true live-preview everywhere.
-
-**Harder later:** full GTK theme regen (apps often need restart); bar if it hardcodes colors.
-
-**Light-mode caveat:** needs a real light text/border set for contrast — don’t only swap the charcoal hex.
-
-**Build-host rule (Ryoku):** develop/publish SweetPotatOs packages without installing them on this host. Do **not** run SPO lockers / sprout / `sweetpotatos-update` here. `build.sh` must **never** add `[sweetpotatos]` / `sweetpotatos-local.conf` to the host’s `/etc/pacman.conf`.
+Develop/publish SweetPotatOs packages without installing them on this host. Do **not** run SPO lockers / sprout / `sweetpotatos-update` here. `build.sh` must **never** add `[sweetpotatos]` / `sweetpotatos-local.conf` to the host’s `/etc/pacman.conf`.
 
 **After any SweetPotatOs build/publish session on this machine — clean Ryoku before stopping:**
 1. Remove host pacman wiring if present: drop `Include = /etc/pacman.d/sweetpotatos-local.conf` from `/etc/pacman.conf`; delete `/etc/pacman.d/sweetpotatos-local.conf` (+ `.bak`) and any `/var/lib/pacman/sync/sweetpotatos.*`.

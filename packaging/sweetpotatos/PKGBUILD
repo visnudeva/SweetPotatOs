@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=217
+pkgrel=220
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -55,6 +55,7 @@ package() {
     sweetpotatos-fix-sudo \
     sweetpotatos-fix-sway-keyboard \
     sweetpotatos-hues \
+    sweetpotatos-settings \
     geany \
     brave-origin; do
     install -Dm755 "${files}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"
@@ -85,6 +86,8 @@ package() {
     "${pkgdir}/usr/share/sweetpotatos/update-news"
   install -Dm644 "${files}/usr/share/applications/sweetpotato-hues.desktop" \
     "${pkgdir}/usr/share/applications/sweetpotato-hues.desktop"
+  install -Dm644 "${files}/usr/share/applications/sweetpotato-settings.desktop" \
+    "${pkgdir}/usr/share/applications/sweetpotato-settings.desktop"
 
   install -Dm644 "${files}/usr/local/share/sweetpotatos/os-release" \
     "${pkgdir}/usr/local/share/sweetpotatos/os-release"
