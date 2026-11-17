@@ -25,7 +25,65 @@ diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
 diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
 --- a/sway/input/seatop_move_tiling.c
 +++ b/sway/input/seatop_move_tiling.c
-@@ -208,6 +208,52 @@
+@@ -97,17 +97,51 @@
+ 		return;
+ 	}
+ 	if (node->type == N_WORKSPACE) {
+-		// Empty workspace
++		// Empty workspace (or stripe padding in overview)
+ 		set_target_node(e, node);
+ 		e->target_edge = WLR_EDGE_NONE;
+ 
+ 		struct wlr_box drop_box;
+ 		if (layout_overview_workspaces_enabled()) {
+-			struct sway_output *output = node->sway_workspace->output;
+-			drop_box.x = output->lx + node->sway_workspace->jump.x;
+-			drop_box.y = output->ly + node->sway_workspace->jump.y;
+-			drop_box.width = node->sway_workspace->jump.width;
+-			drop_box.height = node->sway_workspace->jump.height;
++			/* Accent matches the dragged window inside the stripe — the old
++			 * full-stripe highlight was easy to confuse with a window target. */
++			struct sway_workspace *ws = node->sway_workspace;
++			struct sway_output *output = ws->output;
++			double w = e->con->pending.width;
++			double h = e->con->pending.height;
++			if (layout_scale_enabled(ws)) {
++				float scale = layout_scale_get(ws);
++				w *= scale;
++				h *= scale;
++			}
++			w *= ws->jump.scale;
++			h *= ws->jump.scale;
++			if (w > ws->jump.width) {
++				w = ws->jump.width;
++			}
++			if (h > ws->jump.height) {
++				h = ws->jump.height;
++			}
++			const double stripe_x = output->lx + ws->jump.x;
++			const double stripe_y = output->ly + ws->jump.y;
++			double x = seat->cursor->cursor->x - 0.5 * w;
++			double y = seat->cursor->cursor->y - 0.5 * h;
++			if (x < stripe_x) {
++				x = stripe_x;
++			}
++			if (y < stripe_y) {
++				y = stripe_y;
++			}
++			if (x + w > stripe_x + ws->jump.width) {
++				x = stripe_x + ws->jump.width - w;
++			}
++			if (y + h > stripe_y + ws->jump.height) {
++				y = stripe_y + ws->jump.height - h;
++			}
++			drop_box.x = round(x);
++			drop_box.y = round(y);
++			drop_box.width = round(w);
++			drop_box.height = round(h);
+ 		} else {
+ 			workspace_get_box(node->sway_workspace, &drop_box);
+ 		}
+@@ -208,6 +242,52 @@
  		box.x += drop_layout_border;
  		box.y += drop_layout_border;
  	}
@@ -78,7 +136,7 @@ diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
  	set_target_node(e, &con->node);
  	e->target_edge = edge;
  	if (layout_overview_workspaces_enabled()) {
-@@ -241,6 +287,13 @@
+@@ -241,6 +321,13 @@
  	struct seatop_move_tiling_event *e = seat->seatop_data;
  
  	if (!e->target_node) {
