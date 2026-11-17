@@ -20,6 +20,7 @@ SCRIPTS = Path(__file__).resolve().parent
 THEME = ROOT / "sweetpotatos" / "theme"
 FRAME = ROOT / "sweetpotatos" / "frame"
 SMART = ROOT / "sweetpotatos" / "smart-brightness" / "enabled"
+HOT_CORNER = ROOT / "sweetpotatos" / "hot-corner"
 CAFFEINE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "sweetpotato-caffeine.state"
 TITLE = "SweetPotatOs Settings"
 
@@ -48,6 +49,12 @@ def smart_on():
 
 def caffeine_on():
     return CAFFEINE.is_file() and CAFFEINE.read_text().strip() == "on"
+
+
+def hot_corner_on():
+    if HOT_CORNER.is_file() and HOT_CORNER.read_text().strip() == "off":
+        return False
+    return True
 
 
 def run_script(name, *args):
@@ -149,6 +156,7 @@ class Settings(Gtk.Window):
 
         box.pack_start(self._heading("Desktop"), False, False, 0)
         self.sw_frames = self._switch_row(box, "Corners and gaps", self._on_frames)
+        self.sw_hot = self._switch_row(box, "Overview hot corner", self._on_hot_corner)
         self.sw_smart = self._switch_row(box, "Smart Brightness", self._on_smart)
         self.sw_caffeine = self._switch_row(box, "Caffeine", self._on_caffeine)
 
@@ -285,6 +293,7 @@ class Settings(Gtk.Window):
 
     def refresh(self):
         self._set_switch(self.sw_frames, frames_on())
+        self._set_switch(self.sw_hot, hot_corner_on())
         self._set_switch(self.sw_smart, smart_on())
         self._set_switch(self.sw_caffeine, caffeine_on())
         self._apply_css(theme_mode())
@@ -306,6 +315,11 @@ class Settings(Gtk.Window):
         if self._setting:
             return
         run_script("frame.sh", "on" if switch.get_active() else "off")
+
+    def _on_hot_corner(self, switch, _pspec):
+        if self._setting:
+            return
+        run_script("hot-corner.sh", "on" if switch.get_active() else "off")
 
     def _on_smart(self, switch, _pspec):
         if self._setting:

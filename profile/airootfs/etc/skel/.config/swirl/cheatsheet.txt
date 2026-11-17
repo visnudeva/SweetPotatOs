@@ -34,7 +34,7 @@
 
   Workspaces / overview
   Mod+Tab            Overview (desktop stripes, all windows)
-  top-left corner    Overview (same as Mod+Tab)
+  top-left corner    Overview (same as Mod+Tab; toggle with Mod+Ctrl+h)
   drag window        Move window to another desktop stripe (like niri)
   click / Esc        Leave overview (click focuses that window/desktop)
   Mod+Up/Down        Workspace above / below (exits overview)
@@ -47,6 +47,7 @@
   Mod+Ctrl+l         Laniakea
   Mod+Ctrl+t         SweetPotato themer
   Mod+Ctrl+g         Corners and gaps
+  Mod+Ctrl+h         Overview hot corner on/off
   Mod+Ctrl+d         Displays (nwg-displays)
   Mod+Ctrl+b         Smart Brightness (toggle; fullscreen video → max)
 

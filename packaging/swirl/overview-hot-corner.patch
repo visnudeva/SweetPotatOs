@@ -6,15 +6,85 @@ diff --git a/include/sway/input/cursor.h b/include/sway/input/cursor.h
  
  	size_t pressed_button_count;
 +
-+	/* Top-left overview hot corner: true while pointer stays in the corner. */
-+	bool overview_hot_corner;
++	/* True while the pointer stays in the overview hot corner. */
++	bool in_overview_hot_corner;
  };
  
  struct sway_node;
+diff --git a/include/sway/config.h b/include/sway/config.h
+--- a/include/sway/config.h
++++ b/include/sway/config.h
+@@ -571,6 +571,9 @@
+ 	bool tiling_drag;
+ 	int tiling_drag_threshold;
+ 
++	/* Top-left corner toggles scale_workspaces overview when true. */
++	bool overview_hot_corner;
++
+ 	enum smart_gaps_mode smart_gaps;
+ 	int gaps_inner;
+ 	struct side_gaps gaps_outer;
+diff --git a/include/sway/commands.h b/include/sway/commands.h
+--- a/include/sway/commands.h
++++ b/include/sway/commands.h
+@@ -207,6 +207,7 @@
+ sway_cmd cmd_scale_content;
+ sway_cmd cmd_scale_workspace;
+ sway_cmd cmd_scale_workspaces;
++sway_cmd cmd_overview_hot_corner;
+ sway_cmd cmd_scratchpad;
+ sway_cmd cmd_scratchpad_minimize;
+ sway_cmd cmd_scratchpad_minimize_view;
+diff --git a/sway/config.c b/sway/config.c
+--- a/sway/config.c
++++ b/sway/config.c
+@@ -380,6 +380,7 @@
+ 	config->title_align = ALIGN_LEFT;
+ 	config->tiling_drag = true;
+ 	config->tiling_drag_threshold = 9;
++	config->overview_hot_corner = true;
+ 	config->primary_selection = true;
+ 
+ 	config->smart_gaps = SMART_GAPS_OFF;
+diff --git a/sway/commands.c b/sway/commands.c
+--- a/sway/commands.c
++++ b/sway/commands.c
+@@ -191,6 +191,7 @@
+ 	{ "scale_content", cmd_scale_content },
+ 	{ "scale_workspace", cmd_scale_workspace },
+ 	{ "scale_workspaces", cmd_scale_workspaces },
++	{ "overview_hot_corner", cmd_overview_hot_corner },
+ 	{ "scratchpad", cmd_scratchpad },
+ 	{ "scratchpad_minimize_view", cmd_scratchpad_minimize_view },
+ 	{ "selection", cmd_selection },
+diff --git a/sway/commands/overview.c b/sway/commands/overview.c
+--- a/sway/commands/overview.c
++++ b/sway/commands/overview.c
+@@ -138,3 +138,12 @@
+ 	return cmd_results_new(CMD_SUCCESS, NULL);
+ }
+ 
++
++struct cmd_results *cmd_overview_hot_corner(int argc, char **argv) {
++	struct cmd_results *error;
++	if ((error = checkarg(argc, "overview_hot_corner", EXPECTED_EQUAL_TO, 1))) {
++		return error;
++	}
++	config->overview_hot_corner = parse_boolean(argv[0], config->overview_hot_corner);
++	return cmd_results_new(CMD_SUCCESS, NULL);
++}
 diff --git a/sway/input/cursor.c b/sway/input/cursor.c
 --- a/sway/input/cursor.c
 +++ b/sway/input/cursor.c
-@@ -31,6 +31,7 @@
+@@ -20,6 +20,7 @@
+ #include "log.h"
+ #include "util.h"
+ #include "sway/commands.h"
++#include "sway/config.h"
+ #include "sway/input/cursor.h"
+ #include "sway/input/keyboard.h"
+ #include "sway/input/tablet.h"
+@@ -31,6 +32,7 @@
  #include "sway/tree/root.h"
  #include "sway/tree/view.h"
  #include "sway/tree/workspace.h"
@@ -22,16 +92,18 @@ diff --git a/sway/input/cursor.c b/sway/input/cursor.c
  #include "wlr-layer-shell-unstable-v1-protocol.h"
  #include "sway/desktop/transaction.h"
  
-@@ -349,6 +350,35 @@
+@@ -349,6 +351,37 @@
  	wl_event_source_timer_update(cursor->hide_source, cursor_get_timeout(cursor));
  }
-
+ 
++
 +/* Top-left corner of any output toggles the multi-desktop overview (niri-like). */
 +#define OVERVIEW_HOT_CORNER_PX 1
 +
 +static void cursor_check_overview_hot_corner(struct sway_cursor *cursor) {
-+	if (root->fullscreen_global || !root->outputs || !root->outputs->length) {
-+		cursor->overview_hot_corner = false;
++	if (!config || !config->overview_hot_corner ||
++			root->fullscreen_global || !root->outputs || !root->outputs->length) {
++		cursor->in_overview_hot_corner = false;
 +		return;
 +	}
 +	const double cx = cursor->cursor->x;
@@ -48,17 +120,17 @@ diff --git a/sway/input/cursor.c b/sway/input/cursor.c
 +			break;
 +		}
 +	}
-+	if (in_corner && !cursor->overview_hot_corner) {
++	if (in_corner && !cursor->in_overview_hot_corner) {
 +		layout_overview_workspaces(!layout_overview_workspaces_enabled());
 +		transaction_commit_dirty();
 +	}
-+	cursor->overview_hot_corner = in_corner;
++	cursor->in_overview_hot_corner = in_corner;
 +}
 +
  void pointer_motion(struct sway_cursor *cursor, uint32_t time_msec,
  		struct wlr_input_device *device, double dx, double dy,
  		double dx_unaccel, double dy_unaccel) {
-@@ -380,6 +411,7 @@
+@@ -380,6 +413,7 @@
  
  	wlr_cursor_move(cursor->cursor, device, dx, dy);
  

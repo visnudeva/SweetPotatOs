@@ -234,9 +234,10 @@ seat * xcursor_theme capitaine-cursors 24
     # Overview: stacked desktop stripes (coverflow), each showing every window.
     # Drag a tiled window to another desktop stripe (plain LMB, or Super+drag).
     # Click without moving, or click an empty stripe, zooms back in.
-    # Top-left hot corner also toggles overview (same as Mod+Tab).
+    # Top-left hot corner also toggles overview (same as Mod+Tab; Mod+Ctrl+h).
     # Mod+number / Up/Down also exit.
     bindsym --no-repeat $mod+Tab scale_workspaces toggle
+    bindsym $mod+Ctrl+h exec ~/.config/swirl/scripts/hot-corner.sh toggle
 #
 # Layout stuff:
 #
@@ -312,6 +313,7 @@ default_decoration border_radius 8
 gaps inner 8
 # Re-applies / clears gaps, bar chrome, and hide_edge_borders after reload.
 exec_always ~/.config/swirl/scripts/frame.sh apply
+exec_always ~/.config/swirl/scripts/hot-corner.sh apply
 # Brave paints its own rounded frame. A server border matches the other windows.
 for_window [app_id="brave-origin"] border pixel 2
 for_window [app_id="brave"] border pixel 2
