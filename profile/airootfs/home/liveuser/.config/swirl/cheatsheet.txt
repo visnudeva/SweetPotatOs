@@ -34,6 +34,7 @@
 
   Workspaces / overview
   Mod+Tab            Overview (desktop stripes, all windows)
+  top-left corner    Overview (same as Mod+Tab)
   drag window        Move window to another desktop stripe (like niri)
   click / Esc        Leave overview (click focuses that window/desktop)
   Mod+Up/Down        Workspace above / below (exits overview)

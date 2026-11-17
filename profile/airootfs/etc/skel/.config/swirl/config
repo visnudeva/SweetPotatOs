@@ -230,6 +230,7 @@ seat * xcursor_theme capitaine-cursors 24
     # Overview: stacked desktop stripes (coverflow), each showing every window.
     # Drag a tiled window to another desktop stripe (plain LMB, or Super+drag).
     # Click without moving, or click an empty stripe, zooms back in.
+    # Top-left hot corner also toggles overview (same as Mod+Tab).
     # Mod+number / Up/Down also exit.
     bindsym --no-repeat $mod+Tab scale_workspaces toggle
 #

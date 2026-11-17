@@ -1,0 +1,68 @@
+diff --git a/include/sway/input/cursor.h b/include/sway/input/cursor.h
+--- a/include/sway/input/cursor.h
++++ b/include/sway/input/cursor.h
+@@ -80,6 +80,9 @@
+ 	enum seat_config_hide_cursor_when_typing hide_when_typing;
+ 
+ 	size_t pressed_button_count;
++
++	/* Top-left overview hot corner: true while pointer stays in the corner. */
++	bool overview_hot_corner;
+ };
+ 
+ struct sway_node;
+diff --git a/sway/input/cursor.c b/sway/input/cursor.c
+--- a/sway/input/cursor.c
++++ b/sway/input/cursor.c
+@@ -31,6 +31,7 @@
+ #include "sway/tree/root.h"
+ #include "sway/tree/view.h"
+ #include "sway/tree/workspace.h"
++#include "sway/tree/layout.h"
+ #include "wlr-layer-shell-unstable-v1-protocol.h"
+ #include "sway/desktop/transaction.h"
+ 
+@@ -349,6 +350,35 @@
+ 	wl_event_source_timer_update(cursor->hide_source, cursor_get_timeout(cursor));
+ }
+
++/* Top-left corner of any output toggles the multi-desktop overview (niri-like). */
++#define OVERVIEW_HOT_CORNER_PX 1
++
++static void cursor_check_overview_hot_corner(struct sway_cursor *cursor) {
++	if (root->fullscreen_global || !root->outputs || !root->outputs->length) {
++		cursor->overview_hot_corner = false;
++		return;
++	}
++	const double cx = cursor->cursor->x;
++	const double cy = cursor->cursor->y;
++	bool in_corner = false;
++	for (int i = 0; i < root->outputs->length; ++i) {
++		struct sway_output *output = root->outputs->items[i];
++		if (!output || !output->enabled) {
++			continue;
++		}
++		if (cx >= output->lx && cx < output->lx + OVERVIEW_HOT_CORNER_PX &&
++				cy >= output->ly && cy < output->ly + OVERVIEW_HOT_CORNER_PX) {
++			in_corner = true;
++			break;
++		}
++	}
++	if (in_corner && !cursor->overview_hot_corner) {
++		layout_overview_workspaces(!layout_overview_workspaces_enabled());
++		transaction_commit_dirty();
++	}
++	cursor->overview_hot_corner = in_corner;
++}
++
+ void pointer_motion(struct sway_cursor *cursor, uint32_t time_msec,
+ 		struct wlr_input_device *device, double dx, double dy,
+ 		double dx_unaccel, double dy_unaccel) {
+@@ -380,6 +411,7 @@
+ 
+ 	wlr_cursor_move(cursor->cursor, device, dx, dy);
+ 
++	cursor_check_overview_hot_corner(cursor);
+ 	seatop_pointer_motion(cursor->seat, time_msec);
+ }
+ 
