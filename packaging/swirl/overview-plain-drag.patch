@@ -1,14 +1,13 @@
 diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
 --- a/sway/input/seatop_default.c
 +++ b/sway/input/seatop_default.c
-@@ -451,7 +451,20 @@
+@@ -451,7 +451,19 @@
  			}
  		}
  
 -		/* Exit overview before focus so zoom is a single animation. */
-+		/* Overview + plain LMB on a tiled window: start a drag threshold
-+		 * (niri-like move between desktops). Click without moving zooms in.
-+		 * Empty workspace clicks still zoom immediately (handled above). */
++		/* Overview + plain LMB on a tiled window: start a drag threshold.
++		 * Click without moving zooms in. Empty stripe clicks still zoom. */
 +		if (button == BTN_LEFT && !mod_pressed &&
 +				layout_overview_workspaces_enabled() &&
 +				!is_floating_or_child && cont &&
@@ -26,56 +25,28 @@ diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
 diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
 --- a/sway/input/seatop_move_tiling.c
 +++ b/sway/input/seatop_move_tiling.c
-@@ -96,21 +96,39 @@
- 		e->target_edge = WLR_EDGE_NONE;
- 		return;
+@@ -208,6 +208,20 @@
+ 		box.x += drop_layout_border;
+ 		box.y += drop_layout_border;
  	}
-+	/* Overview is for moving between desktops (niri-like). Dropping onto
-+	 * another window here used to restack columns so individual grabs broke. */
++	/* Overview: never nest windows into a column (that stuck grabs together).
++	 * Keep swap + before/after reorder so you can still rearrange a stripe
++	 * and drop beside a window on another stripe. */
 +	if (layout_overview_workspaces_enabled()) {
-+		struct sway_workspace *ws = NULL;
-+		if (node->type == N_WORKSPACE) {
-+			ws = node->sway_workspace;
-+		} else if (node->type == N_CONTAINER) {
-+			ws = node->sway_container->pending.workspace;
++		if (layout == L_HORIZ) {
++			if (edge == WLR_EDGE_TOP || edge == WLR_EDGE_BOTTOM) {
++				edge = WLR_EDGE_NONE;
++			}
++		} else {
++			if (edge == WLR_EDGE_LEFT || edge == WLR_EDGE_RIGHT) {
++				edge = WLR_EDGE_NONE;
++			}
 +		}
-+		if (!ws) {
-+			set_target_node(e, NULL);
-+			e->target_edge = WLR_EDGE_NONE;
-+			return;
-+		}
-+		set_target_node(e, &ws->node);
-+		e->target_edge = WLR_EDGE_NONE;
-+		struct sway_output *output = ws->output;
-+		struct wlr_box drop_box = {
-+			.x = output->lx + ws->jump.x,
-+			.y = output->ly + ws->jump.y,
-+			.width = ws->jump.width,
-+			.height = ws->jump.height,
-+		};
-+		update_indicator(e, &drop_box);
-+		return;
 +	}
- 	if (node->type == N_WORKSPACE) {
- 		// Empty workspace
- 		set_target_node(e, node);
- 		e->target_edge = WLR_EDGE_NONE;
- 
- 		struct wlr_box drop_box;
--		if (layout_overview_workspaces_enabled()) {
--			struct sway_output *output = node->sway_workspace->output;
--			drop_box.x = output->lx + node->sway_workspace->jump.x;
--			drop_box.y = output->ly + node->sway_workspace->jump.y;
--			drop_box.width = node->sway_workspace->jump.width;
--			drop_box.height = node->sway_workspace->jump.height;
--		} else {
--			workspace_get_box(node->sway_workspace, &drop_box);
--		}
-+		workspace_get_box(node->sway_workspace, &drop_box);
- 		update_indicator(e, &drop_box);
- 		return;
- 	}
-@@ -241,6 +259,13 @@
+ 	set_target_node(e, &con->node);
+ 	e->target_edge = edge;
+ 	if (layout_overview_workspaces_enabled()) {
+@@ -241,6 +255,13 @@
  	struct seatop_move_tiling_event *e = seat->seatop_data;
  
  	if (!e->target_node) {
@@ -88,18 +59,4 @@ diff --git a/sway/input/seatop_move_tiling.c b/sway/input/seatop_move_tiling.c
 +		}
  		seatop_begin_default(seat);
  		return;
- 	}
-@@ -252,8 +277,11 @@
- 	enum wlr_edges edge = e->target_edge;
- 
- 	if (target_node->type == N_WORKSPACE) {
--		// Moving container into workspace
--		layout_drag_container_to_workspace(con, workspace);
-+		/* Same-desktop drop in overview: leave layout alone. */
-+		if (!(layout_overview_workspaces_enabled() &&
-+				con->pending.workspace == workspace)) {
-+			layout_drag_container_to_workspace(con, workspace);
-+		}
- 	} else {
- 		layout_drag_container_to_container(con, target_node->sway_container, workspace, edge);
  	}
