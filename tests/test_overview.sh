@@ -67,6 +67,14 @@ assert "grep -q 'round(sx + sw)' '${ROOT}/packaging/swirl/overview-border-clip.p
 
 assert "grep -q 'animations' '${SKEL_CFG}'" "skel enables overview animation block"
 assert "grep -q 'overview yes' '${SKEL_CFG}'" "skel sets overview animation curve"
+assert "[[ -f '${ROOT}/packaging/swirl/overview-wallpaper-tint.patch' ]]" \
+  "overview-wallpaper-tint patch present"
+assert "grep -q 'overview-wallpaper-tint.patch' '${PKGBUILD}'" \
+  "PKGBUILD applies wallpaper-tint"
+assert "grep -q 'overview_wallpaper_tint' '${ROOT}/packaging/swirl/overview-wallpaper-tint.patch'" \
+  "wallpaper-tint patch defines overview_wallpaper_tint"
+assert "grep -q 'overview_wallpaper_tint' '${SKEL_CFG}'" \
+  "skel seeds overview_wallpaper_tint"
 
 echo
 echo "overview: ${PASS} passed, ${FAIL} failed"

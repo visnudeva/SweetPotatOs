@@ -4,10 +4,19 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-232
+What changed: Overview washes the wallpaper with your theme accent so it is obvious you are in the bird's-eye view. Needs swirl from this update. Log out and back in after updating (or Mod+Shift+c after theme apply).
+
 @2026.10.3-231
-Settings → Light tray (text only): drop GTK tray applets and show Wi‑Fi / Bluetooth / disks in the bar. Network and Bluetooth buttons in Settings still connect. Default stays tray icons.@2026.10.3-230
-Mod+t launches tuber again (tuber-open); tuber no longer exits the keybind terminal.@2026.10.3-229
-tuber opens with a display-sized terminal font (12 on typical 1080p panels).@2026.10.3-228
+Settings → Light tray (text only): drop GTK tray applets and show Wi‑Fi / Bluetooth / disks in the bar. Network and Bluetooth buttons in Settings still connect. Default stays tray icons.
+
+@2026.10.3-230
+Mod+t launches tuber again (tuber-open); tuber no longer exits the keybind terminal.
+
+@2026.10.3-229
+tuber opens with a display-sized terminal font (12 on typical 1080p panels).
+
+@2026.10.3-228
 What changed: Overview hot corner can be toggled in SweetPotatOs Settings or with Mod+Ctrl+h. Needs swirl from this update. Log out and back in after updating.
 
 @2026.10.3-227

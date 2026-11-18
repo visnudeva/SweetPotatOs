@@ -405,6 +405,8 @@ client.pinned            #${INACTIVE} #${SURFACE} #${INACTIVE_FG} #${ACCENT} #${
 client.pinned_focused    #${EDGE} #${SURFACE} #${STRONG} #${ACCENT} #${EDGE}
 client.selected          #${INK_HIGHLIGHT} #${SURFACE} #${STRONG} #${HIGHLIGHT} #${INK_HIGHLIGHT}
 client.selected_focused  #${EDGE} #${SURFACE} #${STRONG} #${ACCENT} #${EDGE}
+# Overview: wash the wallpaper with the accent so the bird's-eye is obvious.
+overview_wallpaper_tint #${ACCENT}66
 EOF
   local cfg
   for cfg in "${ROOT}/swirl/config"; do
