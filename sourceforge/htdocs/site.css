@@ -401,7 +401,8 @@ body.tuber-vault-open header.page .tagline {
     rgba(8, 9, 10, 0.94);
   backdrop-filter: blur(2px);
 }
-.tuber-vault[hidden] { display: none !important; }
+.tuber-vault[hidden],
+.tuber-vault-panel[hidden] { display: none !important; }
 .tuber-vault-scan,
 .tuber-vault-noise {
   position: absolute;
