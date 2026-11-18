@@ -120,52 +120,97 @@ USER_NAME="$(id -un 2>/dev/null || echo visnudeva)"
 
 # --- PASTE-TO-CURSOR.md -----------------------------------------------------
 cat > "${STAGE}/PASTE-TO-CURSOR.md" <<EOF
-# Paste this to Cursor on the SweetPotatOs laptop
+# Paste this into Cursor
 
-You are continuing SweetPotatOs maintenance with me (${USER_NAME}). Read these files in the unzipped handoff folder **before** changing anything:
+Continuing SweetPotatOs with me (${USER_NAME}). Bootstrap already ran.
 
-1. \`RESUME.md\` (current state — newest)
-2. \`docs/NOTES.md\`
-3. \`docs/AGENT_MEMORY_BACKUP.md\`
-4. \`cursor-rules/project-notes.mdc\` (copy into \`SweetPotatOs/.cursor/rules/\` if missing)
+Read these from the handoff folder next to the repo (or ask me for the path):
+\`RESUME.md\`, then \`docs/NOTES.md\` / \`docs/AGENT_MEMORY_BACKUP.md\` as needed.
 
-Expected sibling clones:
-
-\`\`\`text
-~/code/GITHUB/SweetPotatOs
-~/code/GITHUB/SweetPotato
-~/code/GITHUB/spore          # optional
-~/code/tuber                 # or GITHUB/tuber
-\`\`\`
-
-Hard rules:
-
-- Theme edits start in **SweetPotato**, then \`./sync-theme.sh\` (on a Swirl/SPO desktop \`--live\` is fine; never \`--live\` on GNOME/Ryoku).
-- Publish packages to **testing** until I say **stable**.
-- On this SweetPotatOs laptop, use \`sudo sweetpotatos-update\` for desktop updates.
-- Maintainer scripts: \`./scripts/ship-stable.sh\`, \`./scripts/bump-channel-apps.sh\`, \`./scripts/make-iso.sh\`, \`./scripts/make-cursor-handoff.sh\`.
-- Push SweetPotatOs to both \`origin\` and \`sourceforge\` when publishing git.
+Rules: theme edits in **SweetPotato** + \`./sync-theme.sh\`; publish to **testing** until I say stable; push SweetPotatOs to GitHub **and** SourceForge when shipping git.
 
 Say when you’ve read RESUME.md and are ready.
 EOF
 
-# --- CHECKLIST.txt ----------------------------------------------------------
-cat > "${STAGE}/CHECKLIST.txt" <<EOF
-Before leaving the build host (${HOST}):
-[ ] git push any unfinished SweetPotatOs / SweetPotato / tuber work
-[ ] run: ./scripts/make-cursor-handoff.sh
-[ ] copy the zip to email / USB / cloud
-[ ] copy ~/.ssh/id_ed25519_sourceforge (+ .pub) to USB (NOT inside an emailed zip)
-[ ] note gh auth / have a PAT if needed
+# --- bootstrap-on-spo.sh (run on the SPO laptop) ----------------------------
+cat > "${STAGE}/bootstrap-on-spo.sh" <<'BOOT'
+#!/usr/bin/env bash
+# One-shot setup on the SweetPotatOs laptop. Run from inside this unzipped folder:
+#   ./bootstrap-on-spo.sh
+set -euo pipefail
 
-On the SweetPotatOs laptop:
-[ ] clone SweetPotatOs + SweetPotato as siblings under ~/code/GITHUB
-[ ] restore SourceForge SSH key; test: ssh -T visnudeva@git.code.sf.net
-[ ] copy cursor-rules/project-notes.mdc into SweetPotatOs/.cursor/rules/
-[ ] unzip handoff; open PASTE-TO-CURSOR.md in Cursor
-[ ] sudo sweetpotatos-update
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE="${HOME}/code/GITHUB"
+SPO="${BASE}/SweetPotatOs"
+POTATO="${BASE}/SweetPotato"
+
+mkdir -p "${BASE}"
+
+if [[ ! -d "${SPO}/.git" ]]; then
+  echo "[*] Cloning SweetPotatOs…"
+  git clone https://github.com/visnudeva/SweetPotatOs.git "${SPO}"
+else
+  echo "[*] SweetPotatOs already cloned — pulling"
+  git -C "${SPO}" pull --ff-only || true
+fi
+
+if [[ ! -d "${POTATO}/.git" ]]; then
+  echo "[*] Cloning SweetPotato…"
+  git clone https://github.com/visnudeva/SweetPotato.git "${POTATO}"
+else
+  echo "[*] SweetPotato already cloned — pulling"
+  git -C "${POTATO}" pull --ff-only || true
+fi
+
+if ! git -C "${SPO}" remote get-url sourceforge >/dev/null 2>&1; then
+  git -C "${SPO}" remote add sourceforge ssh://visnudeva@git.code.sf.net/p/sweetpotatos/code
+  echo "[*] Added sourceforge remote"
+fi
+
+mkdir -p "${SPO}/.cursor/rules"
+if [[ -f "${HERE}/cursor-rules/project-notes.mdc" ]]; then
+  cp -a "${HERE}/cursor-rules/project-notes.mdc" "${SPO}/.cursor/rules/"
+  echo "[*] Installed Cursor project rules"
+fi
+
+# Keep a copy of this handoff next to the repo for the agent.
+LINK="${SPO}/.cursor-handoff"
+rm -rf "${LINK}"
+cp -a "${HERE}" "${LINK}"
+echo "[*] Handoff copied to ${LINK}"
+
+echo
+echo "Done. Next:"
+echo "  1. Open ${SPO} in Cursor"
+echo "  2. Paste PASTE-TO-CURSOR.md into chat"
+echo "     (also at ${LINK}/PASTE-TO-CURSOR.md)"
+if [[ ! -f "${HOME}/.ssh/id_ed25519_sourceforge" ]]; then
+  echo
+  echo "Note: put id_ed25519_sourceforge in ~/.ssh if you need SourceForge push/rsync."
+fi
+BOOT
+chmod +x "${STAGE}/bootstrap-on-spo.sh"
+
+# --- START-HERE.txt (only instructions humans need) -------------------------
+cat > "${STAGE}/START-HERE.txt" <<EOF
+On the SweetPotatOs PC — 3 steps
+================================
+
+1. Unzip this folder.
+2. In a terminal inside it:
+     ./bootstrap-on-spo.sh
+3. Open ~/code/GITHUB/SweetPotatOs in Cursor and paste PASTE-TO-CURSOR.md
+
+Optional: copy your SourceForge SSH key to ~/.ssh if you will publish.
+Optional: sudo sweetpotatos-update
+
+Built on ${HOST} (${DATE}).
 EOF
 
+# Keep CHECKLIST as a pointer only
+cat > "${STAGE}/CHECKLIST.txt" <<EOF
+See START-HERE.txt — that is the whole SPO-laptop flow.
+EOF
 # --- RESUME.md (generated) --------------------------------------------------
 cat > "${STAGE}/RESUME.md" <<EOF
 # SweetPotatOs — Cursor handoff (${DATE})
@@ -227,43 +272,16 @@ Stable tag: \`pacman-repo\`. Testing tag: \`pacman-repo-testing\`. Promote only 
 ./scripts/make-cursor-handoff.sh
 \`\`\`
 
-## Layout after restore
+## On the SPO laptop
 
-\`\`\`bash
-mkdir -p ~/code/GITHUB && cd ~/code/GITHUB
-git clone https://github.com/visnudeva/SweetPotatOs.git
-git clone https://github.com/visnudeva/SweetPotato.git
-cd SweetPotatOs
-git remote add sourceforge ssh://visnudeva@git.code.sf.net/p/sweetpotatos/code 2>/dev/null || true
-mkdir -p .cursor/rules
-# from the unzipped handoff:
-cp /path/to/handoff/cursor-rules/project-notes.mdc .cursor/rules/
-\`\`\`
-
-Fix \`profile/pacman.conf\` \`[sweetpotatos]\` \`Server = file:///ABS/PATH/TO/SweetPotatOs/repo\`.
+Read \`START-HERE.txt\` — unzip, run \`./bootstrap-on-spo.sh\`, paste into Cursor.
 
 ## Do not commit
 
 \`.cheatsheet-snapshots/\`, \`.publish-repo-stage*\`, \`packaging/laniakea/swirl-laniakea/\`, \`packaging/swirl/wmenu-0.2.0.tar.gz\`, \`__pycache__\`.
-
-## First message on the other laptop
-
-Open the SweetPotatOs repo in Cursor, keep this handoff nearby, and paste \`PASTE-TO-CURSOR.md\`.
 EOF
 
-# --- README for humans ------------------------------------------------------
-cat > "${STAGE}/README.txt" <<EOF
-SweetPotatOs Cursor handoff — ${DATE}
-=====================================
-
-1. Unzip / untar this folder on the destination laptop.
-2. Clone SweetPotatOs + SweetPotato (see RESUME.md).
-3. Copy cursor-rules/project-notes.mdc into the repo.
-4. In Cursor, paste PASTE-TO-CURSOR.md.
-
-SSH keys are NOT included. Copy id_ed25519_sourceforge yourself.
-EOF
-
+cp -a "${STAGE}/START-HERE.txt" "${STAGE}/README.txt"
 # --- archives ---------------------------------------------------------------
 ZIP="${OUT_DIR}/${NAME}.zip"
 TAR="${OUT_DIR}/${NAME}.tar.gz"

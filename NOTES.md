@@ -65,7 +65,7 @@ SF_USER=visnudeva ./scripts/make-iso.sh --sixth --upload
 
 # Portable Cursor handoff for another laptop (holidays / rebuild host):
 ./scripts/make-cursor-handoff.sh
-./scripts/make-cursor-handoff.sh --out ~/Desktop --open
+# On the SPO PC: unzip → ./bootstrap-on-spo.sh → paste PASTE-TO-CURSOR.md in Cursor
 ```
 
 After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]` `Server = file://…` to the absolute path of `./repo`.
