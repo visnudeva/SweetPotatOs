@@ -503,28 +503,6 @@ body.tuber-vault-open header.page .tagline {
 .tuber-vault-line:nth-child(4) { animation: tuber-line-nudge 7.4s steps(1, end) infinite 0.4s; }
 .tuber-vault-line:nth-child(5) { animation: tuber-line-nudge 5.5s steps(1, end) infinite 0.8s; }
 .tuber-vault-line:nth-child(6) { animation: tuber-line-nudge 6.8s steps(1, end) infinite 0.2s; }
-.tuber-vault-links {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.65rem;
-  margin: 1.15rem 0 1rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--border);
-}
-.tuber-vault-links a {
-  color: var(--text);
-  text-decoration: none;
-  font-size: 0.88rem;
-  font-weight: 600;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid transparent;
-}
-.tuber-vault-links a:hover {
-  color: var(--orange);
-  border-bottom-color: var(--orange);
-}
 .tuber-vault-close {
   position: relative;
   z-index: 2;
