@@ -129,8 +129,8 @@ seat * xcursor_theme capitaine-cursors 24
     # Web radio + local music (Spore)
     bindsym $mod+r exec $term -e spore
 
-    # Torrents (tuber)
-    bindsym $mod+t exec $term -T tuber -a tuber -e tuber
+    # Torrents (tuber) — tuber-open owns the terminal + font size
+    bindsym $mod+t exec tuber-open
 
     # Lock screen (Mod+l — vim focus-right moved to arrow keys only)
     bindsym $mod+l exec $lockcmd

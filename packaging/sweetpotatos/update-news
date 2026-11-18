@@ -4,7 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
-@2026.10.3-228
+@2026.10.3-230
+Mod+t launches tuber again (tuber-open); tuber no longer exits the keybind terminal.@2026.10.3-229
+tuber opens with a display-sized terminal font (12 on typical 1080p panels).@2026.10.3-228
 What changed: Overview hot corner can be toggled in SweetPotatOs Settings or with Mod+Ctrl+h. Needs swirl from this update. Log out and back in after updating.
 
 @2026.10.3-227
