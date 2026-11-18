@@ -393,12 +393,12 @@ body.tuber-vault-open header.page .tagline {
   inset: 0;
   z-index: 40;
   display: grid;
-  place-items: center;
-  padding: 1.25rem;
+  padding: 0;
+  overflow: hidden;
   background:
     radial-gradient(ellipse at 50% 20%, rgba(167, 59, 80, 0.28), transparent 55%),
     radial-gradient(ellipse at 80% 80%, rgba(247, 155, 41, 0.18), transparent 50%),
-    rgba(8, 9, 10, 0.88);
+    rgba(8, 9, 10, 0.94);
   backdrop-filter: blur(2px);
 }
 .tuber-vault[hidden] { display: none !important; }
@@ -428,20 +428,28 @@ body.tuber-vault-open header.page .tagline {
 }
 .tuber-vault-panel {
   position: relative;
-  width: min(560px, 100%);
-  padding: 1.5rem 1.35rem 1.25rem;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding:
+    max(1.35rem, env(safe-area-inset-top, 0px))
+    max(1.25rem, env(safe-area-inset-right, 0px))
+    0
+    max(1.25rem, env(safe-area-inset-left, 0px));
   border: 1px solid rgba(247, 155, 41, 0.45);
-  border-radius: 4px;
+  border-radius: 0;
   background:
-    linear-gradient(180deg, rgba(37, 39, 41, 0.72), rgba(29, 31, 33, 0.68));
+    linear-gradient(180deg, rgba(37, 39, 41, 0.92), rgba(29, 31, 33, 0.94));
   backdrop-filter: blur(10px) saturate(1.15);
   -webkit-backdrop-filter: blur(10px) saturate(1.15);
-  box-shadow:
-    0 0 0 1px rgba(167, 59, 80, 0.25),
-    0 18px 50px rgba(0, 0, 0, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(167, 59, 80, 0.22);
   font-family: "IBM Plex Mono", "Cascadia Mono", "SFMono-Regular", ui-monospace, monospace;
   text-align: left;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   animation:
     tuber-panel-jitter 4.8s steps(1, end) infinite,
     tuber-panel-border 3.6s linear infinite;
@@ -504,15 +512,17 @@ body.tuber-vault-open header.page .tagline {
 .tuber-vault-line:nth-child(5) { animation: tuber-line-nudge 5.5s steps(1, end) infinite 0.8s; }
 .tuber-vault-line:nth-child(6) { animation: tuber-line-nudge 6.8s steps(1, end) infinite 0.2s; }
 .tuber-vault-close {
-  position: relative;
-  z-index: 2;
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
   display: inline-flex;
+  align-self: flex-start;
   align-items: center;
   gap: 0.35rem;
-  margin: 0;
-  padding: 0.45rem 0;
+  margin: auto 0 0;
+  padding: 1rem 0 max(1rem, env(safe-area-inset-bottom, 0px));
   border: 0;
-  background: transparent;
+  background: linear-gradient(180deg, transparent, rgba(12, 14, 16, 0.97) 28%);
   color: var(--text-muted);
   font: inherit;
   font-size: 0.8rem;
@@ -553,14 +563,10 @@ body.tuber-vault-open header.page .tagline {
 .tuber-vault-panel-deep {
   border-color: rgba(62, 199, 255, 0.55);
   background:
-    linear-gradient(180deg, rgba(20, 36, 40, 0.7), rgba(16, 22, 28, 0.64));
+    linear-gradient(180deg, rgba(20, 36, 40, 0.94), rgba(16, 22, 28, 0.96));
   box-shadow:
-    0 0 0 1px rgba(62, 199, 255, 0.28),
-    0 18px 50px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(167, 59, 80, 0.18);
-  max-height: min(90vh, 920px);
-  overflow-x: hidden;
-  overflow-y: auto;
+    inset 0 0 0 1px rgba(62, 199, 255, 0.28),
+    inset 0 0 80px rgba(167, 59, 80, 0.12);
   animation:
     tuber-panel-jitter 3.2s steps(1, end) infinite,
     tuber-panel-border-deep 2.4s linear infinite,
@@ -793,8 +799,16 @@ body.tuber-core-open header.page .tagline {
   43% { border-color: rgba(62, 199, 255, 0.55); }
 }
 @keyframes tuber-deep-pulse {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(62, 199, 255, 0.28), 0 18px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(167, 59, 80, 0.18); }
-  50% { box-shadow: 0 0 0 1px rgba(127, 255, 212, 0.4), 0 18px 50px rgba(0, 0, 0, 0.5), 0 0 55px rgba(62, 199, 255, 0.22); }
+  0%, 100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(62, 199, 255, 0.28),
+      inset 0 0 80px rgba(167, 59, 80, 0.12);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(127, 255, 212, 0.4),
+      inset 0 0 100px rgba(62, 199, 255, 0.16);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
