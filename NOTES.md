@@ -46,7 +46,6 @@ Run as your normal user from the SweetPotatOs root (not root login). Shared help
 | `./scripts/ship-stable.sh --en "…"` | Publish `repo/` → live `pacman-repo`, append next `changelog.fifth.N` (EN/FR + HTML), commit, push `origin` + `sourceforge`, rsync project web. |
 | `./scripts/bump-channel-apps.sh` | Check/bump Brave Origin, Shelly, LocalSend, yay-bin, waypaper, **tuber**, **spore**, **laniakea**; rebuild into `repo/`; bump `sweetpotatos` pkgrel + `update-news`. First-party apps only reach `sudo sweetpotatos-update` after this publishes them. Add `--publish-testing` to upload the testing tag. |
 | `./scripts/make-iso.sh [--fifth\|--sixth\|--harvest N] [--upload]` | Update `profiledef` identity, `sudo ./build.sh`, rename ISO, write `.sha256`. Harvest flags advance monthly from First=`2026.08` (Fifth=`2026.12`, Sixth=`2027.01`, …). `--upload` calls `sourceforge/upload.sh`. |
-| `./scripts/make-cursor-handoff.sh` | Build a zip/tar of Cursor memory (`RESUME.md`, `NOTES.md`, rules, paste prompt) for continuing SPO work on another laptop. Default output: `~/Downloads/sweetpotatos-cursor-handoff-YYYY-MM-DD.zip`. |
 
 Examples:
 
@@ -63,9 +62,6 @@ Examples:
 ./scripts/make-iso.sh --sixth
 SF_USER=visnudeva ./scripts/make-iso.sh --sixth --upload
 
-# Portable Cursor handoff for another laptop (holidays / rebuild host):
-./scripts/make-cursor-handoff.sh
-# On the SPO PC: unzip → ./bootstrap-on-spo.sh → paste PASTE-TO-CURSOR.md in Cursor
 ```
 
 After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]` `Server = file://…` to the absolute path of `./repo`.
