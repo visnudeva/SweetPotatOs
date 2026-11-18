@@ -33,6 +33,7 @@
   var outer = document.getElementById("tuber-vault-outer");
   var deep = document.getElementById("tuber-vault-deep");
   var deepClose = document.getElementById("tuber-vault-deep-close");
+  var seedBtn = document.getElementById("tuber-vault-seed");
   if (!hit || !vault || !logo || !outer || !deep) return;
 
   var tagline = document.querySelector("[data-vault-tagline]");
@@ -175,6 +176,12 @@
   if (deepClose) {
     deepClose.addEventListener("click", function () {
       setDeep(false);
+    });
+  }
+  if (seedBtn) {
+    seedBtn.addEventListener("click", function () {
+      if (!open || deepOpen) return;
+      setDeep(true);
     });
   }
   vault.addEventListener("click", function (event) {
