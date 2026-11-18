@@ -58,3 +58,8 @@ sourceforge/empty-repo-stage/
 
 # Full wallpaper PNGs live on SourceForge only; showroom keeps JPG thumbs in git.
 sourceforge/htdocs/wallpapers/
+
+# makepkg / local clones under packaging
+packaging/**/swirl-laniakea/
+packaging/**/src/
+packaging/**/pkg/

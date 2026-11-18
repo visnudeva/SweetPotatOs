@@ -37,6 +37,32 @@ Expected layout on a build machine (siblings):
    - Point releases only — no in-place overlay upgrade channel. Desktop/theme on other distros: SweetPotato `install.sh`.
    - Draft for a future Ryoku-style package + sprout channel (not built yet): [`docs/updates-design.md`](./docs/updates-design.md).
 
+### One-shot maintainer scripts (`scripts/`)
+
+Run as your normal user from the SweetPotatOs root (not root login). Shared helpers live in `scripts/lib-spo.sh`.
+
+| Script | What it does |
+|--------|----------------|
+| `./scripts/ship-stable.sh --en "…"` | Publish `repo/` → live `pacman-repo`, append next `changelog.fifth.N` (EN/FR + HTML), commit, push `origin` + `sourceforge`, rsync project web. |
+| `./scripts/bump-channel-apps.sh` | Check/bump Brave Origin, Shelly, LocalSend, yay-bin, waypaper, **tuber**, **spore**, **laniakea**; rebuild into `repo/`; bump `sweetpotatos` pkgrel + `update-news`. First-party apps only reach `sudo sweetpotatos-update` after this publishes them. Add `--publish-testing` to upload the testing tag. |
+| `./scripts/make-iso.sh [--fifth\|--sixth\|--harvest N] [--upload]` | Update `profiledef` identity, `sudo ./build.sh`, rename ISO, write `.sha256`. Harvest flags advance monthly from First=`2026.08` (Fifth=`2026.12`, Sixth=`2027.01`, …). `--upload` calls `sourceforge/upload.sh`. |
+
+Examples:
+
+```bash
+# After packages are already in repo/ and you are ready for live:
+./scripts/ship-stable.sh --en "<strong>Overview</strong> hot corner + plain drag." --fr "…"
+
+# Refresh channel apps, then push testing for SPO boxes:
+./scripts/bump-channel-apps.sh --check-only
+./scripts/bump-channel-apps.sh --publish-testing
+
+# Fifth / Sixth Harvest ISO (then upload when mirrors are ready):
+./scripts/make-iso.sh --fifth
+./scripts/make-iso.sh --sixth
+SF_USER=visnudeva ./scripts/make-iso.sh --sixth --upload
+```
+
 After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]` `Server = file://…` to the absolute path of `./repo`.
 
 ## Fastfetch logo

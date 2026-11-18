@@ -111,6 +111,7 @@ if (( DO_COMMIT )); then
       2>/dev/null || true
     # Unstage accidental blobs if present
     git reset HEAD -- packaging/swirl/wmenu-0.2.0.tar.gz 2>/dev/null || true
+    git reset HEAD -- packaging/laniakea/swirl-laniakea 2>/dev/null || true
     git reset HEAD -- .publish-repo-stage .publish-repo-stage-tuber .cheatsheet-snapshots 2>/dev/null || true
     if git diff --cached --quiet; then
       echo "[*] Nothing staged to commit (working tree may already be clean)."
