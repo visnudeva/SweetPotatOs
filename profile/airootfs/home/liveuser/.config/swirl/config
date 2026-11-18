@@ -392,11 +392,9 @@ lua ~/.config/swirl/scripts/autotile.lua
 exec --no-startup-id /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # Apply GTK/icon/cursor theme (Thunar reads gsettings/xfconf/xsettingsd)
 exec ~/.config/swirl/scripts/apply-theme.sh
-# Notifications, USB automount, tray applets
+# Notifications; tray applets vs light text mode (Settings → Light tray)
 exec mako
-exec udiskie --tray
-exec nm-applet --indicator
-exec blueman-applet
+exec_always ~/.config/swirl/scripts/tray-mode.sh apply
 exec sh -c 'rfkill unblock bluetooth 2>/dev/null || true'
 exec ~/.config/swirl/scripts/tips.sh
 # Smart Brightness — max backlight for fullscreen video, restore on exit

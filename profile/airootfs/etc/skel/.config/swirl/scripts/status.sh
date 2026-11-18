@@ -96,6 +96,47 @@ while true; do
         wifi_display="$(ico 0xF05AA)"
     fi
 
+    # Light tray mode (Settings): show Bluetooth + removable mounts as text
+    # instead of nm-applet / blueman-applet / udiskie tray icons.
+    tray_mode=icons
+    if [ -f "${HOME}/.config/sweetpotatos/tray-mode" ] \
+        && [ "$(cat "${HOME}/.config/sweetpotatos/tray-mode" 2>/dev/null)" = "text" ]; then
+        tray_mode=text
+    fi
+    bt_display=""
+    disks_display=""
+    if [ "$tray_mode" = "text" ]; then
+        if command -v bluetoothctl >/dev/null 2>&1 \
+            && bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; then
+            bt_name=$(bluetoothctl devices Connected 2>/dev/null \
+                | head -1 | sed 's/^Device [^ ]* //')
+            if [ -n "$bt_name" ]; then
+                bt_display="$(ico 0xF00AF) $(pango_escape "$bt_name")"
+            else
+                bt_display="$(ico 0xF00B1)"
+            fi
+        else
+            bt_display="$(ico 0xF00B2)"
+        fi
+        # Removable / user mounts (udiskie without a tray).
+        disk_names=""
+        for base in /run/media/"$USER" /media/"$USER"; do
+            [ -d "$base" ] || continue
+            for d in "$base"/*; do
+                [ -d "$d" ] || continue
+                name=$(basename "$d")
+                if [ -z "$disk_names" ]; then
+                    disk_names="$name"
+                else
+                    disk_names="${disk_names}, ${name}"
+                fi
+            done
+        done
+        if [ -n "$disk_names" ]; then
+            disks_display="$(ico 0xF0697) $(pango_escape "$disk_names")"
+        fi
+    fi
+
     # Volume. Muted and missing audio use their own icons.
     volume=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -o '[0-9]*%' | head -1 | sed 's/%//')
     if [ -n "$volume" ]; then
@@ -131,7 +172,14 @@ while true; do
     fi
     win_title=$(pango_escape "$win_title")
 
-    meters="$(ico 0xF2DB) ${cpu_usage}% • $(ico 0xF035B) ${ram_usage}% • $(ico 0xF02CA) ${disk_usage}% • ${brightness_display} • ${volume_display} • ${battery_display} • ${wifi_display} • ${datetime}"
+    meters="$(ico 0xF2DB) ${cpu_usage}% • $(ico 0xF035B) ${ram_usage}% • $(ico 0xF02CA) ${disk_usage}% • ${brightness_display} • ${volume_display} • ${battery_display} • ${wifi_display}"
+    if [ -n "$bt_display" ]; then
+        meters="${meters} • ${bt_display}"
+    fi
+    if [ -n "$disks_display" ]; then
+        meters="${meters} • ${disks_display}"
+    fi
+    meters="${meters} • ${datetime}"
     if [ -n "$win_title" ]; then
         line="${win_title}  •  ${meters}"
     else
