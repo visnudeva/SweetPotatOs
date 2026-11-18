@@ -116,22 +116,43 @@
     timers.push(window.setTimeout(tick, delay));
   }
 
-  function runLines(selector) {
+  function loreBlock() {
+    return vault.querySelector(".tuber-vault-lore");
+  }
+
+  function setLoreReady(ready) {
+    var lore = loreBlock();
+    if (!lore) return;
+    lore.hidden = !ready;
+  }
+
+  function runLines(selector, onComplete) {
     var lines = vault.querySelectorAll(selector);
+    var left = lines.length;
+    function oneDone() {
+      left -= 1;
+      if (left <= 0 && onComplete) onComplete();
+    }
+    if (!left) {
+      if (onComplete) onComplete();
+      return;
+    }
     Array.prototype.forEach.call(lines, function (line, index) {
       line.textContent = "";
       var finalText = line.getAttribute("data-final") || "";
       var isSeed = line.hasAttribute("data-vault-seed-line");
-      scrambleInto(
-        line,
-        finalText,
-        index * 220,
-        isSeed
-          ? function () {
-              paintSeedLine(line, finalText);
-            }
-          : null
-      );
+      scrambleInto(line, finalText, index * 220, function () {
+        if (isSeed) paintSeedLine(line, finalText);
+        else line.textContent = finalText;
+        oneDone();
+      });
+    });
+  }
+
+  function runDeepLines() {
+    setLoreReady(false);
+    runLines("[data-deep-line]", function () {
+      setLoreReady(true);
     });
   }
 
@@ -154,9 +175,10 @@
     clearTimers();
     if (deepOpen) {
       if (tagline) tagline.textContent = deepTag();
-      runLines("[data-deep-line]");
+      runDeepLines();
       if (deepClose) deepClose.focus();
     } else if (open) {
+      setLoreReady(false);
       if (tagline) tagline.textContent = vaultTag();
       runLines("[data-vault-line]");
       if (closeBtn) closeBtn.focus();
@@ -182,10 +204,15 @@
     }
     clearTimers();
     if (open) {
-      if (deepOpen) runLines("[data-deep-line]");
-      else runLines("[data-vault-line]");
+      if (deepOpen) runDeepLines();
+      else {
+        setLoreReady(false);
+        runLines("[data-vault-line]");
+      }
       if (deepOpen && deepClose) deepClose.focus();
       else if (closeBtn) closeBtn.focus();
+    } else {
+      setLoreReady(false);
     }
     syncHash();
   }

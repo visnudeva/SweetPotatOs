@@ -584,7 +584,8 @@ body.tuber-vault-open header.page .tagline {
   animation: tuber-eyebrow-glitch 2.1s steps(1, end) infinite;
 }
 
-/* Deep-vault lore: Patrick, the branding tuber */
+/* Deep-vault lore: Patrick, the branding tuber (revealed after deep lines). */
+.tuber-vault-lore[hidden] { display: none !important; }
 .tuber-vault-lore {
   margin: 1.1rem 0 0.35rem;
   padding: 0.85rem 0.9rem 1rem;
