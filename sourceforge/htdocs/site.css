@@ -546,54 +546,30 @@ body.tuber-vault-open header.page .tagline {
   outline: 2px solid var(--orange);
   outline-offset: 3px;
 }
-/* Touch-friendly seed for mashed core (phones have no page keyboard). */
-.tuber-vault-seed {
-  position: relative;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0.15rem 0 0.55rem;
-  padding: 0;
+/* Hidden seed: the leading p in potato / patate is the tap target. */
+.tuber-vault-seed-letter {
+  display: inline;
+  margin: 0;
+  padding: 0.55em 0.2em;
+  margin: -0.55em -0.2em;
   border: 0;
+  border-radius: 2px;
   background: transparent;
   color: inherit;
   font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.tuber-vault-seed kbd {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.75rem;
-  min-height: 2.75rem;
-  padding: 0.35rem 0.85rem;
-  border: 1px solid rgba(247, 155, 41, 0.55);
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.35);
-  box-shadow:
-    inset 0 -2px 0 rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(167, 59, 80, 0.2);
+.tuber-vault-seed-letter:hover,
+.tuber-vault-seed-letter:active {
   color: var(--orange);
-  font-family: inherit;
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: lowercase;
 }
-.tuber-vault-seed:hover kbd,
-.tuber-vault-seed:active kbd {
-  color: var(--text);
-  border-color: var(--orange);
-  background: rgba(247, 155, 41, 0.12);
-}
-.tuber-vault-seed:focus-visible {
-  outline: none;
-}
-.tuber-vault-seed:focus-visible kbd {
-  outline: 2px solid var(--orange);
-  outline-offset: 3px;
+.tuber-vault-seed-letter:focus-visible {
+  outline: 1px solid rgba(247, 155, 41, 0.7);
+  outline-offset: 2px;
 }
 
 .tuber-vault-panel-deep {

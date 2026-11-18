@@ -33,7 +33,6 @@
   var outer = document.getElementById("tuber-vault-outer");
   var deep = document.getElementById("tuber-vault-deep");
   var deepClose = document.getElementById("tuber-vault-deep-close");
-  var seedBtn = document.getElementById("tuber-vault-seed");
   if (!hit || !vault || !logo || !outer || !deep) return;
 
   var tagline = document.querySelector("[data-vault-tagline]");
@@ -60,14 +59,44 @@
     while (timers.length) window.clearTimeout(timers.pop());
   }
 
-  function scrambleInto(el, finalText, delay) {
+  function seedAria() {
+    return (window.SweetPotatOsI18n && window.SweetPotatOsI18n.t("vault.seed.aria")) ||
+      "Plant the seed · open mashed core";
+  }
+
+  function paintSeedLine(el, finalText) {
+    var text = finalText || "";
+    var match = /\b(p)(otato|atate)\b/i.exec(text);
+    el.textContent = "";
+    if (!match) {
+      el.textContent = text;
+      return;
+    }
+    var idx = match.index;
+    if (idx > 0) el.appendChild(document.createTextNode(text.slice(0, idx)));
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "tuber-vault-seed-letter";
+    btn.setAttribute("aria-label", seedAria());
+    btn.textContent = match[1];
+    btn.addEventListener("click", function (event) {
+      event.preventDefault();
+      if (!open || deepOpen) return;
+      setDeep(true);
+    });
+    el.appendChild(btn);
+    el.appendChild(document.createTextNode(match[2] + text.slice(idx + match[0].length)));
+  }
+
+  function scrambleInto(el, finalText, delay, onDone) {
     var i = 0;
     var rounds = reduceMotion ? 1 : 14;
     el.classList.add("is-glitching");
     function tick() {
       if (i >= rounds) {
-        el.textContent = finalText;
         el.classList.remove("is-glitching");
+        if (onDone) onDone();
+        else el.textContent = finalText;
         return;
       }
       var out = "";
@@ -91,7 +120,18 @@
     var lines = vault.querySelectorAll(selector);
     Array.prototype.forEach.call(lines, function (line, index) {
       line.textContent = "";
-      scrambleInto(line, line.getAttribute("data-final") || "", index * 220);
+      var finalText = line.getAttribute("data-final") || "";
+      var isSeed = line.hasAttribute("data-vault-seed-line");
+      scrambleInto(
+        line,
+        finalText,
+        index * 220,
+        isSeed
+          ? function () {
+              paintSeedLine(line, finalText);
+            }
+          : null
+      );
     });
   }
 
@@ -176,12 +216,6 @@
   if (deepClose) {
     deepClose.addEventListener("click", function () {
       setDeep(false);
-    });
-  }
-  if (seedBtn) {
-    seedBtn.addEventListener("click", function () {
-      if (!open || deepOpen) return;
-      setDeep(true);
     });
   }
   vault.addEventListener("click", function (event) {
