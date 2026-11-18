@@ -555,6 +555,9 @@ body.tuber-vault-open header.page .tagline {
     0 0 0 1px rgba(62, 199, 255, 0.28),
     0 18px 50px rgba(0, 0, 0, 0.5),
     0 0 40px rgba(167, 59, 80, 0.18);
+  max-height: min(90vh, 920px);
+  overflow-x: hidden;
+  overflow-y: auto;
   animation:
     tuber-panel-jitter 3.2s steps(1, end) infinite,
     tuber-panel-border-deep 2.4s linear infinite,
@@ -570,6 +573,74 @@ body.tuber-vault-open header.page .tagline {
   color: #7fffd4;
   animation: tuber-eyebrow-glitch 2.1s steps(1, end) infinite;
 }
+
+/* Deep-vault lore: Patrick, the branding tuber */
+.tuber-vault-lore {
+  margin: 1.1rem 0 0.35rem;
+  padding: 0.85rem 0.9rem 1rem;
+  border: 1px solid rgba(127, 255, 212, 0.28);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.28);
+}
+.tuber-vault-lore-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7fffd4;
+}
+.tuber-vault-lore-body {
+  margin: 0 0 0.85rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--text);
+  opacity: 0.92;
+}
+.tuber-vault-lore-shots {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+.tuber-vault-lore-shots figure {
+  margin: 0;
+}
+.tuber-vault-lore-shots a {
+  display: block;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid rgba(247, 155, 41, 0.35);
+  line-height: 0;
+}
+.tuber-vault-lore-shots img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  vertical-align: middle;
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+.tuber-vault-lore-shots a:hover img {
+  transform: scale(1.03);
+  filter: saturate(1.15) contrast(1.05);
+}
+.tuber-vault-lore-shots figcaption {
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245, 230, 232, 0.72);
+}
+@media (max-width: 520px) {
+  .tuber-vault-lore-shots {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tuber-vault-lore-shots img {
+    transition: none;
+  }
+}
+
 body.tuber-core-open header.page img.logo {
   animation: tuber-logo-jitter 0.28s steps(2, end) infinite;
   filter: contrast(1.25) saturate(1.5) hue-rotate(160deg);
