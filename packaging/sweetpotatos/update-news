@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-233
+What changed: Fixes the overview accent wash config error from the previous update. Overview still tints the wallpaper from your theme accent with no extra config line. Log out and back in after updating.
+
 @2026.10.3-232
 What changed: Overview washes the wallpaper with your theme accent so it is obvious you are in the bird's-eye view. Needs swirl from this update. Log out and back in after updating (or Mod+Shift+c after theme apply).
 

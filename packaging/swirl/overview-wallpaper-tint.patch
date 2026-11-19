@@ -90,23 +90,23 @@ index 68a31931..df0c7b35 100644
 +	return cmd_results_new(CMD_SUCCESS, NULL);
 +}
 diff --git a/sway/config.c b/sway/config.c
-index 923ac8e9..00b162ef 100644
+index 923ac8e9..ca5d6dcb 100644
 --- a/sway/config.c
 +++ b/sway/config.c
 @@ -277,6 +277,8 @@ static void config_defaults(struct sway_config *config) {
  	color_to_rgba(config->workspace_labels_color, 0xA54242FF);
  	color_to_rgba(config->workspace_labels_background, 0x00000000);
  	config->workspace_labels_height = 30;
-+	/* SPO red ~35% over wallpaper in overview until theme.sh overrides. */
-+	color_to_rgba(config->overview_wallpaper_tint, 0xA73B5059);
++	/* Overview wash alpha (~40%); RGB follows client.focused indicator. */
++	color_to_rgba(config->overview_wallpaper_tint, 0x00000066);
  	config->fullscreen_movefocus = FULLSCREEN_MOVEFOCUS_NOFOLLOW;
  	config->fullscreen_on_request = FULLSCREEN_REQUEST_DEFAULT;
  	config->align_reset_auto = true;
 diff --git a/sway/tree/layout.c b/sway/tree/layout.c
-index eb1af522..08a975c8 100644
+index eb1af522..4f1f298e 100644
 --- a/sway/tree/layout.c
 +++ b/sway/tree/layout.c
-@@ -386,6 +386,30 @@ bool layout_overview_workspaces_enabled() {
+@@ -386,6 +386,37 @@ bool layout_overview_workspaces_enabled() {
  	return root ? root->overview : false;
  }
  
@@ -115,7 +115,14 @@ index eb1af522..08a975c8 100644
 +		return;
 +	}
 +	bool on = layout_overview_workspaces_enabled();
-+	const float *color = config->overview_wallpaper_tint;
++	float color[4];
++	const float *ind = config->border_colors.focused.indicator;
++	const float *tint = config->overview_wallpaper_tint;
++	/* Theme accent RGB; configured alpha (default ~40%). */
++	color[0] = ind[0];
++	color[1] = ind[1];
++	color[2] = ind[2];
++	color[3] = tint[3] > 0.001f ? tint[3] : 0.4f;
 +	bool show = on && color[3] > 0.001f;
 +	for (int i = 0; i < root->outputs->length; ++i) {
 +		struct sway_output *output = root->outputs->items[i];
@@ -137,12 +144,11 @@ index eb1af522..08a975c8 100644
  static void workspace_name_decoration(struct sway_workspace *ws, bool enable) {
  	if (!enable) {
  		if (ws->jump.name) {
-@@ -522,7 +546,7 @@ void layout_overview_workspaces(bool on) {
- 			}
+@@ -523,6 +554,7 @@ void layout_overview_workspaces(bool on) {
  			output_damage_whole(output);
  		}
--	}
-+	}	overview_wallpaper_tint_apply();
+ 	}
++	overview_wallpaper_tint_apply();
  }
  
  bool layout_overview_workspaces_map_coordinates(struct sway_workspace **workspace, double *lx, double *ly) {

@@ -328,7 +328,6 @@ client.pinned            #3a3a3a #1d1f21 #aaaaaa #a73b50 #3a3a3a
 client.pinned_focused    #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
 client.selected          #f79b29 #1d1f21 #ffffff #f79b29 #f79b29
 client.selected_focused  #a73b50 #1d1f21 #ffffff #a73b50 #a73b50
-overview_wallpaper_tint #a73b5066
 # SPO-CLIENT-END
 
 # ============================================
