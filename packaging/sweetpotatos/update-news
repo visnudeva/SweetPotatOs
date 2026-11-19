@@ -1,3 +1,6 @@
+@2026.10.3-237
+What changed: Restores the last good swirl (pre–overview-tint). The 65–67 builds were broken and dropped bar border_radius. Update still removes any leftover overview_wallpaper_tint line.
+
 # One block per sweetpotatos release, newest first.
 # @pkgver-pkgrel
 # note text

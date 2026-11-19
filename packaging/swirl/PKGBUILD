@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=67
+pkgrel=69
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -164,7 +164,6 @@ prepare() {
   git apply "${srcdir}/overview-escape-exit.patch"
   # Logout/poweroff: do not dump red swaybar/tray disconnect lines on the VT.
   git apply "${srcdir}/swaybar-quiet-shutdown.patch"
-  # overview-wallpaper-tint.patch.wip — parked; re-enable on testing when ready.
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"
