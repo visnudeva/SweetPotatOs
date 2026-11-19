@@ -1,3 +1,6 @@
+@2026.10.3-255
+What changed: Softer overview tint; workspace discs restored if they turned into numbers. Testing — log out once.
+
 @2026.10.3-254
 What changed: Overview wall layout packs desktops side-by-side (not another stripe stack). Testing — log out once.
 

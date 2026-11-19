@@ -38,11 +38,11 @@ index e82ee98c..1eda4700 100644
 +	bool on = layout_overview_workspaces_enabled();
 +	float color[4];
 +	const float *ind = config->border_colors.focused.indicator;
-+	/* Theme accent RGB; fixed ~40% wash — no config command. */
++	/* Theme accent RGB; light wash — no config command. */
 +	color[0] = ind[0];
 +	color[1] = ind[1];
 +	color[2] = ind[2];
-+	color[3] = 0.4f;
++	color[3] = 0.2f;
 +	for (int i = 0; i < root->outputs->length; ++i) {
 +		struct sway_output *output = root->outputs->items[i];
 +		struct wlr_scene_rect *rect = output->overview_wallpaper_tint;
