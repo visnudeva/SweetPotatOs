@@ -27,7 +27,7 @@ diff --git a/sway/tree/layout.c b/sway/tree/layout.c
 index 2f5835c0..38a05206 100644
 --- a/sway/tree/layout.c
 +++ b/sway/tree/layout.c
-@@ -386,6 +386,34 @@ bool layout_overview_workspaces_enabled() {
+@@ -386,6 +386,35 @@ bool layout_overview_workspaces_enabled() {
  	return root ? root->overview : false;
  }
  
@@ -38,11 +38,12 @@ index 2f5835c0..38a05206 100644
 +	bool on = layout_overview_workspaces_enabled();
 +	float color[4];
 +	const float *ind = config->border_colors.focused.indicator;
-+	/* Theme accent RGB; very light wash — no config command. */
-+	color[0] = ind[0];
-+	color[1] = ind[1];
-+	color[2] = ind[2];
-+	color[3] = 0.05f;
++	/* Premultiplied (wlroots requires it). Straight RGB+alpha looked opaque. */
++	float a = ind[3] * 0.06f;
++	color[0] = ind[0] * a;
++	color[1] = ind[1] * a;
++	color[2] = ind[2] * a;
++	color[3] = a;
 +	for (int i = 0; i < root->outputs->length; ++i) {
 +		struct sway_output *output = root->outputs->items[i];
 +		struct wlr_scene_rect *rect = output->overview_wallpaper_tint;
