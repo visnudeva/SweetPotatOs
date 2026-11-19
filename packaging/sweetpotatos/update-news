@@ -1,3 +1,6 @@
+@2026.10.3-248
+What changed: Settings → Updates “Press any key to close” actually closes the terminal again (foot hold mode was keeping it open).
+
 @2026.10.3-247
 What changed: Escape closes the app menu again (overview was eating the key). Log out once after update.
 

@@ -122,15 +122,15 @@ def open_updates(*_args):
         if candidate and Path(candidate).is_file():
             spawn(candidate)
             return
+    # No foot -H: hold mode keeps the window open after the keypress exits bash.
     spawn(
         shutil.which("foot") or "foot",
         "-a",
         "sweetpotato-settings-term",
-        "-H",
         "--",
         "bash",
         "-lc",
-        'sudo /usr/local/bin/sweetpotatos-update; echo; read -n1 -rsp "Press any key to close…" || true',
+        'sudo /usr/local/bin/sweetpotatos-update; echo; read -n1 -rsp "Press any key to close…" </dev/tty || true',
     )
 
 
