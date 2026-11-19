@@ -254,6 +254,9 @@
   document.addEventListener("keydown", function (event) {
     if (!open) return;
     if (event.key === "Escape") {
+      /* Lightbox (Patrick shots) takes Esc first while open over the vault. */
+      var lb = document.querySelector("[data-lightbox]");
+      if (lb && !lb.hidden) return;
       if (deepOpen) setDeep(false);
       else {
         setVault(false);
@@ -274,8 +277,11 @@
     if (!open) return;
     if (tagline) tagline.textContent = deepOpen ? deepTag() : vaultTag();
     clearTimers();
-    if (deepOpen) runLines("[data-deep-line]");
-    else runLines("[data-vault-line]");
+    if (deepOpen) runDeepLines();
+    else {
+      setLoreReady(false);
+      runLines("[data-vault-line]");
+    }
   });
   applyHash();
 })();

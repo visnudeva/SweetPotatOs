@@ -1111,7 +1111,7 @@ main .hero {
 .wall-view {
   position: fixed;
   inset: 0;
-  z-index: 40;
+  z-index: 50; /* above Tuber Vault (40) so Patrick shots zoom in place */
   background: rgba(13, 14, 16, 0);
   transition: background 0.45s ease;
 }

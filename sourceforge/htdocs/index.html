@@ -104,9 +104,9 @@
           for the resemblance to Patrick Star from SpongeBob SquarePants — same soft orange
           torso energy, same unbothered stance. The sprouts came first; the logo idea followed.
         </p>
-        <div class="tuber-vault-lore-shots">
+        <div class="tuber-vault-lore-shots" data-lightbox-gallery>
           <figure>
-            <a href="vault/patrick-close.jpg" target="_blank" rel="noopener">
+            <a href="vault/patrick-close.jpg">
               <img src="vault/patrick-close.jpg" width="600" height="800" loading="lazy"
                 data-i18n-alt="vault.patrick.alt1"
                 alt="Patrick the sweet potato up close in a hanging planter, orange tuber with purple stems and green leaves">
@@ -114,7 +114,7 @@
             <figcaption data-i18n="vault.patrick.cap1">Close portrait</figcaption>
           </figure>
           <figure>
-            <a href="vault/patrick-hanging.jpg" target="_blank" rel="noopener">
+            <a href="vault/patrick-hanging.jpg">
               <img src="vault/patrick-hanging.jpg" width="600" height="800" loading="lazy"
                 data-i18n-alt="vault.patrick.alt2"
                 alt="Patrick hanging in a macramé planter against a white wall, vines reaching up">
@@ -273,5 +273,13 @@ sudo dd if=Sweetpotatos_*.iso of=/dev/sdX bs=4M status=progress oflag=sync</code
       </a>
     </div>
   </footer>
+  <div class="wall-view" hidden data-lightbox>
+    <button type="button" class="wall-view-close" data-i18n-aria="common.close" aria-label="Close">×</button>
+    <img alt="">
+    <div class="wall-view-bar">
+      <p class="wall-view-caption"></p>
+      <a class="wall-view-save" data-i18n="common.saveOriginal">Save original</a>
+    </div>
+  </div>
 </body>
 </html>
