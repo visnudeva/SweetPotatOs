@@ -292,10 +292,11 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
   fi
 fi
 
-# Re-apply shipped config (no parse-time bar border_*; tint scrubbed).
+# Scrub only — do not reinstall the US skel again (that wiped FR keyboard /
+# theme after sprout restored them).
 if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
-  echo "[*] Ensuring swirl config is clean (chrome via frame.sh on login)…"
-  /usr/local/bin/sweetpotatos-fix-swirl-config || true
+  echo "[*] Final scrub of swirl configs (keep keyboard + theme)…"
+  SWEETPOTATOS_SCRUB_ONLY=1 /usr/local/bin/sweetpotatos-fix-swirl-config || true
 fi
 echo "[!] Log out once (or reboot) so Swirl picks up packages and config."
 

@@ -8,10 +8,14 @@
 #   - overview_wallpaper_tint (retired; never a valid config command)
 #   - bar border_radius / border (valid only on patched swirl; IPC via frame.sh)
 # Keep bar gaps in the shipped file; chrome is applied at runtime.
+#
+# After installing the shipped config (US skel), restore the install keyboard
+# from /etc/X11/xorg.conf.d/00-keyboard.conf so French (etc.) is not wiped.
 set -euo pipefail
 
 SHIPPED="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}/swirl/config"
 SCRUB_ONLY="${SWEETPOTATOS_SCRUB_ONLY:-0}"
+XORG_KBD="${SWEETPOTATOS_XORG_KBD:-/etc/X11/xorg.conf.d/00-keyboard.conf}"
 [[ -f "${SHIPPED}" ]] || {
   echo "[!] No shipped swirl config at ${SHIPPED}" >&2
   exit 0
@@ -20,24 +24,57 @@ SCRUB_ONLY="${SWEETPOTATOS_SCRUB_ONLY:-0}"
 scrub_file() {
   local f="$1"
   [[ -f "${f}" ]] || return 0
-  local changed=0
   if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${f}"; then
     sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${f}"
     echo "[+] removed overview_wallpaper_tint from ${f}"
-    changed=1
   fi
   # Only bare bar subcommands (not default_decoration border_radius …).
   if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${f}"; then
     sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${f}"
     echo "[+] removed bar border_radius from ${f}"
-    changed=1
   fi
   if grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${f}"; then
     sed -i -E '/^[[:space:]]*border[[:space:]]+[0-9]+/d' "${f}"
     echo "[+] removed bar border from ${f}"
-    changed=1
   fi
   return 0
+}
+
+sed_escape() {
+  local s=$1
+  s=${s//\\/\\\\}
+  s=${s//&/\\&}
+  s=${s//|/\\|}
+  printf '%s' "$s"
+}
+
+# Read layout/variant chosen at install (Calamares → Xorg).
+read_install_keyboard() {
+  LAYOUT=""
+  VARIANT=""
+  [[ -f "${XORG_KBD}" ]] || return 0
+  LAYOUT="$(sed -n 's/.*Option[[:space:]]*"XkbLayout"[[:space:]]*"\([^"]*\)".*/\1/p' "${XORG_KBD}" | head -1)"
+  VARIANT="$(sed -n 's/.*Option[[:space:]]*"XkbVariant"[[:space:]]*"\([^"]*\)".*/\1/p' "${XORG_KBD}" | head -1)"
+}
+
+apply_keyboard() {
+  local cfg="$1" layout="$2" variant="${3:-}"
+  [[ -f "${cfg}" ]] || return 0
+  [[ -n "${layout}" ]] || return 0
+  local esc escv
+  esc="$(sed_escape "${layout}")"
+  if grep -q '^[[:space:]]*xkb_layout' "${cfg}"; then
+    sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${esc}\"|" "${cfg}" || true
+  fi
+  if [[ -n "${variant}" ]]; then
+    escv="$(sed_escape "${variant}")"
+    if grep -q '^[[:space:]]*xkb_variant' "${cfg}"; then
+      sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${escv}\"|" "${cfg}" || true
+    else
+      sed -i "/xkb_layout /a\\    xkb_variant \"${escv}\"" "${cfg}" || true
+    fi
+  fi
+  echo "[+] ${cfg}: xkb_layout \"${layout}\"${variant:+ variant \"${variant}\"}"
 }
 
 fix_home() {
@@ -47,6 +84,7 @@ fix_home() {
   local sway_cfg="${cfg_home}/sway/config"
   local overlay="${cfg_home}/sweetpotatos/user_edits/swirl/config"
   local old_sway="${home}/.sway/config"
+  local prev_layout="" prev_variant=""
 
   mkdir -p "${cfg_home}/swirl" "${cfg_home}/sway" "${cfg_home}/sweetpotatos/user_edits/swirl"
 
@@ -64,6 +102,13 @@ fix_home() {
     mv -f "${old_sway}" "${old_sway}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
   fi
 
+  # Keep the live layout if Xorg is missing (rare) so a reinstall does not
+  # force US when the user already had fr (etc.) in their swirl config.
+  if [[ -f "${swirl_cfg}" ]]; then
+    prev_layout="$(sed -n 's/^[[:space:]]*xkb_layout[[:space:]]*"\([^"]*\)".*/\1/p' "${swirl_cfg}" | head -1)"
+    prev_variant="$(sed -n 's/^[[:space:]]*xkb_variant[[:space:]]*"\([^"]*\)".*/\1/p' "${swirl_cfg}" | head -1)"
+  fi
+
   if [[ "${SCRUB_ONLY}" != 1 ]]; then
     echo "[*] ${home}: installing shipped swirl config → ${swirl_cfg}"
     install -Dm644 "${SHIPPED}" "${swirl_cfg}"
@@ -72,6 +117,14 @@ fix_home() {
   scrub_file "${cfg_home}/swirl/config.d/user"
   scrub_file "${sway_cfg}"
   scrub_file "${old_sway}"
+
+  if [[ "${SCRUB_ONLY}" != 1 ]]; then
+    if [[ -n "${LAYOUT}" ]]; then
+      apply_keyboard "${swirl_cfg}" "${LAYOUT}" "${VARIANT}"
+    elif [[ -n "${prev_layout}" && "${prev_layout}" != us ]]; then
+      apply_keyboard "${swirl_cfg}" "${prev_layout}" "${prev_variant}"
+    fi
+  fi
 
   chown -R "${uid}:${gid}" "${cfg_home}/swirl" 2>/dev/null || true
   chown "${uid}:${gid}" "${swirl_cfg}" 2>/dev/null || true
@@ -87,6 +140,15 @@ fix_home() {
 }
 
 echo "[*] pacman: $(pacman -Q sweetpotatos 2>/dev/null || echo 'sweetpotatos ?') / $(pacman -Q swirl 2>/dev/null || echo 'swirl ?')"
+
+LAYOUT=""
+VARIANT=""
+read_install_keyboard
+if [[ -n "${LAYOUT}" ]]; then
+  echo "[*] install keyboard: layout=${LAYOUT}${VARIANT:+ variant=${VARIANT}}"
+else
+  echo "[!] No XkbLayout in ${XORG_KBD} — will keep non-US layout from existing config if present" >&2
+fi
 
 fixed=0
 while IFS=: read -r _ _ uid gid _ home _; do

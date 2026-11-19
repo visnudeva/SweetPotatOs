@@ -1,3 +1,6 @@
+@2026.10.3-246
+What changed: Update keeps the keyboard layout chosen at install (French etc.) — a cleanup step was putting the US skel back after sprout. Log out once after update.
+
 @2026.10.3-245
 What changed: Stops Invalid command for good — bar border_radius / border stay out of the config file (frame.sh paints the rounded bar after login). Update no longer reloads into the old compositor. Log out once after update.
 
