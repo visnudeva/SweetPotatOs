@@ -1,3 +1,6 @@
+@2026.10.3-240
+What changed: Fixes the real reason Invalid command kept coming back — ~/.config/sweetpotatos/user_edits/swirl/config was overriding the shipped config and putting border_radius / border back. Update deletes that overlay and forces the clean shipped config.
+
 @2026.10.3-239
 What changed: Removes bar border_radius / border from the Swirl config file (lines that caused Invalid command). frame.sh still applies the floating bar chrome at runtime. Update deletes those lines from your config automatically.
 

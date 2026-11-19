@@ -411,9 +411,13 @@ EOF
     [[ -f "${cfg}" ]] || continue
     changed_note="$(replace_block "${cfg}" "# SPO-CLIENT-START" "# SPO-CLIENT-END" < "${payload}")"
     note_change <<< "${changed_note}"
-    # Retired: overview wash reads client.focused indicator in swirl itself.
-    if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${cfg}"; then
-      sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${cfg}"
+    # Retired / fragile lines that older swirl rejects at parse time.
+    if grep -qE '^[[:space:]]*(overview_wallpaper_tint\b|border_radius[[:space:]]*:?[[:space:]]*[0-9]+|border[[:space:]]*:?[[:space:]]*[0-9]+)' "${cfg}"; then
+      sed -i -E \
+        -e '/^[[:space:]]*overview_wallpaper_tint\b/d' \
+        -e '/^[[:space:]]*border_radius[[:space:]]*:?[[:space:]]*[0-9]+/d' \
+        -e '/^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]+([[:space:]]|#|$)/d' \
+        "${cfg}"
       CHANGED=1
     fi
     if grep -q 'icon_theme ' "${cfg}"; then

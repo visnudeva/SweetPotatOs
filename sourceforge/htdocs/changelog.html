@@ -115,6 +115,7 @@
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
+        <li data-i18n-html="changelog.fifth.35">The Invalid command lines kept coming back because <code>~/.config/sweetpotatos/user_edits/swirl/config</code> overrode the shipped config every update. Update 240 deletes that overlay and forces the clean config (no bar <code>border_radius</code> / <code>border</code>). Run <code>sudo sweetpotatos-update</code>, then log out.</li>
         <li data-i18n-html="changelog.fifth.34">Removes <code>border_radius</code> / <code>border</code> from the Swirl config (the lines that kept showing Invalid command). The floating bar chrome is applied by frame.sh at runtime. Run <code>sudo sweetpotatos-update</code> — it deletes those lines from your config.</li>
         <li data-i18n-html="changelog.fifth.33">Swirl on stable is the swirl 64 binary again (pkgrel 69). After updating you must <b>log out once</b> — a config reload left the old broken compositor running, which is why border_radius errors stayed.</li>
         <li data-i18n-html="changelog.fifth.32">Restores the last good swirl (same as before the overview wallpaper tint). Builds 65–67 were broken and lost bar border_radius. Update still clears any leftover overview_wallpaper_tint line.</li>

@@ -97,6 +97,19 @@ copy_one() {
   local out="${DEST}/${rel}"
   local over="${OVERLAY}/${rel}"
 
+  # Main swirl config must track the shipped file. An old user_edits copy was
+  # re-injecting bar border_radius/border (Invalid command) on every sprout.
+  if [[ "${rel}" == "swirl/config" ]]; then
+    if [[ -e "${over}" || -L "${over}" ]]; then
+      echo "[*] Ignoring ${over} (shipped swirl/config wins; overlay kept resurrecting bad bar lines)"
+      rm -f "${over}"
+    fi
+    mkdir -p "$(dirname "${out}")"
+    cp -a "${src}" "${out}"
+    printf '%s\n' "${rel}" >>"${MANIFEST}.new"
+    return
+  fi
+
   if [[ -e "${over}" || -L "${over}" ]]; then
     mkdir -p "$(dirname "${out}")"
     cp -a "${over}" "${out}"

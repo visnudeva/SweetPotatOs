@@ -198,6 +198,14 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       target_home="$(eval echo "~${target_user}")"
     fi
     target_uid="$(id -u "${target_user}" 2>/dev/null || true)"
+    # Overlay swirl/config was re-injecting bar border_radius/border on every
+    # sprout (Invalid command). Delete it before sprout so the shipped file wins.
+    overlay_swirl_cfg="${target_home}/.config/sweetpotatos/user_edits/swirl/config"
+    if [[ -e "${overlay_swirl_cfg}" || -L "${overlay_swirl_cfg}" ]]; then
+      echo "[*] Removing ${overlay_swirl_cfg} (it was overriding the shipped config)"
+      rm -f "${overlay_swirl_cfg}"
+    fi
+
     echo "[*] Sprouting desktop config for ${target_user} (${target_home})…"
     sudo -u "${target_user}" HOME="${target_home}" \
       XDG_CONFIG_HOME="${target_home}/.config" \
@@ -228,27 +236,55 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
         "${theme_script}" --quiet apply || true
     fi
 
-    # Strip config commands that older/broken swirl rejects (tint seed; bar
-    # border_* which belong in frame.sh IPC only).
+    # Force shipped swirl config + strip any leftover bad lines anywhere.
+    shipped_swirl_cfg="/usr/share/sweetpotato/config/swirl/config"
+    live_swirl_cfg="${target_home}/.config/swirl/config"
+    if [[ -f "${shipped_swirl_cfg}" ]]; then
+      echo "[*] Forcing shipped swirl config (guarantees no bar border_radius / border)"
+      install -Dm644 "${shipped_swirl_cfg}" "${live_swirl_cfg}"
+      chown "${target_user}:${target_user}" "${live_swirl_cfg}" 2>/dev/null || true
+      if [[ -f "${theme_script}" ]]; then
+        sudo -u "${target_user}" HOME="${target_home}" \
+          XDG_CONFIG_HOME="${target_home}/.config" \
+          "${theme_script}" --quiet apply || true
+      fi
+      # Restore keyboard layout onto the fresh file (same helper as sprout).
+      xorg_kbd=/etc/X11/xorg.conf.d/00-keyboard.conf
+      if [[ -f "${xorg_kbd}" && -f "${live_swirl_cfg}" ]]; then
+        layout="$(sed -n 's/.*Option[[:space:]]*"XkbLayout"[[:space:]]*"\([^"]*\)".*/\1/p' "${xorg_kbd}" | head -1)"
+        variant="$(sed -n 's/.*Option[[:space:]]*"XkbVariant"[[:space:]]*"\([^"]*\)".*/\1/p' "${xorg_kbd}" | head -1)"
+        if [[ -n "${layout}" ]]; then
+          sed -i "s|^[[:space:]]*xkb_layout[[:space:]]\".*\"|    xkb_layout \"${layout}\"|" "${live_swirl_cfg}" || true
+          if [[ -n "${variant}" ]]; then
+            if grep -q '^[[:space:]]*xkb_variant' "${live_swirl_cfg}"; then
+              sed -i "s|^[[:space:]]*xkb_variant[[:space:]].*|    xkb_variant \"${variant}\"|" "${live_swirl_cfg}" || true
+            else
+              sed -i "/xkb_layout /a\\    xkb_variant \"${variant}\"" "${live_swirl_cfg}" || true
+            fi
+          fi
+          chown "${target_user}:${target_user}" "${live_swirl_cfg}" 2>/dev/null || true
+        fi
+      fi
+    fi
     for tint_cfg in \
-      "${target_home}/.config/swirl/config" \
-      "${target_home}/.config/sweetpotatos/user_edits/swirl/config"
+      "${live_swirl_cfg}" \
+      "${target_home}/.config/sway/config" \
+      "${target_home}/.config/swirl/config.d/user"
     do
       [[ -f "${tint_cfg}" ]] || continue
-      if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${tint_cfg}"; then
-        echo "[*] Removing leftover overview_wallpaper_tint from ${tint_cfg}"
-        sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${tint_cfg}"
-      fi
-      if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${tint_cfg}"; then
-        echo "[*] Removing bar border_radius from ${tint_cfg} (set by frame.sh)"
-        sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${tint_cfg}"
-      fi
-      if grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+[[:space:]]*$' "${tint_cfg}"; then
-        echo "[*] Removing bar border from ${tint_cfg} (set by frame.sh)"
-        sed -i -E '/^[[:space:]]*border[[:space:]]+[0-9]+[[:space:]]*$/d' "${tint_cfg}"
-      fi
+      sed -i -E \
+        -e '/^[[:space:]]*overview_wallpaper_tint\b/d' \
+        -e '/^[[:space:]]*border_radius[[:space:]]*:?[[:space:]]*[0-9]+/d' \
+        -e '/^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]+([[:space:]]|#|$)/d' \
+        "${tint_cfg}"
       chown "${target_user}:${target_user}" "${tint_cfg}" 2>/dev/null || true
     done
+    # default_decoration border_radius is OK (different command) — only flag bare lines.
+    if [[ -f "${live_swirl_cfg}" ]] && grep -nE '^[[:space:]]*border_radius[[:space:]]*:?[[:space:]]*[0-9]+|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]+' "${live_swirl_cfg}"; then
+      echo "[!] ERROR: bare bar border lines still in ${live_swirl_cfg}" >&2
+    else
+      echo "[+] Verified: ${live_swirl_cfg} has no bare bar border_radius / border lines"
+    fi
 
     # The old save-layout shortcut wrote "1920x1080@60" with no Hz, and
     # "position 0,0". Swirl rejects that on reload. Add Hz and split the
