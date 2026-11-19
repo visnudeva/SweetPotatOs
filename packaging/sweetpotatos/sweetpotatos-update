@@ -197,7 +197,6 @@ if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
   /usr/local/bin/sweetpotatos-fix-swirl-config || true
 fi
 
-reloaded=0
 if command -v sweetpotatos-sprout >/dev/null 2>&1; then
   # Sprout as the real desktop user (never root's HOME).
   target_user="${SUDO_USER:-}"
@@ -209,7 +208,6 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
     if [[ -z "${target_home}" || ! -d "${target_home}" ]]; then
       target_home="$(eval echo "~${target_user}")"
     fi
-    target_uid="$(id -u "${target_user}" 2>/dev/null || true)"
 
     echo "[*] Sprouting desktop config for ${target_user} (${target_home})…"
     sudo -u "${target_user}" HOME="${target_home}" \
@@ -231,8 +229,8 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       chown "${target_user}:${target_user}" "${dst_tips}" 2>/dev/null || true
     fi
 
-    # Sprout writes the default Sweet potato colors. Put the saved
-    # choice back before Swirl reloads, so the desktop does not snap back.
+    # Sprout writes the default Sweet potato colors. Put the saved choice
+    # back so the next login does not snap to the skel theme.
     theme_script="${target_home}/.config/swirl/scripts/theme.sh"
     if [[ -f "${theme_script}" ]]; then
       echo "[*] Restoring the selected theme…"
@@ -260,9 +258,8 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
     fi
 
     # The old save-layout shortcut wrote "1920x1080@60" with no Hz, and
-    # "position 0,0". Swirl rejects that on reload. Add Hz and split the
-    # position so the saved arrangement stays. A Displays Apply file already
-    # ends in Hz and is left alone.
+    # "position 0,0". Swirl rejects that. Add Hz and split the position so
+    # the saved arrangement stays. A Displays Apply file already ends in Hz.
     outputs_file="${target_home}/.config/sway/outputs"
     if [[ -s "${outputs_file}" ]] && grep -E -q \
       '(^|[[:space:]])mode[[:space:]]+(--[[:alnum:]-]+[[:space:]]+)?[0-9]+x[0-9]+@[0-9]+(\.[0-9]+)?([[:space:]]|$)' \
@@ -281,12 +278,10 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       fi
     fi
 
-    # Never reload after a swirl reinstall. Reload only re-parses config in
-    # the *running* compositor; that is what painted Invalid command on screen
-    # whenever package and process disagreed. Logout starts the new binary.
+    # Never reload into the running compositor after a swirl reinstall —
+    # that painted Invalid command when binary and config disagreed.
     echo "[!] Log out and back in (or reboot) so the installed Swirl binary starts."
     echo "    Do not Mod+Shift+c — reload cannot replace the running compositor."
-    reloaded=0
   else
     echo "[!] Skipping sprout — no non-root user to target (ran as root?)." >&2
   fi
@@ -300,18 +295,13 @@ if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
 fi
 echo "[!] Log out once (or reboot) so Swirl picks up packages and config."
 
-# The live color reload did not work. Drop the helper if a testing update
-# installed it. Log out once afterward so the session stops preloading it.
+# Drop a retired testing helper if present.
 if pacman -Q spo-gtk-live >/dev/null 2>&1; then
   echo "[*] Removing the GTK color-reload helper…"
   pacman -Rns --noconfirm spo-gtk-live || pacman -Rdd --noconfirm spo-gtk-live || true
 fi
 
 if command -v sweetpotatos-update-notify >/dev/null 2>&1; then
-  # Reload restarts mako; give it a moment before the what-changed note.
-  if [[ "${reloaded}" == 1 && "${SWEETPOTATOS_NOTIFY_NO_SLEEP:-}" != 1 ]]; then
-    sleep 2
-  fi
   # The notify script on disk is the one just installed. Pass the version
   # from before the transaction so it can show every note in between.
   printf '%s\n' "${changed}" | SWEETPOTATOS_UPDATE_FROM="${previous_sweetpotatos}" \

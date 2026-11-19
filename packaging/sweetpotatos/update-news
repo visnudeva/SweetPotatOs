@@ -1,38 +1,41 @@
+@2026.10.3-249
+What changed: Housekeeping — cleaner update scripts (no bogus reload), Settings update terminal closes on keypress, Escape reaches the app menu, install keyboard kept after update.
+
 @2026.10.3-248
-What changed: Settings → Updates “Press any key to close” actually closes the terminal again (foot hold mode was keeping it open).
+What changed: Settings → Updates “Press any key to close” actually closes the terminal again.
 
 @2026.10.3-247
-What changed: Escape closes the app menu again (overview was eating the key). Log out once after update.
+What changed: Escape closes the app menu again. Log out once after update.
 
 @2026.10.3-246
-What changed: Update keeps the keyboard layout chosen at install (French etc.) — a cleanup step was putting the US skel back after sprout. Log out once after update.
+What changed: Update keeps the keyboard layout chosen at install. Log out once after update.
 
 @2026.10.3-245
-What changed: Stops Invalid command for good — bar border_radius / border stay out of the config file (frame.sh paints the rounded bar after login). Update no longer reloads into the old compositor. Log out once after update.
+What changed: Bar border_radius / border stay out of the config file (frame.sh paints chrome after login). Update no longer reloads into the old compositor. Log out once after update.
 
 @2026.10.3-244
-What changed: Settings → Updates now runs the real sweetpotatos-update (pkexec). Restores the swirlbar rounded corners and accent border in the shipped config (they were removed while hunting Invalid command). Log out once after update.
+What changed: Settings → Updates runs the real sweetpotatos-update (pkexec). Log out once after update.
 
 @2026.10.3-243
-What changed: Update alone fixes the border_radius / border Invalid command — forces swirl + sweetpotatos reinstall, scrubs every user config, and verifies the lines are gone. Log out once after update.
+What changed: Update forces swirl + sweetpotatos reinstall and scrubs fragile config lines. Log out once after update.
 
 @2026.10.3-242
-What changed: Hard-scrubs border_radius / border lines from ~/.config/swirl/config (the exact Unknown/invalid command on lines 363–364), prints the cleaned bar section, and runs during package install. Also run: sudo sweetpotatos-fix-swirl-config
+What changed: Scrubs bar border_radius / border from ~/.config/swirl/config during update and package install.
 
 @2026.10.3-241
-What changed: Swirl was loading ~/.config/sway/config instead of the SweetPotatOs swirl config — that shadowed file still had border_radius / border. Update quarantines it and installs the clean config for every user (also runs during the package install itself).
+What changed: Quarantines ~/.config/sway/config when it shadows the SweetPotatOs swirl config.
 
 @2026.10.3-240
-What changed: Fixes the real reason Invalid command kept coming back — ~/.config/sweetpotatos/user_edits/swirl/config was overriding the shipped config and putting border_radius / border back. Update deletes that overlay and forces the clean shipped config.
+What changed: Deletes user_edits swirl/config overlays that reintroduced bad bar lines on sprout.
 
 @2026.10.3-239
-What changed: Removes bar border_radius / border from the Swirl config file (lines that caused Invalid command). frame.sh still applies the floating bar chrome at runtime. Update deletes those lines from your config automatically.
+What changed: Bar border_radius / border removed from the static config; frame.sh applies chrome at runtime.
 
 @2026.10.3-238
-What changed: After a Swirl upgrade you must log out once. Reload kept the old broken compositor running, which is why border_radius errors stayed. swirl 69 is the swirl 64 binary.
+What changed: After a Swirl upgrade you must log out once — reload cannot replace the running compositor.
 
 @2026.10.3-237
-What changed: Restores the last good swirl (pre–overview-tint). The 65–67 builds were broken and dropped bar border_radius. Update still removes any leftover overview_wallpaper_tint line.
+What changed: Restores the last good swirl binary (builds 65–67 were broken).
 
 # One block per sweetpotatos release, newest first.
 # @pkgver-pkgrel
@@ -41,19 +44,19 @@ What changed: Restores the last good swirl (pre–overview-tint). The 65–67 bu
 # version that was installed. Keep older blocks.
 
 @2026.10.3-236
-What changed: Reverts the overview wallpaper tint experiment from stable (swirl without that patch). Update still removes any leftover overview_wallpaper_tint line and reloads Swirl.
+What changed: Retires the overview wallpaper tint experiment from stable.
 
 @2026.10.3-235
-What changed: Update itself deletes leftover overview_wallpaper_tint lines and reloads Swirl — no manual edit. Fixes Invalid command from the 232 seeding mistake.
+What changed: Update strips leftover overview_wallpaper_tint lines from Swirl config.
 
 @2026.10.3-234
-What changed: Removes leftover overview_wallpaper_tint lines from ~/.config/swirl/config (and user_edits forks) that still caused Invalid command on reload. Run sudo sweetpotatos-update, then Mod+Shift+c.
+What changed: Clears leftover overview_wallpaper_tint lines from existing configs.
 
 @2026.10.3-233
-What changed: Fixes the overview accent wash config error from the previous update. Overview still tints the wallpaper from your theme accent with no extra config line. Log out and back in after updating.
+What changed: Retires the overview wallpaper tint config command.
 
 @2026.10.3-232
-What changed: Overview washes the wallpaper with your theme accent so it is obvious you are in the bird's-eye view. Needs swirl from this update. Log out and back in after updating (or Mod+Shift+c after theme apply).
+What changed: (Retired) Overview wallpaper tint experiment — removed in later updates.
 
 @2026.10.3-231
 Settings → Light tray (text only): drop GTK tray applets and show Wi‑Fi / Bluetooth / disks in the bar. Network and Bluetooth buttons in Settings still connect. Default stays tray icons.

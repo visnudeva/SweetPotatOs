@@ -4,10 +4,10 @@
 # Swirl prefers ~/.config/sway/config over ~/.config/swirl/config — quarantine
 # full-session shadows. Drop user_edits overlays that resurrect bad lines.
 #
-# Scrub parse-time landmines:
-#   - overview_wallpaper_tint (retired; never a valid config command)
-#   - bar border_radius / border (valid only on patched swirl; IPC via frame.sh)
-# Keep bar gaps in the shipped file; chrome is applied at runtime.
+# Scrub parse-time landmines (never leave these in the file):
+#   - overview_wallpaper_tint (retired)
+#   - bare bar border_radius / border (frame.sh applies chrome over IPC)
+# Keep bar gaps in the shipped file.
 #
 # After installing the shipped config (US skel), restore the install keyboard
 # from /etc/X11/xorg.conf.d/00-keyboard.conf so French (etc.) is not wiped.

@@ -112,7 +112,7 @@ def open_wallpaper(*_args):
 
 
 def open_updates(*_args):
-    # Dedicated wrapper: same as `sudo sweetpotatos-update` (pkexec + foot -H).
+    # Dedicated wrapper: same as `sudo sweetpotatos-update` (pkexec + foot).
     # Do not inline foot -e here — foot ignores -e (xterm compat) and old
     # Settings copies drifted from the real updater.
     for candidate in (
