@@ -13,4 +13,4 @@ Description = Removing stock Sway session (SweetPotatOs uses Swirl)...
 When = PostTransaction
 Depends = sh
 Depends = coreutils
-Exec = /bin/sh -c 'rm -f /usr/share/wayland-sessions/sway.desktop; mkdir -p /etc/ly/wayland-sessions; if [ -f /usr/share/wayland-sessions/swirl.desktop ]; then install -Dm644 /usr/share/wayland-sessions/swirl.desktop /etc/ly/wayland-sessions/swirl.desktop; fi'
+Exec = /bin/sh -c 'rm -f /usr/share/wayland-sessions/sway.desktop; mkdir -p /etc/ly/wayland-sessions; if [ -f /usr/share/wayland-sessions/swirl.desktop ]; then install -Dm644 /usr/share/wayland-sessions/swirl.desktop /etc/ly/wayland-sessions/swirl.desktop; sed -i "s|^Exec=.*|Exec=sweetpotatos-session|" /etc/ly/wayland-sessions/swirl.desktop; fi'

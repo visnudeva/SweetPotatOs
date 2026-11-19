@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Swirl
 Comment=SweetPotato scrolling tiling Wayland compositor
-Exec=swirl
+Exec=sweetpotatos-session
 Type=Application
 DesktopNames=swirl;wlroots

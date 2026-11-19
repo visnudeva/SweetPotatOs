@@ -1,9 +1,17 @@
 #!/bin/bash
-# Hand off from Plymouth splash to the live Swirl session.
+# Hand off from Plymouth / Ly to the Swirl session.
+# Bake the saved SweetPotato theme into configs before swirl starts so the
+# first frame is already the chosen palette (not a Sweet potato flash).
 if command -v plymouth >/dev/null 2>&1; then
   plymouth quit --retain-splash 2>/dev/null || plymouth quit 2>/dev/null || true
 fi
 export XDG_CURRENT_DESKTOP=swirl
 export XDG_SESSION_DESKTOP=swirl
 export XDG_SESSION_TYPE=wayland
+
+theme="${HOME}/.config/swirl/scripts/theme.sh"
+if [[ -x "${theme}" ]]; then
+  SPO_CONFIG_ROOT="${HOME}/.config" "${theme}" apply --quiet --no-reload 2>/dev/null || true
+fi
+
 exec swirl

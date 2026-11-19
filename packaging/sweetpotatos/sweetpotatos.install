@@ -124,6 +124,19 @@ _sync_wallpapers() {
   done < /etc/passwd
 }
 
+_ly_session_wrapper() {
+  # Ly must start sweetpotatos-session (theme baked before swirl), not bare swirl.
+  local ly=/etc/ly/wayland-sessions/swirl.desktop
+  local src=/usr/share/wayland-sessions/swirl.desktop
+  mkdir -p /etc/ly/wayland-sessions
+  if [[ -f "${src}" ]]; then
+    install -Dm644 "${src}" "${ly}"
+  fi
+  if [[ -f "${ly}" ]]; then
+    sed -i 's|^Exec=.*|Exec=sweetpotatos-session|' "${ly}" || true
+  fi
+}
+
 post_upgrade() {
   _ensure_pacman_include
   _sync_wallpapers
@@ -136,6 +149,7 @@ post_upgrade() {
   if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
     /usr/local/bin/sweetpotatos-fix-swirl-config || true
   fi
+  _ly_session_wrapper
   systemctl daemon-reload || true
   systemctl enable sweetpotatos-update-check.timer >/dev/null 2>&1 || true
   # $2 is the previous version. A fresh install has none; Calamares builds

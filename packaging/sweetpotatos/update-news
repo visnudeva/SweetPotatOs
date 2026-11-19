@@ -1,3 +1,6 @@
+@2026.10.3-250
+What changed: Chosen theme is already on screen at login — no more flash of the Sweet potato default before your palette. Log out once after update.
+
 @2026.10.3-249
 What changed: Housekeeping — cleaner update scripts (no bogus reload), Settings update terminal closes on keypress, Escape reaches the app menu, install keyboard kept after update.
 

@@ -22,10 +22,12 @@ DARK_IDS=(sweet-potato ube lime cyberpunk monochrome)
 LIGHT_IDS=(dragon-fruit sweet-potato-light blueberry monochrome-light)
 
 QUIET=0
+NO_RELOAD=0
 ARGS=()
 for arg in "$@"; do
   case "${arg}" in
     --quiet) QUIET=1 ;;
+    --no-reload) NO_RELOAD=1 ;;
     *) ARGS+=("${arg}") ;;
   esac
 done
@@ -777,7 +779,13 @@ def install_kanji(dest, asset, accent_hex, highlight_hex, bg_hex):
     im = bg
 
     dest.parent.mkdir(parents=True, exist_ok=True)
-    im.save(dest, "PNG")
+    import io
+    buf = io.BytesIO()
+    im.save(buf, "PNG")
+    data = buf.getvalue()
+    if dest.is_file() and dest.read_bytes() == data:
+        return False
+    dest.write_bytes(data)
     return True
 
 wrote_logo = False
@@ -1056,7 +1064,9 @@ case "${cmd}" in
   apply)
     read_state
     apply_current
-    if [[ "${CHANGED}" -eq 1 && -n "${SWAYSOCK:-}" ]]; then
+    # Login / session wrappers pass --no-reload so the first paint keeps the
+    # chosen theme (a reload after start flashed Sweet potato defaults).
+    if [[ "${CHANGED}" -eq 1 && "${NO_RELOAD}" -eq 0 && -n "${SWAYSOCK:-}" ]]; then
       reload_desktop
     fi
     [[ "${QUIET}" -eq 1 ]] || echo "${NAME}"

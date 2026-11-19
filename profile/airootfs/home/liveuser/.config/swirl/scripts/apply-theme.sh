@@ -75,7 +75,9 @@ EOF
 
 THEME_SCRIPT="${HOME}/.config/swirl/scripts/theme.sh"
 if [[ -x "${THEME_SCRIPT}" ]]; then
-  SPO_CONFIG_ROOT="${HOME}/.config" "${THEME_SCRIPT}" apply --quiet || true
+  # Colors should already be in swirl/config (session wrapper + last Apply).
+  # Never reload here — that flashed the Sweet potato skel before the saved theme.
+  SPO_CONFIG_ROOT="${HOME}/.config" "${THEME_SCRIPT}" apply --quiet --no-reload || true
 fi
 if [[ -f "${HOME}/.config/sweetpotatos/active.sh" ]]; then
   # shellcheck disable=SC1091
