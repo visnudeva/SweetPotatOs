@@ -65,7 +65,7 @@
     <div class="banner-row">
       <div class="rolling-note" data-i18n-aria="changelog.rolling.aria" aria-label="Fifth Harvest changes on the update channel">
         <p data-i18n-html="changelog.rolling1">Desktop changes below are already live for <strong>Fourth Harvest</strong></p>
-        <p data-i18n-html="changelog.rolling2">installs via <code>sudo sweetpotatos-update</code></p>
+        <p data-i18n-html="changelog.rolling2">via Settings → Updates (<code>Mod+,</code>) or <code>sudo sweetpotatos-update</code></p>
         <p data-i18n="changelog.rolling3">No need to wait for the Fifth Harvest ISO.</p>
       </div>
       <div class="banner-stack">
@@ -115,19 +115,7 @@
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
-        <li data-i18n-html="changelog.fifth.43">Settings Updates: Press any key closes the terminal again (foot hold mode was keeping it open).</li>
-        <li data-i18n-html="changelog.fifth.42">Escape closes the app menu again — overview was eating the key while the menu was open.</li>
-        <li data-i18n-html="changelog.fifth.41">Keeps the keyboard layout chosen at install (French etc.) — a cleanup step was putting US back after update.</li>
-        <li data-i18n-html="changelog.fifth.40">Stops the Invalid command loop: bar border radius stays out of the config file (painted after login). Update no longer reloads into the old compositor — log out once.</li>
-        <li data-i18n-html="changelog.fifth.39">Settings → Updates now runs the real <code>sweetpotatos-update</code> (via pkexec). Restores swirlbar rounded corners and accent border. Run <code>sudo sweetpotatos-update</code> (or Settings → Updates), then log out once.</li>
-        <li data-i18n-html="changelog.fifth.38">Update alone now fixes the <code>border_radius</code> / <code>border</code> Invalid command: forces package reinstall, scrubs every user config, verifies the lines are gone. Run <code>sudo sweetpotatos-update</code>, then log out once. Nothing to paste.</li>
-        <li data-i18n-html="changelog.fifth.37">Hard fix for <code>Unknown/invalid command 'border_radius'</code> / <code>border</code> on lines 363–364 of <code>~/.config/swirl/config</code>: update rewrites that file and prints the cleaned bar section. Run <code>sudo sweetpotatos-update</code> then <code>sudo sweetpotatos-fix-swirl-config</code>, then log out.</li>
-        <li data-i18n-html="changelog.fifth.36">Root cause: Swirl prefers <code>~/.config/sway/config</code> over the SweetPotatOs <code>~/.config/swirl/config</code>, so fixes never applied. Update 241 quarantines that shadow file and installs the clean config during the package install. Run <code>sudo sweetpotatos-update</code>, then log out.</li>
-        <li data-i18n-html="changelog.fifth.35">The Invalid command lines kept coming back because <code>~/.config/sweetpotatos/user_edits/swirl/config</code> overrode the shipped config every update. Update 240 deletes that overlay and forces the clean config (no bar <code>border_radius</code> / <code>border</code>). Run <code>sudo sweetpotatos-update</code>, then log out.</li>
-        <li data-i18n-html="changelog.fifth.34">Removes <code>border_radius</code> / <code>border</code> from the Swirl config (the lines that kept showing Invalid command). The floating bar chrome is applied by frame.sh at runtime. Run <code>sudo sweetpotatos-update</code> — it deletes those lines from your config.</li>
-        <li data-i18n-html="changelog.fifth.33">Swirl on stable is the swirl 64 binary again (pkgrel 69). After updating you must <b>log out once</b> — a config reload left the old broken compositor running, which is why border_radius errors stayed.</li>
-        <li data-i18n-html="changelog.fifth.32">Restores the last good swirl (same as before the overview wallpaper tint). Builds 65–67 were broken and lost bar border_radius. Update still clears any leftover overview_wallpaper_tint line.</li>
-        <li data-i18n-html="changelog.fifth.31">Reverts the overview wallpaper tint from stable (it caused Invalid command errors). Update still strips any leftover overview_wallpaper_tint line so a normal upgrade clears the nag.</li>
+        <li data-i18n-html="changelog.fifth.43">Desktop fixes.</li>
         <li data-i18n-html="changelog.fifth.30">Update now deletes leftover <code>overview_wallpaper_tint</code> lines from your Swirl config and reloads automatically — no manual edit. Fixes the <strong>Invalid command</strong> from the 232 seeding mistake. Run <code>sudo sweetpotatos-update</code>.</li>
         <li data-i18n-html="changelog.fifth.29">Removes leftover <code>overview_wallpaper_tint</code> lines from existing Swirl configs that still caused <strong>Invalid command</strong> on reload. Run <code>sudo sweetpotatos-update</code>, then <code>Mod+Shift+c</code>.</li>
         <li data-i18n-html="changelog.fifth.28">Fixes the overview accent-wash config error from the previous update (no more bad <code>overview_wallpaper_tint</code> line). Overview still tints the wallpaper from your theme accent. On the website, Patrick vault thumbnails are smaller before the lightbox zoom. Run <code>sudo sweetpotatos-update</code>, then log out and back in (or <code>Mod+Shift+c</code>).</li>

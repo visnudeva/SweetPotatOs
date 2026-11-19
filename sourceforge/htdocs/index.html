@@ -87,7 +87,7 @@
       <p class="tuber-vault-line" data-vault-line data-i18n-final="vault.line1" data-final="Harvest telemetry nominal. Old potatoes still boot."></p>
       <p class="tuber-vault-line" data-vault-line data-i18n-final="vault.line2" data-final="Swirl strip infinite. Workspaces stacked like soil beds."></p>
       <p class="tuber-vault-line" data-vault-line data-i18n-final="vault.line3" data-final="You found the glitch tuber. Nothing illegal grows here."></p>
-      <p class="tuber-vault-line" data-vault-line data-i18n-final="vault.line4" data-final="Channel rolling. sudo sweetpotatos-update keeps the patch alive."></p>
+      <p class="tuber-vault-line" data-vault-line data-i18n-final="vault.line4" data-final="Channel rolling. Settings → Updates (Mod+,) or sudo sweetpotatos-update keeps the patch alive."></p>
       <p class="tuber-vault-line" data-vault-line data-vault-seed-line data-i18n-final="vault.line5" data-final="Deeper soil: type the first letter of potato."></p>
       <button type="button" class="tuber-vault-close" id="tuber-vault-close" data-i18n="vault.close">Close vault · Esc</button>
     </div>
@@ -98,29 +98,32 @@
       <p class="tuber-vault-line" data-deep-line data-i18n-final="vault.deep.line3" data-final="No megathreads. No loot. Just a potato and a tiling strip."></p>
       <p class="tuber-vault-line" data-deep-line data-i18n-final="vault.deep.line4" data-final="If this made you smile, water the harvest — Support helps."></p>
       <section class="tuber-vault-lore" aria-labelledby="vault-patrick-title" hidden>
-        <p class="tuber-vault-lore-title" id="vault-patrick-title" data-i18n="vault.patrick.title">Subject file · PATRICK</p>
-        <p class="tuber-vault-lore-body" data-i18n-html="vault.patrick.body">
-          The original sweet potato that sparked the branding. Named <strong>Patrick</strong>
-          for the resemblance to Patrick Star from SpongeBob SquarePants — same soft orange
-          torso energy, same unbothered stance. The sprouts came first; the logo idea followed.
-        </p>
-        <div class="tuber-vault-lore-shots" data-lightbox-gallery>
-          <figure>
-            <a href="vault/patrick-close.jpg">
-              <img src="vault/patrick-close.jpg" width="600" height="800" loading="lazy"
-                data-i18n-alt="vault.patrick.alt1"
-                alt="Patrick the sweet potato up close in a hanging planter, orange tuber with purple stems and green leaves">
-            </a>
-            <figcaption data-i18n="vault.patrick.cap1">Close portrait</figcaption>
-          </figure>
-          <figure>
-            <a href="vault/patrick-hanging.jpg">
-              <img src="vault/patrick-hanging.jpg" width="600" height="800" loading="lazy"
-                data-i18n-alt="vault.patrick.alt2"
-                alt="Patrick hanging in a macramé planter against a white wall, vines reaching up">
-            </a>
-            <figcaption data-i18n="vault.patrick.cap2">Habitat shot</figcaption>
-          </figure>
+        <div class="tuber-vault-lore-grid">
+          <div class="tuber-vault-lore-copy">
+            <p class="tuber-vault-lore-title" id="vault-patrick-title" data-i18n="vault.patrick.title">Subject file · PATRICK</p>
+            <p class="tuber-vault-lore-body" data-i18n-html="vault.patrick.body">
+              The sweet potato that sparked the branding — named <strong>Patrick</strong>
+              for the Patrick Star vibe. Soft orange torso, unbothered stance. Sprouts first; the logo followed.
+            </p>
+          </div>
+          <div class="tuber-vault-lore-shots" data-lightbox-gallery>
+            <figure>
+              <a href="vault/patrick-close.jpg">
+                <img src="vault/patrick-close.jpg" width="600" height="800" loading="lazy"
+                  data-i18n-alt="vault.patrick.alt1"
+                  alt="Patrick the sweet potato up close in a hanging planter, orange tuber with purple stems and green leaves">
+              </a>
+              <figcaption data-i18n="vault.patrick.cap1">Close portrait</figcaption>
+            </figure>
+            <figure>
+              <a href="vault/patrick-hanging.jpg">
+                <img src="vault/patrick-hanging.jpg" width="600" height="800" loading="lazy"
+                  data-i18n-alt="vault.patrick.alt2"
+                  alt="Patrick hanging in a macramé planter against a white wall, vines reaching up">
+              </a>
+              <figcaption data-i18n="vault.patrick.cap2">Habitat shot</figcaption>
+            </figure>
+          </div>
         </div>
       </section>
       <button type="button" class="tuber-vault-close" id="tuber-vault-deep-close" data-i18n="vault.deep.back">Back to vault · Esc</button>
@@ -182,6 +185,7 @@
 
     <h2 data-i18n="home.apps">Default apps</h2>
     <ul class="app-grid">
+      <li><span data-i18n="home.app.settings">Settings</span> SweetPotatOs Settings</li>
       <li><span data-i18n="home.app.browser">Browser</span> Brave Origin</li>
       <li><span data-i18n="home.app.files">Files</span> Thunar</li>
       <li><span data-i18n="home.app.editor">Editor</span> Geany</li>
@@ -206,7 +210,8 @@
     <h2 data-i18n="home.updates">Staying updated</h2>
     <p data-i18n-html="home.updates1">
       From <strong>Third Harvest</strong> onward, desktop and SweetPotatOs package fixes ship as a
-      <strong>rolling</strong> channel. On an installed system:
+      <strong>rolling</strong> channel. On an installed system, update with one click from
+      <strong>SweetPotatOs Settings</strong> (<code>Mod+,</code> → Updates, or the app menu), or in a terminal:
     </p>
     <pre><code>sudo sweetpotatos-update</code></pre>
     <p data-i18n-html="home.updates2">

@@ -80,6 +80,7 @@
   (survives updates; later binds win over defaults)
 
   Desktop / package updates
+  Mod+, → Updates (SweetPotatOs Settings), or
   sudo sweetpotatos-update
   A notice once a week when updates are ready
   After an update, a note says what changed
