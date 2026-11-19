@@ -329,30 +329,13 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
   fi
 fi
 
-# Last step: scrub only (do not clobber theme colors). Update alone must fix
-# Unknown/invalid command on border_radius / border — no manual paste.
+# Re-apply shipped config (with bar chrome) without a second full wipe of theme:
+# install shipped once more only if bar chrome lines are missing, then theme.
 if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
-  echo "[*] Final scrub of bar border_radius / border lines…"
-  SWEETPOTATOS_SCRUB_ONLY=1 /usr/local/bin/sweetpotatos-fix-swirl-config || true
+  echo "[*] Ensuring swirl config has bar chrome + no retired tint lines…"
+  /usr/local/bin/sweetpotatos-fix-swirl-config || true
 fi
-bad_left=0
-while IFS=: read -r _ _ uid _ _ home _; do
-  [[ "${uid}" =~ ^[0-9]+$ && "${uid}" -ge 1000 ]] || continue
-  [[ "${home}" == /home/* && -f "${home}/.config/swirl/config" ]] || continue
-  if grep -qE '^[[:space:]]*border_radius|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]' \
-    "${home}/.config/swirl/config"; then
-    echo "[!] STILL BAD: ${home}/.config/swirl/config" >&2
-    grep -nE '^[[:space:]]*border_radius|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]' \
-      "${home}/.config/swirl/config" >&2 || true
-    bad_left=1
-  fi
-done < /etc/passwd
-if (( bad_left )); then
-  echo "[!] Config scrub failed — please report this update log." >&2
-else
-  echo "[+] Confirmed: no bare bar border_radius / border in user swirl configs."
-fi
-echo "[!] Log out once (or reboot) so Swirl reloads the cleaned config."
+echo "[!] Log out once (or reboot) so Swirl picks up packages and config."
 
 # The live color reload did not work. Drop the helper if a testing update
 # installed it. Log out once afterward so the session stops preloading it.

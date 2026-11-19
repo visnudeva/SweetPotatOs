@@ -1,52 +1,25 @@
 #!/usr/bin/env bash
-# Make every desktop user load a clean SweetPotatOs swirl config.
+# Ensure every desktop user loads the SweetPotatOs swirl config.
 #
-# Swirl prefers ~/.config/sway/config over ~/.config/swirl/config.
-# Overlays and stale copies kept reintroducing:
-#   border_radius 8
-#   border 2
-# → Unknown/invalid command (especially on swirl builds without bar chrome).
+# Swirl prefers ~/.config/sway/config over ~/.config/swirl/config — quarantine
+# full-session shadows. Drop user_edits overlays that resurrect bad lines.
+# Scrub only retired overview_wallpaper_tint (bar border_* belong in config).
 set -euo pipefail
 
 SHIPPED="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}/swirl/config"
-# SCRUB_ONLY=1 — only delete bad lines (keep theme colors). Default: reinstall shipped.
 SCRUB_ONLY="${SWEETPOTATOS_SCRUB_ONLY:-0}"
 [[ -f "${SHIPPED}" ]] || {
   echo "[!] No shipped swirl config at ${SHIPPED}" >&2
   exit 0
 }
 
-# Delete any bare bar chrome lines (space or colon separated).
-# Keeps: default_decoration border_radius, default_border, border pixel, for_window … border
 scrub_file() {
   local f="$1"
   [[ -f "${f}" ]] || return 0
-  python3 - "${f}" <<'PY'
-import pathlib, re, sys
-path = pathlib.Path(sys.argv[1])
-text = path.read_text(encoding="utf-8", errors="replace")
-out = []
-removed = []
-for i, line in enumerate(text.splitlines(True), 1):
-    raw = line.rstrip("\n\r")
-    s = raw.strip()
-    # border_radius 8  |  border_radius:8  |  border_radius: 8
-    if re.match(r"^border_radius(\s*:?\s*|\s+)\S", s):
-        removed.append((i, raw))
-        continue
-    # border 2  |  border:2  — but not "border pixel" / "default_border" / for_window
-    if re.match(r"^border(\s*:?\s*|\s+)\d+(\s*(#.*)?)?$", s):
-        removed.append((i, raw))
-        continue
-    out.append(line)
-if removed:
-    path.write_text("".join(out), encoding="utf-8")
-    for n, raw in removed:
-        print(f"    removed line {n}: {raw!r}")
-    print(f"[+] scrubbed {len(removed)} line(s) from {path}")
-else:
-    print(f"[+] no bare bar border lines in {path}")
-PY
+  if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${f}"; then
+    sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${f}"
+    echo "[+] removed overview_wallpaper_tint from ${f}"
+  fi
 }
 
 fix_home() {
@@ -85,14 +58,14 @@ fix_home() {
   chown -R "${uid}:${gid}" "${cfg_home}/swirl" 2>/dev/null || true
   chown "${uid}:${gid}" "${swirl_cfg}" 2>/dev/null || true
 
-  echo "[*] ${home}: lines 355-375 of active swirl config:"
-  sed -n '355,375p' "${swirl_cfg}" | sed 's/^/    |/'
-
-  if grep -nE '^[[:space:]]*border_radius|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]' "${swirl_cfg}"; then
-    echo "[!] ${home}: STILL has bare bar border lines after scrub" >&2
-    return 1
+  if [[ -f "${swirl_cfg}" ]]; then
+    if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${swirl_cfg}" \
+      && grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${swirl_cfg}"; then
+      echo "[+] ${home}: bar border_radius + border present"
+    else
+      echo "[!] ${home}: shipped bar chrome lines missing — check ${swirl_cfg}" >&2
+    fi
   fi
-  echo "[+] ${home}: clean"
 }
 
 echo "[*] pacman: $(pacman -Q sweetpotatos 2>/dev/null || echo 'sweetpotatos ?') / $(pacman -Q swirl 2>/dev/null || echo 'swirl ?')"

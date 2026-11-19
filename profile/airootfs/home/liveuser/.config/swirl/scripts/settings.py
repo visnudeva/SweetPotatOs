@@ -112,15 +112,25 @@ def open_wallpaper(*_args):
 
 
 def open_updates(*_args):
-    term = shutil.which("foot") or shutil.which("xterm") or "foot"
+    # Dedicated wrapper: same as `sudo sweetpotatos-update` (pkexec + foot -H).
+    # Do not inline foot -e here — foot ignores -e (xterm compat) and old
+    # Settings copies drifted from the real updater.
+    for candidate in (
+        shutil.which("sweetpotatos-settings-update"),
+        "/usr/local/bin/sweetpotatos-settings-update",
+    ):
+        if candidate and Path(candidate).is_file():
+            spawn(candidate)
+            return
     spawn(
-        term,
+        shutil.which("foot") or "foot",
         "-a",
         "sweetpotato-settings-term",
-        "-e",
+        "-H",
+        "--",
         "bash",
         "-lc",
-        'sudo sweetpotatos-update; echo; read -n1 -rsp "Press any key to close…" || true',
+        'sudo /usr/local/bin/sweetpotatos-update; echo; read -n1 -rsp "Press any key to close…" || true',
     )
 
 

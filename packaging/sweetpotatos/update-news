@@ -1,3 +1,6 @@
+@2026.10.3-244
+What changed: Settings → Updates now runs the real sweetpotatos-update (pkexec). Restores the swirlbar rounded corners and accent border in the shipped config (they were removed while hunting Invalid command). Log out once after update.
+
 @2026.10.3-243
 What changed: Update alone fixes the border_radius / border Invalid command — forces swirl + sweetpotatos reinstall, scrubs every user config, and verifies the lines are gone. Log out once after update.
 

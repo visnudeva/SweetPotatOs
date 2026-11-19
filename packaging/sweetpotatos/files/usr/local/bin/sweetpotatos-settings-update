@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Settings → Updates. Must do the same work as a terminal `sudo sweetpotatos-update`.
+# foot's -e is ignored (xterm compat), so we pass the command as foot's argv.
+set -euo pipefail
+
+UPD="$(command -v sweetpotatos-update || true)"
+[[ -n "${UPD}" ]] || UPD=/usr/local/bin/sweetpotatos-update
+[[ -x "${UPD}" ]] || {
+  notify-send -a SweetPotatOs "Updates" "sweetpotatos-update is missing." 2>/dev/null || true
+  exit 1
+}
+
+term="$(command -v foot || command -v xterm || true)"
+[[ -n "${term}" ]] || {
+  notify-send -a SweetPotatOs "Updates" "No terminal (foot) installed." 2>/dev/null || true
+  exit 1
+}
+
+# Prefer polkit so a GUI click gets a password dialog even when sudo is awkward.
+runner=(sudo)
+if command -v pkexec >/dev/null 2>&1; then
+  runner=(pkexec)
+fi
+
+exec "${term}" -a sweetpotato-settings-term -H -- bash -lc \
+  "echo 'SweetPotatOs update…'; ${runner[*]} ${UPD}; echo; read -n1 -rsp 'Press any key to close…' || true"
