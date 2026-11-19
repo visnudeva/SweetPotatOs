@@ -115,6 +115,7 @@
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
+        <li data-i18n-html="changelog.fifth.33">Swirl on stable is the swirl 64 binary again (pkgrel 69). After updating you must <b>log out once</b> — a config reload left the old broken compositor running, which is why border_radius errors stayed.</li>
         <li data-i18n-html="changelog.fifth.32">Restores the last good swirl (same as before the overview wallpaper tint). Builds 65–67 were broken and lost bar border_radius. Update still clears any leftover overview_wallpaper_tint line.</li>
         <li data-i18n-html="changelog.fifth.31">Reverts the overview wallpaper tint from stable (it caused Invalid command errors). Update still strips any leftover overview_wallpaper_tint line so a normal upgrade clears the nag.</li>
         <li data-i18n-html="changelog.fifth.30">Update now deletes leftover <code>overview_wallpaper_tint</code> lines from your Swirl config and reloads automatically — no manual edit. Fixes the <strong>Invalid command</strong> from the 232 seeding mistake. Run <code>sudo sweetpotatos-update</code>.</li>

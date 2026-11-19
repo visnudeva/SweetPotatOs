@@ -1,3 +1,6 @@
+@2026.10.3-238
+What changed: After a Swirl upgrade you must log out once. Reload kept the old broken compositor running, which is why border_radius errors stayed. swirl 69 is the swirl 64 binary.
+
 @2026.10.3-237
 What changed: Restores the last good swirl (pre–overview-tint). The 65–67 builds were broken and dropped bar border_radius. Update still removes any leftover overview_wallpaper_tint line.
 

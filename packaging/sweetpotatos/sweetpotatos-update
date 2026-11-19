@@ -263,8 +263,29 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       fi
     fi
 
-    # Reload Swirl so shipped config changes apply — users should not need Mod+Shift+c.
-    if [[ -n "${target_uid}" ]]; then
+    # Reload applies config to the *running* compositor. If that process is
+    # still an old swirl binary (package upgraded, session not restarted),
+    # reload reports bogus Invalid command (e.g. bar border_radius).
+    swirl_needs_logout=0
+    if printf '%s\n' "${changed}" | grep -qx 'swirl'; then
+      swirl_needs_logout=1
+    elif [[ -n "${target_uid}" && -x /usr/bin/swirl ]]; then
+      # pacman already installed a new swirl earlier; session still on old exe.
+      for swirl_pid in $(pgrep -u "${target_uid}" -x swirl 2>/dev/null || true); do
+        exe="/proc/${swirl_pid}/exe"
+        if [[ -L "${exe}" ]]; then
+          if [[ "$(readlink "${exe}" 2>/dev/null || true)" == *'(deleted)'* ]] \
+            || ! cmp -s /usr/bin/swirl "${exe}" 2>/dev/null; then
+            swirl_needs_logout=1
+            break
+          fi
+        fi
+      done
+    fi
+    if (( swirl_needs_logout )); then
+      echo "[!] Log out and back in (or reboot) so the installed Swirl binary starts."
+      echo "    Config reload cannot replace the running compositor — that left border_radius errors on screen."
+    elif [[ -n "${target_uid}" ]]; then
       shopt -s nullglob
       socks=(/run/user/"${target_uid}"/sway-ipc.*.sock /run/user/"${target_uid}"/swirl-ipc.*.sock)
       shopt -u nullglob
