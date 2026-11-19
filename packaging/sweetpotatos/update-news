@@ -1,3 +1,6 @@
+@2026.10.3-247
+What changed: Escape closes the app menu again (overview was eating the key). Log out once after update.
+
 @2026.10.3-246
 What changed: Update keeps the keyboard layout chosen at install (French etc.) — a cleanup step was putting the US skel back after sprout. Log out once after update.
 

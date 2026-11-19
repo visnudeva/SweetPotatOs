@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=69
+pkgrel=70
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -103,13 +103,13 @@ sha256sums=('SKIP'
             '97189ea05e4e97c1e132c972bece049f4073dfd1e72dc4751ec2e75f5c7a73ab'
             'a00af1731de153ff92d6b8a3c368483790eb053c109b12347aba51c22cace081'
             'SKIP'
-            '0f434fbd20c4953b319744793a85121b84b72caf0ca4eaa505377ec0be120c78'
+            'ab1b3534818b11bcd69ab270bc02a7f08f32f7ee0884574cd77b4194d8144536'
             '9ba4d6289cab1c65d9659730493a0309da2f631965fd225859bda8e7b917fc0f'
             '66d22925cb86f95be38d6f2187f7d867c2b4924568d07366eaca748c001ca6c7'
             '50841dd1a6e38920391d3197924bdfbaf07e3e6d6816e6d1188c196d13755898'
             '689d4d0998195d8d9e5e211b13f89952197d9df7eea7f02806c56b8b05c37772'
             '20430894c03ff636f9dbdb332f6fc8c80560c2eca52f1ac608c811d532eac36e'
-            'a9a5728a8e6d1c5194a8682a9467a21ce71f251bc60a10b9d0513164ed84e128'
+            'b82c0b0779894f9e38153c42d936a64dc8346f9e945ccbdeeb4164075cfd381b'
             'd02bf171159dbb75c799af98e0b55df3614cbf69a555914a3bad2d6bb2cba7a9'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46'
