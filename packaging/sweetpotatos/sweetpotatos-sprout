@@ -175,3 +175,17 @@ if [[ -f "${theme_script}" ]]; then
   echo "[*] Restoring the selected theme…"
   SPO_CONFIG_ROOT="${DEST}" "${theme_script}" --quiet apply || true
 fi
+
+# Drop the short-lived overview_wallpaper_tint line from 232 — unknown on
+# older swirl and no longer written by theme.sh (wash uses indicator color).
+purge_overview_tint() {
+  local f
+  for f in "${DEST}/swirl/config" "${OVERLAY}/swirl/config"; do
+    [[ -f "${f}" ]] || continue
+    if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${f}"; then
+      sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${f}"
+      echo "[+] Removed overview_wallpaper_tint from ${f}"
+    fi
+  done
+}
+purge_overview_tint
