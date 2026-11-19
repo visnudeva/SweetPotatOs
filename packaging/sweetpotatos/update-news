@@ -4,6 +4,9 @@
 # The updater shows one notification for every block newer than the
 # version that was installed. Keep older blocks.
 
+@2026.10.3-236
+What changed: Reverts the overview wallpaper tint experiment from stable (swirl without that patch). Update still removes any leftover overview_wallpaper_tint line and reloads Swirl.
+
 @2026.10.3-235
 What changed: Update itself deletes leftover overview_wallpaper_tint lines and reloads Swirl — no manual edit. Fixes Invalid command from the 232 seeding mistake.
 

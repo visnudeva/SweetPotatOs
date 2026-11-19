@@ -115,6 +115,7 @@
         <span class="expand-btn" aria-hidden="true"><span class="when-closed" data-i18n="changelog.expand">Expand</span><span class="when-open" data-i18n="changelog.collapse">Collapse</span></span>
       </summary>
       <ul>
+        <li data-i18n-html="changelog.fifth.31">Reverts the overview wallpaper tint from stable (it caused Invalid command errors). Update still strips any leftover overview_wallpaper_tint line so a normal upgrade clears the nag.</li>
         <li data-i18n-html="changelog.fifth.30">Update now deletes leftover <code>overview_wallpaper_tint</code> lines from your Swirl config and reloads automatically — no manual edit. Fixes the <strong>Invalid command</strong> from the 232 seeding mistake. Run <code>sudo sweetpotatos-update</code>.</li>
         <li data-i18n-html="changelog.fifth.29">Removes leftover <code>overview_wallpaper_tint</code> lines from existing Swirl configs that still caused <strong>Invalid command</strong> on reload. Run <code>sudo sweetpotatos-update</code>, then <code>Mod+Shift+c</code>.</li>
         <li data-i18n-html="changelog.fifth.28">Fixes the overview accent-wash config error from the previous update (no more bad <code>overview_wallpaper_tint</code> line). Overview still tints the wallpaper from your theme accent. On the website, Patrick vault thumbnails are smaller before the lightbox zoom. Run <code>sudo sweetpotatos-update</code>, then log out and back in (or <code>Mod+Shift+c</code>).</li>
