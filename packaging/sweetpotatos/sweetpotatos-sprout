@@ -25,6 +25,7 @@ rm -f "${STATE_DIR}/materialized"
 SEED_ONLY=(
   kanshi/config
   swirl/config.d/user
+  xfce4/helpers.rc
 )
 
 wallpaper_dests() {

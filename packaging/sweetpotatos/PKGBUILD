@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=250
+pkgrel=251
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -91,6 +91,10 @@ package() {
   install -Dm644 "${files}/usr/share/applications/sweetpotato-settings.desktop" \
     "${pkgdir}/usr/share/applications/sweetpotato-settings.desktop"
 
+  # Thunar "Open Terminal Here" resolves TerminalEmulator via xfce4 helpers.
+  install -Dm644 "${files}/usr/share/xfce4/helpers/foot.desktop" \
+    "${pkgdir}/usr/share/xfce4/helpers/foot.desktop"
+
   install -Dm644 "${files}/usr/local/share/sweetpotatos/os-release" \
     "${pkgdir}/usr/local/share/sweetpotatos/os-release"
   install -Dm644 "${files}/usr/local/share/sweetpotatos/issue" \
@@ -141,6 +145,10 @@ package() {
       cp -a "${skel}/${dir}/." "${pkgdir}/usr/share/sweetpotato/config/${dir}/"
     fi
   done
+
+  # Preferred terminal for Thunar/exo — helpers.rc only (not whole xfce4/xfconf).
+  install -Dm644 "${skel}/xfce4/helpers.rc" \
+    "${pkgdir}/usr/share/sweetpotato/config/xfce4/helpers.rc"
 
   # Shipped wallpapers for sprout → ~/Pictures/Wallpapers.
   # Use /usr/share/sweetpotato/backgrounds (not /usr/share/backgrounds/…) so
