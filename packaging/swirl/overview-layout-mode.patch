@@ -1,0 +1,233 @@
+diff --git a/include/sway/commands.h b/include/sway/commands.h
+index 47ca7dae..9c28e317 100644
+--- a/include/sway/commands.h
++++ b/include/sway/commands.h
+@@ -208,6 +208,7 @@ sway_cmd cmd_scale_content;
+ sway_cmd cmd_scale_workspace;
+ sway_cmd cmd_scale_workspaces;
+ sway_cmd cmd_overview_hot_corner;
++sway_cmd cmd_overview_layout;
+ sway_cmd cmd_scratchpad;
+ sway_cmd cmd_scratchpad_minimize;
+ sway_cmd cmd_scratchpad_minimize_view;
+diff --git a/include/sway/config.h b/include/sway/config.h
+index 2a697a90..71bd8637 100644
+--- a/include/sway/config.h
++++ b/include/sway/config.h
+@@ -576,6 +576,12 @@ struct sway_config {
+ 	/* Top-left corner toggles scale_workspaces overview when true. */
+ 	bool overview_hot_corner;
+ 
++	/* Multi-desktop overview packing: stripe (coverflow) or wall (equal grid). */
++	enum {
++		OVERVIEW_LAYOUT_STRIPE = 0,
++		OVERVIEW_LAYOUT_WALL = 1,
++	} overview_layout;
++
+ 	enum smart_gaps_mode smart_gaps;
+ 	int gaps_inner;
+ 	struct side_gaps gaps_outer;
+diff --git a/sway/commands.c b/sway/commands.c
+index 2f468937..11337007 100644
+--- a/sway/commands.c
++++ b/sway/commands.c
+@@ -192,6 +192,7 @@ static const struct cmd_handler command_handlers[] = {
+ 	{ "scale_workspace", cmd_scale_workspace },
+ 	{ "scale_workspaces", cmd_scale_workspaces },
+ 	{ "overview_hot_corner", cmd_overview_hot_corner },
++	{ "overview_layout", cmd_overview_layout },
+ 	{ "scratchpad", cmd_scratchpad },
+ 	{ "scratchpad_minimize_view", cmd_scratchpad_minimize_view },
+ 	{ "selection", cmd_selection },
+diff --git a/sway/commands/overview.c b/sway/commands/overview.c
+index 68a31931..bf8fbcae 100644
+--- a/sway/commands/overview.c
++++ b/sway/commands/overview.c
+@@ -4,6 +4,7 @@
+ #include <strings.h>
+ #include "sway/commands.h"
+ #include "sway/tree/workspace.h"
++#include "sway/tree/layout.h"
+ #include "util.h"
+ 
+ struct cmd_results *cmd_workspace_labels_color(int argc, char **argv) {
+@@ -147,3 +148,21 @@ struct cmd_results *cmd_overview_hot_corner(int argc, char **argv) {
+ 	config->overview_hot_corner = parse_boolean(argv[0], config->overview_hot_corner);
+ 	return cmd_results_new(CMD_SUCCESS, NULL);
+ }
++
++
++struct cmd_results *cmd_overview_layout(int argc, char **argv) {
++	struct cmd_results *error;
++	if ((error = checkarg(argc, "overview_layout", EXPECTED_EQUAL_TO, 1))) {
++		return error;
++	}
++	if (strcmp(argv[0], "stripe") == 0) {
++		config->overview_layout = OVERVIEW_LAYOUT_STRIPE;
++	} else if (strcmp(argv[0], "wall") == 0) {
++		config->overview_layout = OVERVIEW_LAYOUT_WALL;
++	} else {
++		return cmd_results_new(CMD_INVALID,
++			"Expected 'overview_layout <stripe|wall>'");
++	}
++	layout_overview_workspaces_recompute_scale();
++	return cmd_results_new(CMD_SUCCESS, NULL);
++}
+diff --git a/sway/config.c b/sway/config.c
+index 923ac8e9..ebc825f3 100644
+--- a/sway/config.c
++++ b/sway/config.c
+@@ -381,6 +381,7 @@ static void config_defaults(struct sway_config *config) {
+ 	config->tiling_drag = true;
+ 	config->tiling_drag_threshold = 9;
+ 	config->overview_hot_corner = true;
++	config->overview_layout = OVERVIEW_LAYOUT_STRIPE;
+ 	config->primary_selection = true;
+ 
+ 	config->smart_gaps = SMART_GAPS_OFF;
+diff --git a/sway/tree/layout.c b/sway/tree/layout.c
+index 2f5835c0..e82ee98c 100644
+--- a/sway/tree/layout.c
++++ b/sway/tree/layout.c
+@@ -409,8 +409,31 @@ static void workspace_name_decoration(struct sway_workspace *ws, bool enable) {
+ 	wlr_scene_node_set_enabled(&ws->jump.name_tree->node, true);
+ }
+ 
++static void overview_place_workspace(struct sway_output *output,
++		struct sway_workspace *child, double x, double y,
++		double jump_w, double jump_h, double scale) {
++	wlr_scene_node_reparent(&child->jump.text_tree->node, output->layers.shell_overlay);
++	wlr_scene_node_reparent(&child->jump.name_tree->node, output->layers.shell_overlay);
++	child->layout.fullscreen = child->fullscreen;
++	child->jump.x = round(x);
++	child->jump.y = round(y);
++	child->jump.width = jump_w;
++	child->jump.height = jump_h;
++	child->jump.scale = scale;
++	child->layers.tiling->node.info.workspace = child;
++	node_set_dirty(&child->node);
++	if (child->fullscreen) {
++		container_set_fullscreen(child->fullscreen, FULLSCREEN_NONE);
++		arrange_root();
++	}
++	workspace_name_decoration(child, false);
++	for (int f = 0; f < child->floating->length; ++f) {
++		struct sway_container *con = child->floating->items[f];
++		con->scene_tree->node.info.workspace = child;
++	}
++}
++
+ static void overview_workspaces_recompute_scale(struct sway_output *output) {
+-	/* Stack workspaces as equal-height horizontal stripes (stable hit targets). */
+ 	const struct wlr_box *usable_area = &output->usable_area;
+ 	const double left = usable_area->x;
+ 	const double top = usable_area->y;
+@@ -421,51 +444,66 @@ static void overview_workspaces_recompute_scale(struct sway_output *output) {
+ 		return;
+ 	}
+ 
+-	/* No workspace numbers/names — stripes only. */
+-	const double label_h = 0.0;
+ 	const double gap = 8.0;
+-	const double reserved = gap * (length + 1);
+-	double avail_h = usable_area->height - reserved;
+-	if (avail_h < 48.0) {
+-		avail_h = 48.0;
+-	}
+-	const double avail_w = usable_area->width - 2.0 * gap;
+-
+-	double scale = fmin(avail_w / width, avail_h / (height * (double) length));
+-	if (scale > 1.0) {
+-		scale = 1.0;
+-	}
+-	if (scale < 0.05) {
+-		scale = 0.05;
+-	}
+-
+-	double y = top + gap;
+-	for (int i = 0; i < length; ++i) {
+-		struct sway_workspace *child = output->workspaces->items[i];
+-		const double jump_w = ceil(scale * width);
+-		const double jump_h = ceil(scale * height);
+-		const double x = left + 0.5 * (usable_area->width - jump_w);
+-
+-		wlr_scene_node_reparent(&child->jump.text_tree->node, output->layers.shell_overlay);
+-		wlr_scene_node_reparent(&child->jump.name_tree->node, output->layers.shell_overlay);
+-		child->layout.fullscreen = child->fullscreen;
+-		child->jump.x = round(x);
+-		child->jump.y = round(y + label_h);
+-		child->jump.width = jump_w;
+-		child->jump.height = jump_h;
+-		child->jump.scale = scale;
+-		child->layers.tiling->node.info.workspace = child;
+-		node_set_dirty(&child->node);
+-		if (child->fullscreen) {
+-			container_set_fullscreen(child->fullscreen, FULLSCREEN_NONE);
+-			arrange_root();
++
++	if (config->overview_layout == OVERVIEW_LAYOUT_WALL) {
++		/* Equal-size tiles packed in a sqrt grid (wall of stripes). */
++		const int rows = (int)ceil(sqrt((double)length));
++		const int per_row = length / rows;
++		int remain = length % rows;
++		double scale = fmin(
++			(usable_area->width - gap * (rows + 1)) / (rows * width),
++			(usable_area->height - gap * (rows + 1)) / (rows * height));
++		if (scale > 1.0) {
++			scale = 1.0;
++		}
++		if (scale < 0.05) {
++			scale = 0.05;
++		}
++		int j = 0;
++		for (int r = 0; r < rows; ++r) {
++			int cols = per_row;
++			if (remain > 0) {
++				++cols;
++				remain--;
++			}
++			const double jump_w = ceil(scale * width);
++			const double jump_h = ceil(scale * height);
++			const double gapx = (usable_area->width - cols * jump_w) / (cols + 1);
++			const double gapy = (usable_area->height - rows * jump_h) / (rows + 1);
++			for (int c = 0; c < cols; ++c) {
++				struct sway_workspace *child = output->workspaces->items[j++];
++				const double x = left + gapx + c * (jump_w + gapx);
++				const double y = top + gapy + r * (jump_h + gapy);
++				overview_place_workspace(output, child, x, y, jump_w, jump_h, scale);
++			}
++		}
++	} else {
++		/* Stack workspaces as equal-height horizontal stripes (stable hit targets). */
++		const double reserved = gap * (length + 1);
++		double avail_h = usable_area->height - reserved;
++		if (avail_h < 48.0) {
++			avail_h = 48.0;
+ 		}
+-		workspace_name_decoration(child, false);
+-		for (int f = 0; f < child->floating->length; ++f) {
+-			struct sway_container *con = child->floating->items[f];
+-			con->scene_tree->node.info.workspace = child;
++		const double avail_w = usable_area->width - 2.0 * gap;
++
++		double scale = fmin(avail_w / width, avail_h / (height * (double) length));
++		if (scale > 1.0) {
++			scale = 1.0;
++		}
++		if (scale < 0.05) {
++			scale = 0.05;
++		}
++
++		double y = top + gap;
++		for (int i = 0; i < length; ++i) {
++			struct sway_workspace *child = output->workspaces->items[i];
++			const double jump_w = ceil(scale * width);
++			const double jump_h = ceil(scale * height);
++			const double x = left + 0.5 * (usable_area->width - jump_w);
++			overview_place_workspace(output, child, x, y, jump_w, jump_h, scale);
++			y += jump_h + gap;
+ 		}
+-		y += label_h + jump_h + gap;
+ 	}
+ 	output_damage_whole(output);
+ }

@@ -24,10 +24,10 @@ index 933c8a0c..1bf8a69e 100644
  void layout_overview_workspaces_global_to_local(struct sway_workspace *workspace, double *lx, double *ly);
  void layout_overview_workspaces_local_to_global(struct sway_workspace *workspace, double *lx, double *ly);
 diff --git a/sway/tree/layout.c b/sway/tree/layout.c
-index eb1af522..4f1f298e 100644
+index e82ee98c..1eda4700 100644
 --- a/sway/tree/layout.c
 +++ b/sway/tree/layout.c
-@@ -386,6 +386,35 @@ bool layout_overview_workspaces_enabled() {
+@@ -386,6 +386,34 @@ bool layout_overview_workspaces_enabled() {
  	return root ? root->overview : false;
  }
  
@@ -43,27 +43,26 @@ index eb1af522..4f1f298e 100644
 +	color[1] = ind[1];
 +	color[2] = ind[2];
 +	color[3] = 0.4f;
-+	bool show = on;
 +	for (int i = 0; i < root->outputs->length; ++i) {
 +		struct sway_output *output = root->outputs->items[i];
 +		struct wlr_scene_rect *rect = output->overview_wallpaper_tint;
 +		if (!rect) {
 +			continue;
 +		}
-+		if (show) {
++		if (on) {
 +			wlr_scene_rect_set_size(rect, output->width, output->height);
 +			wlr_scene_rect_set_color(rect, color);
 +			wlr_scene_node_set_position(&rect->node, 0, 0);
 +			wlr_scene_node_raise_to_top(&rect->node);
 +		}
-+		wlr_scene_node_set_enabled(&rect->node, show);
++		wlr_scene_node_set_enabled(&rect->node, on);
 +	}
 +}
 +
  static void workspace_name_decoration(struct sway_workspace *ws, bool enable) {
  	if (!enable) {
  		if (ws->jump.name) {
-@@ -523,6 +552,7 @@ void layout_overview_workspaces(bool on) {
+@@ -567,6 +595,7 @@ void layout_overview_workspaces(bool on) {
  			output_damage_whole(output);
  		}
  	}

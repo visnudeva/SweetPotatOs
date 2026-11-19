@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=70
+pkgrel=71
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -87,6 +87,8 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'overview-border-clip.patch'
         'overview-escape-exit.patch'
         'swaybar-quiet-shutdown.patch'
+        'overview-layout-mode.patch'
+        'overview-wallpaper-tint.patch'
         'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
         'wmenu-selection-radius.patch'
         'wmenu-layer-margins.patch')
@@ -111,6 +113,8 @@ sha256sums=('SKIP'
             '20430894c03ff636f9dbdb332f6fc8c80560c2eca52f1ac608c811d532eac36e'
             'b82c0b0779894f9e38153c42d936a64dc8346f9e945ccbdeeb4164075cfd381b'
             'd02bf171159dbb75c799af98e0b55df3614cbf69a555914a3bad2d6bb2cba7a9'
+            '1829dafaff2d600c67c65a03bd617a7f79a31a2a2c8677a70e0ae234107a3dec'
+            '2be597378f8f8f4090948f82d6e6ef5a13f7667b07c1b06b74e8126de9494954'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46'
             'c0fd32d07027e5e4f290392df0acaaf64c61b9fe1a421f9fee317550b9f9dc92')
@@ -164,6 +168,10 @@ prepare() {
   git apply "${srcdir}/overview-escape-exit.patch"
   # Logout/poweroff: do not dump red swaybar/tray disconnect lines on the VT.
   git apply "${srcdir}/swaybar-quiet-shutdown.patch"
+  # Overview packing: stripe (coverflow) or wall (equal grid); Settings toggle.
+  git apply "${srcdir}/overview-layout-mode.patch"
+  # Accent wash over wallpaper in overview (theme indicator; no config command).
+  git apply "${srcdir}/overview-wallpaper-tint.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"

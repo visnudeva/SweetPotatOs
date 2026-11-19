@@ -1,5 +1,8 @@
+@2026.10.3-253
+What changed: Overview wallpaper tint follows your accent; Settings → Overview wall layout switches stripe vs equal tiles. Testing channel — log out once after update.
+
 @2026.10.3-252
-What changed: File manager “Open Terminal Here” opens foot directly (testing channel). Close and reopen Thunar once after update.
+What changed: File manager “Open Terminal Here” opens foot directly. Close and reopen Thunar once after update.
 
 @2026.10.3-251
 What changed: File manager “Open Terminal Here” opens foot again (preferred TerminalEmulator was never set).

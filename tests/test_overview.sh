@@ -63,6 +63,10 @@ assert "grep -q 'Exit overview first' '${CLICK}' || grep -q 'Exit overview befor
   "click-zoom exits overview before focus"
 assert "grep -q 'OVERVIEW_ALL' '${FIT}'" "fit-strips shows every window stripe"
 assert "grep -q 'XKB_KEY_Escape' '${ESC}'" "escape-exit patch handles Escape"
+assert "grep -q 'focused_layer' '${ESC}'" \
+  "escape-exit does not steal Escape from layer menus"
+assert "grep -q 'output->workspaces' '${FIT}'" \
+  "fit-strips clears overview on all workspaces"
 assert "grep -q 'round(sx + sw)' '${ROOT}/packaging/swirl/overview-border-clip.patch'" "border-clip uses non-overlapping round scale"
 
 assert "grep -q 'animations' '${SKEL_CFG}'" "skel enables overview animation block"
@@ -71,12 +75,29 @@ assert "[[ -f '${ROOT}/packaging/swirl/overview-wallpaper-tint.patch' ]]" \
   "overview-wallpaper-tint patch present"
 assert "grep -q 'overview-wallpaper-tint.patch' '${PKGBUILD}'" \
   "PKGBUILD applies wallpaper-tint"
-assert "grep -q 'overview_wallpaper_tint' '${ROOT}/packaging/swirl/overview-wallpaper-tint.patch'" \
-  "wallpaper-tint patch defines overview_wallpaper_tint"
 assert "grep -q 'border_colors.focused.indicator' '${ROOT}/packaging/swirl/overview-wallpaper-tint.patch'" \
-  "wallpaper-tint follows focused indicator accent"
+  "tint uses theme accent indicator (no config command)"
 assert "! grep -q 'overview_wallpaper_tint' '${SKEL_CFG}'" \
-  "skel does not seed overview_wallpaper_tint (avoids reload errors)"
+  "skel does not seed overview_wallpaper_tint"
+assert "[[ -f '${ROOT}/packaging/swirl/overview-layout-mode.patch' ]]" \
+  "overview-layout-mode patch present"
+assert "grep -q 'overview-layout-mode.patch' '${PKGBUILD}'" \
+  "PKGBUILD applies overview-layout-mode"
+assert "grep -q 'OVERVIEW_LAYOUT_WALL' '${ROOT}/packaging/swirl/overview-layout-mode.patch'" \
+  "layout-mode patch defines wall packing"
+assert "grep -q 'overview-layout.sh apply' '${SKEL_CFG}'" \
+  "skel applies overview-layout on login"
+assert "[[ -f '${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/overview-layout.sh' ]]" \
+  "overview-layout.sh present"
+assert "grep -q 'Overview wall layout' '${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/settings.py'" \
+  "Settings has Overview wall layout toggle"
+assert "! grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' '${SKEL_CFG}'" \
+  "skel has no parse-time bar border_radius"
+assert "! grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' '${SKEL_CFG}'" \
+  "skel has no parse-time bar border"
+assert "! grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' '${LIVE_CFG}'" \
+  "liveuser has no parse-time bar border_radius"
+assert "grep -q 'frame.sh apply' '${SKEL_CFG}'" "skel applies bar chrome via frame.sh"
 
 echo
 echo "overview: ${PASS} passed, ${FAIL} failed"

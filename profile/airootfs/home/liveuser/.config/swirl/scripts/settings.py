@@ -21,6 +21,7 @@ THEME = ROOT / "sweetpotatos" / "theme"
 FRAME = ROOT / "sweetpotatos" / "frame"
 SMART = ROOT / "sweetpotatos" / "smart-brightness" / "enabled"
 HOT_CORNER = ROOT / "sweetpotatos" / "hot-corner"
+OVERVIEW_LAYOUT = ROOT / "sweetpotatos" / "overview-layout"
 TRAY_MODE = ROOT / "sweetpotatos" / "tray-mode"
 CAFFEINE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "sweetpotato-caffeine.state"
 TITLE = "SweetPotatOs Settings"
@@ -56,6 +57,11 @@ def hot_corner_on():
     if HOT_CORNER.is_file() and HOT_CORNER.read_text().strip() == "off":
         return False
     return True
+
+
+def overview_wall_on():
+    """True when overview packs desktops as an equal-size wall (not stripes)."""
+    return OVERVIEW_LAYOUT.is_file() and OVERVIEW_LAYOUT.read_text().strip() == "wall"
 
 
 def light_tray_on():
@@ -173,6 +179,9 @@ class Settings(Gtk.Window):
         box.pack_start(self._heading("Desktop"), False, False, 0)
         self.sw_frames = self._switch_row(box, "Corners and gaps", self._on_frames)
         self.sw_hot = self._switch_row(box, "Overview hot corner", self._on_hot_corner)
+        self.sw_overview_wall = self._switch_row(
+            box, "Overview wall layout", self._on_overview_wall
+        )
         self.sw_tray = self._switch_row(
             box, "Light tray (text only)", self._on_light_tray
         )
@@ -313,6 +322,7 @@ class Settings(Gtk.Window):
     def refresh(self):
         self._set_switch(self.sw_frames, frames_on())
         self._set_switch(self.sw_hot, hot_corner_on())
+        self._set_switch(self.sw_overview_wall, overview_wall_on())
         self._set_switch(self.sw_tray, light_tray_on())
         self._set_switch(self.sw_smart, smart_on())
         self._set_switch(self.sw_caffeine, caffeine_on())
@@ -340,6 +350,13 @@ class Settings(Gtk.Window):
         if self._setting:
             return
         run_script("hot-corner.sh", "on" if switch.get_active() else "off")
+
+    def _on_overview_wall(self, switch, _pspec):
+        if self._setting:
+            return
+        run_script(
+            "overview-layout.sh", "wall" if switch.get_active() else "stripe"
+        )
 
     def _on_light_tray(self, switch, _pspec):
         if self._setting:
