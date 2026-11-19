@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+# Make every desktop user load a clean SweetPotatOs swirl config.
+#
+# Swirl's search order prefers ~/.config/sway/config over ~/.config/swirl/config.
+# A leftover sway/config (or user_edits overlay) kept reintroducing
+# bar border_radius / border → Invalid command, no matter what we shipped.
+set -euo pipefail
+
+SHIPPED="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}/swirl/config"
+[[ -f "${SHIPPED}" ]] || {
+  echo "[!] No shipped swirl config at ${SHIPPED}" >&2
+  exit 0
+}
+
+strip_bad_lines() {
+  local f="$1"
+  [[ -f "${f}" ]] || return 0
+  sed -i -E \
+    -e '/^[[:space:]]*overview_wallpaper_tint\b/d' \
+    -e '/^[[:space:]]*border_radius[[:space:]]*:?[[:space:]]*[0-9]+/d' \
+    -e '/^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]+([[:space:]]|#|$)/d' \
+    "${f}"
+}
+
+fix_home() {
+  local home="$1" uid="$2" gid="$3"
+  local cfg_home="${home}/.config"
+  local swirl_cfg="${cfg_home}/swirl/config"
+  local sway_cfg="${cfg_home}/sway/config"
+  local overlay="${cfg_home}/sweetpotatos/user_edits/swirl/config"
+  local old_sway="${home}/.sway/config"
+  local active=""
+
+  mkdir -p "${cfg_home}/swirl" "${cfg_home}/sway" "${cfg_home}/sweetpotatos/user_edits/swirl"
+
+  if [[ -e "${overlay}" || -L "${overlay}" ]]; then
+    echo "[*] ${home}: removing user_edits swirl/config overlay"
+    rm -f "${overlay}"
+  fi
+
+  # Prefer-order shadow: if sway/config exists, swirl never reads swirl/config.
+  if [[ -f "${sway_cfg}" ]]; then
+    if grep -qE '^[[:space:]]*bar[[:space:]]*\{|border_radius|bindsym \$mod' "${sway_cfg}" 2>/dev/null; then
+      echo "[*] ${home}: quarantining ${sway_cfg} (it shadowed swirl/config)"
+      mv -f "${sway_cfg}" "${sway_cfg}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
+    fi
+  fi
+  if [[ -f "${old_sway}" ]]; then
+    if grep -qE '^[[:space:]]*bar[[:space:]]*\{|border_radius|bindsym \$mod' "${old_sway}" 2>/dev/null; then
+      echo "[*] ${home}: quarantining ${old_sway}"
+      mv -f "${old_sway}" "${old_sway}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
+    fi
+  fi
+
+  echo "[*] ${home}: installing shipped swirl config"
+  install -Dm644 "${SHIPPED}" "${swirl_cfg}"
+  strip_bad_lines "${swirl_cfg}"
+  strip_bad_lines "${cfg_home}/swirl/config.d/user"
+  strip_bad_lines "${sway_cfg}"
+  chown -R "${uid}:${gid}" "${cfg_home}/swirl" 2>/dev/null || true
+  chown "${uid}:${gid}" "${swirl_cfg}" 2>/dev/null || true
+
+  # Which file swirl will actually load next login.
+  if [[ -f "${sway_cfg}" ]]; then
+    active="${sway_cfg}"
+  elif [[ -f "${old_sway}" ]]; then
+    active="${old_sway}"
+  elif [[ -f "${swirl_cfg}" ]]; then
+    active="${swirl_cfg}"
+  fi
+  echo "[+] ${home}: active config → ${active:-unknown}"
+  if [[ -n "${active}" ]] && grep -nE '^[[:space:]]*border_radius[[:space:]]*:?[[:space:]]*[0-9]+|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]+' "${active}" 2>/dev/null; then
+    echo "[!] ${home}: bare bar border lines STILL in ${active}" >&2
+    return 1
+  fi
+  echo "[+] ${home}: no bare bar border_radius / border in active config"
+}
+
+fixed=0
+while IFS=: read -r _ _ uid gid _ home _; do
+  [[ "${uid}" =~ ^[0-9]+$ ]] || continue
+  [[ "${uid}" -ge 1000 ]] || continue
+  [[ "${home}" == /home/* && -d "${home}" ]] || continue
+  fix_home "${home}" "${uid}" "${gid}" || true
+  fixed=$((fixed + 1))
+done < /etc/passwd
+
+if (( fixed == 0 )); then
+  echo "[!] No /home desktop users found to fix" >&2
+fi
+exit 0

@@ -131,6 +131,11 @@ post_upgrade() {
   if command -v sweetpotatos-branding >/dev/null 2>&1; then
     sweetpotatos-branding || true
   fi
+  # Runs inside the pacman transaction (all /home users) so a shadowed
+  # ~/.config/sway/config cannot keep Invalid command alive after update.
+  if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
+    /usr/local/bin/sweetpotatos-fix-swirl-config || true
+  fi
   systemctl daemon-reload || true
   systemctl enable sweetpotatos-update-check.timer >/dev/null 2>&1 || true
   # $2 is the previous version. A fresh install has none; Calamares builds

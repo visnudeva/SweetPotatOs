@@ -1,3 +1,6 @@
+@2026.10.3-241
+What changed: Swirl was loading ~/.config/sway/config instead of the SweetPotatOs swirl config — that shadowed file still had border_radius / border. Update quarantines it and installs the clean config for every user (also runs during the package install itself).
+
 @2026.10.3-240
 What changed: Fixes the real reason Invalid command kept coming back — ~/.config/sweetpotatos/user_edits/swirl/config was overriding the shipped config and putting border_radius / border back. Update deletes that overlay and forces the clean shipped config.
 
