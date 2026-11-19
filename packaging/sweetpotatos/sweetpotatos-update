@@ -228,17 +228,26 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
         "${theme_script}" --quiet apply || true
     fi
 
-    # 232 briefly seeded overview_wallpaper_tint; strip it everywhere before
-    # reload so users only need this update (no manual edit / Mod+Shift+c).
+    # Strip config commands that older/broken swirl rejects (tint seed; bar
+    # border_* which belong in frame.sh IPC only).
     for tint_cfg in \
       "${target_home}/.config/swirl/config" \
       "${target_home}/.config/sweetpotatos/user_edits/swirl/config"
     do
-      if [[ -f "${tint_cfg}" ]] && grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${tint_cfg}"; then
+      [[ -f "${tint_cfg}" ]] || continue
+      if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${tint_cfg}"; then
         echo "[*] Removing leftover overview_wallpaper_tint from ${tint_cfg}"
         sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${tint_cfg}"
-        chown "${target_user}:${target_user}" "${tint_cfg}" 2>/dev/null || true
       fi
+      if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${tint_cfg}"; then
+        echo "[*] Removing bar border_radius from ${tint_cfg} (set by frame.sh)"
+        sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${tint_cfg}"
+      fi
+      if grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+[[:space:]]*$' "${tint_cfg}"; then
+        echo "[*] Removing bar border from ${tint_cfg} (set by frame.sh)"
+        sed -i -E '/^[[:space:]]*border[[:space:]]+[0-9]+[[:space:]]*$/d' "${tint_cfg}"
+      fi
+      chown "${target_user}:${target_user}" "${tint_cfg}" 2>/dev/null || true
     done
 
     # The old save-layout shortcut wrote "1920x1080@60" with no Hz, and

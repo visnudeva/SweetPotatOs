@@ -1,3 +1,6 @@
+@2026.10.3-239
+What changed: Removes bar border_radius / border from the Swirl config file (lines that caused Invalid command). frame.sh still applies the floating bar chrome at runtime. Update deletes those lines from your config automatically.
+
 @2026.10.3-238
 What changed: After a Swirl upgrade you must log out once. Reload kept the old broken compositor running, which is why border_radius errors stayed. swirl 69 is the swirl 64 binary.
 
