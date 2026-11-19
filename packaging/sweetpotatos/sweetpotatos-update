@@ -227,6 +227,20 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
         XDG_CONFIG_HOME="${target_home}/.config" \
         "${theme_script}" --quiet apply || true
     fi
+
+    # 232 briefly seeded overview_wallpaper_tint; strip it everywhere before
+    # reload so users only need this update (no manual edit / Mod+Shift+c).
+    for tint_cfg in \
+      "${target_home}/.config/swirl/config" \
+      "${target_home}/.config/sweetpotatos/user_edits/swirl/config"
+    do
+      if [[ -f "${tint_cfg}" ]] && grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${tint_cfg}"; then
+        echo "[*] Removing leftover overview_wallpaper_tint from ${tint_cfg}"
+        sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${tint_cfg}"
+        chown "${target_user}:${target_user}" "${tint_cfg}" 2>/dev/null || true
+      fi
+    done
+
     # The old save-layout shortcut wrote "1920x1080@60" with no Hz, and
     # "position 0,0". Swirl rejects that on reload. Add Hz and split the
     # position so the saved arrangement stays. A Displays Apply file already
