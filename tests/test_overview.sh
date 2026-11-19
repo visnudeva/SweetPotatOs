@@ -79,20 +79,14 @@ assert "grep -q 'border_colors.focused.indicator' '${ROOT}/packaging/swirl/overv
   "tint uses theme accent indicator (no config command)"
 assert "! grep -q 'overview_wallpaper_tint' '${SKEL_CFG}'" \
   "skel does not seed overview_wallpaper_tint"
-assert "[[ -f '${ROOT}/packaging/swirl/overview-layout-mode.patch' ]]" \
-  "overview-layout-mode patch present"
-assert "grep -q 'overview-layout-mode.patch' '${PKGBUILD}'" \
-  "PKGBUILD applies overview-layout-mode"
-assert "grep -q 'OVERVIEW_LAYOUT_WALL' '${ROOT}/packaging/swirl/overview-layout-mode.patch'" \
-  "layout-mode patch defines wall packing"
-assert "grep -q 'cols first' '${ROOT}/packaging/swirl/overview-layout-mode.patch'" \
-  "wall packing uses wide cols-first grid"
-assert "grep -q 'overview-layout.sh apply' '${SKEL_CFG}'" \
-  "skel applies overview-layout on login"
-assert "[[ -f '${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/overview-layout.sh' ]]" \
-  "overview-layout.sh present"
-assert "grep -q 'Overview wall layout' '${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/settings.py'" \
-  "Settings has Overview wall layout toggle"
+assert "[[ -f '${ROOT}/packaging/swirl/overview-layout-mode.patch.wip' ]]" \
+  "overview-layout-mode patch parked as .wip"
+assert "! grep -qE 'git apply.*overview-layout-mode' '${PKGBUILD}'" \
+  "PKGBUILD does not apply overview-layout-mode"
+assert "! grep -q 'overview-layout.sh' '${SKEL_CFG}'" \
+  "skel has no overview-layout apply"
+assert "! grep -q 'Overview wall layout' '${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/settings.py'" \
+  "Settings has no Overview wall layout toggle"
 assert "! grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' '${SKEL_CFG}'" \
   "skel has no parse-time bar border_radius"
 assert "! grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' '${SKEL_CFG}'" \

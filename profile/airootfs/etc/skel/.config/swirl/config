@@ -310,7 +310,6 @@ gaps inner 8
 # Re-applies / clears gaps, bar chrome, and hide_edge_borders after reload.
 exec_always ~/.config/swirl/scripts/frame.sh apply
 exec_always ~/.config/swirl/scripts/hot-corner.sh apply
-exec_always ~/.config/swirl/scripts/overview-layout.sh apply
 # Brave paints its own rounded frame. A server border matches the other windows.
 for_window [app_id="brave-origin"] border pixel 2
 for_window [app_id="brave"] border pixel 2
