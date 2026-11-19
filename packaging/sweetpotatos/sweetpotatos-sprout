@@ -189,7 +189,7 @@ if [[ -f "${theme_script}" ]]; then
   SPO_CONFIG_ROOT="${DEST}" "${theme_script}" --quiet apply || true
 fi
 
-# Drop retired overview_wallpaper_tint only (bar border_* are valid again).
+# Drop parse-time landmines. Bar chrome is IPC-only (frame.sh).
 purge_fragile_swirl_lines() {
   local f
   for f in "${DEST}/swirl/config" "${OVERLAY}/swirl/config"; do
@@ -197,6 +197,14 @@ purge_fragile_swirl_lines() {
     if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${f}"; then
       sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${f}"
       echo "[+] Removed overview_wallpaper_tint from ${f}"
+    fi
+    if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${f}"; then
+      sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${f}"
+      echo "[+] Removed bar border_radius from ${f}"
+    fi
+    if grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${f}"; then
+      sed -i -E '/^[[:space:]]*border[[:space:]]+[0-9]+/d' "${f}"
+      echo "[+] Removed bar border from ${f}"
     fi
   done
 }

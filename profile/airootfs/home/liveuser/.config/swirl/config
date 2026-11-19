@@ -361,11 +361,10 @@ bar {
     # are off. The meters on the right are the status script.
     scroller_indicator no
     trails_indicator no
-    # Default matches frames on so a theme reload keeps the floating chrome.
-    # frame.sh clears these when ~/.config/sweetpotatos/frame is off.
+    # Floating bar gaps match frames-on. border_radius / border stay out of
+    # this file — parse-time bar cmds are Invalid command on any mismatched
+    # binary; frame.sh apply (exec_always) sets chrome over IPC instead.
     gaps 8 8 0 8
-    border_radius 8
-    border 2
 
     colors {
         # SPO-BAR-START

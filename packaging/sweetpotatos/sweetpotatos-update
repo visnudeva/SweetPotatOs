@@ -193,7 +193,7 @@ pacman -S --noconfirm "${REPO_NAME}/sweetpotatos" "${REPO_NAME}/swirl" || \
 
 # Always scrub configs for every /home user (not gated on sprout/SUDO_USER).
 if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
-  echo "[*] Fixing swirl configs (remove bar border_radius / border)…"
+  echo "[*] Fixing swirl configs (no parse-time bar border_*; scrub tint)…"
   /usr/local/bin/sweetpotatos-fix-swirl-config || true
 fi
 
@@ -281,58 +281,20 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       fi
     fi
 
-    # Reload applies config to the *running* compositor. If that process is
-    # still an old swirl binary (package upgraded, session not restarted),
-    # reload reports bogus Invalid command (e.g. bar border_radius).
-    swirl_needs_logout=0
-    if printf '%s\n' "${changed}" | grep -qx 'swirl'; then
-      swirl_needs_logout=1
-    elif [[ -n "${target_uid}" && -x /usr/bin/swirl ]]; then
-      # pacman already installed a new swirl earlier; session still on old exe.
-      for swirl_pid in $(pgrep -u "${target_uid}" -x swirl 2>/dev/null || true); do
-        exe="/proc/${swirl_pid}/exe"
-        if [[ -L "${exe}" ]]; then
-          if [[ "$(readlink "${exe}" 2>/dev/null || true)" == *'(deleted)'* ]] \
-            || ! cmp -s /usr/bin/swirl "${exe}" 2>/dev/null; then
-            swirl_needs_logout=1
-            break
-          fi
-        fi
-      done
-    fi
-    if (( swirl_needs_logout )); then
-      echo "[!] Log out and back in (or reboot) so the installed Swirl binary starts."
-      echo "    Config reload cannot replace the running compositor — that left border_radius errors on screen."
-    elif [[ -n "${target_uid}" ]]; then
-      shopt -s nullglob
-      socks=(/run/user/"${target_uid}"/sway-ipc.*.sock /run/user/"${target_uid}"/swirl-ipc.*.sock)
-      shopt -u nullglob
-      if ((${#socks[@]} > 0)) && command -v swaymsg >/dev/null 2>&1; then
-        echo "[*] Reloading Swirl session…"
-        if sudo -u "${target_user}" SWAYSOCK="${socks[0]}" swaymsg reload >/dev/null 2>&1; then
-          reloaded=1
-        fi
-        # Reload starts the normal idle timeouts. If caffeine was on, put
-        # the timeout-free watcher back and drop any old idle inhibitor.
-        caffeine_state="/run/user/${target_uid}/sweetpotato-caffeine.state"
-        caffeine_script="${target_home}/.config/swirl/scripts/caffeine.sh"
-        if [[ -f "${caffeine_state}" && "$(cat "${caffeine_state}")" == on && -f "${caffeine_script}" ]]; then
-          echo "[*] Caffeine was on — restoring it without an idle lock…"
-          sudo -u "${target_user}" HOME="${target_home}" \
-            XDG_RUNTIME_DIR="/run/user/${target_uid}" \
-            "${caffeine_script}" on || true
-        fi
-      fi
-    fi
+    # Never reload after a swirl reinstall. Reload only re-parses config in
+    # the *running* compositor; that is what painted Invalid command on screen
+    # whenever package and process disagreed. Logout starts the new binary.
+    echo "[!] Log out and back in (or reboot) so the installed Swirl binary starts."
+    echo "    Do not Mod+Shift+c — reload cannot replace the running compositor."
+    reloaded=0
   else
     echo "[!] Skipping sprout — no non-root user to target (ran as root?)." >&2
   fi
 fi
 
-# Re-apply shipped config (with bar chrome) without a second full wipe of theme:
-# install shipped once more only if bar chrome lines are missing, then theme.
+# Re-apply shipped config (no parse-time bar border_*; tint scrubbed).
 if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
-  echo "[*] Ensuring swirl config has bar chrome + no retired tint lines…"
+  echo "[*] Ensuring swirl config is clean (chrome via frame.sh on login)…"
   /usr/local/bin/sweetpotatos-fix-swirl-config || true
 fi
 echo "[!] Log out once (or reboot) so Swirl picks up packages and config."

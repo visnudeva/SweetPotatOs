@@ -1,3 +1,6 @@
+@2026.10.3-245
+What changed: Stops Invalid command for good — bar border_radius / border stay out of the config file (frame.sh paints the rounded bar after login). Update no longer reloads into the old compositor. Log out once after update.
+
 @2026.10.3-244
 What changed: Settings → Updates now runs the real sweetpotatos-update (pkexec). Restores the swirlbar rounded corners and accent border in the shipped config (they were removed while hunting Invalid command). Log out once after update.
 

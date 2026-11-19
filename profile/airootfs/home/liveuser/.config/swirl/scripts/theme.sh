@@ -411,9 +411,17 @@ EOF
     [[ -f "${cfg}" ]] || continue
     changed_note="$(replace_block "${cfg}" "# SPO-CLIENT-START" "# SPO-CLIENT-END" < "${payload}")"
     note_change <<< "${changed_note}"
-    # Retired overview tint seed (bar border_* stay — swirl supports them).
+    # Parse-time landmines: tint (retired) and bar border_* (IPC via frame.sh).
     if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${cfg}"; then
       sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${cfg}"
+      CHANGED=1
+    fi
+    if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${cfg}"; then
+      sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${cfg}"
+      CHANGED=1
+    fi
+    if grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${cfg}"; then
+      sed -i -E '/^[[:space:]]*border[[:space:]]+[0-9]+/d' "${cfg}"
       CHANGED=1
     fi
     if grep -q 'icon_theme ' "${cfg}"; then

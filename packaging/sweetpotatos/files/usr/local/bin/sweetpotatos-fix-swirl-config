@@ -3,7 +3,11 @@
 #
 # Swirl prefers ~/.config/sway/config over ~/.config/swirl/config — quarantine
 # full-session shadows. Drop user_edits overlays that resurrect bad lines.
-# Scrub only retired overview_wallpaper_tint (bar border_* belong in config).
+#
+# Scrub parse-time landmines:
+#   - overview_wallpaper_tint (retired; never a valid config command)
+#   - bar border_radius / border (valid only on patched swirl; IPC via frame.sh)
+# Keep bar gaps in the shipped file; chrome is applied at runtime.
 set -euo pipefail
 
 SHIPPED="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}/swirl/config"
@@ -16,10 +20,24 @@ SCRUB_ONLY="${SWEETPOTATOS_SCRUB_ONLY:-0}"
 scrub_file() {
   local f="$1"
   [[ -f "${f}" ]] || return 0
+  local changed=0
   if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${f}"; then
     sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${f}"
     echo "[+] removed overview_wallpaper_tint from ${f}"
+    changed=1
   fi
+  # Only bare bar subcommands (not default_decoration border_radius …).
+  if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${f}"; then
+    sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${f}"
+    echo "[+] removed bar border_radius from ${f}"
+    changed=1
+  fi
+  if grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${f}"; then
+    sed -i -E '/^[[:space:]]*border[[:space:]]+[0-9]+/d' "${f}"
+    echo "[+] removed bar border from ${f}"
+    changed=1
+  fi
+  return 0
 }
 
 fix_home() {
@@ -60,10 +78,10 @@ fix_home() {
 
   if [[ -f "${swirl_cfg}" ]]; then
     if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${swirl_cfg}" \
-      && grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${swirl_cfg}"; then
-      echo "[+] ${home}: bar border_radius + border present"
+      || grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${swirl_cfg}"; then
+      echo "[!] ${home}: bar border_* still present after scrub — check ${swirl_cfg}" >&2
     else
-      echo "[!] ${home}: shipped bar chrome lines missing — check ${swirl_cfg}" >&2
+      echo "[+] ${home}: no parse-time bar border_* (chrome via frame.sh)"
     fi
   fi
 }
