@@ -1,3 +1,6 @@
+@2026.10.3-260
+What changed: Overview tint at 15%. Testing — log out once.
+
 @2026.10.3-259
 What changed: Overview tint actually transparent now (was wrong alpha blend). Testing — log out once.
 

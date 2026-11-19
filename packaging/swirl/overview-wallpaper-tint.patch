@@ -39,7 +39,7 @@ index 2f5835c0..38a05206 100644
 +	float color[4];
 +	const float *ind = config->border_colors.focused.indicator;
 +	/* Premultiplied (wlroots requires it). Straight RGB+alpha looked opaque. */
-+	float a = ind[3] * 0.06f;
++	float a = ind[3] * 0.15f;
 +	color[0] = ind[0] * a;
 +	color[1] = ind[1] * a;
 +	color[2] = ind[2] * a;
