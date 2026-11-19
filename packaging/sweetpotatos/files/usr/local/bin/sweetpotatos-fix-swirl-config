@@ -9,6 +9,8 @@
 set -euo pipefail
 
 SHIPPED="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}/swirl/config"
+# SCRUB_ONLY=1 — only delete bad lines (keep theme colors). Default: reinstall shipped.
+SCRUB_ONLY="${SWEETPOTATOS_SCRUB_ONLY:-0}"
 [[ -f "${SHIPPED}" ]] || {
   echo "[!] No shipped swirl config at ${SHIPPED}" >&2
   exit 0
@@ -71,11 +73,12 @@ fix_home() {
     mv -f "${old_sway}" "${old_sway}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
   fi
 
-  echo "[*] ${home}: installing shipped swirl config → ${swirl_cfg}"
-  install -Dm644 "${SHIPPED}" "${swirl_cfg}"
+  if [[ "${SCRUB_ONLY}" != 1 ]]; then
+    echo "[*] ${home}: installing shipped swirl config → ${swirl_cfg}"
+    install -Dm644 "${SHIPPED}" "${swirl_cfg}"
+  fi
   scrub_file "${swirl_cfg}"
   scrub_file "${cfg_home}/swirl/config.d/user"
-  # If a sway/config still exists (didn't look like a full session), scrub it too.
   scrub_file "${sway_cfg}"
   scrub_file "${old_sway}"
 

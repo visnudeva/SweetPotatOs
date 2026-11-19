@@ -185,6 +185,18 @@ previous_sweetpotatos="$(pacman -Q sweetpotatos 2>/dev/null | awk '{print $2}' |
 echo "[*] Installing/upgrading: ${to_touch[*]}"
 pacman -S --needed --noconfirm "${to_touch[@]}"
 
+# Force these two even if --needed thought they were current — stale swirl +
+# unfixed configs were the Invalid command loop.
+echo "[*] Forcing sweetpotatos + swirl reinstall from the channel…"
+pacman -S --noconfirm "${REPO_NAME}/sweetpotatos" "${REPO_NAME}/swirl" || \
+  pacman -S --noconfirm sweetpotatos swirl || true
+
+# Always scrub configs for every /home user (not gated on sprout/SUDO_USER).
+if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
+  echo "[*] Fixing swirl configs (remove bar border_radius / border)…"
+  /usr/local/bin/sweetpotatos-fix-swirl-config || true
+fi
+
 reloaded=0
 if command -v sweetpotatos-sprout >/dev/null 2>&1; then
   # Sprout as the real desktop user (never root's HOME).
@@ -198,11 +210,6 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       target_home="$(eval echo "~${target_user}")"
     fi
     target_uid="$(id -u "${target_user}" 2>/dev/null || true)"
-    # Quarantine shadowed ~/.config/sway/config, drop overlays, force shipped
-    # swirl/config — must run for every /home user (not only SUDO_USER).
-    if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
-      /usr/local/bin/sweetpotatos-fix-swirl-config || true
-    fi
 
     echo "[*] Sprouting desktop config for ${target_user} (${target_home})…"
     sudo -u "${target_user}" HOME="${target_home}" \
@@ -234,15 +241,6 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
         "${theme_script}" --quiet apply || true
     fi
 
-    # Fix again after sprout/theme so nothing reintroduced bad lines.
-    if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
-      /usr/local/bin/sweetpotatos-fix-swirl-config || true
-    fi
-    if [[ -f "${theme_script}" ]]; then
-      sudo -u "${target_user}" HOME="${target_home}" \
-        XDG_CONFIG_HOME="${target_home}/.config" \
-        "${theme_script}" --quiet apply || true
-    fi
     xorg_kbd=/etc/X11/xorg.conf.d/00-keyboard.conf
     live_swirl_cfg="${target_home}/.config/swirl/config"
     if [[ -f "${xorg_kbd}" && -f "${live_swirl_cfg}" ]]; then
@@ -330,6 +328,31 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
     echo "[!] Skipping sprout — no non-root user to target (ran as root?)." >&2
   fi
 fi
+
+# Last step: scrub only (do not clobber theme colors). Update alone must fix
+# Unknown/invalid command on border_radius / border — no manual paste.
+if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
+  echo "[*] Final scrub of bar border_radius / border lines…"
+  SWEETPOTATOS_SCRUB_ONLY=1 /usr/local/bin/sweetpotatos-fix-swirl-config || true
+fi
+bad_left=0
+while IFS=: read -r _ _ uid _ _ home _; do
+  [[ "${uid}" =~ ^[0-9]+$ && "${uid}" -ge 1000 ]] || continue
+  [[ "${home}" == /home/* && -f "${home}/.config/swirl/config" ]] || continue
+  if grep -qE '^[[:space:]]*border_radius|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]' \
+    "${home}/.config/swirl/config"; then
+    echo "[!] STILL BAD: ${home}/.config/swirl/config" >&2
+    grep -nE '^[[:space:]]*border_radius|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]' \
+      "${home}/.config/swirl/config" >&2 || true
+    bad_left=1
+  fi
+done < /etc/passwd
+if (( bad_left )); then
+  echo "[!] Config scrub failed — please report this update log." >&2
+else
+  echo "[+] Confirmed: no bare bar border_radius / border in user swirl configs."
+fi
+echo "[!] Log out once (or reboot) so Swirl reloads the cleaned config."
 
 # The live color reload did not work. Drop the helper if a testing update
 # installed it. Log out once afterward so the session stops preloading it.
