@@ -1,3 +1,6 @@
+@2026.10.3-242
+What changed: Hard-scrubs border_radius / border lines from ~/.config/swirl/config (the exact Unknown/invalid command on lines 363–364), prints the cleaned bar section, and runs during package install. Also run: sudo sweetpotatos-fix-swirl-config
+
 @2026.10.3-241
 What changed: Swirl was loading ~/.config/sway/config instead of the SweetPotatOs swirl config — that shadowed file still had border_radius / border. Update quarantines it and installs the clean config for every user (also runs during the package install itself).
 

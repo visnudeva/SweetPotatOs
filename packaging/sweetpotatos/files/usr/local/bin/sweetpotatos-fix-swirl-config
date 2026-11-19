@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Make every desktop user load a clean SweetPotatOs swirl config.
 #
-# Swirl's search order prefers ~/.config/sway/config over ~/.config/swirl/config.
-# A leftover sway/config (or user_edits overlay) kept reintroducing
-# bar border_radius / border → Invalid command, no matter what we shipped.
+# Swirl prefers ~/.config/sway/config over ~/.config/swirl/config.
+# Overlays and stale copies kept reintroducing:
+#   border_radius 8
+#   border 2
+# → Unknown/invalid command (especially on swirl builds without bar chrome).
 set -euo pipefail
 
 SHIPPED="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}/swirl/config"
@@ -12,14 +14,37 @@ SHIPPED="${SWEETPOTATO_CONFIG_BASE:-/usr/share/sweetpotato/config}/swirl/config"
   exit 0
 }
 
-strip_bad_lines() {
+# Delete any bare bar chrome lines (space or colon separated).
+# Keeps: default_decoration border_radius, default_border, border pixel, for_window … border
+scrub_file() {
   local f="$1"
   [[ -f "${f}" ]] || return 0
-  sed -i -E \
-    -e '/^[[:space:]]*overview_wallpaper_tint\b/d' \
-    -e '/^[[:space:]]*border_radius[[:space:]]*:?[[:space:]]*[0-9]+/d' \
-    -e '/^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]+([[:space:]]|#|$)/d' \
-    "${f}"
+  python3 - "${f}" <<'PY'
+import pathlib, re, sys
+path = pathlib.Path(sys.argv[1])
+text = path.read_text(encoding="utf-8", errors="replace")
+out = []
+removed = []
+for i, line in enumerate(text.splitlines(True), 1):
+    raw = line.rstrip("\n\r")
+    s = raw.strip()
+    # border_radius 8  |  border_radius:8  |  border_radius: 8
+    if re.match(r"^border_radius(\s*:?\s*|\s+)\S", s):
+        removed.append((i, raw))
+        continue
+    # border 2  |  border:2  — but not "border pixel" / "default_border" / for_window
+    if re.match(r"^border(\s*:?\s*|\s+)\d+(\s*(#.*)?)?$", s):
+        removed.append((i, raw))
+        continue
+    out.append(line)
+if removed:
+    path.write_text("".join(out), encoding="utf-8")
+    for n, raw in removed:
+        print(f"    removed line {n}: {raw!r}")
+    print(f"[+] scrubbed {len(removed)} line(s) from {path}")
+else:
+    print(f"[+] no bare bar border lines in {path}")
+PY
 }
 
 fix_home() {
@@ -29,7 +54,6 @@ fix_home() {
   local sway_cfg="${cfg_home}/sway/config"
   local overlay="${cfg_home}/sweetpotatos/user_edits/swirl/config"
   local old_sway="${home}/.sway/config"
-  local active=""
 
   mkdir -p "${cfg_home}/swirl" "${cfg_home}/sway" "${cfg_home}/sweetpotatos/user_edits/swirl"
 
@@ -38,43 +62,37 @@ fix_home() {
     rm -f "${overlay}"
   fi
 
-  # Prefer-order shadow: if sway/config exists, swirl never reads swirl/config.
-  if [[ -f "${sway_cfg}" ]]; then
-    if grep -qE '^[[:space:]]*bar[[:space:]]*\{|border_radius|bindsym \$mod' "${sway_cfg}" 2>/dev/null; then
-      echo "[*] ${home}: quarantining ${sway_cfg} (it shadowed swirl/config)"
-      mv -f "${sway_cfg}" "${sway_cfg}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
-    fi
+  if [[ -f "${sway_cfg}" ]] && grep -qE '^[[:space:]]*bar[[:space:]]*\{|border_radius|bindsym \$mod' "${sway_cfg}" 2>/dev/null; then
+    echo "[*] ${home}: quarantining ${sway_cfg} (shadows swirl/config)"
+    mv -f "${sway_cfg}" "${sway_cfg}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
   fi
-  if [[ -f "${old_sway}" ]]; then
-    if grep -qE '^[[:space:]]*bar[[:space:]]*\{|border_radius|bindsym \$mod' "${old_sway}" 2>/dev/null; then
-      echo "[*] ${home}: quarantining ${old_sway}"
-      mv -f "${old_sway}" "${old_sway}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
-    fi
+  if [[ -f "${old_sway}" ]] && grep -qE '^[[:space:]]*bar[[:space:]]*\{|border_radius|bindsym \$mod' "${old_sway}" 2>/dev/null; then
+    echo "[*] ${home}: quarantining ${old_sway}"
+    mv -f "${old_sway}" "${old_sway}.spo-shadow-bak.$(date +%Y%m%d%H%M%S)"
   fi
 
-  echo "[*] ${home}: installing shipped swirl config"
+  echo "[*] ${home}: installing shipped swirl config → ${swirl_cfg}"
   install -Dm644 "${SHIPPED}" "${swirl_cfg}"
-  strip_bad_lines "${swirl_cfg}"
-  strip_bad_lines "${cfg_home}/swirl/config.d/user"
-  strip_bad_lines "${sway_cfg}"
+  scrub_file "${swirl_cfg}"
+  scrub_file "${cfg_home}/swirl/config.d/user"
+  # If a sway/config still exists (didn't look like a full session), scrub it too.
+  scrub_file "${sway_cfg}"
+  scrub_file "${old_sway}"
+
   chown -R "${uid}:${gid}" "${cfg_home}/swirl" 2>/dev/null || true
   chown "${uid}:${gid}" "${swirl_cfg}" 2>/dev/null || true
 
-  # Which file swirl will actually load next login.
-  if [[ -f "${sway_cfg}" ]]; then
-    active="${sway_cfg}"
-  elif [[ -f "${old_sway}" ]]; then
-    active="${old_sway}"
-  elif [[ -f "${swirl_cfg}" ]]; then
-    active="${swirl_cfg}"
-  fi
-  echo "[+] ${home}: active config → ${active:-unknown}"
-  if [[ -n "${active}" ]] && grep -nE '^[[:space:]]*border_radius[[:space:]]*:?[[:space:]]*[0-9]+|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]+' "${active}" 2>/dev/null; then
-    echo "[!] ${home}: bare bar border lines STILL in ${active}" >&2
+  echo "[*] ${home}: lines 355-375 of active swirl config:"
+  sed -n '355,375p' "${swirl_cfg}" | sed 's/^/    |/'
+
+  if grep -nE '^[[:space:]]*border_radius|^[[:space:]]*border[[:space:]]*:?[[:space:]]*[0-9]' "${swirl_cfg}"; then
+    echo "[!] ${home}: STILL has bare bar border lines after scrub" >&2
     return 1
   fi
-  echo "[+] ${home}: no bare bar border_radius / border in active config"
+  echo "[+] ${home}: clean"
 }
+
+echo "[*] pacman: $(pacman -Q sweetpotatos 2>/dev/null || echo 'sweetpotatos ?') / $(pacman -Q swirl 2>/dev/null || echo 'swirl ?')"
 
 fixed=0
 while IFS=: read -r _ _ uid gid _ home _; do
