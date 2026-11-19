@@ -1,3 +1,6 @@
+@2026.10.3-254
+What changed: Overview wall layout packs desktops side-by-side (not another stripe stack). Testing — log out once.
+
 @2026.10.3-253
 What changed: Overview wallpaper tint follows your accent; Settings → Overview wall layout switches stripe vs equal tiles. Testing channel — log out once after update.
 

@@ -85,6 +85,8 @@ assert "grep -q 'overview-layout-mode.patch' '${PKGBUILD}'" \
   "PKGBUILD applies overview-layout-mode"
 assert "grep -q 'OVERVIEW_LAYOUT_WALL' '${ROOT}/packaging/swirl/overview-layout-mode.patch'" \
   "layout-mode patch defines wall packing"
+assert "grep -q 'cols first' '${ROOT}/packaging/swirl/overview-layout-mode.patch'" \
+  "wall packing uses wide cols-first grid"
 assert "grep -q 'overview-layout.sh apply' '${SKEL_CFG}'" \
   "skel applies overview-layout on login"
 assert "[[ -f '${ROOT}/profile/airootfs/etc/skel/.config/swirl/scripts/overview-layout.sh' ]]" \

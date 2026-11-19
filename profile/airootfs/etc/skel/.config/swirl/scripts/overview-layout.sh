@@ -31,7 +31,16 @@ write_state() {
 }
 
 apply_now() {
-  swaymsg "overview_layout $(state_now)" >/dev/null || true
+  local mode msg quiet="${1:-}"
+  mode="$(state_now)"
+  if ! msg="$(swaymsg "overview_layout ${mode}" 2>&1)"; then
+    echo "${msg}" >&2
+    if [[ "${quiet}" != "quiet" ]]; then
+      notify "overview layout failed" \
+        "Compositor rejected overview_layout ${mode}. Log out once after update."
+    fi
+    return 1
+  fi
 }
 
 cmd="${1:-toggle}"
@@ -50,7 +59,7 @@ case "${cmd}" in
     notify "overview wall" "Desktops as equal tiles"
     ;;
   apply)
-    apply_now
+    apply_now quiet || true
     ;;
   toggle)
     if [[ "$(state_now)" == "wall" ]]; then
