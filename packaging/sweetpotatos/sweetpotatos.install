@@ -137,6 +137,16 @@ _ly_session_wrapper() {
   fi
 }
 
+# Stock Thunar UCA calls exo TerminalEmulator (needs xfce4-settings). Point
+# the system default at foot; sprout does the same for ~/.config/Thunar.
+_fix_thunar_open_terminal() {
+  local uca=/etc/xdg/Thunar/uca.xml
+  [[ -f "${uca}" ]] || return 0
+  if grep -q 'exo-open --working-directory %f --launch TerminalEmulator' "${uca}"; then
+    sed -i 's|exo-open --working-directory %f --launch TerminalEmulator|foot -D %f|g' "${uca}" || true
+  fi
+}
+
 post_upgrade() {
   _ensure_pacman_include
   _sync_wallpapers
@@ -149,6 +159,7 @@ post_upgrade() {
   if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
     /usr/local/bin/sweetpotatos-fix-swirl-config || true
   fi
+  _fix_thunar_open_terminal
   _ly_session_wrapper
   systemctl daemon-reload || true
   systemctl enable sweetpotatos-update-check.timer >/dev/null 2>&1 || true

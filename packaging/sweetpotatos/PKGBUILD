@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=sweetpotatos
 pkgver=2026.10.3
-pkgrel=251
+pkgrel=252
 pkgdesc='SweetPotatOs system branding, hooks, helpers, and update channel'
 arch=('any')
 url='https://github.com/visnudeva/SweetPotatOs'
@@ -139,14 +139,14 @@ package() {
   # Shipped desktop config base for sweetpotatos-sprout.
   local dir
   for dir in swirl foot swayimg mako gtk-3.0 gtk-4.0 fastfetch swaylock xsettingsd \
-             networkmanager-dmenu geany environment.d kanshi; do
+             networkmanager-dmenu geany environment.d kanshi Thunar; do
     if [[ -d "${skel}/${dir}" ]]; then
       mkdir -p "${pkgdir}/usr/share/sweetpotato/config/${dir}"
       cp -a "${skel}/${dir}/." "${pkgdir}/usr/share/sweetpotato/config/${dir}/"
     fi
   done
 
-  # Preferred terminal for Thunar/exo — helpers.rc only (not whole xfce4/xfconf).
+  # exo fallback (no xfce4-settings): helpers.rc names a PATH binary.
   install -Dm644 "${skel}/xfce4/helpers.rc" \
     "${pkgdir}/usr/share/sweetpotato/config/xfce4/helpers.rc"
 

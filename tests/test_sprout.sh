@@ -67,11 +67,14 @@ assert_eq "AUTOTILE_V2" "$(cat "${DEST}/swirl/scripts/autotile.lua")" "scripts u
 assert_eq "USER_BINDS" "$(cat "${DEST}/swirl/config.d/user")" "user override preserved"
 assert_eq "KANSHI_CUSTOM" "$(cat "${DEST}/kanshi/config")" "kanshi seed preserved"
 
-# Overlay wins over base for a shipped path.
-mkdir -p "${DEST}/sweetpotatos/user_edits/swirl"
+# Overlay wins for normal shipped paths; swirl/config is exempt (kept
+# resurrecting Invalid command bar lines).
+mkdir -p "${DEST}/sweetpotatos/user_edits/swirl/scripts"
+echo "OVERLAY_AUTOTILE" >"${DEST}/sweetpotatos/user_edits/swirl/scripts/autotile.lua"
 echo "OVERLAY_CONFIG" >"${DEST}/sweetpotatos/user_edits/swirl/config"
 bash "${SPROUT}" >/dev/null
-assert_eq "OVERLAY_CONFIG" "$(cat "${DEST}/swirl/config")" "user_edits overlay wins"
+assert_eq "OVERLAY_AUTOTILE" "$(cat "${DEST}/swirl/scripts/autotile.lua")" "user_edits overlay wins"
+assert_eq "SHIPPED_CONFIG_V2" "$(cat "${DEST}/swirl/config")" "swirl/config ignores user_edits overlay"
 
 # Wallpapers: always sync before config; land in Pictures/Wallpapers (+ local backgrounds).
 WALLS="${TMP}/backgrounds"
@@ -107,6 +110,16 @@ EOF
 chmod +x "${BASE}/swirl/scripts/theme.sh"
 bash "${SPROUT}" >/dev/null
 assert_eq "--quiet apply" "$(cat "${DEST}/theme-called")" "sprout reapplies the saved theme"
+
+# Thunar Open Terminal Here → foot (rewrite exo TerminalEmulator + helpers.rc).
+mkdir -p "${DEST}/Thunar"
+cat >"${DEST}/Thunar/uca.xml" <<'EOF'
+<actions><action><command>exo-open --working-directory %f --launch TerminalEmulator</command></action></actions>
+EOF
+printf 'TerminalEmulator=xfce4-terminal\n' >"${DEST}/xfce4/helpers.rc"
+bash "${SPROUT}" >/dev/null
+assert_eq "1" "$(grep -c 'foot -D %f' "${DEST}/Thunar/uca.xml")" "rewrites Thunar UCA to foot"
+assert_eq "TerminalEmulator=foot" "$(grep '^TerminalEmulator=' "${DEST}/xfce4/helpers.rc")" "forces helpers.rc to foot"
 
 echo
 echo "sprout: ${PASS} passed, ${FAIL} failed"

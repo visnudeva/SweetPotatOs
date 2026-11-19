@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE actions [
+<!ELEMENT actions (action)+>
+<!ELEMENT action (icon | patterns | name | unique-id | command | description | directories | audio-files | image-files | other-files | text-files | video-files)*>
+<!ELEMENT icon (#PCDATA)>
+<!ELEMENT command (#PCDATA)>
+<!ELEMENT patterns (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ATTLIST name xml:lang CDATA #IMPLIED>
+<!ELEMENT unique-id (#PCDATA)>
+<!ELEMENT description (#PCDATA)>
+<!ATTLIST description xml:lang CDATA #IMPLIED>
+<!ELEMENT startup-notify EMPTY>
+<!ELEMENT directories EMPTY>
+<!ELEMENT audio-files EMPTY>
+<!ELEMENT image-files EMPTY>
+<!ELEMENT other-files EMPTY>
+<!ELEMENT text-files EMPTY>
+<!ELEMENT video-files EMPTY>
+]>
+<!-- SweetPotatOs: open foot directly. exo TerminalEmulator needs xfce4-settings. -->
+<actions>
+  <action>
+    <icon>utilities-terminal</icon>
+    <patterns>*</patterns>
+    <range/>
+    <name>Open Terminal Here</name>
+    <command>foot -D %f</command>
+    <description>Open a terminal in this folder</description>
+    <startup-notify/>
+    <directories/>
+  </action>
+</actions>

@@ -25,7 +25,6 @@ rm -f "${STATE_DIR}/materialized"
 SEED_ONLY=(
   kanshi/config
   swirl/config.d/user
-  xfce4/helpers.rc
 )
 
 wallpaper_dests() {
@@ -169,6 +168,25 @@ apply_install_keyboard() {
 }
 
 apply_install_keyboard
+
+# Thunar "Open Terminal Here" must call foot. Stock uca.xml uses exo-open
+# TerminalEmulator, which needs xfce4-settings (not shipped). Always rewrite.
+ensure_thunar_foot() {
+  local uca="${DEST}/Thunar/uca.xml"
+  local helpers="${DEST}/xfce4/helpers.rc"
+  mkdir -p "${DEST}/Thunar" "${DEST}/xfce4"
+  if [[ -f "${uca}" ]] && grep -q 'TerminalEmulator' "${uca}" 2>/dev/null; then
+    sed -i 's|exo-open --working-directory %f --launch TerminalEmulator|foot -D %f|g' "${uca}" || true
+  fi
+  if [[ ! -f "${helpers}" ]]; then
+    printf '%s\n' '# Thunar / exo → foot' 'TerminalEmulator=foot' >"${helpers}"
+  elif grep -qE '^[[:space:]]*TerminalEmulator=' "${helpers}"; then
+    sed -i 's|^[[:space:]]*TerminalEmulator=.*|TerminalEmulator=foot|' "${helpers}" || true
+  else
+    printf '\nTerminalEmulator=foot\n' >>"${helpers}"
+  fi
+}
+ensure_thunar_foot
 
 mv -f "${MANIFEST}.new" "${MANIFEST}"
 # Drop retired Wi‑Fi tray experiments, the Mod+P pin helper, and the
