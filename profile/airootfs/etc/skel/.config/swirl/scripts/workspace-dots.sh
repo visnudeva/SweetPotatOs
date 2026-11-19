@@ -37,29 +37,16 @@ fi
 lock="${XDG_RUNTIME_DIR:-/tmp}/sweetpotato-workspace-dots.lock"
 mkdir -p "$(dirname "${lock}")"
 exec 9>"${lock}"
-# Stale lock from a dead helper after logout → wait briefly, then take over.
-if ! flock -n 9; then
-  flock -w 2 9 || exit 0
-fi
+flock -n 9 || exit 0
 
 rename_plain() {
-  local name num want
+  local name num
   command -v swaymsg >/dev/null 2>&1 || return 0
   command -v jq >/dev/null 2>&1 || return 0
   while IFS= read -r name; do
-    [[ -n "${name}" ]] || continue
-    if [[ "${name}" =~ ^([0-9]+)$ ]]; then
-      num="${BASH_REMATCH[1]}"
-    elif [[ "${name}" =~ ^([0-9]+): ]]; then
-      num="${BASH_REMATCH[1]}"
-    else
-      continue
-    fi
-    want="${num}:${dot}"
-    [[ "${name}" == "${want}" ]] && continue
-    swaymsg "rename workspace \"${name}\" to ${want}" >/dev/null 2>&1 \
-      || swaymsg "rename workspace number ${num} to ${want}" >/dev/null 2>&1 \
-      || true
+    [[ "${name}" =~ ^([0-9]+)$ ]] || continue
+    num="${BASH_REMATCH[1]}"
+    swaymsg "rename workspace number ${num} to ${num}:${dot}" >/dev/null 2>&1 || true
   done < <(swaymsg -t get_workspaces 2>/dev/null | jq -r '.[].name' 2>/dev/null || true)
 }
 
@@ -70,14 +57,6 @@ done
 
 normalize_workspace_file
 rename_plain
-
-# Keep discs even if a create/rename event was missed.
-(
-  while swaymsg -t get_version >/dev/null 2>&1; do
-    sleep 2
-    rename_plain
-  done
-) &
 
 swaymsg -t subscribe -m '["workspace"]' 2>/dev/null | while IFS= read -r _; do
   rename_plain

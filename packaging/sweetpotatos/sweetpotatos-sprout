@@ -219,6 +219,10 @@ purge_fragile_swirl_lines() {
       sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${f}"
       echo "[+] Removed overview_wallpaper_tint from ${f}"
     fi
+    if grep -qE '^[[:space:]]*overview_layout\b' "${f}"; then
+      sed -i -E '/^[[:space:]]*overview_layout\b/d' "${f}"
+      echo "[+] Removed overview_layout from ${f}"
+    fi
     if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${f}"; then
       sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${f}"
       echo "[+] Removed bar border_radius from ${f}"

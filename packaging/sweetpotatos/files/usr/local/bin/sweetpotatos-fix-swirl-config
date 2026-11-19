@@ -28,6 +28,11 @@ scrub_file() {
     sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${f}"
     echo "[+] removed overview_wallpaper_tint from ${f}"
   fi
+  # Retired wall-layout experiment (unknown command breaks later binds).
+  if grep -qE '^[[:space:]]*overview_layout\b' "${f}"; then
+    sed -i -E '/^[[:space:]]*overview_layout\b/d' "${f}"
+    echo "[+] removed overview_layout from ${f}"
+  fi
   # Only bare bar subcommands (not default_decoration border_radius …).
   if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${f}"; then
     sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${f}"

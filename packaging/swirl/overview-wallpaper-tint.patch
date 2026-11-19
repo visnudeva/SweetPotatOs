@@ -1,12 +1,12 @@
 diff --git a/include/sway/output.h b/include/sway/output.h
-index a1072d5f..d3972ea9 100644
+index a1072d5f..5618ddc2 100644
 --- a/include/sway/output.h
 +++ b/include/sway/output.h
 @@ -49,6 +49,8 @@ struct sway_output {
  	// ensures that when looking through a surface, all that will be seen
  	// is black.
  	struct wlr_scene_rect *fullscreen_background;
-+	/* Accent wash over wallpaper while multi-desktop overview is open. */
++	/* Soft accent wash over wallpaper while multi-desktop overview is open. */
 +	struct wlr_scene_rect *overview_wallpaper_tint;
  
  	struct wlr_output *wlr_output;
@@ -24,7 +24,7 @@ index 933c8a0c..1bf8a69e 100644
  void layout_overview_workspaces_global_to_local(struct sway_workspace *workspace, double *lx, double *ly);
  void layout_overview_workspaces_local_to_global(struct sway_workspace *workspace, double *lx, double *ly);
 diff --git a/sway/tree/layout.c b/sway/tree/layout.c
-index e82ee98c..1eda4700 100644
+index 2f5835c0..38a05206 100644
 --- a/sway/tree/layout.c
 +++ b/sway/tree/layout.c
 @@ -386,6 +386,34 @@ bool layout_overview_workspaces_enabled() {
@@ -38,11 +38,11 @@ index e82ee98c..1eda4700 100644
 +	bool on = layout_overview_workspaces_enabled();
 +	float color[4];
 +	const float *ind = config->border_colors.focused.indicator;
-+	/* Theme accent RGB; light wash — no config command. */
++	/* Theme accent RGB; soft wash — no config command. */
 +	color[0] = ind[0];
 +	color[1] = ind[1];
 +	color[2] = ind[2];
-+	color[3] = 0.2f;
++	color[3] = 0.12f;
 +	for (int i = 0; i < root->outputs->length; ++i) {
 +		struct sway_output *output = root->outputs->items[i];
 +		struct wlr_scene_rect *rect = output->overview_wallpaper_tint;
@@ -62,7 +62,7 @@ index e82ee98c..1eda4700 100644
  static void workspace_name_decoration(struct sway_workspace *ws, bool enable) {
  	if (!enable) {
  		if (ws->jump.name) {
-@@ -567,6 +595,7 @@ void layout_overview_workspaces(bool on) {
+@@ -529,6 +557,7 @@ void layout_overview_workspaces(bool on) {
  			output_damage_whole(output);
  		}
  	}
@@ -71,27 +71,28 @@ index e82ee98c..1eda4700 100644
  
  bool layout_overview_workspaces_map_coordinates(struct sway_workspace **workspace, double *lx, double *ly) {
 diff --git a/sway/tree/output.c b/sway/tree/output.c
-index 46953f33..ce27c15a 100644
+index 46953f33..2490e6fe 100644
 --- a/sway/tree/output.c
 +++ b/sway/tree/output.c
-@@ -90,6 +90,9 @@ static void restore_workspaces(struct sway_output *output) {
+@@ -90,6 +90,10 @@ static void restore_workspaces(struct sway_output *output) {
  
  static void destroy_scene_layers(struct sway_output *output) {
  	wlr_scene_node_destroy(&output->fullscreen_background->node);
 +	if (output->overview_wallpaper_tint) {
 +		wlr_scene_node_destroy(&output->overview_wallpaper_tint->node);
++		output->overview_wallpaper_tint = NULL;
 +	}
  
  	scene_node_disown_children(output->layers.tiling);
  	scene_node_disown_children(output->layers.fullscreen);
-@@ -129,6 +132,18 @@ struct sway_output *output_create(struct wlr_output *wlr_output) {
+@@ -129,6 +133,18 @@ struct sway_output *output_create(struct wlr_output *wlr_output) {
  		}
  	}
  
 +	if (!failed) {
-+		/* Above wallpaper (same shell_background tree), below tiling. */
++		/* shell_bottom: above wallpaper, below tiling — soft accent wash. */
 +		output->overview_wallpaper_tint = wlr_scene_rect_create(
-+			output->layers.shell_background, 0, 0, (float[4]){0.f, 0.f, 0.f, 0.f});
++			output->layers.shell_bottom, 0, 0, (float[4]){0.f, 0.f, 0.f, 0.f});
 +		if (!output->overview_wallpaper_tint) {
 +			sway_log(SWAY_ERROR, "Unable to allocate overview wallpaper tint");
 +			failed = true;
