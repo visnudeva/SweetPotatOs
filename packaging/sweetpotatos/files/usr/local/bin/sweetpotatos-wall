@@ -190,18 +190,21 @@ build_and_install_swirl() {
   fi
 
   info "Meson setup ${BUILD_DIR} (prefix=/usr)"
+  # Drop a half-configured tree (e.g. previous swirl.png failure) so setup can retry cleanly.
+  if [[ -d "${BUILD_DIR}" && ! -f "${BUILD_DIR}/build.ninja" ]]; then
+    warn "Removing incomplete ${BUILD_DIR}"
+    rm -rf "${BUILD_DIR}"
+  fi
+  local meson_args=(
+    --prefix=/usr
+    -D sd-bus-provider=libsystemd
+    -D werror=false
+    -D b_ndebug=true
+  )
   if [[ ! -f "${BUILD_DIR}/build.ninja" ]]; then
-    meson setup "${BUILD_DIR}" "${SWIRL_DIR}" \
-      --prefix=/usr \
-      -D sd-bus-provider=libsystemd \
-      -D werror=false \
-      -D b_ndebug=true
+    meson setup "${BUILD_DIR}" "${SWIRL_DIR}" "${meson_args[@]}"
   else
-    meson setup --reconfigure "${BUILD_DIR}" "${SWIRL_DIR}" \
-      --prefix=/usr \
-      -D sd-bus-provider=libsystemd \
-      -D werror=false \
-      -D b_ndebug=true
+    meson setup --reconfigure "${BUILD_DIR}" "${SWIRL_DIR}" "${meson_args[@]}"
   fi
 
   info "ninja -C ${BUILD_DIR}"
