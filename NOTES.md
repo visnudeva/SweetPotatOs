@@ -46,6 +46,7 @@ Run as your normal user from the SweetPotatOs root (not root login). Shared help
 | `./scripts/ship-stable.sh --en "…"` | Publish `repo/` → live `pacman-repo`, append next `changelog.fifth.N` (EN/FR + HTML), commit, push `origin` + `sourceforge`, rsync project web. |
 | `./scripts/bump-channel-apps.sh` | Check/bump Brave Origin, Shelly, LocalSend, yay-bin, waypaper, **tuber**, **spore**, **laniakea**; rebuild into `repo/`; bump `sweetpotatos` pkgrel + `update-news`. First-party apps only reach `sudo sweetpotatos-update` after this publishes them. Add `--publish-testing` to upload the testing tag. |
 | `sweetpotatos-update --renewm` | **Lab only.** Pull/build the renewm + repywm forks and register a Ly session. Does **not** touch Swirl or the desktop candidate list. See `packaging/renewm/README.md`. |
+| `sweetpotatos-update --wall` | **Lab only.** Pull/build Swirl `wall-mode-v1` over the packaged binary and sync SweetPotato wall Settings/keybinds. See `packaging/wall/README.md`. |
 | `./scripts/make-iso.sh [--fifth\|--sixth\|--harvest N] [--upload]` | Update `profiledef` identity, `sudo ./build.sh`, rename ISO, write `.sha256`. Harvest flags advance monthly from First=`2026.08` (Fifth=`2026.12`, Sixth=`2027.01`, …). `--upload` calls `sourceforge/upload.sh`. |
 
 Examples:

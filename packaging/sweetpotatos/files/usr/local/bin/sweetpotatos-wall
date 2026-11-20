@@ -1,0 +1,254 @@
+#!/usr/bin/env bash
+# Experimental Swirl wall-mode lab lane for SweetPotatOs.
+# Pulls the wall-mode branch, builds Swirl over the packaged binary, and syncs
+# SweetPotato wall toggle/keybinds into ~/.config/swirl.
+#
+# Usage:
+#   sweetpotatos-wall              # pull + build/install + desktop bits
+#   sweetpotatos-wall --check      # show checkout / binary status
+#   sweetpotatos-wall --pull-only  # git pull only
+#   sweetpotatos-wall --desktop-only  # config/scripts only (no rebuild)
+#   sweetpotatos-update --wall     # same as sweetpotatos-wall
+set -euo pipefail
+
+SWIRL_URL="${SWEETPOTATOS_SWIRL_URL:-https://github.com/visnudeva/swirl.git}"
+SWIRL_BRANCH="${SWEETPOTATOS_WALL_BRANCH:-wall-mode-v1}"
+POTATO_URL="${SWEETPOTATOS_SWEETPOTATO_URL:-https://github.com/visnudeva/SweetPotato.git}"
+CODE_ROOT="${SWEETPOTATOS_WALL_ROOT:-${HOME}/code/GITHUB}"
+SWIRL_DIR="${CODE_ROOT}/swirl"
+POTATO_DIR="${CODE_ROOT}/SweetPotato"
+BUILD_DIR="${SWIRL_DIR}/build-wall"
+
+CHECK_ONLY=0
+PULL_ONLY=0
+DESKTOP_ONLY=0
+
+usage() {
+  sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --check) CHECK_ONLY=1 ;;
+    --pull-only) PULL_ONLY=1 ;;
+    --desktop-only) DESKTOP_ONLY=1 ;;
+    -h|--help) usage; exit 0 ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "$(id -u)" -eq 0 ]]; then
+  echo "[!] Run as your desktop user (not root). Tip: sudo -u \"\$SUDO_USER\" -H sweetpotatos-wall" >&2
+  exit 1
+fi
+
+info() { printf '[*] %s\n' "$*"; }
+ok()   { printf '[+] %s\n' "$*"; }
+warn() { printf '[!] %s\n' "$*" >&2; }
+
+ensure_repo() {
+  local url="$1" dir="$2" branch="${3:-}"
+  if [[ -d "${dir}/.git" ]]; then
+    info "git fetch ${dir}"
+    git -C "$dir" fetch --prune origin
+    if [[ -n "${branch}" ]]; then
+      if git -C "$dir" show-ref --verify --quiet "refs/remotes/origin/${branch}"; then
+        git -C "$dir" checkout -B "$branch" "origin/${branch}"
+      elif git -C "$dir" show-ref --verify --quiet "refs/heads/${branch}"; then
+        git -C "$dir" checkout "$branch"
+        git -C "$dir" pull --ff-only 2>/dev/null || true
+      else
+        warn "Branch ${branch} not on origin yet — keeping current checkout in ${dir}"
+        warn "Push wall-mode-v1 from the machine that has the commits, then re-run."
+      fi
+    else
+      git -C "$dir" pull --ff-only
+    fi
+  else
+    info "git clone ${url} → ${dir}"
+    mkdir -p "$(dirname "$dir")"
+    if [[ -n "${branch}" ]]; then
+      if ! git clone --branch "$branch" --single-branch "$url" "$dir"; then
+        warn "Clone of ${branch} failed; cloning default branch"
+        git clone "$url" "$dir"
+        warn "Checkout ${branch} locally once it exists on origin."
+      fi
+    else
+      git clone "$url" "$dir"
+    fi
+  fi
+}
+
+has_wall_cmd() {
+  command -v swirlmsg >/dev/null 2>&1 || command -v swaymsg >/dev/null 2>&1 || return 1
+  local msg
+  msg="$(command -v swirlmsg 2>/dev/null || command -v swaymsg)"
+  "${msg}" -t get_version >/dev/null 2>&1 || return 1
+  # Probe for the command without changing state.
+  local out
+  out="$("${msg}" wall_mode 2>&1 || true)"
+  [[ "${out}" != *"Unknown command"* && "${out}" != *"unknown command"* ]]
+}
+
+show_check() {
+  echo "wall lab status"
+  echo "  code root: ${CODE_ROOT}"
+  echo "  branch:    ${SWIRL_BRANCH}"
+  if [[ -d "${SWIRL_DIR}/.git" ]]; then
+    echo "  swirl:     $(git -C "$SWIRL_DIR" rev-parse --abbrev-ref HEAD) @ $(git -C "$SWIRL_DIR" rev-parse --short HEAD) ($(git -C "$SWIRL_DIR" log -1 --format=%s))"
+    if [[ -n "$(git -C "$SWIRL_DIR" status --porcelain)" ]]; then
+      echo "             (dirty working tree)"
+    fi
+  else
+    echo "  swirl:     not cloned"
+  fi
+  if [[ -d "${POTATO_DIR}/.git" ]]; then
+    echo "  SweetPotato: $(git -C "$POTATO_DIR" rev-parse --short HEAD) ($(git -C "$POTATO_DIR" log -1 --format=%s))"
+  else
+    echo "  SweetPotato: not cloned"
+  fi
+  if [[ -x /usr/bin/swirl ]]; then
+    echo "  /usr/bin/swirl: present ($(stat -c%s /usr/bin/swirl 2>/dev/null || echo ?) bytes)"
+  else
+    echo "  /usr/bin/swirl: missing"
+  fi
+  if [[ -x "${HOME}/.config/swirl/scripts/wall-mode.sh" ]]; then
+    echo "  wall-mode.sh: ${HOME}/.config/swirl/scripts/wall-mode.sh"
+  else
+    echo "  wall-mode.sh: not installed in ~/.config/swirl/scripts"
+  fi
+  if has_wall_cmd; then
+    echo "  IPC:       wall_mode available (running session)"
+  else
+    echo "  IPC:       wall_mode not available yet (rebuild + re-login)"
+  fi
+}
+
+install_desktop_bits() {
+  local dest="${HOME}/.config/swirl"
+  local scripts="${dest}/scripts"
+  mkdir -p "${scripts}"
+
+  if [[ ! -d "${POTATO_DIR}/swirl" ]]; then
+    warn "SweetPotato checkout missing; skipping desktop sync"
+    return 0
+  fi
+
+  cp -f "${POTATO_DIR}/swirl/scripts/wall-mode.sh" "${scripts}/wall-mode.sh"
+  chmod 755 "${scripts}/wall-mode.sh"
+  if [[ -f "${POTATO_DIR}/swirl/scripts/settings.py" ]]; then
+    cp -f "${POTATO_DIR}/swirl/scripts/settings.py" "${scripts}/settings.py"
+    chmod 755 "${scripts}/settings.py"
+  fi
+  if [[ -f "${POTATO_DIR}/swirl/cheatsheet.txt" ]]; then
+    cp -f "${POTATO_DIR}/swirl/cheatsheet.txt" "${dest}/cheatsheet.txt"
+  fi
+
+  local cfg="${dest}/config"
+  if [[ -f "${cfg}" ]]; then
+    if ! grep -q 'wall-mode\.sh toggle' "${cfg}"; then
+      if grep -q 'hot-corner\.sh toggle' "${cfg}"; then
+        sed -i '/hot-corner\.sh toggle/a\
+    # Wall mode: free 2D pan of the strip (Settings → Desktop → Wall; default off).\
+    bindsym $mod+Ctrl+Shift+w exec ~/.config/swirl/scripts/wall-mode.sh toggle\
+    bindsym $mod+Alt+Left wall_pan left\
+    bindsym $mod+Alt+Right wall_pan right\
+    bindsym $mod+Alt+Up wall_pan up\
+    bindsym $mod+Alt+Down wall_pan down' "${cfg}"
+        ok "Injected wall keybinds into ~/.config/swirl/config"
+      else
+        warn "Could not find hot-corner bind to inject after; add wall binds by hand"
+      fi
+    fi
+    if ! grep -q 'wall-mode\.sh apply' "${cfg}"; then
+      if grep -q 'hot-corner\.sh apply' "${cfg}"; then
+        sed -i '/hot-corner\.sh apply/a\
+exec_always ~/.config/swirl/scripts/wall-mode.sh apply' "${cfg}"
+        ok "Injected wall-mode apply into ~/.config/swirl/config"
+      fi
+    fi
+  else
+    warn "No ~/.config/swirl/config — copy SweetPotato swirl/config or run sprout"
+  fi
+
+  ok "Desktop wall bits synced"
+}
+
+build_and_install_swirl() {
+  need() { command -v "$1" >/dev/null 2>&1 || { echo "missing: $1" >&2; exit 1; }; }
+  need meson
+  need ninja
+  need sudo
+
+  if [[ ! -f "${SWIRL_DIR}/meson.build" ]]; then
+    echo "[!] ${SWIRL_DIR}/meson.build missing" >&2
+    exit 1
+  fi
+
+  info "Meson setup ${BUILD_DIR} (prefix=/usr)"
+  if [[ ! -f "${BUILD_DIR}/build.ninja" ]]; then
+    meson setup "${BUILD_DIR}" "${SWIRL_DIR}" \
+      --prefix=/usr \
+      -D sd-bus-provider=libsystemd \
+      -D werror=false \
+      -D b_ndebug=true
+  else
+    meson setup --reconfigure "${BUILD_DIR}" "${SWIRL_DIR}" \
+      --prefix=/usr \
+      -D sd-bus-provider=libsystemd \
+      -D werror=false \
+      -D b_ndebug=true
+  fi
+
+  info "ninja -C ${BUILD_DIR}"
+  ninja -C "${BUILD_DIR}"
+
+  info "sudo ninja -C ${BUILD_DIR} install (overwrites packaged /usr/bin/swirl)"
+  sudo ninja -C "${BUILD_DIR}" install
+  ok "Installed wall-mode Swirl to /usr"
+}
+
+main() {
+  if [[ "$CHECK_ONLY" -eq 1 ]]; then
+    show_check
+    exit 0
+  fi
+
+  need() { command -v "$1" >/dev/null 2>&1 || { echo "missing: $1" >&2; exit 1; }; }
+  need git
+
+  ensure_repo "$SWIRL_URL" "$SWIRL_DIR" "$SWIRL_BRANCH"
+  ensure_repo "$POTATO_URL" "$POTATO_DIR" ""
+
+  if [[ "$PULL_ONLY" -eq 1 ]]; then
+    ok "Pulled swirl (${SWIRL_BRANCH}) + SweetPotato"
+    show_check
+    exit 0
+  fi
+
+  install_desktop_bits
+
+  if [[ "$DESKTOP_ONLY" -eq 1 ]]; then
+    ok "Desktop-only wall sync done"
+    echo "    Rebuild compositor:  sweetpotatos-update --wall"
+    echo "    Status:              sweetpotatos-wall --check"
+    show_check
+    exit 0
+  fi
+
+  build_and_install_swirl
+
+  ok "wall lab install done"
+  echo "    Log out and back into Swirl to load the new binary."
+  echo "    Toggle: Settings → Desktop → Wall, or Mod+Ctrl+Shift+w"
+  echo "    Update again:  sweetpotatos-update --wall"
+  echo "    Status:        sweetpotatos-wall --check"
+  echo "    Note: a later pacman swirl upgrade may overwrite this binary — re-run --wall."
+  show_check
+}
+
+main

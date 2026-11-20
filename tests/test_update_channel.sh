@@ -26,6 +26,12 @@ assert "[[ -f '${ROOT}/packaging/sweetpotatos/files/usr/local/bin/sweetpotatos-r
   "sweetpotatos-renewm helper exists"
 assert "! grep -qE '^[[:space:]]*renewm[[:space:]]*$' '${UPD}'" \
   "renewm is not in the default CANDIDATES desktop list"
+assert "grep -q -- '--wall' '${UPD}'" "supports --wall lab lane"
+assert "[[ -f '${ROOT}/packaging/sweetpotatos/files/usr/local/bin/sweetpotatos-wall' ]]" \
+  "sweetpotatos-wall helper exists"
+assert "! grep -qE '^[[:space:]]*wall[[:space:]]*$' '${UPD}'" \
+  "wall is not in the default CANDIDATES desktop list"
+assert "[[ -f '${ROOT}/packaging/wall/README.md' ]]" "wall lab README exists"
 assert "grep -q -- '--stable' '${UPD}'" "supports --stable"
 assert "grep -q 'pacman-repo-testing' '${UPD}'" "knows the testing release tag"
 assert "grep -q 'releases/download/pacman-repo$' '${ROOT}/packaging/sweetpotatos/sweetpotatos.conf'" \

@@ -16,6 +16,7 @@ optdepends=(
   'tuber: light BitTorrent TUI client'
   'laniakea: generative flow-field wallpaper'
   'sweetpotatos-renewm: experimental renewm (newm) lab session (sweetpotatos-update --renewm)'
+  'sweetpotatos-wall: experimental Swirl wall-mode lab (sweetpotatos-update --wall)'
   'swaylock-effects: lock screen with clock (replaces swaylock)'
   'waypaper: wallpaper picker'
   'brave-origin-bin: default web browser (Mod+w)'
@@ -60,6 +61,7 @@ package() {
     sweetpotatos-hues \
     sweetpotatos-settings \
     sweetpotatos-renewm \
+    sweetpotatos-wall \
     geany \
     brave-origin; do
     install -Dm755 "${files}/usr/local/bin/${bin}" "${pkgdir}/usr/local/bin/${bin}"

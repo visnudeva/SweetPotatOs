@@ -21,6 +21,7 @@ THEME = ROOT / "sweetpotatos" / "theme"
 FRAME = ROOT / "sweetpotatos" / "frame"
 SMART = ROOT / "sweetpotatos" / "smart-brightness" / "enabled"
 HOT_CORNER = ROOT / "sweetpotatos" / "hot-corner"
+WALL_MODE = ROOT / "sweetpotatos" / "wall-mode"
 TRAY_MODE = ROOT / "sweetpotatos" / "tray-mode"
 CAFFEINE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "sweetpotato-caffeine.state"
 TITLE = "SweetPotatOs Settings"
@@ -56,6 +57,10 @@ def hot_corner_on():
     if HOT_CORNER.is_file() and HOT_CORNER.read_text().strip() == "off":
         return False
     return True
+
+
+def wall_mode_on():
+    return WALL_MODE.is_file() and WALL_MODE.read_text().strip() == "on"
 
 
 def light_tray_on():
@@ -173,6 +178,7 @@ class Settings(Gtk.Window):
         box.pack_start(self._heading("Desktop"), False, False, 0)
         self.sw_frames = self._switch_row(box, "Corners and gaps", self._on_frames)
         self.sw_hot = self._switch_row(box, "Overview hot corner", self._on_hot_corner)
+        self.sw_wall = self._switch_row(box, "Wall (free 2D pan)", self._on_wall_mode)
         self.sw_tray = self._switch_row(
             box, "Light tray (text only)", self._on_light_tray
         )
@@ -313,6 +319,7 @@ class Settings(Gtk.Window):
     def refresh(self):
         self._set_switch(self.sw_frames, frames_on())
         self._set_switch(self.sw_hot, hot_corner_on())
+        self._set_switch(self.sw_wall, wall_mode_on())
         self._set_switch(self.sw_tray, light_tray_on())
         self._set_switch(self.sw_smart, smart_on())
         self._set_switch(self.sw_caffeine, caffeine_on())
@@ -340,6 +347,11 @@ class Settings(Gtk.Window):
         if self._setting:
             return
         run_script("hot-corner.sh", "on" if switch.get_active() else "off")
+
+    def _on_wall_mode(self, switch, _pspec):
+        if self._setting:
+            return
+        run_script("wall-mode.sh", "on" if switch.get_active() else "off")
 
     def _on_light_tray(self, switch, _pspec):
         if self._setting:

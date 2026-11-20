@@ -30,41 +30,55 @@ CANDIDATES=(
 
 usage() {
   cat <<EOF
-Usage: sweetpotatos-update [--testing|--stable|--check|--renewm]
+Usage: sweetpotatos-update [--testing|--stable|--check|--renewm|--wall]
   (no flag)   update from the channel this machine is already tracking
   --testing   track pacman-repo-testing until --stable
   --stable    track the live pacman-repo release
   --check     print SweetPotatOs packages that would install or upgrade
   --renewm    experimental renewm lab only (does NOT touch Swirl / desktop packages)
+  --wall      experimental Swirl wall-mode lab (builds wall branch over packaged swirl)
 EOF
 }
 
-# Isolated lab lane: never mixed into CANDIDATES / normal desktop updates.
-if [[ "${1:-}" == "--renewm" ]]; then
-  shift
-  helper=/usr/local/bin/sweetpotatos-renewm
+# Isolated lab lanes: never mixed into CANDIDATES / normal desktop updates.
+run_lab_helper() {
+  local flag="$1"
+  local name="$2"
+  shift 2
+  local helper="/usr/local/bin/${name}"
   if [[ ! -x "${helper}" ]]; then
     # Dev checkout fallback (maintainer machine / before the package ships).
+    local self_dir
     self_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    if [[ -x "${self_dir}/files/usr/local/bin/sweetpotatos-renewm" ]]; then
-      helper="${self_dir}/files/usr/local/bin/sweetpotatos-renewm"
-    elif [[ -x "${self_dir}/../files/usr/local/bin/sweetpotatos-renewm" ]]; then
-      helper="${self_dir}/../files/usr/local/bin/sweetpotatos-renewm"
+    if [[ -x "${self_dir}/files/usr/local/bin/${name}" ]]; then
+      helper="${self_dir}/files/usr/local/bin/${name}"
+    elif [[ -x "${self_dir}/../files/usr/local/bin/${name}" ]]; then
+      helper="${self_dir}/../files/usr/local/bin/${name}"
     else
-      echo "[!] sweetpotatos-renewm is not installed yet." >&2
+      echo "[!] ${name} is not installed yet." >&2
       echo "    Rebuild/install the sweetpotatos package, or run the helper from the SweetPotatOs tree." >&2
       exit 1
     fi
   fi
   if [[ "${EUID}" -eq 0 ]]; then
-    target_user="${SUDO_USER:-}"
+    local target_user="${SUDO_USER:-}"
     if [[ -z "${target_user}" || "${target_user}" == root ]]; then
-      echo "[!] --renewm must run as the desktop user (got root)." >&2
+      echo "[!] ${flag} must run as the desktop user (got root)." >&2
       exit 1
     fi
     exec sudo -u "${target_user}" -H "${helper}" "$@"
   fi
   exec "${helper}" "$@"
+}
+
+if [[ "${1:-}" == "--renewm" ]]; then
+  shift
+  run_lab_helper --renewm sweetpotatos-renewm "$@"
+fi
+
+if [[ "${1:-}" == "--wall" ]]; then
+  shift
+  run_lab_helper --wall sweetpotatos-wall "$@"
 fi
 
 requested=""
