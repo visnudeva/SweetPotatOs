@@ -21,6 +21,11 @@ assert() {
 assert "[[ -x '${UPD}' || -f '${UPD}' ]]" "sweetpotatos-update exists"
 assert "grep -q '^REPO_NAME=sweetpotatos$' '${UPD}'" "uses [sweetpotatos] repo"
 assert "grep -q -- '--testing' '${UPD}'" "supports --testing"
+assert "grep -q -- '--renewm' '${UPD}'" "supports --renewm lab lane"
+assert "[[ -f '${ROOT}/packaging/sweetpotatos/files/usr/local/bin/sweetpotatos-renewm' ]]" \
+  "sweetpotatos-renewm helper exists"
+assert "! grep -qE '^[[:space:]]*renewm[[:space:]]*$' '${UPD}'" \
+  "renewm is not in the default CANDIDATES desktop list"
 assert "grep -q -- '--stable' '${UPD}'" "supports --stable"
 assert "grep -q 'pacman-repo-testing' '${UPD}'" "knows the testing release tag"
 assert "grep -q 'releases/download/pacman-repo$' '${ROOT}/packaging/sweetpotatos/sweetpotatos.conf'" \
@@ -38,9 +43,10 @@ assert "grep -q '^  laniakea$' '${UPD}'" "testing channel can install laniakea"
 assert "grep -q 'pacman -Syu' '${UPD}'" "can run or remind Arch lane Syu"
 assert "grep -q 'Do you want to update the Arch/system packages as well' '${UPD}'" \
   "prompts to update Arch/system packages when some are waiting"
-assert "grep -q 'swaymsg reload' '${UPD}'" "reloads Swirl after sprout"
+assert "! grep -q 'swaymsg reload' '${UPD}'" "does not reload Swirl (logout required)"
+assert "grep -q 'Do not Mod+Shift+c' '${UPD}'" "tells users not to reload after update"
 assert "grep -q -- '--quiet apply' '${UPD}'" \
-  "reapplies the saved theme before reload"
+  "reapplies the saved theme after sprout"
 assert "grep -q -- '--quiet apply' '${ROOT}/packaging/sweetpotatos/sweetpotatos-sprout'" \
   "sprout reapplies the saved theme"
 assert "grep -q 'Open Mod+?' '${UPD}'" "tells users Mod+? is enough after update"

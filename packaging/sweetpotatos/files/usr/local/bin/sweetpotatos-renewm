@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+# Experimental renewm (newm fork) lab lane for SweetPotatOs.
+# Kept out of the normal desktop update so long-running work cannot break Swirl.
+#
+# Usage:
+#   sweetpotatos-renewm              # pull + build/install + Ly session
+#   sweetpotatos-renewm --check      # show checkout / binary status
+#   sweetpotatos-renewm --pull-only  # git pull only
+#   sweetpotatos-update --renewm     # same as sweetpotatos-renewm
+set -euo pipefail
+
+RENEWM_URL="${SWEETPOTATOS_RENEWM_URL:-https://github.com/visnudeva/renewm.git}"
+REPYWM_URL="${SWEETPOTATOS_REPYWM_URL:-https://github.com/visnudeva/repywm.git}"
+CODE_ROOT="${SWEETPOTATOS_RENEWM_ROOT:-${HOME}/code/GITHUB}"
+RENEWM_DIR="${CODE_ROOT}/renewm"
+REPYWM_DIR="${CODE_ROOT}/repywm"
+
+CHECK_ONLY=0
+PULL_ONLY=0
+
+usage() {
+  sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    --check) CHECK_ONLY=1 ;;
+    --pull-only) PULL_ONLY=1 ;;
+    -h|--help) usage; exit 0 ;;
+    *)
+      echo "Unknown option: $arg" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "$(id -u)" -eq 0 ]]; then
+  echo "[!] Run as your desktop user (not root). Tip: sudo -u \"\$SUDO_USER\" -H sweetpotatos-renewm" >&2
+  exit 1
+fi
+
+info() { printf '[*] %s\n' "$*"; }
+ok()   { printf '[+] %s\n' "$*"; }
+warn() { printf '[!] %s\n' "$*" >&2; }
+
+ensure_clone() {
+  local url="$1" dir="$2"
+  if [[ -d "${dir}/.git" ]]; then
+    info "git pull --ff-only ${dir}"
+    git -C "$dir" pull --ff-only
+  else
+    info "git clone ${url} → ${dir}"
+    mkdir -p "$(dirname "$dir")"
+    git clone --recurse-submodules "$url" "$dir"
+  fi
+}
+
+show_check() {
+  echo "renewm lab status"
+  echo "  code root: ${CODE_ROOT}"
+  if [[ -d "${RENEWM_DIR}/.git" ]]; then
+    echo "  renewm:    $(git -C "$RENEWM_DIR" rev-parse --short HEAD) ($(git -C "$RENEWM_DIR" log -1 --format=%s))"
+  else
+    echo "  renewm:    not cloned"
+  fi
+  if [[ -d "${REPYWM_DIR}/.git" ]]; then
+    echo "  repywm:    $(git -C "$REPYWM_DIR" rev-parse --short HEAD) ($(git -C "$REPYWM_DIR" log -1 --format=%s))"
+  else
+    echo "  repywm:    not cloned"
+  fi
+  if [[ -f "${REPYWM_DIR}/pywm/_pywm.so" ]]; then
+    echo "  _pywm.so:  present ($(stat -c%s "${REPYWM_DIR}/pywm/_pywm.so" 2>/dev/null || echo ?) bytes)"
+  else
+    echo "  _pywm.so:  missing"
+  fi
+  if [[ -x "${HOME}/.local/share/renewm-venv/bin/python" ]]; then
+    if "${HOME}/.local/share/renewm-venv/bin/python" -c 'import newm, pywm' 2>/dev/null; then
+      echo "  venv:      OK (import newm, pywm)"
+    else
+      echo "  venv:      present but import failed"
+    fi
+  else
+    echo "  venv:      missing"
+  fi
+  if [[ -f /etc/ly/wayland-sessions/renewm.desktop ]]; then
+    echo "  Ly session: $(grep '^Exec=' /etc/ly/wayland-sessions/renewm.desktop)"
+  else
+    echo "  Ly session: not installed"
+  fi
+}
+
+main() {
+  if [[ "$CHECK_ONLY" -eq 1 ]]; then
+    show_check
+    exit 0
+  fi
+
+  need() { command -v "$1" >/dev/null 2>&1 || { echo "missing: $1" >&2; exit 1; }; }
+  need git
+
+  ensure_clone "$RENEWM_URL" "$RENEWM_DIR"
+  ensure_clone "$REPYWM_URL" "$REPYWM_DIR"
+
+  if [[ -f "${REPYWM_DIR}/.gitmodules" ]]; then
+    git -C "$REPYWM_DIR" submodule sync --recursive
+    git -C "$REPYWM_DIR" submodule update --init --recursive
+  fi
+
+  if [[ "$PULL_ONLY" -eq 1 ]]; then
+    ok "Pulled renewm + repywm"
+    show_check
+    exit 0
+  fi
+
+  if [[ ! -x "${RENEWM_DIR}/install.sh" ]]; then
+    echo "[!] ${RENEWM_DIR}/install.sh missing" >&2
+    exit 1
+  fi
+
+  info "Running renewm install.sh (isolated from Swirl / sweetpotatos-update desktop lane)…"
+  # Reuse native .so when present; set REPYWM_FORCE_NATIVE=1 to rebuild.
+  (cd "$RENEWM_DIR" && ./install.sh)
+
+  # Prefer SweetPotatOs example configs if the user has none yet.
+  mkdir -p "${HOME}/.config/newm"
+  if [[ ! -f "${HOME}/.config/newm/config.py" && -f "${RENEWM_DIR}/examples/config.sweetpotatos.py" ]]; then
+    cp -f "${RENEWM_DIR}/examples/config.sweetpotatos.py" "${HOME}/.config/newm/config.py"
+    ok "Seeded ~/.config/newm/config.py"
+  fi
+  if [[ ! -f "${HOME}/.config/newm/launcher.py" && -f "${RENEWM_DIR}/examples/launcher.sweetpotatos.py" ]]; then
+    cp -f "${RENEWM_DIR}/examples/launcher.sweetpotatos.py" "${HOME}/.config/newm/launcher.py"
+    ok "Seeded ~/.config/newm/launcher.py"
+  fi
+
+  ok "renewm lab install done"
+  echo "    Pick 'renewm' at Ly (Swirl stays the default)."
+  echo "    Update again later:  sweetpotatos-update --renewm"
+  echo "    Status:              sweetpotatos-renewm --check"
+  show_check
+}
+
+main
