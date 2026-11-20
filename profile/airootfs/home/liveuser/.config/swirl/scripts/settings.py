@@ -178,7 +178,7 @@ class Settings(Gtk.Window):
         box.pack_start(self._heading("Desktop"), False, False, 0)
         self.sw_frames = self._switch_row(box, "Corners and gaps", self._on_frames)
         self.sw_hot = self._switch_row(box, "Overview hot corner", self._on_hot_corner)
-        self.sw_wall = self._switch_row(box, "Wall (free 2D pan)", self._on_wall_mode)
+        self.sw_wall = self._switch_row(box, "Wall (2D grid + zoom)", self._on_wall_mode)
         self.sw_tray = self._switch_row(
             box, "Light tray (text only)", self._on_light_tray
         )

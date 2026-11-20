@@ -48,8 +48,9 @@
   Mod+Ctrl+t         SweetPotato themer
   Mod+Ctrl+g         Corners and gaps
   Mod+Ctrl+h         Overview hot corner on/off
-  Mod+Ctrl+Shift+w   Wall mode (free 2D pan) on/off
-  Mod+Alt+arrows     Pan the wall (when wall mode is on)
+  Mod+Ctrl+Shift+w   Wall mode (2D tile grid) on/off
+  Mod+Alt+arrows     Pan the wall viewport
+  Mod+Alt+u / n      Zoom wall out / in
   Mod+Ctrl+d         Displays (nwg-displays)
   Mod+Ctrl+b         Smart Brightness (toggle; fullscreen video → max)
 
@@ -70,7 +71,7 @@
   XF86 brightness    Brightness up / down
 
   Gestures
-  3-finger L/R       Scroll the window strip (free 2D pan when wall is on)
+  3-finger drag      Scroll strip (or pan the wall when wall mode is on)
   4-finger up/down   Next / previous workspace
 
   Resize mode (after Mod+Shift+r)

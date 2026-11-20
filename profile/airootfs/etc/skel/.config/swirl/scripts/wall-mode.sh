@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Toggle free 2D pan of the Swirl strip (wall mode). See WALL.md in swirl.
+# Toggle newm-style wall mode (2D tile grid + zoom). See WALL.md in swirl.
 # State: ~/.config/sweetpotatos/wall-mode ("on" or "off"). Missing means off.
 # Usage: wall-mode.sh [on|off|toggle|status|apply]
 set -euo pipefail
@@ -48,7 +48,7 @@ case "${cmd}" in
   on)
     write_state on
     apply_now
-    notify "wall mode on" "Swipe or Mod+Alt+arrows to pan freely"
+    notify "wall mode on" "Pan: Mod+Alt+arrows · Zoom: Mod+Alt+u/n"
     ;;
   off)
     write_state off
@@ -66,7 +66,7 @@ case "${cmd}" in
     else
       write_state on
       apply_now
-      notify "wall mode on" "Swipe or Mod+Alt+arrows to pan freely"
+      notify "wall mode on" "Pan: Mod+Alt+arrows · Zoom: Mod+Alt+u/n"
     fi
     ;;
   *)

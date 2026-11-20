@@ -1,7 +1,7 @@
 # Swirl wall-mode lab lane
 
-Builds the **wall-mode** Swirl branch (free 2D pan) and syncs SweetPotato
-Settings/keybinds. Opt-in only — not part of the default
+Builds the **wall-mode** Swirl branch (newm-style 2D tile grid + zoom) and
+syncs SweetPotato Settings/keybinds. Opt-in only — not part of the default
 `sweetpotatos-update` candidate list.
 
 ## On a SweetPotatOs machine

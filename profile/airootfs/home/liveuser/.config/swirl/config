@@ -238,12 +238,14 @@ seat * xcursor_theme capitaine-cursors 24
     # Mod+number / Up/Down also exit.
     bindsym --no-repeat $mod+Tab scale_workspaces toggle
     bindsym $mod+Ctrl+h exec ~/.config/swirl/scripts/hot-corner.sh toggle
-    # Wall mode: free 2D pan of the strip (Settings → Desktop → Wall; default off).
+    # Wall mode: 2D tile grid + viewport (Settings → Desktop → Wall; default off).
     bindsym $mod+Ctrl+Shift+w exec ~/.config/swirl/scripts/wall-mode.sh toggle
     bindsym $mod+Alt+Left wall_pan left
     bindsym $mod+Alt+Right wall_pan right
     bindsym $mod+Alt+Up wall_pan up
     bindsym $mod+Alt+Down wall_pan down
+    bindsym $mod+Alt+u wall_zoom out
+    bindsym $mod+Alt+n wall_zoom in
 #
 # Layout stuff:
 #
@@ -368,10 +370,11 @@ bar {
     # are off. The meters on the right are the status script.
     scroller_indicator no
     trails_indicator no
-    # Floating bar gaps match frames-on. border_radius / border stay out of
-    # this file — parse-time bar cmds are Invalid command on any mismatched
-    # binary; frame.sh apply (exec_always) sets chrome over IPC instead.
+    # Default matches frames on so a theme reload keeps the floating chrome.
+    # frame.sh clears these when ~/.config/sweetpotatos/frame is off.
     gaps 8 8 0 8
+    border_radius 8
+    border 2
 
     colors {
         # SPO-BAR-START
