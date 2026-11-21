@@ -38,10 +38,17 @@ apply_now() {
   else
     swaymsg "wall_mode disable" >/dev/null || true
   fi
-  # Wall/overview touch layer-shell; re-assert swirlbar chrome if frames are on.
-  if [[ -x "${ROOT}/swirl/scripts/frame.sh" ]]; then
-    "${ROOT}/swirl/scripts/frame.sh" apply >/dev/null 2>&1 || true
+  # Wall/overview touch layer-shell; re-assert swirlbar chrome (sync + delayed).
+  local frame="${ROOT}/swirl/scripts/frame.sh"
+  if [[ -x "${frame}" ]]; then
+    "${frame}" apply-now >/dev/null 2>&1 || true
+    (sleep 0.8; "${frame}" apply-now >/dev/null 2>&1) &
+    disown || true
   fi
+}
+
+notify_on() {
+  notify "wall mode on" "Work in the focused tile · Mod+Tab fits the wall · Zoom: Mod+Alt+u/n"
 }
 
 cmd="${1:-toggle}"
@@ -52,7 +59,7 @@ case "${cmd}" in
   on)
     write_state on
     apply_now
-    notify "wall mode on" "Pan: Mod+Alt+arrows · Zoom: Mod+Alt+u/n"
+    notify_on
     ;;
   off)
     write_state off
@@ -70,7 +77,7 @@ case "${cmd}" in
     else
       write_state on
       apply_now
-      notify "wall mode on" "Pan: Mod+Alt+arrows · Zoom: Mod+Alt+u/n"
+      notify_on
     fi
     ;;
   *)

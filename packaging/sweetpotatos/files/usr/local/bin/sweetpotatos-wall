@@ -153,15 +153,27 @@ install_desktop_bits() {
     if ! grep -q 'wall-mode\.sh toggle' "${cfg}"; then
       if grep -q 'hot-corner\.sh toggle' "${cfg}"; then
         sed -i '/hot-corner\.sh toggle/a\
-    # Wall mode: free 2D pan of the strip (Settings → Desktop → Wall; default off).\
+    # Wall: focused tile first; Mod+Tab fits/zooms (Settings → Desktop → Wall).\
     bindsym $mod+Ctrl+Shift+w exec ~/.config/swirl/scripts/wall-mode.sh toggle\
     bindsym $mod+Alt+Left wall_pan left\
     bindsym $mod+Alt+Right wall_pan right\
     bindsym $mod+Alt+Up wall_pan up\
-    bindsym $mod+Alt+Down wall_pan down' "${cfg}"
+    bindsym $mod+Alt+Down wall_pan down\
+    bindsym $mod+Alt+u wall_zoom out\
+    bindsym $mod+Alt+n wall_zoom in\
+    bindsym $mod+Alt+Return wall_zoom toggle' "${cfg}"
         ok "Injected wall keybinds into ~/.config/swirl/config"
       else
         warn "Could not find hot-corner bind to inject after; add wall binds by hand"
+      fi
+    elif ! grep -q 'wall_zoom' "${cfg}"; then
+      # Older inject had pan only — add zoom binds after the last wall_pan line.
+      if grep -q 'wall_pan down' "${cfg}"; then
+        sed -i '/wall_pan down/a\
+    bindsym $mod+Alt+u wall_zoom out\
+    bindsym $mod+Alt+n wall_zoom in\
+    bindsym $mod+Alt+Return wall_zoom toggle' "${cfg}"
+        ok "Injected missing wall_zoom keybinds into ~/.config/swirl/config"
       fi
     fi
     if ! grep -q 'wall-mode\.sh apply' "${cfg}"; then
