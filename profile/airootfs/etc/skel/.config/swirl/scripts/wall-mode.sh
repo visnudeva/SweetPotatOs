@@ -38,6 +38,10 @@ apply_now() {
   else
     swaymsg "wall_mode disable" >/dev/null || true
   fi
+  # Wall/overview touch layer-shell; re-assert swirlbar chrome if frames are on.
+  if [[ -x "${ROOT}/swirl/scripts/frame.sh" ]]; then
+    "${ROOT}/swirl/scripts/frame.sh" apply >/dev/null 2>&1 || true
+  fi
 }
 
 cmd="${1:-toggle}"
