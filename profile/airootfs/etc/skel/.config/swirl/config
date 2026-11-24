@@ -235,6 +235,7 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym --no-repeat $mod+Tab scale_workspaces toggle
     bindsym $mod+Ctrl+h exec ~/.config/swirl/scripts/hot-corner.sh toggle
     # Wall mode: 2D tile grid + viewport (Settings → Desktop → Wall; default off).
+    # Wall: starts on the focused window. Mod+Tab fits/zooms the wall (not ws overview).
     bindsym $mod+Ctrl+Shift+w exec ~/.config/swirl/scripts/wall-mode.sh toggle
     bindsym $mod+Alt+Left wall_pan left
     bindsym $mod+Alt+Right wall_pan right
@@ -242,6 +243,7 @@ seat * xcursor_theme capitaine-cursors 24
     bindsym $mod+Alt+Down wall_pan down
     bindsym $mod+Alt+u wall_zoom out
     bindsym $mod+Alt+n wall_zoom in
+    bindsym $mod+Alt+Return wall_zoom toggle
 #
 # Layout stuff:
 #
@@ -363,7 +365,8 @@ bar {
     strip_workspace_numbers yes
     workspace_min_width 0
     # Scroll's bar draws insert arrows, an eye, and "T0/0 (0)" unless these
-    # are off. The meters on the right are the status script.
+    # are off. Status script is thin by default (volume/battery/wifi/clock);
+    # Settings → Detailed status bar restores CPU/RAM/disk meters.
     scroller_indicator no
     trails_indicator no
     # Default matches frames on so a theme reload keeps the floating chrome.
@@ -407,9 +410,9 @@ exec --no-startup-id ~/.config/swirl/scripts/smart-brightness.sh daemon
 exec_always ~/.config/swirl/scripts/workspace-dots.sh
 
 for_window [app_id="io.calamares.calamares"] floating enable
-for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, border pixel 2, resize set width 50 ppt height 90 ppt, move position center
-for_window [app_id="sweetpotato-themes"] floating enable
-for_window [app_id="sweetpotato-settings"] floating enable
+for_window [app_id="sweetpotato-cheatsheet"] floating enable, sticky enable, border pixel 2, resize set width 42 ppt height 80 ppt, move position center
+for_window [app_id="sweetpotato-themes"] floating enable, border pixel 2
+for_window [app_id="sweetpotato-settings"] floating enable, border pixel 2
 
 # Saved monitor layout (nwg-displays Apply)
 include ~/.config/sway/outputs

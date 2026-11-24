@@ -5,7 +5,7 @@
   Mod+,              SweetPotatOs Settings
 
   This page
-  Mod+Shift+x          Keybind reminder on/off
+  Esc or Mod+q         Close this window
 
   Apps
   Mod+Space          App launcher (Esc closes it)
@@ -48,9 +48,6 @@
   Mod+Ctrl+t         SweetPotato themer
   Mod+Ctrl+g         Corners and gaps
   Mod+Ctrl+h         Overview hot corner on/off
-  Mod+Ctrl+Shift+w   Wall mode (2D tile grid) on/off
-  Mod+Alt+arrows     Pan the wall viewport
-  Mod+Alt+u / n      Zoom wall out / in
   Mod+Ctrl+d         Displays (nwg-displays)
   Mod+Ctrl+b         Smart Brightness (toggle; fullscreen video → max)
 
@@ -71,7 +68,7 @@
   XF86 brightness    Brightness up / down
 
   Gestures
-  3-finger drag      Scroll strip (or pan the wall when wall mode is on)
+  3-finger drag      Scroll strip
   4-finger up/down   Next / previous workspace
 
   Resize mode (after Mod+Shift+r)
@@ -83,7 +80,6 @@
   (survives updates; later binds win over defaults)
 
   Desktop / package updates
-  Mod+, → Updates (SweetPotatOs Settings), or
   sudo sweetpotatos-update
   A notice once a week when updates are ready
   After an update, a note says what changed

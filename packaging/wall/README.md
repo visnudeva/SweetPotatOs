@@ -10,9 +10,16 @@ syncs SweetPotato Settings/keybinds. Opt-in only — not part of the default
 sweetpotatos-update --wall          # pull + build Swirl + desktop bits
 sweetpotatos-wall --check           # status
 sweetpotatos-wall --desktop-only    # config/scripts only
+sweetpotatos-wall --remove          # back to packaged Swirl (clean)
 ```
 
-Touches:
+`--remove` turns wall off, strips wall binds/`exec_always` from
+`~/.config/swirl/config`, deletes `wall-mode.sh` + state, restores Settings so
+the Wall toggle is gone (it only appears while the lab helper is installed),
+scrubs cheatsheet wall lines, force-reinstalls the channel `swirl` package over
+the meson binary, and drops `build-wall`. Then log out and back in.
+
+Touches (while installed):
 
 - `~/code/GITHUB/swirl` on branch `wall-mode-v1` (override with
   `SWEETPOTATOS_WALL_BRANCH` / `SWEETPOTATOS_SWIRL_URL`)

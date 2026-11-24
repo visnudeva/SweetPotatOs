@@ -22,12 +22,10 @@ DARK_IDS=(sweet-potato ube lime cyberpunk monochrome)
 LIGHT_IDS=(dragon-fruit sweet-potato-light blueberry monochrome-light)
 
 QUIET=0
-NO_RELOAD=0
 ARGS=()
 for arg in "$@"; do
   case "${arg}" in
     --quiet) QUIET=1 ;;
-    --no-reload) NO_RELOAD=1 ;;
     *) ARGS+=("${arg}") ;;
   esac
 done
@@ -413,19 +411,6 @@ EOF
     [[ -f "${cfg}" ]] || continue
     changed_note="$(replace_block "${cfg}" "# SPO-CLIENT-START" "# SPO-CLIENT-END" < "${payload}")"
     note_change <<< "${changed_note}"
-    # Parse-time landmines: tint (retired) and bar border_* (IPC via frame.sh).
-    if grep -q '^[[:space:]]*overview_wallpaper_tint\b' "${cfg}"; then
-      sed -i '/^[[:space:]]*overview_wallpaper_tint\b/d' "${cfg}"
-      CHANGED=1
-    fi
-    if grep -qE '^[[:space:]]*border_radius[[:space:]]+[0-9]+' "${cfg}"; then
-      sed -i -E '/^[[:space:]]*border_radius[[:space:]]+[0-9]+/d' "${cfg}"
-      CHANGED=1
-    fi
-    if grep -qE '^[[:space:]]*border[[:space:]]+[0-9]+' "${cfg}"; then
-      sed -i -E '/^[[:space:]]*border[[:space:]]+[0-9]+/d' "${cfg}"
-      CHANGED=1
-    fi
     if grep -q 'icon_theme ' "${cfg}"; then
       local icon_line="    icon_theme ${TRAY_ICONS}"
       if ! grep -qx "${icon_line}" "${cfg}"; then
@@ -779,13 +764,7 @@ def install_kanji(dest, asset, accent_hex, highlight_hex, bg_hex):
     im = bg
 
     dest.parent.mkdir(parents=True, exist_ok=True)
-    import io
-    buf = io.BytesIO()
-    im.save(buf, "PNG")
-    data = buf.getvalue()
-    if dest.is_file() and dest.read_bytes() == data:
-        return False
-    dest.write_bytes(data)
+    im.save(dest, "PNG")
     return True
 
 wrote_logo = False
@@ -1064,9 +1043,7 @@ case "${cmd}" in
   apply)
     read_state
     apply_current
-    # Login / session wrappers pass --no-reload so the first paint keeps the
-    # chosen theme (a reload after start flashed Sweet potato defaults).
-    if [[ "${CHANGED}" -eq 1 && "${NO_RELOAD}" -eq 0 && -n "${SWAYSOCK:-}" ]]; then
+    if [[ "${CHANGED}" -eq 1 && -n "${SWAYSOCK:-}" ]]; then
       reload_desktop
     fi
     [[ "${QUIET}" -eq 1 ]] || echo "${NAME}"

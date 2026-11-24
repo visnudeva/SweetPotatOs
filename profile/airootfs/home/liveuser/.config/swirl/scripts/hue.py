@@ -15,10 +15,14 @@ from gi.repository import GLib
 GLib.set_prgname("sweetpotato-themes")
 from gi.repository import Gdk, Gtk  # noqa: E402
 
+SCRIPTS = Path(__file__).resolve().parent
+sys.path.insert(0, str(SCRIPTS))
+import spo_ui  # noqa: E402
+
 ROOT = Path(os.environ.get("SPO_CONFIG_ROOT", Path.home() / ".config"))
 HUES = ROOT / "sweetpotatos" / "hues"
 THEME = ROOT / "sweetpotatos" / "theme"
-SCRIPT = Path(__file__).resolve().parent / "theme.sh"
+SCRIPT = SCRIPTS / "theme.sh"
 DEFAULT_ACCENT = 348.33
 DEFAULT_HIGHLIGHT = 33.20
 
@@ -174,10 +178,12 @@ class Picker(Gtk.Window):
         return False
 
     def do_draw(self, cr):
-        red, green, blue = self._bg
-        cr.set_source_rgb(red, green, blue)
-        cr.rectangle(0, 0, self.get_allocated_width(), self.get_allocated_height())
-        cr.fill()
+        spo_ui.paint_window_bg(
+            cr,
+            self._bg,
+            self.get_allocated_width(),
+            self.get_allocated_height(),
+        )
         child = self.get_child()
         if child is not None:
             self.propagate_draw(child, cr)
@@ -187,33 +193,14 @@ class Picker(Gtk.Window):
         return False
 
     def _apply_css(self, mode):
-        if mode == "light":
-            bg, fg = "f4f1ec", "241e20"
-            raised, hover, border = "e8e2d8", "e0d9cf", "d4cdc2"
-        else:
-            bg, fg = "1d1f21", "f5e6e8"
-            raised, hover, border = "222426", "2c3032", "2e3234"
-        self._bg = tuple(int(bg[i : i + 2], 16) / 255 for i in (0, 2, 4))
-        self._ring = fg
+        accent = spo_ui.accent_hex(ROOT)
+        highlight = spo_ui.highlight_hex(ROOT)
+        on_highlight = spo_ui.on_highlight_hex(ROOT)
+        p = spo_ui.palette(mode, accent, highlight, on_highlight)
+        self._bg = tuple(int(p["bg"][i : i + 2], 16) / 255 for i in (0, 2, 4))
+        self._ring = p["fg"]
         self._css.load_from_data(
-            f"""
-            window, window.background, .background {{
-              background-color: #{bg};
-              color: #{fg};
-            }}
-            label {{ color: #{fg}; }}
-            #title {{ color: #{fg}; font-weight: bold; }}
-            button {{
-              background-image: none;
-              background-color: #{raised};
-              color: #{fg};
-              border-color: #{border};
-            }}
-            button:hover {{
-              background-color: #{hover};
-              color: #{fg};
-            }}
-            """.encode()
+            spo_ui.panel_css(mode, accent, highlight, on_highlight)
         )
         self.queue_draw()
         self._redraw_dots()

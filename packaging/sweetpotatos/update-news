@@ -1,3 +1,33 @@
+@2026.10.3-271
+What changed: Update button uses the theme highlight orange (same family as section labels), slightly deepened so the solid fill does not look washed out.
+
+@2026.10.3-270
+What changed: Update button in Settings is orange (highlight).
+
+@2026.10.3-269
+What changed: Keybinds footer wording — Esc or Mod+q to close.
+
+@2026.10.3-268
+What changed: Keybinds has no Close button — footer says Esc or Mod+q closes. Update in Settings uses the accent color.
+
+@2026.10.3-267
+What changed: Smaller Settings/Help buttons. Keybinds no longer duplicates Mod=. Close is compact. Open-at-login toggle moved to Startup at the bottom. Help button is Update (runs the updater).
+
+@2026.10.3-266
+What changed: Login opens Settings once (toggle: Open Settings at login). System / Help button grids are even; GTK look removed. Keybinds / Website / Updates sit under Help.
+
+@2026.10.3-265
+What changed: Wall toggle hidden unless you opt in with sweetpotatos-update --wall. Website moved to Settings. Keybinds panel keeps Reminder + Close only.
+
+@2026.10.3-264
+What changed: Update clears an unowned sweetpotatos-renewm (lab leftover) that blocked pacman with "exists in filesystem". Retry the update after this lands.
+
+@2026.10.3-263
+What changed: Update now force-refreshes the thin status bar, Settings, themer, and keybinds panel into ~/.config (stale user_edits could hide 262). Log out once after updating.
+
+@2026.10.3-262
+What changed: Thinner status bar by default (volume · battery · network · clock). Settings → Detailed status bar restores the old meters. Settings, themer, and keybinds (Mod+?) now share one rounded panel look.
+
 @2026.10.3-261
 What changed: Experimental renewm lab lane — `sweetpotatos-update --renewm` (second session only; Swirl untouched).
 

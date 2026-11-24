@@ -8,7 +8,9 @@
 #   sweetpotatos-wall --check      # show checkout / binary status
 #   sweetpotatos-wall --pull-only  # git pull only
 #   sweetpotatos-wall --desktop-only  # config/scripts only (no rebuild)
+#   sweetpotatos-wall --remove     # restore packaged Swirl + scrub desktop bits
 #   sweetpotatos-update --wall     # same as sweetpotatos-wall
+#   sweetpotatos-update --wall --remove  # same as sweetpotatos-wall --remove
 set -euo pipefail
 
 SWIRL_URL="${SWEETPOTATOS_SWIRL_URL:-https://github.com/visnudeva/swirl.git}"
@@ -22,9 +24,10 @@ BUILD_DIR="${SWIRL_DIR}/build-wall"
 CHECK_ONLY=0
 PULL_ONLY=0
 DESKTOP_ONLY=0
+REMOVE=0
 
 usage() {
-  sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
+  sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
 }
 
 for arg in "$@"; do
@@ -32,6 +35,7 @@ for arg in "$@"; do
     --check) CHECK_ONLY=1 ;;
     --pull-only) PULL_ONLY=1 ;;
     --desktop-only) DESKTOP_ONLY=1 ;;
+    --remove|--uninstall) REMOVE=1 ;;
     -h|--help) usage; exit 0 ;;
     *)
       echo "Unknown option: $arg" >&2
@@ -140,6 +144,9 @@ install_desktop_bits() {
 
   cp -f "${POTATO_DIR}/swirl/scripts/wall-mode.sh" "${scripts}/wall-mode.sh"
   chmod 755 "${scripts}/wall-mode.sh"
+  mkdir -p "${HOME}/.config/sweetpotatos"
+  printf 'on\n' >"${HOME}/.config/sweetpotatos/wall-lab"
+  ok "Marked wall lab on (Settings → Wall appears)"
   if [[ -f "${POTATO_DIR}/swirl/scripts/settings.py" ]]; then
     cp -f "${POTATO_DIR}/swirl/scripts/settings.py" "${scripts}/settings.py"
     chmod 755 "${scripts}/settings.py"
@@ -147,6 +154,7 @@ install_desktop_bits() {
   if [[ -f "${POTATO_DIR}/swirl/cheatsheet.txt" ]]; then
     cp -f "${POTATO_DIR}/swirl/cheatsheet.txt" "${dest}/cheatsheet.txt"
   fi
+  inject_cheatsheet_wall
 
   local cfg="${dest}/config"
   if [[ -f "${cfg}" ]]; then
@@ -227,9 +235,161 @@ build_and_install_swirl() {
   ok "Installed wall-mode Swirl to /usr"
 }
 
+scrub_cheatsheet_wall() {
+  local cheat="${HOME}/.config/swirl/cheatsheet.txt"
+  [[ -f "${cheat}" ]] || return 0
+  if grep -qE 'Wall mode|wall viewport|wall when wall|Mod\+Tab \(wall|wall_pan|Zoom wall' "${cheat}"; then
+    info "Scrubbing wall lines from cheatsheet"
+    sed -i \
+      -e '/Wall mode (2D tile grid)/d' \
+      -e '/Pan the wall viewport/d' \
+      -e '/Zoom wall out/d' \
+      -e '/Mod+Tab (wall on)/d' \
+      -e '/Toggle fit-all/d' \
+      -e 's/ (or pan the wall when wall mode is on)//' \
+      "${cheat}"
+    ok "Cheatsheet wall lines removed"
+  fi
+}
+
+inject_cheatsheet_wall() {
+  local cheat="${HOME}/.config/swirl/cheatsheet.txt"
+  [[ -f "${cheat}" ]] || return 0
+  if grep -q 'Wall mode (2D tile grid)' "${cheat}"; then
+    return 0
+  fi
+  if grep -q 'Overview hot corner on/off' "${cheat}"; then
+    info "Adding wall lines to cheatsheet"
+    sed -i '/Overview hot corner on\/off/a\
+  Mod+Ctrl+Shift+w   Wall mode (2D tile grid) on/off\
+  Mod+Alt+arrows     Pan the wall viewport\
+  Mod+Alt+u / n      Zoom wall out / in\
+  Mod+Alt+Return     Toggle fit-all ↔ focused window\
+  Mod+Tab (wall on)  Same fit/focus toggle (not workspace overview)' "${cheat}"
+    sed -i 's/3-finger drag      Scroll strip$/3-finger drag      Scroll strip (or pan the wall when wall mode is on)/' "${cheat}" || true
+    ok "Cheatsheet wall lines added"
+  else
+    warn "Could not find Overview hot corner line to inject wall binds after"
+  fi
+}
+
+restore_settings_without_wall_toggle() {
+  local settings="${HOME}/.config/swirl/scripts/settings.py"
+  local src=""
+
+  # Prefer the gated Settings from the SweetPotato checkout (shows Wall only
+  # while wall-mode.sh exists). Fall back to shipping skel, then a local scrub.
+  if [[ -f "${POTATO_DIR}/swirl/scripts/settings.py" ]]; then
+    src="${POTATO_DIR}/swirl/scripts/settings.py"
+  elif [[ -f /usr/share/sweetpotato/config/swirl/scripts/settings.py ]]; then
+    src=/usr/share/sweetpotato/config/swirl/scripts/settings.py
+  fi
+
+  if [[ -n "${src}" && -f "${settings}" ]]; then
+    info "Restoring Settings from ${src}"
+    cp -f "${src}" "${settings}"
+    chmod 755 "${settings}"
+    ok "Settings restored (Wall row only appears if the lab is re-installed)"
+    return 0
+  fi
+
+  if [[ -f "${settings}" ]] && grep -q 'Wall (2D grid + zoom)' "${settings}"; then
+    info "Scrubbing unconditional Wall switch from Settings"
+    # Drop the always-on switch row; keep the rest of Desktop intact.
+    sed -i '/Wall (2D grid + zoom)/d' "${settings}"
+    # Neutralize refresh/handler if the attribute is gone (best-effort).
+    sed -i \
+      -e 's/self\._set_switch(self\.sw_wall, wall_mode_on())/pass  # wall lab removed/' \
+      "${settings}" || true
+    ok "Wall switch line removed from Settings"
+  fi
+}
+
+remove_desktop_bits() {
+  local wall_sh="${HOME}/.config/swirl/scripts/wall-mode.sh"
+  local cfg="${HOME}/.config/swirl/config"
+  local state="${HOME}/.config/sweetpotatos/wall-mode"
+
+  # Turn wall off in the live session before scrubbing (best-effort).
+  if [[ -x "${wall_sh}" ]]; then
+    info "Disabling wall mode"
+    "${wall_sh}" off >/dev/null 2>&1 || true
+  elif has_wall_cmd; then
+    local msg
+    msg="$(command -v swirlmsg 2>/dev/null || command -v swaymsg)"
+    "${msg}" wall_mode disable >/dev/null 2>&1 || true
+  fi
+
+  if [[ -f "${cfg}" ]]; then
+    if grep -qE 'wall-mode\.sh|wall_pan|wall_zoom|wall_mode' "${cfg}"; then
+      info "Scrubbing wall binds from ~/.config/swirl/config"
+      # Drop wall comment, binds, and exec_always apply lines.
+      sed -i \
+        -e '/# Wall: focused tile first/d' \
+        -e '/wall-mode\.sh toggle/d' \
+        -e '/wall-mode\.sh apply/d' \
+        -e '/[[:space:]]wall_pan /d' \
+        -e '/[[:space:]]wall_zoom /d' \
+        "${cfg}"
+      ok "Removed wall lines from swirl config"
+    else
+      info "No wall lines in ~/.config/swirl/config"
+    fi
+  fi
+
+  if [[ -e "${wall_sh}" ]]; then
+    rm -f "${wall_sh}"
+    ok "Removed ${wall_sh}"
+  fi
+  if [[ -e "${state}" ]]; then
+    rm -f "${state}"
+    ok "Removed wall-mode state file"
+  fi
+  if [[ -e "${HOME}/.config/sweetpotatos/wall-lab" ]]; then
+    rm -f "${HOME}/.config/sweetpotatos/wall-lab"
+    ok "Cleared wall-lab marker (Settings → Wall hidden)"
+  fi
+
+  restore_settings_without_wall_toggle
+  scrub_cheatsheet_wall
+}
+
+restore_packaged_swirl() {
+  need() { command -v "$1" >/dev/null 2>&1 || { echo "missing: $1" >&2; exit 1; }; }
+  need sudo
+  need pacman
+
+  info "Reinstalling packaged swirl from the SweetPotatOs channel"
+  # Force even if --needed would skip: the wall meson install left a foreign binary.
+  if ! sudo pacman -S --noconfirm sweetpotatos/swirl 2>/dev/null; then
+    sudo pacman -S --noconfirm swirl
+  fi
+  ok "Packaged /usr/bin/swirl restored"
+
+  if [[ -d "${BUILD_DIR}" ]]; then
+    info "Removing wall build tree ${BUILD_DIR}"
+    rm -rf "${BUILD_DIR}"
+    ok "Removed build-wall"
+  fi
+}
+
+remove_wall_lab() {
+  remove_desktop_bits
+  restore_packaged_swirl
+  ok "wall lab removed — back to packaged Swirl"
+  echo "    Log out and back into Swirl so the packaged compositor loads."
+  echo "    Status:  sweetpotatos-wall --check   (IPC should say wall_mode not available)"
+  show_check
+}
+
 main() {
   if [[ "$CHECK_ONLY" -eq 1 ]]; then
     show_check
+    exit 0
+  fi
+
+  if [[ "$REMOVE" -eq 1 ]]; then
+    remove_wall_lab
     exit 0
   fi
 
@@ -261,6 +421,7 @@ main() {
   echo "    Log out and back into Swirl to load the new binary."
   echo "    Toggle: Settings → Desktop → Wall, or Mod+Ctrl+Shift+w"
   echo "    Update again:  sweetpotatos-update --wall"
+  echo "    Remove:        sweetpotatos-wall --remove"
   echo "    Status:        sweetpotatos-wall --check"
   echo "    Note: a later pacman swirl upgrade may overwrite this binary — re-run --wall."
   show_check

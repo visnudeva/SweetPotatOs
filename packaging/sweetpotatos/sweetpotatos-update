@@ -30,13 +30,14 @@ CANDIDATES=(
 
 usage() {
   cat <<EOF
-Usage: sweetpotatos-update [--testing|--stable|--check|--renewm|--wall]
+Usage: sweetpotatos-update [--testing|--stable|--check|--renewm|--wall [--remove]]
   (no flag)   update from the channel this machine is already tracking
   --testing   track pacman-repo-testing until --stable
   --stable    track the live pacman-repo release
   --check     print SweetPotatOs packages that would install or upgrade
   --renewm    experimental renewm lab only (does NOT touch Swirl / desktop packages)
   --wall      experimental Swirl wall-mode lab (builds wall branch over packaged swirl)
+  --wall --remove  restore packaged Swirl and scrub wall desktop bits
 EOF
 }
 
@@ -225,14 +226,37 @@ changed="$(printf '%s\n' "${changed}" | sed '/^$/d')"
 # Captured before the transaction so the note can list every change since this version.
 previous_sweetpotatos="$(pacman -Q sweetpotatos 2>/dev/null | awk '{print $2}' || true)"
 
+# Lab helpers (renewm / wall) may exist as unowned files from an earlier
+# sweetpotatos-update --renewm/--wall before they shipped in the package.
+# Pacman then aborts with "exists in filesystem" and upgrades nothing.
+_clear_unowned_spo_bins() {
+  local path owner
+  for path in \
+    /usr/local/bin/sweetpotatos-renewm \
+    /usr/local/bin/sweetpotatos-renew \
+    /usr/local/bin/sweetpotatos-wall
+  do
+    [[ -e "${path}" || -L "${path}" ]] || continue
+    owner="$(pacman -Qo "${path}" 2>/dev/null || true)"
+    if [[ -z "${owner}" ]]; then
+      echo "[*] Removing unowned ${path} so the sweetpotatos package can own it"
+      rm -f "${path}"
+    fi
+  done
+}
+_clear_unowned_spo_bins
+
 echo "[*] Installing/upgrading: ${to_touch[*]}"
 pacman -S --needed --noconfirm "${to_touch[@]}"
 
 # Force these two even if --needed thought they were current — stale swirl +
 # unfixed configs were the Invalid command loop.
 echo "[*] Forcing sweetpotatos + swirl reinstall from the channel…"
-pacman -S --noconfirm "${REPO_NAME}/sweetpotatos" "${REPO_NAME}/swirl" || \
-  pacman -S --noconfirm sweetpotatos swirl || true
+_clear_unowned_spo_bins
+pacman -S --noconfirm --overwrite '/usr/local/bin/sweetpotatos-renew*,/usr/local/bin/sweetpotatos-wall' \
+  "${REPO_NAME}/sweetpotatos" "${REPO_NAME}/swirl" || \
+  pacman -S --noconfirm --overwrite '/usr/local/bin/sweetpotatos-renew*,/usr/local/bin/sweetpotatos-wall' \
+  sweetpotatos swirl || true
 
 # Always scrub configs for every /home user (not gated on sprout/SUDO_USER).
 if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
@@ -258,18 +282,43 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       XDG_STATE_HOME="${target_home}/.local/state" \
       sweetpotatos-sprout || true
 
-    # Guaranteed refresh of the help sheet and its login tip (no overlay / stale copy).
-    src_cheat="/usr/share/sweetpotato/config/swirl/scripts/cheatsheet.sh"
-    dst_cheat="${target_home}/.config/swirl/scripts/cheatsheet.sh"
-    if [[ -f "${src_cheat}" ]]; then
-      install -Dm755 "${src_cheat}" "${dst_cheat}"
-      chown "${target_user}:${target_user}" "${dst_cheat}" 2>/dev/null || true
-    fi
-    src_tips="/usr/share/sweetpotato/config/swirl/scripts/tips.sh"
-    dst_tips="${target_home}/.config/swirl/scripts/tips.sh"
-    if [[ -f "${src_tips}" ]]; then
-      install -Dm755 "${src_tips}" "${dst_tips}"
-      chown "${target_user}:${target_user}" "${dst_tips}" 2>/dev/null || true
+    # Guaranteed refresh of desktop UI scripts (ignore user_edits / stale copies).
+    # cheatsheet.sh alone is not enough — it execs cheatsheet.py + spo_ui.py;
+    # status.sh / settings.py are what make the thin bar + panel look visible.
+    shipped_scripts=(
+      cheatsheet.sh
+      cheatsheet.py
+      spo_ui.py
+      status.sh
+      status-detail.sh
+      settings.py
+      hue.py
+      tips.sh
+    )
+    for script_name in "${shipped_scripts[@]}"; do
+      src_script="/usr/share/sweetpotato/config/swirl/scripts/${script_name}"
+      dst_script="${target_home}/.config/swirl/scripts/${script_name}"
+      if [[ -f "${src_script}" ]]; then
+        install -Dm755 "${src_script}" "${dst_script}"
+        chown "${target_user}:${target_user}" "${dst_script}" 2>/dev/null || true
+      fi
+      # Drop overlay forks so the next sprout does not put the old file back.
+      rm -f "${target_home}/.config/sweetpotatos/user_edits/swirl/scripts/${script_name}"
+    done
+    # Keybinds text + bar chrome comments live beside the scripts.
+    for rel in swirl/cheatsheet.txt swirl/config; do
+      src_cfg="/usr/share/sweetpotato/config/${rel}"
+      dst_cfg="${target_home}/.config/${rel}"
+      if [[ -f "${src_cfg}" ]]; then
+        install -Dm644 "${src_cfg}" "${dst_cfg}"
+        chown "${target_user}:${target_user}" "${dst_cfg}" 2>/dev/null || true
+      fi
+    done
+    # Wall is opt-in lab. Drop leaked toggle/script unless wall-lab marker is set.
+    if [[ ! -f "${target_home}/.config/sweetpotatos/wall-lab" ]]; then
+      rm -f "${target_home}/.config/swirl/scripts/wall-mode.sh" \
+            "${target_home}/.config/sweetpotatos/wall-mode" \
+            "${target_home}/.config/sweetpotatos/user_edits/swirl/scripts/wall-mode.sh"
     fi
 
     # Sprout writes the default Sweet potato colors. Put the saved choice

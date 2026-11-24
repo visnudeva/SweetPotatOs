@@ -198,6 +198,11 @@ rm -f "${DEST}/swirl/scripts/network-applet.py" \
       "${DEST}/swirl/scripts/swirlbar.sh" \
       "${DEST}/swirl/scripts/overview-layout.sh" \
       "${DEST}/sweetpotatos/overview-layout"
+# Wall lab only: keep wall-mode.sh when ~/.config/sweetpotatos/wall-lab exists.
+if [[ ! -f "${DEST}/sweetpotatos/wall-lab" ]]; then
+  rm -f "${DEST}/swirl/scripts/wall-mode.sh" \
+        "${DEST}/sweetpotatos/wall-mode"
+fi
 echo "[+] Sprouted shipped config into ${DEST}"
 echo "    Overlay: ${OVERLAY}"
 

@@ -171,7 +171,9 @@ sync_common_into() {
         "${dest}/.config/swirl/scripts/network-tray.sh" \
         "${dest}/.config/swirl/scripts/pin-window.sh" \
         "${dest}/.config/swirl/scripts/escape.sh" \
-        "${dest}/.config/swirl/scripts/swirlbar.sh"
+        "${dest}/.config/swirl/scripts/swirlbar.sh" \
+        "${dest}/.config/swirl/scripts/wall-mode.sh"
+  # wall-mode.sh is lab-only (sweetpotatos-update --wall); never ship it in skel.
   cp -f "${SP}/swirl/cheatsheet.txt" "${dest}/.config/swirl/cheatsheet.txt"
   # Drop polished first-hour sheet if a prior sync left one behind.
   rm -f "${dest}/.config/swirl/cheatsheet-first-hour.txt"
