@@ -121,8 +121,8 @@
       "contact.message": "Message",
       "contact.send": "Send message",
       "contact.xmpp.h2": "Chat on XMPP",
-      "contact.xmpp.lead": "Prefer a private chat? Scan the QR to add the maintainer (<code>visnudeva@conversations.im</code>). You’ll need an XMPP app — <a href=\"https://conversations.im/\" target=\"_blank\" rel=\"noopener noreferrer\">Conversations</a> is a free, open-source client for Android (and a good place to start).",
-      "contact.xmpp.alt": "QR code for XMPP address visnudeva@conversations.im",
+      "contact.xmpp.lead": "Prefer a private chat? Scan the QR to add the maintainer (<code>goguma@conversations.im</code>). You’ll need an XMPP app — <a href=\"https://conversations.im/\" target=\"_blank\" rel=\"noopener noreferrer\">Conversations</a> is a free, open-source client for Android (and a good place to start).",
+      "contact.xmpp.alt": "QR code for XMPP address goguma@conversations.im",
       "contact.xmpp.btn": "Get Conversations",
       "contact.xmpp.note": "Install Conversations, create or sign in to an XMPP account, then scan the QR (or add the address above) to message the maintainer.",
 
@@ -579,8 +579,8 @@
       "contact.message": "Message",
       "contact.send": "Envoyer",
       "contact.xmpp.h2": "Discuter en XMPP",
-      "contact.xmpp.lead": "Vous préférez un chat privé ? Scannez le QR pour ajouter le mainteneur (<code>visnudeva@conversations.im</code>). Il vous faut une appli XMPP — <a href=\"https://conversations.im/\" target=\"_blank\" rel=\"noopener noreferrer\">Conversations</a> est un client libre pour Android (et un bon point de départ).",
-      "contact.xmpp.alt": "QR code pour l’adresse XMPP visnudeva@conversations.im",
+      "contact.xmpp.lead": "Vous préférez un chat privé ? Scannez le QR pour ajouter le mainteneur (<code>goguma@conversations.im</code>). Il vous faut une appli XMPP — <a href=\"https://conversations.im/\" target=\"_blank\" rel=\"noopener noreferrer\">Conversations</a> est un client libre pour Android (et un bon point de départ).",
+      "contact.xmpp.alt": "QR code pour l’adresse XMPP goguma@conversations.im",
       "contact.xmpp.btn": "Obtenir Conversations",
       "contact.xmpp.note": "Installez Conversations, créez ou connectez un compte XMPP, puis scannez le QR (ou ajoutez l’adresse ci-dessus) pour écrire au mainteneur.",
 
