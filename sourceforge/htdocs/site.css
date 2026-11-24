@@ -1790,6 +1790,83 @@ pre code {
   border: 1px solid var(--border);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
 }
+.contact-xmpp {
+  margin: 1.5rem 0 1.75rem;
+  padding: 1.25rem 1.35rem;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+.contact-xmpp h2 {
+  margin: 0 0 0.45rem;
+}
+.contact-xmpp-lead {
+  max-width: 40rem;
+  margin: 0 0 1.15rem;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+}
+.contact-xmpp-lead a {
+  color: var(--orange);
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+.contact-xmpp-lead a:hover {
+  color: var(--text);
+}
+.contact-xmpp-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 1.75rem;
+}
+.contact-xmpp-qr {
+  display: block;
+  flex: 0 0 auto;
+  width: min(14rem, 100%);
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  line-height: 0;
+  cursor: zoom-in;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.contact-xmpp-qr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.36);
+}
+.contact-xmpp-qr img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.contact-xmpp-aside {
+  flex: 1 1 14rem;
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  max-width: 24rem;
+}
+.contact-xmpp-jid {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.contact-xmpp-jid code {
+  font-size: 1em;
+  word-break: break-all;
+}
+.contact-xmpp-aside .btn {
+  justify-self: start;
+}
+.contact-xmpp-note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  max-width: 22rem;
+}
 .contact > p {
   margin: 0 0 1rem;
   max-width: 36rem;

@@ -89,6 +89,28 @@
         <button class="btn btn-primary" type="submit" data-i18n="contact.send">Send message</button>
       </form>
     </div>
+
+    <section class="contact-xmpp" aria-labelledby="contact-xmpp-heading">
+      <h2 id="contact-xmpp-heading" data-i18n="contact.xmpp.h2">Chat on XMPP</h2>
+      <p class="lead contact-xmpp-lead" data-i18n-html="contact.xmpp.lead">
+        Prefer a private chat? Scan the QR to add the maintainer
+        (<code>visnudeva@conversations.im</code>). You’ll need an XMPP app —
+        <a href="https://conversations.im/" target="_blank" rel="noopener noreferrer">Conversations</a>
+        is a free, open-source client for Android (and a good place to start).
+      </p>
+      <div class="contact-xmpp-row" data-lightbox-gallery>
+        <a class="contact-xmpp-qr" href="xmpp-qr.png">
+          <img src="xmpp-qr.png" width="280" height="280" alt="QR code for XMPP address visnudeva@conversations.im" data-i18n-alt="contact.xmpp.alt">
+        </a>
+        <div class="contact-xmpp-aside">
+          <p class="contact-xmpp-jid"><code>visnudeva@conversations.im</code></p>
+          <a class="btn btn-primary" href="https://conversations.im/" target="_blank" rel="noopener noreferrer" data-i18n="contact.xmpp.btn">Get Conversations</a>
+          <p class="contact-xmpp-note" data-i18n="contact.xmpp.note">
+            Install Conversations, create or sign in to an XMPP account, then scan the QR (or add the address above) to message the maintainer.
+          </p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -100,5 +122,13 @@
       </a>
     </div>
   </footer>
+  <div class="wall-view" hidden data-lightbox>
+    <button type="button" class="wall-view-close" data-i18n-aria="common.close" aria-label="Close">×</button>
+    <img alt="">
+    <div class="wall-view-bar">
+      <p class="wall-view-caption"></p>
+      <a class="wall-view-save" data-i18n="common.saveOriginal">Save original</a>
+    </div>
+  </div>
 </body>
 </html>
