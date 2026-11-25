@@ -31,14 +31,15 @@ detail_on() {
     [[ -f "$f" ]] && [[ "$(tr -d '[:space:]' <"$f" 2>/dev/null)" == on ]]
 }
 
+# Light tray is always on (no icons mode / Settings toggle).
 tray_text_on() {
-    local f="${HOME}/.config/sweetpotatos/tray-mode"
-    [[ -f "$f" ]] && [[ "$(tr -d '[:space:]' <"$f" 2>/dev/null)" == text ]]
+    return 0
 }
 
 # Short probe — never block the status loop on compositor IPC / bluetoothd.
+# SIGKILL so a wedged swaymsg cannot outlive the timeout and stall the bar.
 probe() {
-    timeout 0.4 "$@" 2>/dev/null
+    timeout -s KILL 0.3 "$@" 2>/dev/null
 }
 
 build_line() {
@@ -106,11 +107,12 @@ build_line() {
             fi
         done
 
-        # Timed: swaymsg from status_command can deadlock the bar IPC.
+        # Timed + KILL: swaymsg from status_command can deadlock bar IPC.
+        # Single timeout around the pipeline so a stuck swaymsg cannot linger.
         win_title=$(
-            probe swaymsg -t get_tree \
-              | probe jq -r '.. | objects | select(.focused == true) | .name // empty' \
-              | head -1
+            timeout -s KILL 0.35 bash -c \
+              'swaymsg -t get_tree 2>/dev/null | jq -r ".. | objects | select(.focused == true) | .name // empty" | head -1' \
+              2>/dev/null || true
         )
         if [[ "${win_title}" =~ ^([0-9]+):●$ ]]; then
             win_title="${BASH_REMATCH[1]}"

@@ -1,3 +1,6 @@
+@2026.10.3-275
+What changed: Light tray is always on (no toggle). Detailed status toggles force-respawn the bar status line so it cannot stay blank.
+
 @2026.10.3-274
 What changed: Detailed status and light tray no longer blank the bar (status probes time out; toggles restart the status line).
 

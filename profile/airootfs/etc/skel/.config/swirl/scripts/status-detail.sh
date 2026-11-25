@@ -30,11 +30,15 @@ write_state() {
   printf '%s\n' "$1" >"${STATE_FILE}"
 }
 
-# Respawn status_command so a stuck probe (swaymsg IPC) cannot leave the bar blank.
+# swirlbar only kills/respawns status_command when the command *string* changes.
+# Re-setting the same path is a no-op and leaves a stuck status line blank —
+# clear first (`-`), then set again.
 restart_bar_status() {
   local script="${ROOT}/swirl/scripts/status.sh"
   [[ -f "${script}" ]] || script="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/status.sh"
   command -v swaymsg >/dev/null 2>&1 || return 0
+  swaymsg -q 'bar potato status_command -' >/dev/null 2>&1 || true
+  sleep 0.05
   swaymsg -q "bar potato status_command ${script}" >/dev/null 2>&1 || true
 }
 
