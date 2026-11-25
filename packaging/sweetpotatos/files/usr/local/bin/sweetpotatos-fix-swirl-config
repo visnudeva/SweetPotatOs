@@ -21,6 +21,14 @@ XORG_KBD="${SWEETPOTATOS_XORG_KBD:-/etc/X11/xorg.conf.d/00-keyboard.conf}"
   exit 0
 }
 
+# Live ISO airootfs (and the running live session) already has liveuser injects:
+# Calamares autostart, Mod+i, caffeine-on, xkb watch. Replacing that file with the
+# installed-system skel during pacstrap was wiping the installer autostart.
+if [[ -f /etc/mkinitcpio.conf.d/archiso.conf ]]; then
+  echo "[*] archiso image — scrub only, keep live swirl configs"
+  SCRUB_ONLY=1
+fi
+
 scrub_file() {
   local f="$1"
   [[ -f "${f}" ]] || return 0

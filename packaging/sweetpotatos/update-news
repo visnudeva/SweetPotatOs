@@ -1,3 +1,6 @@
+@2026.10.3-273
+What changed: Live ISO opens the installer again at login (Calamares autostart was being cleared during the image build).
+
 @2026.10.3-272
 What changed: Stable channel ships swirl 78 (overview accent tint). The live package index is rebuilt so updates match the ISO.
 
