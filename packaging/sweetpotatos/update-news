@@ -1,3 +1,6 @@
+@2026.10.3-272
+What changed: Stable channel ships swirl 78 (overview accent tint). The live package index is rebuilt so updates match the ISO.
+
 @2026.10.3-271
 What changed: Update button uses the theme highlight orange (same family as section labels), slightly deepened so the solid fill does not look washed out.
 
