@@ -1,3 +1,6 @@
+@2026.10.3-274
+What changed: Detailed status and light tray no longer blank the bar (status probes time out; toggles restart the status line).
+
 @2026.10.3-273
 What changed: Live ISO opens the installer again at login (Calamares autostart was being cleared during the image build).
 

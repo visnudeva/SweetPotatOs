@@ -163,10 +163,12 @@ post_upgrade() {
   _ly_session_wrapper
   systemctl daemon-reload || true
   systemctl enable sweetpotatos-update-check.timer >/dev/null 2>&1 || true
-  # $2 is the previous version. A fresh install has none; Calamares builds
-  # the initramfs after the packages are unpacked.
+  # Always pin GRUB_DISABLE_BOOTNEXT (fresh install + upgrades). Calamares
+  # may skip its defaults when /etc/default/grub already exists from the grub
+  # package; without this, grub 2.16+ lists every firmware Boot#### entry.
+  # Initramfs refresh stays upgrade-only — Calamares builds it on first install.
+  _revert_boot_quiet_experiment
   if [[ -n "${2:-}" ]]; then
-    _revert_boot_quiet_experiment
     _refresh_boot_splash
   fi
 }

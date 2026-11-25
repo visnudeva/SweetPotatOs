@@ -2,6 +2,10 @@
 # Potato bar status line. Default is thin (volume · battery · wifi · clock).
 # Detailed meters (CPU/RAM/disk/brightness + title) when
 # ~/.config/sweetpotatos/status-detail is "on" (Settings → Detailed status bar).
+#
+# Never call blocking swaymsg/bluetoothctl without timeout: a stuck IPC client
+# from status_command can deadlock swirlbar and leave the bar blank until the
+# status process is respawned (Settings toggles / Mod+Shift+c).
 
 # Store previous CPU values for calculating usage
 prev_total=0
@@ -27,58 +31,71 @@ detail_on() {
     [[ -f "$f" ]] && [[ "$(tr -d '[:space:]' <"$f" 2>/dev/null)" == on ]]
 }
 
-while true; do
-    detail=0
+tray_text_on() {
+    local f="${HOME}/.config/sweetpotatos/tray-mode"
+    [[ -f "$f" ]] && [[ "$(tr -d '[:space:]' <"$f" 2>/dev/null)" == text ]]
+}
+
+# Short probe — never block the status loop on compositor IPC / bluetoothd.
+probe() {
+    timeout 0.4 "$@" 2>/dev/null
+}
+
+build_line() {
+    local detail=0
+    local cpu_usage=0 ram_usage=0 disk_usage=0
+    local brightness_display="" win_title=""
+    local battery_display wifi_display volume_display
+    local bt_display="" disks_display=""
+    local meters line datetime
+    local cpu_line total idle total_diff idle_diff
+    local user nice system iowait irq softirq steal
+    local battery_percent battery_status volume muted
+    local wifi_ssid bl max_brightness current_brightness brightness sun
+    local bt_name disk_names base d name
+    local -a cpu_values
+
     if detail_on; then
         detail=1
     fi
 
-    cpu_usage=0
-    ram_usage=0
-    disk_usage=0
-    brightness_display=""
-    win_title=""
-
     if [ "$detail" -eq 1 ]; then
-        # CPU usage (current percentage)
-        cpu_line=$(grep 'cpu ' /proc/stat)
+        cpu_line=$(grep 'cpu ' /proc/stat 2>/dev/null) || cpu_line=""
+        # shellcheck disable=SC2206
         cpu_values=($cpu_line)
-        user=${cpu_values[1]}
-        nice=${cpu_values[2]}
-        system=${cpu_values[3]}
-        idle=${cpu_values[4]}
-        iowait=${cpu_values[5]}
-        irq=${cpu_values[6]}
-        softirq=${cpu_values[7]}
-        steal=${cpu_values[8]}
+        user=${cpu_values[1]:-0}
+        nice=${cpu_values[2]:-0}
+        system=${cpu_values[3]:-0}
+        idle=${cpu_values[4]:-0}
+        iowait=${cpu_values[5]:-0}
+        irq=${cpu_values[6]:-0}
+        softirq=${cpu_values[7]:-0}
+        steal=${cpu_values[8]:-0}
 
         total=$((user + nice + system + idle + iowait + irq + softirq + steal))
 
-        if [ $prev_total -gt 0 ]; then
+        if [ "$prev_total" -gt 0 ]; then
             total_diff=$((total - prev_total))
             idle_diff=$((idle - prev_idle))
             if [ "$total_diff" -gt 0 ]; then
                 cpu_usage=$((100 * (total_diff - idle_diff) / total_diff))
-            else
-                cpu_usage=0
             fi
-        else
-            cpu_usage=0
         fi
 
         prev_total=$total
         prev_idle=$idle
 
-        ram_usage=$(free -m | awk '/Mem:/ {printf "%.0f", ($3/$2)*100}')
-        disk_usage=$(df -h / | awk 'NR==2 {print $5}' | sed 's/%//')
+        ram_usage=$(free -m 2>/dev/null | awk '/Mem:/ {printf "%.0f", ($3/$2)*100}')
+        ram_usage=${ram_usage:-0}
+        disk_usage=$(df -h / 2>/dev/null | awk 'NR==2 {print $5}' | sed 's/%//')
+        disk_usage=${disk_usage:-0}
 
-        # Brightness. No backlight (a desktop) is a crossed-out sun.
         brightness_display="$(ico 0xF14E4)"
         for bl in /sys/class/backlight/*; do
             [ -d "$bl" ] || continue
             max_brightness=$(cat "$bl/max_brightness" 2>/dev/null) || continue
             current_brightness=$(cat "$bl/brightness" 2>/dev/null) || continue
-            if [ -n "$max_brightness" ] && [ "$max_brightness" -gt 0 ]; then
+            if [ -n "$max_brightness" ] && [ "$max_brightness" -gt 0 ] 2>/dev/null; then
                 brightness=$((current_brightness * 100 / max_brightness))
                 sun=$((0xF00DA + brightness * 6 / 100))
                 if [ "$sun" -gt $((0xF00E0)) ]; then
@@ -89,35 +106,36 @@ while true; do
             fi
         done
 
-        win_title=$(swaymsg -t get_tree 2>/dev/null \
-          | jq -r '.. | objects | select(.focused == true) | .name // empty' 2>/dev/null \
-          | head -1)
+        # Timed: swaymsg from status_command can deadlock the bar IPC.
+        win_title=$(
+            probe swaymsg -t get_tree \
+              | probe jq -r '.. | objects | select(.focused == true) | .name // empty' \
+              | head -1
+        )
         if [[ "${win_title}" =~ ^([0-9]+):●$ ]]; then
             win_title="${BASH_REMATCH[1]}"
         fi
         win_title=${win_title//$'\n'/ }
-        if [ ${#win_title} -gt 36 ]; then
-            win_title="${win_title:0:33}..."
+        if [ ${#win_title} -gt 28 ]; then
+            win_title="${win_title:0:25}..."
         fi
         win_title=$(pango_escape "$win_title")
     fi
 
-    # Battery. The glyph changes for charging, low, and no battery.
     battery_percent=$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -1)
     battery_status=$(cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -1)
     if [ -z "$battery_percent" ]; then
         battery_display="$(ico 0xF125D)"
     elif [ "$battery_status" = "Charging" ]; then
         battery_display="$(ico 0xF0084) ${battery_percent}%"
-    elif [ "$battery_percent" -lt 15 ]; then
+    elif [ "$battery_percent" -lt 15 ] 2>/dev/null; then
         battery_display="$(ico 0xF12A1) ${battery_percent}%"
-    elif [ "$battery_percent" -lt 50 ]; then
+    elif [ "$battery_percent" -lt 50 ] 2>/dev/null; then
         battery_display="$(ico 0xF12A2) ${battery_percent}%"
     else
         battery_display="$(ico 0xF12A3) ${battery_percent}%"
     fi
 
-    # WiFi. The name stays text; off is a slashed icon.
     wifi_ssid=$(iwgetid -r 2>/dev/null)
     if [ -n "$wifi_ssid" ]; then
         wifi_display="$(ico 0xF05A9) $(pango_escape "$wifi_ssid")"
@@ -125,19 +143,10 @@ while true; do
         wifi_display="$(ico 0xF05AA)"
     fi
 
-    # Light tray mode (Settings): show Bluetooth + removable mounts as text
-    # instead of nm-applet / blueman-applet / udiskie tray icons.
-    tray_mode=icons
-    if [ -f "${HOME}/.config/sweetpotatos/tray-mode" ] \
-        && [ "$(cat "${HOME}/.config/sweetpotatos/tray-mode" 2>/dev/null)" = "text" ]; then
-        tray_mode=text
-    fi
-    bt_display=""
-    disks_display=""
-    if [ "$tray_mode" = "text" ]; then
+    if tray_text_on; then
         if command -v bluetoothctl >/dev/null 2>&1 \
-            && bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; then
-            bt_name=$(bluetoothctl devices Connected 2>/dev/null \
+            && probe bluetoothctl show | grep -q 'Powered: yes'; then
+            bt_name=$(probe bluetoothctl devices Connected \
                 | head -1 | sed 's/^Device [^ ]* //')
             if [ -n "$bt_name" ]; then
                 bt_display="$(ico 0xF00AF) $(pango_escape "$bt_name")"
@@ -165,15 +174,14 @@ while true; do
         fi
     fi
 
-    # Volume. Muted and missing audio use their own icons.
     volume=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -o '[0-9]*%' | head -1 | sed 's/%//')
     if [ -n "$volume" ]; then
         muted=$(pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -o 'yes')
         if [ "$muted" = "yes" ]; then
             volume_display="$(ico 0xF075F)"
-        elif [ "$volume" -lt 30 ]; then
+        elif [ "$volume" -lt 30 ] 2>/dev/null; then
             volume_display="$(ico 0xF057F) ${volume}%"
-        elif [ "$volume" -lt 70 ]; then
+        elif [ "$volume" -lt 70 ] 2>/dev/null; then
             volume_display="$(ico 0xF0580) ${volume}%"
         else
             volume_display="$(ico 0xF057E) ${volume}%"
@@ -201,9 +209,11 @@ while true; do
     else
         line="${meters}"
     fi
-    # No pango rise — swirlbar centers status text on ink extents so the
-    # meters line up with the tray icons. A rise made the line sit high.
-    echo "${line}"
+    printf '%s\n' "${line}"
+}
 
+while true; do
+    # Always print something; a failed probe must not skip a frame.
+    build_line || printf '%s\n' "$(date '+%a %d %b %H:%M')"
     sleep 3
 done

@@ -30,6 +30,14 @@ write_state() {
   printf '%s\n' "$1" >"${STATE_FILE}"
 }
 
+# Respawn status_command so a stuck probe (swaymsg IPC) cannot leave the bar blank.
+restart_bar_status() {
+  local script="${ROOT}/swirl/scripts/status.sh"
+  [[ -f "${script}" ]] || script="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/status.sh"
+  command -v swaymsg >/dev/null 2>&1 || return 0
+  swaymsg -q "bar potato status_command ${script}" >/dev/null 2>&1 || true
+}
+
 cmd="${1:-toggle}"
 case "${cmd}" in
   status)
@@ -37,18 +45,22 @@ case "${cmd}" in
     ;;
   on|enable)
     write_state on
+    restart_bar_status
     notify "Detailed status" "CPU, RAM, disk, brightness, and window title in the bar"
     ;;
   off|disable)
     write_state off
+    restart_bar_status
     notify "Thin status" "Volume, battery, network, and clock"
     ;;
   toggle)
     if [[ "$(state_now)" == on ]]; then
       write_state off
+      restart_bar_status
       notify "Thin status" "Volume, battery, network, and clock"
     else
       write_state on
+      restart_bar_status
       notify "Detailed status" "CPU, RAM, disk, brightness, and window title in the bar"
     fi
     ;;

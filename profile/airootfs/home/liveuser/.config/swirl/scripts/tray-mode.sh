@@ -97,6 +97,14 @@ apply_now() {
   esac
 }
 
+# Respawn status_command after tray changes (clears a blank/stuck status line).
+restart_bar_status() {
+  local script="${ROOT}/swirl/scripts/status.sh"
+  [[ -f "${script}" ]] || script="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/status.sh"
+  command -v swaymsg >/dev/null 2>&1 || return 0
+  swaymsg -q "bar potato status_command ${script}" >/dev/null 2>&1 || true
+}
+
 cmd="${1:-toggle}"
 case "${cmd}" in
   status)
@@ -105,11 +113,13 @@ case "${cmd}" in
   icons)
     write_state icons
     apply_now
+    restart_bar_status
     notify "tray icons" "Network, Bluetooth, and disks use the bar tray"
     ;;
   text)
     write_state text
     apply_now
+    restart_bar_status
     notify "light tray" "Text in the bar — use Settings for Network / Bluetooth"
     ;;
   apply)
@@ -119,10 +129,12 @@ case "${cmd}" in
     if [[ "$(state_now)" == "text" ]]; then
       write_state icons
       apply_now
+      restart_bar_status
       notify "tray icons" "Network, Bluetooth, and disks use the bar tray"
     else
       write_state text
       apply_now
+      restart_bar_status
       notify "light tray" "Text in the bar — use Settings for Network / Bluetooth"
     fi
     ;;
