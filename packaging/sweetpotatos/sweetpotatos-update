@@ -313,6 +313,9 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
         XDG_CONFIG_HOME="${target_home}/.config" \
         "${tray_script}" apply >/dev/null 2>&1 || true
     fi
+    # Detailed status was removed — clear leftover toggle state.
+    rm -f "${target_home}/.config/sweetpotatos/status-detail" \
+      "${target_home}/.config/sweetpotatos/user_edits/swirl/scripts/status-detail.sh"
     # Keybinds text + bar chrome comments live beside the scripts.
     for rel in swirl/cheatsheet.txt swirl/config; do
       src_cfg="/usr/share/sweetpotato/config/${rel}"

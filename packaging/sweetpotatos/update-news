@@ -1,3 +1,6 @@
+@2026.10.3-276
+What changed: Status bar stays thin (no detailed toggle). It refreshes every 10s instead of 3s to use less CPU.
+
 @2026.10.3-275
 What changed: Light tray is always on (no toggle). Detailed status toggles force-respawn the bar status line so it cannot stay blank.
 

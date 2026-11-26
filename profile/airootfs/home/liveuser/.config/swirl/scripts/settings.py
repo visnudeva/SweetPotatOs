@@ -24,7 +24,6 @@ FRAME = ROOT / "sweetpotatos" / "frame"
 SMART = ROOT / "sweetpotatos" / "smart-brightness" / "enabled"
 HOT_CORNER = ROOT / "sweetpotatos" / "hot-corner"
 WALL_MODE = ROOT / "sweetpotatos" / "wall-mode"
-STATUS_DETAIL = ROOT / "sweetpotatos" / "status-detail"
 LOGIN_TIP = ROOT / "sweetpotatos" / "login-tip"
 CAFFEINE = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp")) / "sweetpotato-caffeine.state"
 TITLE = "SweetPotatOs Settings"
@@ -61,10 +60,6 @@ def wall_lab_available():
     """Show Wall only while the wall lab is opted in (sweetpotatos-update --wall)."""
     marker = ROOT / "sweetpotatos" / "wall-lab"
     return marker.is_file() and (SCRIPTS / "wall-mode.sh").is_file()
-
-
-def status_detail_on():
-    return STATUS_DETAIL.is_file() and STATUS_DETAIL.read_text().strip() == "on"
 
 
 def open_at_login_on():
@@ -194,9 +189,6 @@ class Settings(Gtk.Window):
             self.sw_wall = self._switch_row(
                 box, "Wall (2D grid + zoom)", self._on_wall_mode
             )
-        self.sw_detail = self._switch_row(
-            box, "Detailed status bar", self._on_status_detail
-        )
         self.sw_smart = self._switch_row(box, "Smart Brightness", self._on_smart)
         self.sw_caffeine = self._switch_row(box, "Caffeine", self._on_caffeine)
 
@@ -320,7 +312,6 @@ class Settings(Gtk.Window):
         self._set_switch(self.sw_hot, hot_corner_on())
         if self.sw_wall is not None:
             self._set_switch(self.sw_wall, wall_mode_on())
-        self._set_switch(self.sw_detail, status_detail_on())
         self._set_switch(self.sw_smart, smart_on())
         self._set_switch(self.sw_caffeine, caffeine_on())
         self._set_switch(self.sw_login, open_at_login_on())
@@ -353,11 +344,6 @@ class Settings(Gtk.Window):
         if self._setting:
             return
         run_script("wall-mode.sh", "on" if switch.get_active() else "off")
-
-    def _on_status_detail(self, switch, _pspec):
-        if self._setting:
-            return
-        run_script("status-detail.sh", "on" if switch.get_active() else "off")
 
     def _on_smart(self, switch, _pspec):
         if self._setting:
