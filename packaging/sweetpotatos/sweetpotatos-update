@@ -290,7 +290,6 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       cheatsheet.py
       spo_ui.py
       status.sh
-      status-detail.sh
       tray-mode.sh
       settings.py
       hue.py
@@ -306,15 +305,15 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       # Drop overlay forks so the next sprout does not put the old file back.
       rm -f "${target_home}/.config/sweetpotatos/user_edits/swirl/scripts/${script_name}"
     done
-    # Light tray only — drop GTK applets and pin tray-mode=text.
+    # Light tray — drop GTK applets; remove retired detailed-status leftovers.
     tray_script="${target_home}/.config/swirl/scripts/tray-mode.sh"
     if [[ -x "${tray_script}" ]]; then
       sudo -u "${target_user}" HOME="${target_home}" \
         XDG_CONFIG_HOME="${target_home}/.config" \
         "${tray_script}" apply >/dev/null 2>&1 || true
     fi
-    # Detailed status was removed — clear leftover toggle state.
-    rm -f "${target_home}/.config/sweetpotatos/status-detail" \
+    rm -f "${target_home}/.config/swirl/scripts/status-detail.sh" \
+      "${target_home}/.config/sweetpotatos/status-detail" \
       "${target_home}/.config/sweetpotatos/user_edits/swirl/scripts/status-detail.sh"
     # Keybinds text + bar chrome comments live beside the scripts.
     for rel in swirl/cheatsheet.txt swirl/config; do

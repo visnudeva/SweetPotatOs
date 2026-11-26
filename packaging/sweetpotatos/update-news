@@ -1,3 +1,6 @@
+@2026.10.3-277
+What changed: Cleanup after the thin bar — removed the old detailed-status script and leftover Settings/tray toggle wiring.
+
 @2026.10.3-276
 What changed: Status bar stays thin (no detailed toggle). It refreshes every 10s instead of 3s to use less CPU.
 

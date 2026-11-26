@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-# Light tray only: no GTK tray applets; BT + mounts show as text in status.sh.
-# State: ~/.config/sweetpotatos/tray-mode — always "text" (icons mode removed).
-# Usage: tray-mode.sh [apply|text|status|icons|toggle]
-#   icons|toggle are accepted for old callers but still apply light tray.
+# Keep GTK tray applets off; status.sh shows BT / mounts as text.
+# Usage: tray-mode.sh [apply]
 set -euo pipefail
 
 ROOT="${SPO_CONFIG_ROOT:-${HOME}/.config}"
@@ -51,24 +49,12 @@ ensure_udiskie() {
   start_bg udiskie
 }
 
-apply_text() {
+apply() {
   mkdir -p "${STATE_DIR}"
   printf 'text\n' >"${STATE_FILE}"
   stop_bins nm-applet blueman-applet
   ensure_udiskie
 }
 
-cmd="${1:-apply}"
-case "${cmd}" in
-  status)
-    echo text
-    ;;
-  apply|text|icons|toggle)
-    # Always light tray — no Settings toggle.
-    apply_text
-    ;;
-  *)
-    echo "Usage: $0 [apply|text|status]" >&2
-    exit 2
-    ;;
-esac
+# Any leftover icons/text/toggle args still mean "apply".
+apply
