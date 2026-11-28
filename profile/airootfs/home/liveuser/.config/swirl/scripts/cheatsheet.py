@@ -99,51 +99,28 @@ def parse_sheet(path: Path) -> list[tuple[str, str]]:
     return rows
 
 
-class Cheatsheet(Gtk.Window):
-    def __init__(self):
-        super().__init__(title=TITLE)
-        self.set_default_size(520, 640)
-        self.set_resizable(True)
-        self.set_app_paintable(True)
-        self._bg = (0x1D / 255, 0x1F / 255, 0x21 / 255)
-        self._css = Gtk.CssProvider()
-        Gtk.StyleContext.add_provider_for_screen(
-            Gdk.Screen.get_default(),
-            self._css,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER,
-        )
-        self._apply_css(spo_ui.theme_mode(ROOT))
+class CheatsheetPanel(Gtk.Box):
+    """Keybinds list without window chrome — embed in Settings Help."""
 
-        outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        outer.set_margin_top(14)
-        outer.set_margin_bottom(14)
-        outer.set_margin_start(14)
-        outer.set_margin_end(14)
-        self.add(outer)
-
-        title = Gtk.Label(label=TITLE)
-        title.set_name("title")
-        title.set_xalign(0)
-        outer.pack_start(title, False, False, 0)
-
+    def __init__(self, show_close_hint: bool = False):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         scroll = Gtk.ScrolledWindow()
         scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         scroll.set_hexpand(True)
         scroll.set_vexpand(True)
-        outer.pack_start(scroll, True, True, 0)
+        self.pack_start(scroll, True, True, 0)
 
         self.list_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=2)
         scroll.add(self.list_box)
-        self._fill_list()
+        self.reload()
 
-        hint = Gtk.Label(label="Esc or Mod+q to close")
-        hint.set_name("muted")
-        hint.set_xalign(0)
-        outer.pack_start(hint, False, False, 0)
+        if show_close_hint:
+            hint = Gtk.Label(label="Esc or Mod+q to close")
+            hint.set_name("muted")
+            hint.set_xalign(0)
+            self.pack_start(hint, False, False, 0)
 
-        self.connect("key-press-event", self._on_key)
-
-    def _fill_list(self):
+    def reload(self) -> None:
         for child in self.list_box.get_children():
             self.list_box.remove(child)
         for kind, text in parse_sheet(SHEET):
@@ -153,7 +130,7 @@ class Cheatsheet(Gtk.Window):
                 self.list_box.pack_start(spacer, False, False, 0)
                 continue
             if kind == "title":
-                continue  # window title already shows this
+                continue
             if kind == "section":
                 label = Gtk.Label(label=text)
                 label.set_name("section")
@@ -185,6 +162,39 @@ class Cheatsheet(Gtk.Window):
             label.set_line_wrap(True)
             self.list_box.pack_start(label, False, False, 0)
         self.list_box.show_all()
+
+
+class Cheatsheet(Gtk.Window):
+    def __init__(self):
+        super().__init__(title=TITLE)
+        self.set_default_size(520, 640)
+        self.set_resizable(True)
+        self.set_app_paintable(True)
+        self._bg = (0x1D / 255, 0x1F / 255, 0x21 / 255)
+        self._css = Gtk.CssProvider()
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            self._css,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER,
+        )
+        self._apply_css(spo_ui.theme_mode(ROOT))
+
+        outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        outer.set_margin_top(14)
+        outer.set_margin_bottom(14)
+        outer.set_margin_start(14)
+        outer.set_margin_end(14)
+        self.add(outer)
+
+        title = Gtk.Label(label=TITLE)
+        title.set_name("title")
+        title.set_xalign(0)
+        outer.pack_start(title, False, False, 0)
+
+        self.panel = CheatsheetPanel(show_close_hint=True)
+        outer.pack_start(self.panel, True, True, 0)
+
+        self.connect("key-press-event", self._on_key)
 
     def _on_key(self, _widget, event):
         if event.keyval == Gdk.KEY_Escape:

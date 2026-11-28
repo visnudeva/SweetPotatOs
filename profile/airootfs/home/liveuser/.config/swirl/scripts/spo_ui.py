@@ -78,6 +78,7 @@ def palette(
             "border": "d4cdc2",
             "muted": "6e6760",
             "accent": accent,
+            "on_accent": "ffffff",
             "highlight": highlight,
             "on_highlight": on_highlight,
             "highlight_fill": darken_hex(highlight, 0.9),
@@ -92,6 +93,7 @@ def palette(
         "border": "2e3234",
         "muted": "aaaaaa",
         "accent": accent,
+        "on_accent": "ffffff",
         "highlight": highlight,
         "on_highlight": on_highlight,
         # Solid fills read lighter than the same hex as text — deepen a touch.
@@ -175,6 +177,8 @@ def panel_css(
               background-color: #{p['raised']};
               border-color: #{p['border']};
               border-radius: {r}px;
+              min-width: 40px;
+              min-height: 22px;
             }}
             switch:checked {{
               background-color: #{p['accent']};
@@ -182,6 +186,19 @@ def panel_css(
             }}
             switch slider {{
               border-radius: {max(2, r - 2)}px;
+              min-width: 18px;
+              min-height: 18px;
+            }}
+            /* Dark/Light mode selector — accent track in both positions;
+               leave the knob alone so it matches the other (grey) switches. */
+            switch.spo-mode,
+            switch.spo-mode:checked {{
+              background-color: #{p['accent']};
+              border-color: #{p['accent']};
+            }}
+            stackswitcher button {{
+              min-height: 28px;
+              padding: 4px 10px;
             }}
             scrolledwindow {{
               border: none;
@@ -201,6 +218,39 @@ def panel_css(
               border-radius: {r}px;
             }}
             radiobutton {{ color: #{p['fg']}; }}
+            list {{
+              background-color: #{p['bg']};
+              border: none;
+            }}
+            list row {{
+              background-color: transparent;
+              border-radius: {r}px;
+              padding: 2px;
+              margin: 1px 0;
+              min-height: 32px;
+            }}
+            list row:hover {{
+              background-color: #{p['hover']};
+            }}
+            list row:selected {{
+              background-color: #{p['raised']};
+              border: 1px solid #{p['accent']};
+            }}
+            list row:selected label {{
+              color: #{p['fg']};
+              font-weight: bold;
+            }}
+            #hub-rail {{
+              background-color: #{p['bg']};
+              border-right: 1px solid #{p['border']};
+              padding-right: 8px;
+              margin-right: 4px;
+            }}
+            #hub-page-title {{
+              color: #{p['highlight']};
+              font-weight: bold;
+              font-size: 12pt;
+            }}
             """.encode()
 
 

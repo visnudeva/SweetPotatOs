@@ -246,17 +246,49 @@ _clear_unowned_spo_bins() {
 }
 _clear_unowned_spo_bins
 
-echo "[*] Installing/upgrading: ${to_touch[*]}"
-pacman -S --needed --noconfirm "${to_touch[@]}"
+# Only install packages that actually need an upgrade — avoids a wall of
+# "up to date -- skipping" warnings for every channel candidate.
+to_install=()
+while IFS= read -r name; do
+  [[ -n "${name}" ]] || continue
+  to_install+=("${REPO_NAME}/${name}")
+done < <(printf '%s\n' "${changed}")
 
-# Force these two even if --needed thought they were current — stale swirl +
-# unfixed configs were the Invalid command loop.
-echo "[*] Forcing sweetpotatos + swirl reinstall from the channel…"
+if ((${#to_install[@]} > 0)); then
+  echo "[*] Installing/upgrading: ${to_install[*]}"
+  pacman -S --needed --noconfirm "${to_install[@]}"
+else
+  echo "[*] Channel packages already current."
+fi
+
+# Refresh sweetpotatos (+ swirl) so shipped scripts/configs always land.
+# Prefer the local pacman cache — a second CDN download often 404s right
+# after a testing upload even though the package is already installed.
+_spo_reinstall_pkg() {
+  local pkg="$1"
+  local overwrite='/usr/local/bin/sweetpotatos-renew*,/usr/local/bin/sweetpotatos-wall'
+  local ver cached
+  ver="$(pacman -Q "${pkg}" 2>/dev/null | awk '{print $2}')" || return 0
+  cached="$(
+    ls -1t /var/cache/pacman/pkg/"${pkg}-${ver}"-*.pkg.tar.zst 2>/dev/null | head -1 || true
+  )"
+  if [[ -n "${cached}" && -f "${cached}" ]]; then
+    echo "[*] Reinstalling ${pkg} ${ver} from local cache…"
+    pacman -U --noconfirm --overwrite "${overwrite}" "${cached}" && return 0
+  fi
+  echo "[*] Reinstalling ${pkg} from the channel…"
+  if pacman -S --noconfirm --overwrite "${overwrite}" "${REPO_NAME}/${pkg}" 2>/dev/null \
+    || pacman -S --noconfirm --overwrite "${overwrite}" "${pkg}" 2>/dev/null; then
+    return 0
+  fi
+  echo "[!] Could not reinstall ${pkg}; continuing with the installed package."
+  return 0
+}
+
+echo "[*] Refreshing sweetpotatos + swirl…"
 _clear_unowned_spo_bins
-pacman -S --noconfirm --overwrite '/usr/local/bin/sweetpotatos-renew*,/usr/local/bin/sweetpotatos-wall' \
-  "${REPO_NAME}/sweetpotatos" "${REPO_NAME}/swirl" || \
-  pacman -S --noconfirm --overwrite '/usr/local/bin/sweetpotatos-renew*,/usr/local/bin/sweetpotatos-wall' \
-  sweetpotatos swirl || true
+_spo_reinstall_pkg sweetpotatos
+_spo_reinstall_pkg swirl
 
 # Always scrub configs for every /home user (not gated on sprout/SUDO_USER).
 if [[ -x /usr/local/bin/sweetpotatos-fix-swirl-config ]]; then
@@ -292,7 +324,9 @@ if command -v sweetpotatos-sprout >/dev/null 2>&1; then
       status.sh
       tray-mode.sh
       settings.py
+      system_panel.py
       hue.py
+      theme.sh
       tips.sh
     )
     for script_name in "${shipped_scripts[@]}"; do

@@ -148,8 +148,8 @@ After cloning SweetPotatOs elsewhere, fix `profile/pacman.conf` `[sweetpotatos]`
 
 ## Settings GUI
 
-- **SweetPotatOs Settings** (`settings.py`, `sweetpotatos-settings`, Mod+,): hub for look tools and desktop toggles. Lives in SweetPotato; ships via sprout + the `sweetpotatos` package launcher/desktop entry. Wallpaper opens waypaper.
-- **Themer** stays its own window (`hue.py` / Mod+Ctrl+t); Settings opens it.
+- **SweetPotatOs Settings** (`settings.py`, `sweetpotatos-settings`, Mod+,): sectioned hub (Look embeds themer; Apps = Spore/tuber; Help embeds keybinds); `sweetpotatos-settings open look|desktop|system|apps|help`. Lives in SweetPotato; ships via sprout. Waypaper/Laniakea still separate windows for now.
+- **Themer** also stays its own window (`hue.py` / Mod+Ctrl+t); Settings Look embeds the same panel.
 - Toggles call the existing scripts: `frame.sh`, `smart-brightness.sh`, `caffeine.sh`.
 
 ## Build-host rule (Ryoku)

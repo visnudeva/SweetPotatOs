@@ -1,3 +1,33 @@
+@2026.10.3-288
+What changed: Dark/Light knob matches other switches; update skips up-to-date noise and reinstalls from local cache (no more CDN 404 spam). Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-287
+What changed: Light presets start with Sweet potato; Cyberpunk removed; Dark/Light switch keeps the accent in both positions. Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-286
+What changed: Look palette swatches sit beside the preset name so the scrollbar no longer covers them. Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-285
+What changed: Dark/Light toggle in Settings Look applies the theme when flipped. Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-284
+What changed: Settings polish — SPO Apps tab, Dark/Light switch, tighter System switches, Update before Website, clearer wallpaper copy. Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-283
+What changed: Settings System page now has built-in Wi-Fi, Bluetooth, Sound, and Displays tabs (with Advanced fallbacks). Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-282
+What changed: Settings Apps page briefly explains Spore and tuber. Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-281
+What changed: Settings remembers the last tab correctly on reopen. New Apps page for Spore and tuber. Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-280
+What changed: Settings Look embeds the themer; Help embeds keybinds (was Updates). Waypaper and Laniakea still open as their own apps. Log out once or Mod+Shift+c after updating.
+
+@2026.10.3-279
+What changed: SweetPotatOs Settings is a sectioned hub (Look, Desktop, System, Updates). Open a page with sweetpotatos-settings open look. Log out once or Mod+Shift+c after updating.
+
 @2026.10.3-278
 What changed: Touchpad gestures match niri — three fingers left/right scroll the strip, three fingers up/down change workspace, four fingers open overview. Log out once after updating.
 

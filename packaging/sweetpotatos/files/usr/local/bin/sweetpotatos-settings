@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# Open SweetPotato Settings (Mod+,).
+# Open SweetPotatOs Settings (Mod+,).
+# Deep-link a page: sweetpotatos-settings open look|desktop|system|apps|help
 script="${HOME}/.config/swirl/scripts/settings.py"
 if [[ ! -f "${script}" ]]; then
   script=/usr/share/sweetpotato/config/swirl/scripts/settings.py
 fi
-exec python3 "${script}"
+exec python3 "${script}" "$@"

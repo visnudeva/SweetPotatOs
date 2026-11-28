@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Theme presets, plus accent and highlight sliders. Apply commits."""
+"""Theme presets, plus accent and highlight sliders. Apply commits.
+
+ThemerPanel is embeddable (Settings Look page). Picker is the standalone window.
+"""
 import math
 import os
 import subprocess
@@ -98,63 +101,72 @@ def load_presets():
     return rows
 
 
-class Picker(Gtk.Window):
-    def __init__(self):
-        super().__init__(title="SweetPotato themer")
-        self.set_default_size(380, -1)
-        self.set_resizable(False)
-        self.set_app_paintable(True)
-        self._bg = (0x1D / 255, 0x1F / 255, 0x21 / 255)
+class ThemerPanel(Gtk.Box):
+    """Theme UI without a window chrome — embed in Settings or wrap in Picker."""
+
+    def __init__(self, on_applied=None, show_title: bool = True):
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.on_applied = on_applied
         self.presets = load_presets()
         self._preset_id = current_id()
         self._chips = {}
         self._building = False
         self._setting = False
-        self._css = Gtk.CssProvider()
-        # User gtk.css is loaded at the same priority and keeps the old
-        # window fill after a theme switch. This provider is more specific,
-        # and do_draw paints the fill so a stale cache cannot leave it behind.
-        Gtk.StyleContext.add_provider_for_screen(
-            Gdk.Screen.get_default(),
-            self._css,
-            Gtk.STYLE_PROVIDER_PRIORITY_USER,
-        )
+        self._ring = "f5e6e8"
+
         start = next(
             (row["mode"] for row in self.presets if row["id"] == self._preset_id),
             "dark",
         )
-        self._apply_css(start)
 
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        box.set_margin_top(16)
-        box.set_margin_bottom(16)
-        box.set_margin_start(16)
-        box.set_margin_end(16)
-        self.add(box)
+        if show_title:
+            title = Gtk.Label(label="SweetPotato themer")
+            title.set_name("title")
+            title.set_xalign(0)
+            self.pack_start(title, False, False, 0)
 
-        title = Gtk.Label(label="SweetPotato themer")
-        title.set_name("title")
-        title.set_xalign(0)
-        box.pack_start(title, False, False, 0)
-
+        # Dark left / Light right — switch off = dark, on = light.
         modes = Gtk.Box(spacing=8)
-        self.dark = Gtk.RadioButton.new_with_label_from_widget(None, "Dark")
-        self.light = Gtk.RadioButton.new_with_label_from_widget(self.dark, "Light")
-        if start == "light":
-            self.light.set_active(True)
-        modes.pack_start(self.dark, False, False, 0)
-        modes.pack_start(self.light, False, False, 0)
-        box.pack_start(modes, False, False, 0)
+        dark_lbl = Gtk.Label(label="Dark")
+        dark_lbl.set_xalign(1)
+        self.mode_sw = Gtk.Switch()
+        self.mode_sw.set_valign(Gtk.Align.CENTER)
+        # Mode selector (not on/off) — keep accent fill in both positions.
+        self.mode_sw.get_style_context().add_class("spo-mode")
+        light_lbl = Gtk.Label(label="Light")
+        light_lbl.set_xalign(0)
+        self._setting_mode = True
+        self.mode_sw.set_state(start == "light")
+        self.mode_sw.set_active(start == "light")
+        self._setting_mode = False
+        dark_hit = Gtk.EventBox()
+        dark_hit.add(dark_lbl)
+        dark_hit.set_above_child(True)
+        dark_hit.connect(
+            "button-press-event",
+            lambda *_: (self._set_mode(False) or True),
+        )
+        light_hit = Gtk.EventBox()
+        light_hit.add(light_lbl)
+        light_hit.set_above_child(True)
+        light_hit.connect(
+            "button-press-event",
+            lambda *_: (self._set_mode(True) or True),
+        )
+        modes.pack_start(dark_hit, False, False, 0)
+        modes.pack_start(self.mode_sw, False, False, 0)
+        modes.pack_start(light_hit, False, False, 0)
+        self.pack_start(modes, False, False, 0)
 
         self.preset_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
-        box.pack_start(self.preset_box, False, False, 0)
+        self.pack_start(self.preset_box, False, False, 0)
 
         self.slider_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
         self.accent_scale, self.accent_swatch = self._slider(self.slider_box, "Accent", 0)
         self.highlight_scale, self.highlight_swatch = self._slider(
             self.slider_box, "Highlight", 0
         )
-        box.pack_start(self.slider_box, False, False, 0)
+        self.pack_start(self.slider_box, False, False, 0)
 
         buttons = Gtk.Box(spacing=8)
         apply = Gtk.Button.new_with_label("Apply")
@@ -163,47 +175,11 @@ class Picker(Gtk.Window):
         reset.connect("clicked", self._on_reset)
         buttons.pack_start(apply, False, False, 0)
         buttons.pack_start(reset, False, False, 0)
-        box.pack_start(buttons, False, False, 0)
+        self.pack_start(buttons, False, False, 0)
 
-        self.dark.connect("toggled", self._on_mode)
-        self.light.connect("toggled", self._on_mode)
-        self.connect("key-press-event", self._on_key)
+        self.mode_sw.connect("state-set", self._on_mode_state)
         self._rebuild_presets(self._preset_id)
         self.refresh_swatches()
-
-    def _on_key(self, _widget, event):
-        if event.keyval == Gdk.KEY_Escape:
-            self.destroy()
-            return True
-        return False
-
-    def do_draw(self, cr):
-        spo_ui.paint_window_bg(
-            cr,
-            self._bg,
-            self.get_allocated_width(),
-            self.get_allocated_height(),
-        )
-        child = self.get_child()
-        if child is not None:
-            self.propagate_draw(child, cr)
-        titlebar = self.get_titlebar()
-        if titlebar is not None:
-            self.propagate_draw(titlebar, cr)
-        return False
-
-    def _apply_css(self, mode):
-        accent = spo_ui.accent_hex(ROOT)
-        highlight = spo_ui.highlight_hex(ROOT)
-        on_highlight = spo_ui.on_highlight_hex(ROOT)
-        p = spo_ui.palette(mode, accent, highlight, on_highlight)
-        self._bg = tuple(int(p["bg"][i : i + 2], 16) / 255 for i in (0, 2, 4))
-        self._ring = p["fg"]
-        self._css.load_from_data(
-            spo_ui.panel_css(mode, accent, highlight, on_highlight)
-        )
-        self.queue_draw()
-        self._redraw_dots()
 
     def _slider(self, box, title, value):
         label = Gtk.Label(label=title)
@@ -222,20 +198,59 @@ class Picker(Gtk.Window):
         return scale, swatch
 
     def mode(self):
-        return "light" if self.light.get_active() else "dark"
+        return "light" if self.mode_sw.get_active() else "dark"
+
+    def set_ring_color(self, hex_color: str) -> None:
+        self._ring = hex_color.lstrip("#")
+        self._redraw_dots()
+
+    def _set_mode(self, light: bool):
+        if self.mode_sw.get_active() == light:
+            return False
+        self.mode_sw.set_state(light)
+        return True
+
+    def _on_mode_state(self, switch, state):
+        # GTK Switch: return False so the slider animation/state can proceed.
+        if self._setting_mode:
+            return False
+        fallback = "sweet-potato-light" if state else "sweet-potato"
+        # Defer rebuild+apply until after the switch finishes flipping.
+        GLib.idle_add(self._apply_mode, state, fallback)
+        return False
+
+    def _apply_mode(self, light: bool, fallback: str):
+        if self._setting_mode:
+            return False
+        self._setting_mode = True
+        try:
+            self.mode_sw.set_active(light)
+            self._rebuild_presets(fallback)
+            self.apply()
+        finally:
+            self._setting_mode = False
+        return False
 
     def _rebuild_presets(self, selected):
         self._building = True
         self._chips = {}
         for child in self.preset_box.get_children():
             self.preset_box.remove(child)
+        want = "light" if (
+            self.mode_sw.get_active() if hasattr(self, "mode_sw") else False
+        ) else "dark"
+        # Prefer the target selected preset's mode when rebuilding after a flip.
+        for row in self.presets:
+            if row["id"] == selected:
+                want = row["mode"]
+                break
         group = None
         chosen = None
         chosen_id = None
         first = None
         first_id = None
         for row in self.presets:
-            if row["mode"] != self.mode():
+            if row["mode"] != want:
                 continue
             radio = Gtk.RadioButton.new_with_label_from_widget(group, row["name"])
             group = radio
@@ -243,10 +258,14 @@ class Picker(Gtk.Window):
             line = Gtk.Box(spacing=8)
             accent = self._dot(16)
             highlight = self._dot(16)
+            accent.set_valign(Gtk.Align.CENTER)
+            highlight.set_valign(Gtk.Align.CENTER)
             self._paint(accent, row["accent"])
             self._paint(highlight, row["highlight"])
             self._chips[row["id"]] = (accent, highlight)
-            line.pack_start(radio, True, True, 0)
+            # Keep swatches beside the name — expand pushed them under the
+            # Settings scrollbar on the Look page.
+            line.pack_start(radio, False, False, 0)
             line.pack_start(accent, False, False, 0)
             line.pack_start(highlight, False, False, 0)
             self.preset_box.pack_start(line, False, False, 0)
@@ -265,12 +284,6 @@ class Picker(Gtk.Window):
         self._building = False
         self._show_preset_hues()
         self.preset_box.show_all()
-
-    def _on_mode(self, button):
-        if not button.get_active():
-            return
-        fallback = "sweet-potato-light" if self.mode() == "light" else "sweet-potato"
-        self._rebuild_presets(fallback)
 
     def _on_preset(self, button, ident):
         if self._building or not button.get_active():
@@ -381,7 +394,73 @@ class Picker(Gtk.Window):
             ],
             check=False,
         )
-        self._apply_css(row["mode"])
+        if self.on_applied is not None:
+            self.on_applied(row["mode"])
+
+
+class Picker(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="SweetPotato themer")
+        self.set_default_size(380, -1)
+        self.set_resizable(False)
+        self.set_app_paintable(True)
+        self._bg = (0x1D / 255, 0x1F / 255, 0x21 / 255)
+        self._css = Gtk.CssProvider()
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            self._css,
+            Gtk.STYLE_PROVIDER_PRIORITY_USER,
+        )
+        start = spo_ui.theme_mode(ROOT)
+        self._apply_css(start)
+
+        outer = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        outer.set_margin_top(16)
+        outer.set_margin_bottom(16)
+        outer.set_margin_start(16)
+        outer.set_margin_end(16)
+        self.add(outer)
+
+        self.panel = ThemerPanel(on_applied=self._on_panel_applied, show_title=True)
+        outer.pack_start(self.panel, True, True, 0)
+        self.connect("key-press-event", self._on_key)
+
+    def _on_panel_applied(self, mode: str) -> None:
+        self._apply_css(mode)
+
+    def _on_key(self, _widget, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.destroy()
+            return True
+        return False
+
+    def do_draw(self, cr):
+        spo_ui.paint_window_bg(
+            cr,
+            self._bg,
+            self.get_allocated_width(),
+            self.get_allocated_height(),
+        )
+        child = self.get_child()
+        if child is not None:
+            self.propagate_draw(child, cr)
+        titlebar = self.get_titlebar()
+        if titlebar is not None:
+            self.propagate_draw(titlebar, cr)
+        return False
+
+    def _apply_css(self, mode):
+        accent = spo_ui.accent_hex(ROOT)
+        highlight = spo_ui.highlight_hex(ROOT)
+        on_highlight = spo_ui.on_highlight_hex(ROOT)
+        p = spo_ui.palette(mode, accent, highlight, on_highlight)
+        self._bg = tuple(int(p["bg"][i : i + 2], 16) / 255 for i in (0, 2, 4))
+        if hasattr(self, "panel"):
+            self.panel.set_ring_color(p["fg"])
+        self._css.load_from_data(
+            spo_ui.panel_css(mode, accent, highlight, on_highlight)
+        )
+        self.queue_draw()
 
 
 def float_window():
