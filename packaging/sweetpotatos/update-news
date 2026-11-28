@@ -1,3 +1,6 @@
+@2026.10.3-278
+What changed: Touchpad gestures match niri — three fingers left/right scroll the strip, three fingers up/down change workspace, four fingers open overview. Log out once after updating.
+
 @2026.10.3-277
 What changed: Cleanup after the thin bar — removed the old detailed-status script and leftover Settings/tray toggle wiring.
 

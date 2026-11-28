@@ -1,7 +1,7 @@
 # Maintainer: visnudeva
 pkgname=swirl
 pkgver=1.13.0.r8567.gcd070469
-pkgrel=78
+pkgrel=79
 pkgdesc='Scrolling tiling Wayland compositor with a ready session'
 arch=('x86_64')
 url='https://github.com/visnudeva/swirl'
@@ -88,6 +88,7 @@ source=("git+https://github.com/visnudeva/swirl.git#commit=cd070469"
         'overview-escape-exit.patch'
         'swaybar-quiet-shutdown.patch'
         'overview-wallpaper-tint.patch'
+        'gesture-axis-lock.patch'
         'wmenu-0.2.0.tar.gz::https://codeberg.org/adnano/wmenu/archive/0.2.0.tar.gz'
         'wmenu-selection-radius.patch'
         'wmenu-layer-margins.patch')
@@ -113,6 +114,7 @@ sha256sums=('SKIP'
             'b82c0b0779894f9e38153c42d936a64dc8346f9e945ccbdeeb4164075cfd381b'
             'd02bf171159dbb75c799af98e0b55df3614cbf69a555914a3bad2d6bb2cba7a9'
             '0ae18e79614a14fcce16396ad3b0ac85371faedacc93b16793e3aecb5bb2d63a'
+            '23d183634a0ffee39178ae6e7130c3dadd59fce3bf9724e79174c7722bf265c0'
             'b1b593a80310085a90bd349d458ffbcfacf875d74468ae4428bdf5692a671ef9'
             '17d73b6466c7200033623b7ca4c3f93db8836769a70a0dda86d14b2ed2cd6f46'
             'c0fd32d07027e5e4f290392df0acaaf64c61b9fe1a421f9fee317550b9f9dc92')
@@ -168,6 +170,9 @@ prepare() {
   git apply "${srcdir}/swaybar-quiet-shutdown.patch"
   # Accent wash over wallpaper in overview (theme indicator; no config command).
   git apply "${srcdir}/overview-wallpaper-tint.patch"
+  # Niri-style: when gesture_scroll and swipe binds share a finger count, lock
+  # to the dominant axis (H → strip scroll, V → bindgesture) instead of stealing.
+  git apply "${srcdir}/gesture-axis-lock.patch"
 
   # App / Wi-Fi / wallpaper menu selection corners match window frames.
   cd "${srcdir}/wmenu"

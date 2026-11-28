@@ -1,0 +1,250 @@
+diff --git a/sway/input/seatop_default.c b/sway/input/seatop_default.c
+--- a/sway/input/seatop_default.c
++++ b/sway/input/seatop_default.c
+@@ -1,4 +1,5 @@
+ #include <float.h>
++#include <math.h>
+ #include <libevdev/libevdev.h>
+ #include <wlr/types/wlr_cursor.h>
+ #include <wlr/types/wlr_subcompositor.h>
+@@ -21,11 +22,26 @@
+ #include "sway/xwayland.h"
+ #endif
+ 
++enum seatop_swipe_mode {
++	SEATOP_SWIPE_NONE = 0,
++	SEATOP_SWIPE_TRACKER,
++	SEATOP_SWIPE_SCROLL,
++	SEATOP_SWIPE_AXIS_PENDING,
++	SEATOP_SWIPE_CLIENT,
++};
++
++/* Pixels of dominant-axis motion before H vs V commits (niri-style lock). */
++static const double SWIPE_AXIS_LOCK_PX = 16.0;
++
+ struct seatop_default_event {
+ 	struct sway_node *previous_node;
+ 	uint32_t pressed_buttons[SWAY_CURSOR_PRESSED_BUTTONS_CAP];
+ 	size_t pressed_button_count;
+ 	struct gesture_tracker gestures;
++	enum seatop_swipe_mode swipe_mode;
++	uint8_t swipe_fingers;
++	double swipe_dx;
++	double swipe_dy;
+ };
+ 
+ /*-----------------------------------------\
+@@ -1113,79 +1129,167 @@
+ 	}
+ }
+ 
++static void swipe_commit_tracker(struct seatop_default_event *seatop,
++		uint8_t fingers, double dx, double dy) {
++	gesture_tracker_begin(&seatop->gestures, GESTURE_TYPE_SWIPE, fingers);
++	gesture_tracker_update(&seatop->gestures, dx, dy, NAN, NAN);
++	seatop->swipe_mode = SEATOP_SWIPE_TRACKER;
++}
++
++static bool swipe_commit_scroll(struct sway_seat *seat,
++		struct seatop_default_event *seatop, double dx, double dy) {
++	if (!layout_scroll_begin(seat)) {
++		return false;
++	}
++	layout_scroll_update(seat, dx, dy, config->gesture_scroll_sentitivity);
++	seatop->swipe_mode = SEATOP_SWIPE_SCROLL;
++	return true;
++}
++
++static void swipe_resolve_axis(struct sway_seat *seat,
++		struct seatop_default_event *seatop) {
++	double ax = fabs(seatop->swipe_dx);
++	double ay = fabs(seatop->swipe_dy);
++	if (ay > ax) {
++		/* Vertical wins: bindgesture (workspace / overview), like niri. */
++		swipe_commit_tracker(seatop, seatop->swipe_fingers,
++			seatop->swipe_dx, seatop->swipe_dy);
++		return;
++	}
++	/* Horizontal wins: continuous strip scroll. */
++	if (!swipe_commit_scroll(seat, seatop, seatop->swipe_dx, seatop->swipe_dy)) {
++		/* Nothing to scroll; still allow a matching bind if any. */
++		swipe_commit_tracker(seatop, seatop->swipe_fingers,
++			seatop->swipe_dx, seatop->swipe_dy);
++	}
++}
++
+ static void handle_swipe_begin(struct sway_seat *seat,
+ 		struct wlr_pointer_swipe_begin_event *event) {
+-	// Start tracking gesture if there is a matching binding ...
+ 	struct sway_input_device *device =
+ 		event->pointer ? event->pointer->base.data : NULL;
++	struct seatop_default_event *seatop = seat->seatop_data;
+ 	list_t *bindings = config->current_mode->gesture_bindings;
+-	if (gesture_binding_check(bindings, GESTURE_TYPE_SWIPE, event->fingers, device)) {
+-		struct seatop_default_event *seatop = seat->seatop_data;
++	bool has_bind = gesture_binding_check(bindings, GESTURE_TYPE_SWIPE,
++		event->fingers, device);
++	bool scroll_fingers = config->gesture_scroll_enable &&
++		event->fingers == config->gesture_scroll_fingers;
++
++	seatop->swipe_mode = SEATOP_SWIPE_NONE;
++	seatop->swipe_fingers = event->fingers;
++	seatop->swipe_dx = 0.0;
++	seatop->swipe_dy = 0.0;
++
++	/*
++	 * When layout scroll and swipe binds share a finger count, defer until
++	 * the dominant axis is known (niri: 3-finger H scrolls, V switches ws).
++	 * Binding alone or scroll alone keeps the previous exclusive paths.
++	 */
++	if (has_bind && scroll_fingers) {
++		seatop->swipe_mode = SEATOP_SWIPE_AXIS_PENDING;
++		return;
++	}
++	if (has_bind) {
+ 		gesture_tracker_begin(&seatop->gestures, GESTURE_TYPE_SWIPE, event->fingers);
+-	} else {
+-		if (config->gesture_scroll_enable && event->fingers == config->gesture_scroll_fingers) {
+-			if (layout_scroll_begin(seat)) {
+-				return;
+-			}
+-		}
+-		// ... otherwise forward to client
+-		struct sway_cursor *cursor = seat->cursor;
+-		wlr_pointer_gestures_v1_send_swipe_begin(
+-			server.input->pointer_gestures, cursor->seat->wlr_seat,
+-			event->time_msec, event->fingers);
++		seatop->swipe_mode = SEATOP_SWIPE_TRACKER;
++		return;
++	}
++	if (scroll_fingers && layout_scroll_begin(seat)) {
++		seatop->swipe_mode = SEATOP_SWIPE_SCROLL;
++		return;
+ 	}
++	seatop->swipe_mode = SEATOP_SWIPE_CLIENT;
++	struct sway_cursor *cursor = seat->cursor;
++	wlr_pointer_gestures_v1_send_swipe_begin(
++		server.input->pointer_gestures, cursor->seat->wlr_seat,
++		event->time_msec, event->fingers);
+ }
+ 
+ static void handle_swipe_update(struct sway_seat *seat,
+ 		struct wlr_pointer_swipe_update_event *event) {
+-
+-	// Update any ongoing tracking ...
+ 	struct seatop_default_event *seatop = seat->seatop_data;
+-	if (gesture_tracker_check(&seatop->gestures, GESTURE_TYPE_SWIPE)) {
+-		gesture_tracker_update(&seatop->gestures,
+-			event->dx, event->dy, NAN, NAN);
+-	} else {
+-		if (config->gesture_scroll_enable && event->fingers == config->gesture_scroll_fingers) {
+-			layout_scroll_update(seat, event->dx, event->dy, config->gesture_scroll_sentitivity);
++
++	if (seatop->swipe_mode == SEATOP_SWIPE_AXIS_PENDING) {
++		seatop->swipe_dx += event->dx;
++		seatop->swipe_dy += event->dy;
++		if (fabs(seatop->swipe_dx) < SWIPE_AXIS_LOCK_PX &&
++				fabs(seatop->swipe_dy) < SWIPE_AXIS_LOCK_PX) {
+ 			return;
+ 		}
+-		// ... otherwise forward to client
+-		struct sway_cursor *cursor = seat->cursor;
+-		wlr_pointer_gestures_v1_send_swipe_update(
+-			server.input->pointer_gestures, cursor->seat->wlr_seat,
+-			event->time_msec, event->dx, event->dy);
++		swipe_resolve_axis(seat, seatop);
++		return;
+ 	}
++	if (seatop->swipe_mode == SEATOP_SWIPE_TRACKER ||
++			gesture_tracker_check(&seatop->gestures, GESTURE_TYPE_SWIPE)) {
++		gesture_tracker_update(&seatop->gestures,
++			event->dx, event->dy, NAN, NAN);
++		return;
++	}
++	if (seatop->swipe_mode == SEATOP_SWIPE_SCROLL ||
++			(config->gesture_scroll_enable &&
++			 event->fingers == config->gesture_scroll_fingers &&
++			 seat->workspace && seat->workspace->gesture.scrolling)) {
++		layout_scroll_update(seat, event->dx, event->dy,
++			config->gesture_scroll_sentitivity);
++		return;
++	}
++	struct sway_cursor *cursor = seat->cursor;
++	wlr_pointer_gestures_v1_send_swipe_update(
++		server.input->pointer_gestures, cursor->seat->wlr_seat,
++		event->time_msec, event->dx, event->dy);
+ }
+ 
+ static void handle_swipe_end(struct sway_seat *seat,
+ 		struct wlr_pointer_swipe_end_event *event) {
+-	if (config->gesture_scroll_enable) {
+-		if (layout_scroll_end(seat)) {
++	struct seatop_default_event *seatop = seat->seatop_data;
++
++	if (seatop->swipe_mode == SEATOP_SWIPE_AXIS_PENDING) {
++		if (event->cancelled) {
++			seatop->swipe_mode = SEATOP_SWIPE_NONE;
++			return;
++		}
++		/* Tiny motion: still pick an axis from whatever we have. */
++		if (fabs(seatop->swipe_dx) > 0.0 || fabs(seatop->swipe_dy) > 0.0) {
++			swipe_resolve_axis(seat, seatop);
++		} else {
++			seatop->swipe_mode = SEATOP_SWIPE_NONE;
+ 			return;
+ 		}
+ 	}
+-	// Ensure gesture is being tracked and was not cancelled
+-	struct seatop_default_event *seatop = seat->seatop_data;
+-	if (!gesture_tracker_check(&seatop->gestures, GESTURE_TYPE_SWIPE)) {
+-		struct sway_cursor *cursor = seat->cursor;
+-		wlr_pointer_gestures_v1_send_swipe_end(server.input->pointer_gestures,
+-			cursor->seat->wlr_seat, event->time_msec, event->cancelled);
+-		return;
++
++	if (seatop->swipe_mode == SEATOP_SWIPE_SCROLL ||
++			(config->gesture_scroll_enable &&
++			 seat->workspace && seat->workspace->gesture.scrolling)) {
++		if (layout_scroll_end(seat)) {
++			seatop->swipe_mode = SEATOP_SWIPE_NONE;
++			return;
++		}
+ 	}
+-	if (event->cancelled) {
+-		gesture_tracker_cancel(&seatop->gestures);
++
++	if (seatop->swipe_mode == SEATOP_SWIPE_TRACKER ||
++			gesture_tracker_check(&seatop->gestures, GESTURE_TYPE_SWIPE)) {
++		if (event->cancelled) {
++			gesture_tracker_cancel(&seatop->gestures);
++			seatop->swipe_mode = SEATOP_SWIPE_NONE;
++			return;
++		}
++		struct sway_input_device *device =
++			event->pointer ? event->pointer->base.data : NULL;
++		struct sway_gesture_binding *binding = gesture_tracker_end_and_match(
++			&seatop->gestures, device);
++		if (binding) {
++			gesture_binding_execute(seat, binding);
++		}
++		seatop->swipe_mode = SEATOP_SWIPE_NONE;
+ 		return;
+ 	}
+ 
+-	// End gesture tracking and execute matched binding
+-	struct sway_input_device *device =
+-		event->pointer ? event->pointer->base.data : NULL;
+-	struct sway_gesture_binding *binding = gesture_tracker_end_and_match(
+-		&seatop->gestures, device);
+-
+-	if (binding) {
+-		gesture_binding_execute(seat, binding);
++	if (seatop->swipe_mode == SEATOP_SWIPE_CLIENT) {
++		struct sway_cursor *cursor = seat->cursor;
++		wlr_pointer_gestures_v1_send_swipe_end(server.input->pointer_gestures,
++			cursor->seat->wlr_seat, event->time_msec, event->cancelled);
+ 	}
++	seatop->swipe_mode = SEATOP_SWIPE_NONE;
+ }
+ 
+ /*----------------------------------\

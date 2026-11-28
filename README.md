@@ -180,7 +180,8 @@ Shipped stack (2026.08+): **Spore** (web radio + local music) and **LocalSend** 
 | Gesture | Action |
 |---------|--------|
 | 3-finger left / right | Scroll the window strip |
-| 4-finger up / down | Next / previous workspace |
+| 3-finger up / down | Next / previous workspace |
+| 4-finger up / down | Overview |
 
 ## Write ISO to USB
 

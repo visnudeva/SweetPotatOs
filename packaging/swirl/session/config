@@ -41,8 +41,10 @@ workspace_next_on_output_create_empty true
 gesture_scroll_enable true
 gesture_scroll_fingers 3
 gesture_scroll_sensitivity 1.0
-bindgesture swipe:4:up workspace next_on_output
-bindgesture swipe:4:down workspace prev_on_output
+bindgesture swipe:3:up workspace next_on_output
+bindgesture swipe:3:down workspace prev_on_output
+bindgesture swipe:4:up scale_workspaces toggle
+bindgesture swipe:4:down scale_workspaces toggle
 
 default_border pixel 2
 default_floating_border pixel 2

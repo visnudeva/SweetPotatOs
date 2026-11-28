@@ -68,8 +68,9 @@
   XF86 brightness    Brightness up / down
 
   Gestures
-  3-finger drag      Scroll strip
-  4-finger up/down   Next / previous workspace
+  3-finger L/R       Scroll strip
+  3-finger up/down   Next / previous workspace
+  4-finger up/down   Overview
 
   Resize mode (after Mod+Shift+r)
   hjkl or arrows     Resize focused window

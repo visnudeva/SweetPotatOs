@@ -73,15 +73,17 @@ animations {
     overview yes 250 var simple [ 0.215 0.61 0.355 1 ]
 }
 
-# 3-finger: continuous scroll along the window strip (must not bind 3-finger
-# swipes, or layout scroll is stolen).
+# 3-finger: niri-style axis lock (compositor gesture-axis-lock patch).
+# Horizontal scrolls the window strip; vertical switches workspace.
 gesture_scroll_enable true
 gesture_scroll_fingers 3
 gesture_scroll_sensitivity 1.0
+bindgesture swipe:3:up workspace next_on_output
+bindgesture swipe:3:down workspace prev_on_output
 
-# 4-finger vertical: dynamic workspaces (traditional direction: swipe up → next)
-bindgesture swipe:4:up workspace next_on_output
-bindgesture swipe:4:down workspace prev_on_output
+# 4-finger vertical: overview (same idea as niri)
+bindgesture swipe:4:up scale_workspaces toggle
+bindgesture swipe:4:down scale_workspaces toggle
 
 seat * xcursor_theme capitaine-cursors 24
 
